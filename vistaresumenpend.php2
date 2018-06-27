@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <title>Resumen pendientes</title><br>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+        <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+        <link href='custom.css' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+ 
+
+
+<!-- Barra de navegación -->
+<center>
+  <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li><a href="#">Usuario</a></li>
+      <li><a href="vistabuscador2.php">Buscador</a></li>
+      <li><a href="vistaingmemo.php">Ingreso</a></li>
+      <li><a href="vistalistadomemo.php">Listado</a></li>
+      <li><a href="vistaresumenpend.php">Resumen pendientes</a></li>
+    </ul>
+  </div>
+</nav>
+</center><br><br>
+
+   
+                            <center><h1>Resumen pendientes</h1></center><br><br>
+                            <div class="container">           
+                              <table class="table table-striped">
+                              <thead>
+                                   <tr>
+                                      <th>Usuarios</th>
+                                      <th>Estado</th>
+                                      <th>Cantidad</th>
+                                      <th>Total</th>  
+                                   </tr>
+                              </thead>
+                              <tbody>
+                                   <tr>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                   </tr>
+                                   <tr>
+                                      <td></td>
+                                      <td></td> 
+                                      <td></td>
+                                   </tr> 
+                                   <tr>
+                                      <td></td> 
+                                      <td></td>
+                                      <td></td>
+                                   </tr>
+                              </tbody>
+                              </table>
+                            </div> 
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label >En proceso</label><br>
+                                        <label >Sin gestión</label><br>
+                                        <label >Total</label>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+ 
+
+
+
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="validator.js"></script>
+        <script src="contact-2.js"></script>
+    </body>
+</html>

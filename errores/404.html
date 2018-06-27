@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Dev</title>
+		<link href="http://static.umce.cl/img/ico/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+        <link  href="http://static.umce.cl/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <script src="http://static.umce.cl/jquery/1.12.4/jquery.min.js"></script>
+        <script src="http://static.umce.cl/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+		body, html {
+		  height: 100%;
+		  width: 100%
+		  margin: 0;
+		  font: 400 15px/1.8 "Lato", sans-serif;
+		  color: #777;
+		}
+
+		.bgimg-1, .bgimg-2, .bgimg-3 {
+		  position: relative;
+		  opacity: 0.85;
+		  background-position: center;
+		  background-repeat: no-repeat;
+		  background-size: cover;
+
+		}
+		.bgimg-1 {
+		  /*background-image: url("img/dev.jpg");
+		  height: 100%;*/
+		}
+		.bgimg-2{
+			background-image: url("errores/img/docbrwon_e404.jpg");
+			width: 368px;
+		  	height: 491px;	
+		}
+
+		.caption {
+		  margin-top: 7%;
+		  width: 100%;
+		  text-align: center;
+		  color: #000;
+		}
+
+		.caption span.border {
+		  color: #eb594f;
+		  padding: 10px;
+		  font-size: 40px;
+		  letter-spacing: 5px;
+		  font-weight: bold;
+		}
+		.caption span.border2 {
+		  color: #eb594f;
+		  padding: 9px;
+		  font-size: 20px;
+		  letter-spacing: 5px;
+		}		
+		.logoumce { 
+			background-image: url("http://static.umce.cl/img/logos/logo_umce_2018_290.jpg");
+			background-repeat: no-repeat;
+			position: relative;
+			width: 290px;
+			height: 105px;
+		}
+		.titulomsg {
+			color: #3167a3;
+			font-size: 16px;
+			font-weight: bold;
+		}
+		.msg{
+			font-size: 14px;
+		}
+		ol{
+			list-style: none;
+			counter-reset: li;
+		}
+		li::before{
+			content: counter(li); 
+			color: #5abc64;
+  			display: inline-block; 
+  			width: 1em;
+  			margin-left: -1em			
+		}
+		li{
+			counter-increment: li;
+		}
+
+		</style>
+
+</head>
+<body>
+	<div class="bgimg-1">
+		<div class="container" style="height: 60%">
+			<div class="row">
+				<div class="col-sm-9 col-sm-offset-3">
+					  <div class="caption">
+					    <span class="border">ERROR 404</span><br>
+					    <span class="border2">Página NO encontrada</span>
+					  </div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="bgimg-2"></div>
+				</div>
+				<div class="col-sm-6">
+					<br><br><br>
+					<p class="titulomsg">Lo sentimos, no encontramos la página que buscas</p>
+						<ol class="msg">
+							<li>Tal vez se ha movido de sitio</li>
+							<li>Puede haber sido nominada para abandonar el portal</li>
+							<li>Quizas nunca ha existido (es producto de la imaginación)</li>
+							<li>Existe pero en otra dimensión</li>
+						</ol>
+					<br><br>
+					<p>Si no te convencen estas explicaciones puedes volver a la <a href="http://www.umce.cl">página principal</a></p>
+				</div>
+			</div>			
+		</div>
+		<footer>
+			<div class="col-sm-3 col-sm-offset-9 logoumce">
+			</div>
+		</footer>		
+	</div>
+</body>
+</html>

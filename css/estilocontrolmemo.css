@@ -1,0 +1,14 @@
+select#memoEstado {
+    color: mediumblue;
+    background-color: antiquewhite;
+}
+select#detalleestadomemo{
+    color: mediumblue;
+    background-color: antiquewhite;	
+}
+.lbldest{
+	/*color:#9d9d9d;*/
+}
+.textocol1{
+	padding: 6px 8px;
+}
