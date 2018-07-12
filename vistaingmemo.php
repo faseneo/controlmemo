@@ -133,10 +133,10 @@
                      </div>-->
                     <div class="row">
                         <div class="col-lg-3">
-                            <label>PDF, JPG, PNG, DOC, DOCX, XLS, XLSX</label>
                             <label class="btn btn-success btn-sm" for="my-file-selector">
                                 <input id="my-file-selector" name="my-file-selector" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar archivo memo escaneado
                             </label>
+                              <label>PDF, JPG, PNG, DOC, DOCX, XLS, XLSX</label>
                             <span class='label label-info' id="upload-file-info"></span>
                         </div>
                         <div class="col-lg-9">
@@ -150,11 +150,23 @@
                                 <input id="my-filelist-selector" name="my-filelist-selector" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar otros archivos Anexos
                              </label><span class='label label-info' id="upload-filelist-info"></span> &nbsp; &nbsp;
                              <button id="limpiar-archivo" type="button" class="btn btn-sm btn-default" data-dismiss="modal">Quitar Archivos</button>
-                             
-                        </div>                             
+                        </div>
                      </div>
-                     <div class="row">
-                         <div class="col-lg-12">
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default" id="panel1">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne">Collapsible Group Item #1</a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus VHS.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
                              <div class="table-responsive">
                                  <table class="table table-striped">
                                      <thead>

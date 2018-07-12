@@ -1,40 +1,31 @@
     function deshabilitabotones(){
-        document.getElementById('editar-cecosto').style.display = 'none';
-        document.getElementById('guardar-cecosto').style.display = 'none';
-        document.getElementById('actualizar-cecosto').style.display = 'none';
+        document.getElementById('editar-dependencia').style.display = 'none';
+        document.getElementById('guardar-dependencia').style.display = 'none';
+        document.getElementById('actualizar-dependencia').style.display = 'none';
     }
     function limpiaform(){
-        $("#ccId").val("");
-        $("#ccNombre").val("");
-        $("#ccCodigo").val("");
+        $("#depCodigo").val("");
+        $("#depNombre").val("");
     }        
     function habilitaform(){
-        $("#ccId").prop( "disabled", false );
-        $("#ccNombre").prop( "disabled", false );
-        $("#ccCodigo").prop( "disabled", false );
+        $("#depCodigo").prop( "disabled", false );
+        $("#depNombre").prop( "disabled", false );
     }
     function deshabilitaform(){
-        $("#ccId").prop( "disabled", true );
-        $("#ccNombre").prop( "disabled", true );
-        $("#ccCodigo").prop( "disabled", true );
+        $("#depCodigo").prop( "disabled", true );
+        $("#depNombre").prop( "disabled", true );
     }
 
     $(document).ready(function(){
         //funcion para validar campos del formulario
         function validarFormulario(){
-            var txtNombre = document.getElementById('ccNombre').value;
-            var txtCodigo = document.getElementById('ccCodigo').value;
+            var txtNombre = document.getElementById('depNombre').value;
                 //Test campo obligatorio
                 if(txtNombre == null || txtNombre.length == 0 || /^\s+$/.test(txtNombre)){
                     alert('ERROR: El campo nombre no debe ir vacío o con espacios en blanco');
-                    document.getElementById('ccNombre').focus();
+                    document.getElementById('depNombre').focus();
                     return false;
-                }
-                if(txtCodigo == null || txtCodigo.length == 0 || /^\s+$/.test(txtCodigo)){
-                    alert('ERROR: El campo Codigo no debe ir vacío o con espacios en blanco');
-                    document.getElementById('ccCodigo').focus();
-                    return false;
-                }                
+                }              
                 return true;
             }         
         //funcion para listar los cecostos
@@ -49,7 +40,7 @@
                 url: "controllers/controllerdependencia.php", 
             })
             .done(function( data, textStatus, jqXHR ) {
-                $("#listacecostos").html("");
+                $("#listadependencia").html("");
                 if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
                         + " \n data msg : "+ data.message 
@@ -62,17 +53,17 @@
 
                                 fila = '<tr><td>'+ data.datos[i].dep_nombre +'</td>';
                                 fila += '<td>'+ data.datos[i].dep_codigo +'</td>';
-                                fila += '<td><button id="ver-cecosto" type="button" '
+                                fila += '<td><button id="ver-dependencia" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
-                                fila += ' onclick="verCecosto(\'ver\',\'' + data.datos[i].dep_codigo + '\')">';
+                                fila += ' onclick="verDependencia(\'ver\',\'' + data.datos[i].dep_codigo + '\')">';
                                 fila += 'Ver / Editar</button>';
                                 fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
                                 fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                                fila += 'onclick="deleteCecosto(\''+ data.datos[i].dep_codigo +'\',\''
+                                fila += 'onclick="deleteDependencia(\''+ data.datos[i].dep_codigo +'\',\''
                                 + data.datos[i].dep_nombre +'\')">';
                                 fila += 'Eliminar</button></td>';
                                 fila += '</tr>';
-                                $("#listacecostos").append(fila);
+                                $("#listadependencia").append(fila);
                             }
                         })
             .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -86,25 +77,25 @@
         }
 
         //Levanta modal nuevo centro de costos
-        $("#crea-cecosto").click(function(e){
+        $("#crea-dependencia").click(function(e){
             e.preventDefault();
             limpiaform();
             habilitaform();
             $("#Accion").val("registrar");
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
-                modal.find('.modal-title-form').text('Creación Centro de Costo');  
+                modal.find('.modal-title-form').text('Creación Dependencia');  
                 deshabilitabotones();
-                $('#guardar-cecosto').show();
-                $('#ccNombre').focus();
+                $('#guardar-dependencia').show();
+                $('#depCodigo').focus();
             });
         });
 
         // implementacion boton para guardar el centro de costo
-        $("#guardar-cecosto").click(function(e){
+        $("#guardar-dependencia").click(function(e){
             e.preventDefault();
             if(validarFormulario()==true){
-                var datax = $("#formCecosto").serializeArray();
+                var datax = $("#formDependencia").serializeArray();
                 $.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
                 });
@@ -112,7 +103,7 @@
                     data: datax, 
                     type: "POST",
                     dataType: "json", 
-                    url: "controllers/controllercentrocostos.php", 
+                    url: "controllers/controllerdependencia.php", 
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     if ( console && console.log ) {
@@ -143,21 +134,21 @@
             }
         });
         //Cambia boton y habilita form para actualizar
-        $("#editar-cecosto").click(function(e){
+        $("#editar-dependencia").click(function(e){
             e.preventDefault();
-            $('.modal-title-form').text('Editar Centro de Costo');
+            $('.modal-title-form').text('Editar dependencia');
             habilitaform();
             deshabilitabotones();
-            $('#actualizar-cecosto').show();
+            $('#actualizar-dependencia').show();
             $("#Accion").val("actualizar");               
         });
 
         //  envia los nuevos datos para actualizar
-        $("#actualizar-cecosto").click(function(e){
+        $("#actualizar-dependencia").click(function(e){
                     // Detenemos el comportamiento normal del evento click sobre el elemento clicado
                     e.preventDefault();
                     if(validarFormulario()==true){
-                        var datax = $("#formCecosto").serializeArray();
+                        var datax = $("#formDependencia").serializeArray();
                         /*   $.each(datax, function(i, field){
                             console.log("contenido del form = "+ field.name + ":" + field.value + " ");
                         });*/
@@ -165,7 +156,7 @@
                             data: datax,    // En data se puede utilizar un objeto JSON, un array o un query string
                             type: "POST",   //Cambiar a type: POST si necesario
                             dataType: "json",  // Formato de datos que se espera en la respuesta
-                            url: "controllers/controllercentrocostos.php",  // URL a la que se enviará la solicitud Ajax
+                            url: "controllers/controllerdependencia.php",  // URL a la que se enviará la solicitud Ajax
                         })
                         .done(function( data, textStatus, jqXHR ) {
                             if ( console && console.log ) {
@@ -196,10 +187,10 @@
                     }
                 });
         // Envia los datos para eliminar
-        $("#eliminar-cecosto").click(function(e){
+        $("#eliminar-dependencia").click(function(e){
             e.preventDefault();
             console.log("paso");
-            var datax = $("#formDeleteCecosto").serializeArray();
+            var datax = $("#formDeleteDependencia").serializeArray();
 
             console.log("paso2");
 
@@ -211,7 +202,7 @@
                         data: datax, 
                         type: "POST",
                         dataType: "json", 
-                        url: "controllers/controllercentrocostos.php",
+                        url: "controllers/controllerdependencia.php",
                     })
                     .done(function(data,textStatus,jqXHR ) {
                         if ( console && console.log ) {
@@ -243,27 +234,27 @@
         getlista();
     });
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
-    function verCecosto(action, ccid){
+    function verDependencia(action, depid){
         deshabilitabotones();
-        var datay = {"ccId": ccid,
+        var datay = {"depCodigo": depid,
                      "Accion":"obtener"
                     };
         $.ajax({
             data: datay, 
             type: "POST",
             dataType: "json", 
-            url: "controllers/controllercentrocostos.php",
+            url: "controllers/controllerdependencia.php",
         })
         .done(function(data,textStatus,jqXHR ) {
             if ( console && console.log ) {
-                console.log( " data success : "+ data.success 
+                console.log( " data success jjjj : "+ data.success 
                     + " \n data msg : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
             }
-            $("#ccId").val(data.datos.ccosto_id);
-            $("#ccNombre").val(data.datos.ccosto_nombre);
-            $("#ccCodigo").val(data.datos.ccosto_codigo);
+
+            $("#depCodigo").val(data.datos.dep_codigo);
+            $("#depNombre").val(data.datos.dep_nombre);
 
             deshabilitaform();
             $("#Accion").val(action);
@@ -271,13 +262,13 @@
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
                 if (action === 'actualizar'){
-                    modal.find('.modal-title-form').text('Actualizar Centro de Costo');
-                    $('#guardar-cecosto').hide();                    
-                    $('#actualizar-cecosto').show();   
+                    modal.find('.modal-title-form').text('Actualizar Dependencia');
+                    $('#guardar-dependencia').hide();                    
+                    $('#actualizar-dependencia').show();   
                 }else if (action === 'ver'){
-                    modal.find('.modal-title-form').text('Datos Centro de Costo');
+                    modal.find('.modal-title-form').text('Datos Dependencia');
                     deshabilitabotones();
-                    $('#editar-cecosto').show();   
+                    $('#editar-dependencia').show();   
                 }
 
             });
@@ -292,10 +283,10 @@
         });
     }
     // Funcion que levanta modal para eliminar centro de costo 
-    function deleteCecosto(idcecosto, namececosto){     
-        document.formDeleteCecosto.ccId.value = idcecosto;
-        document.formDeleteCecosto.namececosto.value = namececosto;
-        document.formDeleteCecosto.Accion.value = "eliminar";
+    function deleteDependencia(iddep, namedep){     
+        document.formDeleteDependencia.depCodigo.value = iddep;
+        document.formDeleteDependencia.namedep.value = namedep;
+        document.formDeleteDependencia.Accion.value = "eliminar";
         $('#myModalDelete').on('shown.bs.modal', function () {
             $('#myInput').focus()
         });

@@ -3,6 +3,7 @@
 class ProcCompra{
     private $proc_comp_id;
     private $proc_comp_tipo;
+    private $proc_priori;
     
 
     public function __GET($k){

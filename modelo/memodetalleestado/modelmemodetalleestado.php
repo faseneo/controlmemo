@@ -21,13 +21,15 @@ class ModelMemoDetEst{
         try{
             $result = array();
             $stm = $this->pdo->prepare("SELECT  de.memo_detalle_estado_id,
-                                                de.memo_detalle_estado_tipo
+                                                de.memo_detalle_estado_tipo,
+												de.memo_detalle_prioridad
                                         FROM memo_detalle_estado as de");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new MemoDetEst();
                     $busq->__SET('memo_det_est_id', $r->memo_detalle_estado_id);
-                    $busq->__SET('memo_det_est_tipo', $r->memo_detalle_estado_tipo);                   
+                    $busq->__SET('memo_det_est_tipo', $r->memo_detalle_estado_tipo);
+                    $busq->__SET('memo_det_priori', $r->memo_detalle_prioridad);                   
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;
@@ -47,14 +49,16 @@ class ModelMemoDetEst{
         try{
             $stm = $this->pdo
                        ->prepare("SELECT de.memo_detalle_estado_id,
-                                         de.memo_detalle_estado_tipo
+                                         de.memo_detalle_estado_tipo,
+										 de.memo_detalle_prioridad
                                 FROM memo_detalle_estado as de
                                 WHERE de.memo_detalle_estado_id = ?");
             $stm->execute(array($id));
             $r = $stm->fetch(PDO::FETCH_OBJ);
             $busq = new MemoDetEst();
                     $busq->__SET('memo_det_est_id', $r->memo_detalle_estado_id);
-                    $busq->__SET('memo_det_est_tipo', $r->memo_detalle_estado_tipo); 
+                    $busq->__SET('memo_det_est_tipo', $r->memo_detalle_estado_tipo);
+                    $busq->__SET('memo_det_priori', $r->memo_detalle_prioridad); 
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Se obtuvo memo detalle estado correctamente';
@@ -87,10 +91,11 @@ class ModelMemoDetEst{
     public function Registrar(MemoDetEst $data){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO memo_detalle_estado (memo_detalle_estado_tipo) 
-                    VALUES (?)";
+            $sql = "INSERT INTO memo_detalle_estado (memo_detalle_estado_tipo, memo_detalle_prioridad) 
+                    VALUES (?,?)";
 
-            $this->pdo->prepare($sql)->execute(array($data->__GET('memo_det_est_tipo'))
+            $this->pdo->prepare($sql)->execute(array($data->__GET('memo_det_est_tipo'),
+													 $data->__GET('memo_det_priori'))
                                               );
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo detalle estado ingresado correctamente'; 
@@ -109,11 +114,13 @@ class ModelMemoDetEst{
         //print_r($data);
         try{
             $sql = "UPDATE memo_detalle_estado SET 
-                           memo_detalle_estado_tipo = ?
+                           memo_detalle_estado_tipo = ?,
+						   memo_detalle_prioridad = ?	
                     WHERE  memo_detalle_estado_id = ?";
 
             $this->pdo->prepare($sql)
-                 ->execute(array($data->__GET('memo_det_est_tipo'))
+                 ->execute(array($data->__GET('memo_det_est_tipo'),
+								 $data->__GET('memo_det_priori'))
                           );
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo detalle estado actualizado correctamente';                 
@@ -130,13 +137,15 @@ class ModelMemoDetEst{
         try{
             $result = array();
              $stm = $this->pdo->prepare("SELECT  de.memo_detalle_estado_id,
-                                                 de.memo_detalle_estado_tipo
+                                                 de.memo_detalle_estado_tipo,
+												 de.memo_detalle_prioridad
                                         FROM memo_detalle_estado as de");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new MemoDetEst();
                     $busq->__SET('memo_det_est_id', $r->memo_detalle_estado_id);
-                    $busq->__SET('memo_det_est_tipo', $r->memo_detalle_estado_tipo); 
+                    $busq->__SET('memo_det_est_tipo', $r->memo_detalle_estado_tipo);
+                    $busq->__SET('memo_det_priori', $r->memo_detalle_prioridad); 
                 $result[] = $busq;
             }
             return $result;

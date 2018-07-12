@@ -1,38 +1,30 @@
         function deshabilitabotones(){
-            document.getElementById('editar-memodetest').style.display = 'none';
-            document.getElementById('guardar-memodetest').style.display = 'none';
-            document.getElementById('actualizar-memodetest').style.display = 'none';
+            document.getElementById('editar-usurol').style.display = 'none';
+            document.getElementById('guardar-usurol').style.display = 'none';
+            document.getElementById('actualizar-usurol').style.display = 'none';
         }
         function limpiaform(){
-            $("#memodetestId").val("");
-            $("#memodetestTipo").val("");
-            $("#memodetPriori").val("");
+            $("#usuRolId").val("");
+            $("#usuRolNom").val("");
         }        
         function habilitaform(){
-            $("#memodetestId").prop( "disabled", false );
-            $("#memodetestTipo").prop( "disabled", false );
-            $("#memodetPriori").prop( "disabled", false );
+            $("#usuRolId").prop( "disabled", false );
+            $("#usuRolNom").prop( "disabled", false );
         }
         function deshabilitaform(){
-            $("#memodetestId").prop( "disabled", true );
-            $("#memodetestTipo").prop( "disabled", true );
-            $("#memodetPriori").prop( "disabled", true );
+            $("#usuRolId").prop( "disabled", true );
+            $("#usuRolNom").prop( "disabled", true );
         }
-$(document).ready(function(){
+
+    $(document).ready(function(){
         function validarFormulario(){
-            var txtTipo = document.getElementById('memodetestTipo').value;
-            var txtPriori = document.getElementById('memodetPriori').value;
+            var txtNombre = document.getElementById('usuRolNom').value;
                 //Test campo obligatorio
-                if(txtTipo == null || txtTipo.length == 0 || /^\s+$/.test(txtTipo)){
-                    alert('ERROR: El campo tipo no debe ir vacío o con espacios en blanco');
-                    document.getElementById('memodetestTipo').focus();
+                if(txtNombre == null || txtNombre.length == 0 || /^\s+$/.test(txtNombre)){
+                    alert('ERROR: El campo nombre no debe ir vacío o con espacios en blanco');
+                    document.getElementById('usuRolNom').focus();
                     return false;
-                }
-                if(txtPriori == null || txtPriori.length == 0 || /^\s+$/.test(txtPriori)){
-                    alert('ERROR: El campo prioridad no debe ir vacío o con espacios en blanco');
-                    document.getElementById('memodetPriori').focus();
-                    return false;
-                }              
+                }               
             return true;
         }         
         deshabilitabotones();
@@ -45,10 +37,10 @@ $(document).ready(function(){
                 data: datax, 
                 type: "GET",
                 dataType: "json", 
-                url: "controllers/controllermemodetalleestado.php", 
+                url: "controllers/controllerusuariorol.php", 
             })
             .done(function( data, textStatus, jqXHR ) {
-                $("#listamemodetest").html("");
+                $("#listausurol").html("");
                 if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
                         + " \n data msg : "+ data.message 
@@ -57,22 +49,22 @@ $(document).ready(function(){
                 }
                 for(var i=0; i<data.datos.length;i++){
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
-                                console.log('id: '+data.datos[i].memo_det_est_id + ' tipo: '+data.datos[i].memo_det_est_tipo);
+                                console.log('id: '+data.datos[i].usuario_rol_id + ' nombre: '+data.datos[i].usuario_rol_nombre);
 
-                                fila = '<tr><td>'+ data.datos[i].memo_det_est_tipo +'</td>';
-                                fila += '<td>'+ data.datos[i].memo_det_priori +'</td>';
+                                fila = '<tr><td>'+ data.datos[i].usuario_rol_nombre +'</td>';
+                                //fila += '<td>'+ data.datos[i].ccosto_codigo +'</td>';
 
-                                fila += '<td><button id="ver-memodetest" type="button" '
+                                fila += '<td><button id="ver-usurol" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
-                                fila += ' onclick="verMemoDetEst(\'ver\',\'' + data.datos[i].memo_det_est_id + '\')">';
+                                fila += ' onclick="verUsuRol(\'ver\',\'' + data.datos[i].usuario_rol_id + '\')">';
                                 fila += 'Ver / Editar</button>';
                                 fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
                                 fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                                fila += 'onclick="deleteMemoDetEst(\''+ data.datos[i].memo_det_est_id +'\',\''
-                                + data.datos[i].memo_det_est_tipo +'\')">';
+                                fila += 'onclick="deleteUsuRol(\''+ data.datos[i].usuario_rol_id +'\',\''
+                                + data.datos[i].usuario_rol_nombre +'\')">';
                                 fila += 'Eliminar</button></td>';
                                 fila += '</tr>';
-                                $("#listamemodetest").append(fila);
+                                $("#listausurol").append(fila);
                             }
                         })
             .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -86,25 +78,25 @@ $(document).ready(function(){
         }
 
         //Levanta modal nuevo centro de costos
-        $("#crea-memodetest").click(function(e){
+        $("#crea-usurol").click(function(e){
             e.preventDefault();
             limpiaform();
             habilitaform();
             $("#Accion").val("registrar");
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
-                modal.find('.modal-title-form').text('Creación Memo Detalle Estado');  
+                modal.find('.modal-title-form').text('Creación Usuario Rol');  
                 deshabilitabotones();
-                $('#guardar-memodetest').show();
-                $('#memodetestTipo').focus();
+                $('#guardar-usurol').show();
+                $('#usuRolNom').focus();
             });
         });
 
         // implementacion boton para guardar el centro de costo
-        $("#guardar-memodetest").click(function(e){
+        $("#guardar-usurol").click(function(e){
             e.preventDefault();
             if(validarFormulario()==true){
-                var datax = $("#formMemoDetEst").serializeArray();
+                var datax = $("#formUsuRol").serializeArray();
                 $.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
                 });
@@ -112,7 +104,7 @@ $(document).ready(function(){
                     data: datax, 
                     type: "POST",
                     dataType: "json", 
-                    url: "controllers/controllermemodetalleestado.php", 
+                    url: "controllers/controllerusuariorol.php", 
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     if ( console && console.log ) {
@@ -144,21 +136,21 @@ $(document).ready(function(){
         });
 
         //Cambia boton y habilita form para actualizar
-        $("#editar-memodetest").click(function(e){
+        $("#editar-usurol").click(function(e){
             e.preventDefault();
-            $('.modal-title-form').text('Editar Memo Detalle Estado');
+            $('.modal-title-form').text('Editar Usuario Rol');
             habilitaform();
             deshabilitabotones();
-            $('#actualizar-memodetest').show();
+            $('#actualizar-usurol').show();
             $("#Accion").val("actualizar");               
         });
 
         //  envia los nuevos datos para actualizar
-        $("#actualizar-memodetest").click(function(e){
+        $("#actualizar-usurol").click(function(e){
                     // Detenemos el comportamiento normal del evento click sobre el elemento clicado
                     e.preventDefault();
                     if(validarFormulario()==true){
-                        var datax = $("#formMemoDetEst").serializeArray();
+                        var datax = $("#formUsuRol").serializeArray();
                         /*   $.each(datax, function(i, field){
                             console.log("contenido del form = "+ field.name + ":" + field.value + " ");
                         });*/
@@ -166,7 +158,7 @@ $(document).ready(function(){
                             data: datax,    // En data se puede utilizar un objeto JSON, un array o un query string
                             type: "POST",   //Cambiar a type: POST si necesario
                             dataType: "json",  // Formato de datos que se espera en la respuesta
-                            url: "controllers/controllermemodetalleestado.php",  // URL a la que se enviará la solicitud Ajax
+                            url: "controllers/controllerusuariorol.php",  // URL a la que se enviará la solicitud Ajax
                         })
                         .done(function( data, textStatus, jqXHR ) {
                             if ( console && console.log ) {
@@ -197,10 +189,10 @@ $(document).ready(function(){
                     }
                 });
         // Envia los datos para eliminar
-        $("#eliminar-memodetest").click(function(e){
+        $("#eliminar-usurol").click(function(e){
             e.preventDefault();
             console.log("paso");
-            var datax = $("#formDeleteMemoDetEst").serializeArray();
+            var datax = $("#formDeleteUsuRol").serializeArray();
 
             console.log("paso2");
 
@@ -212,7 +204,7 @@ $(document).ready(function(){
                         data: datax, 
                         type: "POST",
                         dataType: "json", 
-                        url: "controllers/controllermemodetalleestado.php",
+                        url: "controllers/controllerusuariorol.php",
                     })
                     .done(function(data,textStatus,jqXHR ) {
                         if ( console && console.log ) {
@@ -244,16 +236,17 @@ $(document).ready(function(){
         getlista();
     });
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
-    function verMemoDetEst(action, memodetestid){
+    function verUsuRol(action, usurolid){
         deshabilitabotones();
-        var datay = {"memodetestId": memodetestid,
+        console.log('pase');
+        var datay = {"usuRolId": usurolid,
                      "Accion":"obtener"
                     };
         $.ajax({
             data: datay, 
             type: "POST",
             dataType: "json", 
-            url: "controllers/controllermemodetalleestado.php",
+            url: "controllers/controllerusuariorol.php",
         })
         .done(function(data,textStatus,jqXHR ) {
             if ( console && console.log ) {
@@ -262,9 +255,8 @@ $(document).ready(function(){
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
             }
-            $("#memodetestId").val(data.datos.memo_det_est_id);
-            $("#memodetestTipo").val(data.datos.memo_det_est_tipo);
-            $("#memodetPriori").val(data.datos.memo_det_priori);
+            $("#usuRolId").val(data.datos.usuario_rol_id);
+            $("#usuRolNom").val(data.datos.usuario_rol_nombre);
 
             deshabilitaform();
             $("#Accion").val(action);
@@ -272,13 +264,13 @@ $(document).ready(function(){
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
                 if (action === 'actualizar'){
-                    modal.find('.modal-title-form').text('Actualizar Memo Detalle Estado');
-                    $('#guardar-memodetest').hide();                    
-                    $('#actualizar-memodetest').show();   
+                    modal.find('.modal-title-form').text('Actualizar Usuario Rol');
+                    $('#guardar-usurol').hide();                    
+                    $('#actualizar-usurol').show();   
                 }else if (action === 'ver'){
-                    modal.find('.modal-title-form').text('Datos Memo Detalle Estado');
+                    modal.find('.modal-title-form').text('Datos Usuario Rol');
                     deshabilitabotones();
-                    $('#editar-memodetest').show();   
+                    $('#editar-usurol').show();   
                 }
 
             });
@@ -293,11 +285,11 @@ $(document).ready(function(){
         });
     }
     // Funcion que levanta modal para eliminar centro de costo 
-    function deleteMemoDetEst(idmemodetest, nameMemoDetEst){     
-        document.formDeleteMemoDetEst.memodetestId.value = idmemodetest;
-        document.formDeleteMemoDetEst.nameMemoDetEst.value = nameMemoDetEst;
-        document.formDeleteMemoDetEst.Accion.value = "eliminar";
+    function deleteUsuRol(idusurol, nameUsuRol){     
+        document.formDeleteUsuRol.usuRolId.value = idusurol;
+        document.formDeleteUsuRol.nameUsuRol.value = nameUsuRol;
+        document.formDeleteUsuRol.Accion.value = "eliminar";
         $('#myModalDelete').on('shown.bs.modal', function () {
             $('#myInput').focus()
         });
-    }      
+    }

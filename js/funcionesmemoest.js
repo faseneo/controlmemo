@@ -6,24 +6,34 @@
         function limpiaform(){
             $("#memoestId").val("");
             $("#memoestTipo").val("");
+			$("#memoPrioridad").val("");
         }        
         function habilitaform(){
             $("#memoestId").prop( "disabled", false );
             $("#memoestTipo").prop( "disabled", false );
+            $("#memoPrioridad").prop( "disabled", false );
         }
         function deshabilitaform(){
             $("#memoestId").prop( "disabled", true );
             $("#memoestTipo").prop( "disabled", true );
+            $("#memoPrioridad").prop( "disabled", true );
+
         }
     $(document).ready(function(){
         function validarFormulario(){
             var txtTipo = document.getElementById('memoestTipo').value;
+            var txtPriori = document.getElementById('memoPrioridad').value;
                 //Test campo obligatorio
                 if(txtTipo == null || txtTipo.length == 0 || /^\s+$/.test(txtTipo)){
                     alert('ERROR: El campo tipo no debe ir vacío o con espacios en blanco');
                     document.getElementById('memoestTipo').focus();
                     return false;
-                }               
+                } 
+                if(txtPriori == null || txtPriori.length == 0 || /^\s+$/.test(txtPriori)){
+                    alert('ERROR: El campo tipo no debe ir vacío o con espacios en blanco');
+                    document.getElementById('memoPrioridad').focus();
+                    return false;
+                }              
             return true;
         }         
         deshabilitabotones();
@@ -51,7 +61,7 @@
                                 console.log('id: '+data.datos[i].memo_est_id + ' tipo: '+data.datos[i].memo_est_tipo);
 
                                 fila = '<tr><td>'+ data.datos[i].memo_est_tipo +'</td>';
-                                //fila += '<td>'+ data.datos[i].ccosto_codigo +'</td>';
+                                fila += '<td>'+ data.datos[i].memo_priori +'</td>';
 
                                 fila += '<td><button id="ver-memoest" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
@@ -255,6 +265,7 @@
             }
             $("#memoestId").val(data.datos.memo_est_id);
             $("#memoestTipo").val(data.datos.memo_est_tipo);
+            $("#memoPrioridad").val(data.datos.memo_priori);
 
             deshabilitaform();
             $("#Accion").val(action);

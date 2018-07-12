@@ -21,13 +21,15 @@ class ModelMemoEst{
         try{
             $result = array();
             $stm = $this->pdo->prepare("SELECT  me.memo_estado_id,
-                                                me.memo_estado_tipo
+                                                me.memo_estado_tipo,
+						me.memo_prioridad
                                         FROM memo_estado as me");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new MemoEst();
                     $busq->__SET('memo_est_id', $r->memo_estado_id);
-                    $busq->__SET('memo_est_tipo', $r->memo_estado_tipo);                   
+                    $busq->__SET('memo_est_tipo', $r->memo_estado_tipo);
+		    $busq->__SET('memo_priori', $r->memo_prioridad);                   
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;
@@ -47,7 +49,8 @@ class ModelMemoEst{
         try{
             $stm = $this->pdo
                        ->prepare("SELECT me.memo_estado_id,
-                                         me.memo_estado_tipo
+                                         me.memo_estado_tipo,
+					 me.memo_prioridad
                                 FROM memo_estado as me
                                 WHERE me.memo_estado_id = ?");
             $stm->execute(array($id));
@@ -55,6 +58,7 @@ class ModelMemoEst{
             $busq = new MemoEst();
                     $busq->__SET('memo_est_id', $r->memo_estado_id);
                     $busq->__SET('memo_est_tipo', $r->memo_estado_tipo);
+		    $busq->__SET('memo_priori', $r->memo_prioridad);
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Se obtuvo memo estado correctamente';
@@ -87,10 +91,11 @@ class ModelMemoEst{
     public function Registrar(MemoEst $data){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO memo_estado (memo_estado_tipo) 
-                    VALUES (?)";
+            $sql = "INSERT INTO memo_estado (memo_estado_tipo, memo_prioridad) 
+                    VALUES (?,?)";
 
-            $this->pdo->prepare($sql)->execute(array($data->__GET('memo_est_tipo'))
+            $this->pdo->prepare($sql)->execute(array($data->__GET('memo_est_tipo'),
+	    					     $data->__GET('memo_priori'))
                                               );
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo estado ingresado correctamente'; 
@@ -109,12 +114,14 @@ class ModelMemoEst{
         //print_r($data);
         try{
             $sql = "UPDATE memo_estado SET 
-                           memo_estado_tipo = ?
+                           memo_estado_tipo = ?,
+			   memo_prioridad = ?
                     WHERE  memo_estado_id = ?";
 
             $this->pdo->prepare($sql)
                  ->execute(array($data->__GET('memo_est_tipo'),
-                                 $data->__GET('memo_est_id'))
+                                 $data->__GET('memo_est_id'),
+				 $data->__GET('memo_priori'))
                           );
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo estado actualizado correctamente';                 
@@ -131,13 +138,15 @@ class ModelMemoEst{
         try{
             $result = array();
              $stm = $this->pdo->prepare("SELECT  me.memo_estado_id,
-                                                 me.memo_estado_tipo
+                                                 me.memo_estado_tipo,
+						 me.memo_prioridad
                                         FROM memo_estado as me");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new MemoEst();
                     $busq->__SET('memo_est_id', $r->memo_estado_id);
                     $busq->__SET('memo_est_tipo', $r->memo_estado_tipo); 
+		    $busq->__SET('memo_priori', $r->memo_prioridad);
                 $result[] = $busq;
             }
             return $result;

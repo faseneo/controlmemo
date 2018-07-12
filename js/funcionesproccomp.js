@@ -6,26 +6,35 @@
     function limpiaform(){
         $("#proccompId").val("");
         $("#proccompTipo").val("");
+        $("#procPriori").val("");
     }        
     function habilitaform(){
         $("#proccompId").prop( "disabled", false );
         $("#proccompTipo").prop( "disabled", false );
+        $("#procPriori").prop( "disabled", false );
     }
     function deshabilitaform(){
         $("#proccompId").prop( "disabled", true );
         $("#proccompTipo").prop( "disabled", true );
+        $("#procPriori").prop( "disabled", true );
     }
 
     $(document).ready(function(){
         //funcion para validar campos del formulario
         function validarFormulario(){
             var txtTipo = document.getElementById('proccompTipo').value;
+            var txtPriori = document.getElementById('procPriori').value;
                 //Test campo obligatorio
                 if(txtTipo == null || txtTipo.length == 0 || /^\s+$/.test(txtTipo)){
                     alert('ERROR: El campo tipo no debe ir vacío o con espacios en blanco');
                     document.getElementById('proccompTipo').focus();
                     return false;
-                }             
+                }   
+                if(txtPriori == null || txtPriori.length == 0 || /^\s+$/.test(txtPriori)){
+                    alert('ERROR: El campo prioridad no debe ir vacío o con espacios en blanco');
+                    document.getElementById('procPriori').focus();
+                    return false;
+                }          
             return true;
         }         
         //funcion para listar los cecostos
@@ -52,7 +61,8 @@
                                 console.log('id: '+data.datos[i].proc_comp_id + ' tipo: '+data.datos[i].proc_comp_tipo);
 
                                 fila = '<tr><td>'+ data.datos[i].proc_comp_tipo +'</td>';
-                                //fila += '<td>'+ data.datos[i].ccosto_codigo +'</td>';
+                                fila += '<td>'+ data.datos[i].proc_priori +'</td>';
+
                                 fila += '<td><button id="ver-proccomp" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
                                 fila += ' onclick="verProcComp(\'ver\',\'' + data.datos[i].proc_comp_id + '\')">';
@@ -254,6 +264,7 @@
             }
             $("#proccompId").val(data.datos.proc_comp_id);
             $("#proccompTipo").val(data.datos.proc_comp_tipo);
+            $("#procPriori").val(data.datos.proc_priori);
 
             deshabilitaform();
             $("#Accion").val(action);
