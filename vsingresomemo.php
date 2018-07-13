@@ -11,6 +11,11 @@
             height: 30px;
         }
     </style>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();   
+        });
+    </script>    
 </head>
 <body> 
     <?php include "barranav.php"; ?>
@@ -87,7 +92,6 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>                        
-
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="memoDeptoDestinatario">Departamento o Unidad Destinatario</label>
@@ -97,90 +101,72 @@
                             </div>
                         </div>
                     </div>                    
-                    <!--<div class="row">
-                         <div class="col-md-6">
-                             <div class="form-group"> data-toggle="modal" data-target="#myModalDetalle"
-                                 <button type="submit" id="crea-detalle-memo" class="btn btn-primary" >Agregar detalle</button>
-                                 <div class="help-block with-errors"></div>
-                             </div>
-                         </div>
-                     </div>
-                     <div class="row">
-                         <div class="col-lg-12">
-                             <div class="table-responsive">
-                                 <table class="table table-striped">
-                                     <thead>
-                                         <tr>
-                                             <th width="40%">Descripción</th>
-                                             <th width="30%">Proveedor</th>
-                                             <th width="10%">N° Factura</th>
-                                             <th width="10%">Editar</th>
-                                             <th width="10%">Eliminar</th>
-                                         </tr>
-                                     </thead>
-                                     <tbody id="listaDetalleMemo">
-                                         <tr>
-                                             <td>&nbsp;</td>
-                                             <td>&nbsp;</td>
-                                             <td>&nbsp;</td>
-                                             <td>&nbsp;</td>
-                                             <td>&nbsp;</td>
-                                         </tr>
-                                     </tbody>
-                                 </table>
-                             </div>
-                         </div>
-                     </div>-->
                     <div class="row">
-                        <div class="col-lg-3">
-                            <label class="btn btn-success btn-sm" for="my-file-selector">
-                                <input id="my-file-selector" name="my-file-selector" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar archivo memo escaneado
-                            </label>
-                              <label>PDF, JPG, PNG, DOC, DOCX, XLS, XLSX</label>
-                            <span class='label label-info' id="upload-file-info"></span>
-                        </div>
-                        <div class="col-lg-9">
-                            <p id="archivoMemo"></p>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <label class="btn btn-primary btn-sm" for="my-filelist-selector">
-                                <input id="my-filelist-selector" name="my-filelist-selector" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar otros archivos Anexos
-                             </label><span class='label label-info' id="upload-filelist-info"></span> &nbsp; &nbsp;
-                             <button id="limpiar-archivo" type="button" class="btn btn-sm btn-default" data-dismiss="modal">Quitar Archivos</button>
-                        </div>
-                     </div>
-                    <div class="panel-group" id="accordion">
-                        <div class="panel panel-default" id="panel1">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-target="#collapseOne" href="#collapseOne">Collapsible Group Item #1</a>
-                                </h4>
-                            </div>
-                            <div id="collapseOne" class="panel-collapse collapse in">
-                                <div class="panel-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus VHS.
+                        <div class="col-md-12">
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a id="accord" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                            Agregar Archivos</a>
+                                            <a href="#" data-toggle="popover" title="Tipos de Archivos" data-content="pdf, jpg, png, doc, dox, xls, xlsx"><span class="glyphicon glyphicon-info-sign"></span></a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse1" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <label class="btn btn-success btn-sm" for="my-file-selector">
+                                                        <input id="my-file-selector" name="my-file-selector" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar archivo memo escaneado
+                                                    </label>
+                                                    <span class='label label-info' id="upload-file-info"></span>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <!-- <p id="archivoMemo"></p> -->
+                                                    <label class="btn btn-primary btn-sm" for="my-filelist-selector">
+                                                        <input id="my-filelist-selector" name="my-filelist-selector" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar otros archivos Anexos
+                                                    </label><span class='label label-info' id="upload-filelist-info"></span> &nbsp; &nbsp;
+                                                    <button id="limpiar-archivo" type="button" class="btn btn-sm btn-default" data-dismiss="modal">Quitar Archivos</button>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                   <div class="table-responsive">
+                                                       <table class="table table-striped">
+                                                           <thead>
+                                                               <tr>
+                                                                   <th width="80%">Nombre Archivo</th>
+                                                                   <th width="10%">Tamaño</th>
+                                                               </tr>
+                                                           </thead>
+                                                           <tbody id="listaArchivosMemo">
+                                                           </tbody>
+                                                       </table>
+                                                   </div>
+                                                </div>
+
+                                               <div class="col-lg-6">
+                                                   <div class="table-responsive">
+                                                       <table class="table table-striped">
+                                                           <thead>
+                                                               <tr>
+                                                                   <th width="80%">Nombre Archivo</th>
+                                                                   <th width="10%">Tamaño</th>
+                                                               </tr>
+                                                           </thead>
+                                                           <tbody id="listaArchivosMemo">
+                                                           </tbody>
+                                                       </table>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                             <div class="table-responsive">
-                                 <table class="table table-striped">
-                                     <thead>
-                                         <tr>
-                                             <th width="80%">Nombre Archivo</th>
-                                             <th width="10%">Tamaño</th>
-                                         </tr>
-                                     </thead>
-                                     <tbody id="listaArchivosMemo">
-                                     </tbody>
-                                 </table>
-                             </div>
-                         </div>
-                     </div>
+                    </div>                    
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">

@@ -12,3 +12,12 @@ select#detalleestadomemo{
 .textocol1{
 	padding: 6px 8px;
 }
+.panel-heading a#accord:after {
+    font-family:'Glyphicons Halflings';
+    content:"\e114";
+    float: right;
+    color: grey;
+}
+.panel-heading a#accord.collapsed:after {
+    content:"\e080";
+}
