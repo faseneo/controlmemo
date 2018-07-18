@@ -2,13 +2,22 @@
 //memo
 class Memos{
     private $mem_id;
+    private $mem_fecha;
     private $mem_numero;
     private $mem_fecha_recep;
-    private $mem_fecha;
-    private $mem_fecha_analista;
+    private $mem_anio;
+    /*private $mem_fecha_analista;*/
+    private $mem_materia;
 
-    private $mem_depto_id;
-    private $mem_ccosto_id;
+    private $mem_nom_sol;
+    private $mem_depto_sol_id;
+
+    private $mem_nom_dest;
+    private $mem_depto_dest_id;
+
+    private $mem_archivo_memo;
+    private $mem_archivo_lista;
+    
     private $mem_estado_id;
     private $mem_fecha_ingr;
 

@@ -116,16 +116,17 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-lg-6">
-                                                    <label class="btn btn-success btn-sm" for="my-file-selector">
-                                                        <input id="my-file-selector" name="my-file-selector" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar archivo memo escaneado
+                                                    <label class="btn btn-success btn-sm" for="memoFile">
+                                                        <input id="memoFile" name="memoFile" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar archivo memo escaneado
                                                     </label>
-                                                    <span class='label label-info' id="upload-file-info"></span>
+                                                    <span class='label label-info' id="memoFileInfo"></span> &nbsp; &nbsp;
+                                                     <button id="limpiar-archivo-memo" type="button" class="btn btn-sm btn-default" data-dismiss="modal">Quita Archivo Memo</button>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <!-- <p id="archivoMemo"></p> -->
-                                                    <label class="btn btn-primary btn-sm" for="my-filelist-selector">
-                                                        <input id="my-filelist-selector" name="my-filelist-selector" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar otros archivos Anexos
-                                                    </label><span class='label label-info' id="upload-filelist-info"></span> &nbsp; &nbsp;
+                                                    <label class="btn btn-primary btn-sm" for="memoFileList">
+                                                        <input id="memoFileList" name="memoFileList" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar otros archivos Anexos
+                                                    </label><span class='label label-info' id="memoFileListInfo"></span> &nbsp; &nbsp;
                                                     <button id="limpiar-archivo" type="button" class="btn btn-sm btn-default" data-dismiss="modal">Quitar Archivos</button>
                                                 </div>
                                             </div>
@@ -140,7 +141,7 @@
                                                                    <th width="10%">Tamaño</th>
                                                                </tr>
                                                            </thead>
-                                                           <tbody id="listaArchivosMemo">
+                                                           <tbody id="archivoMemo">
                                                            </tbody>
                                                        </table>
                                                    </div>

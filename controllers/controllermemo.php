@@ -14,7 +14,7 @@ if(isset($_REQUEST['AccionMemo'])){
     switch($_REQUEST['AccionMemo']){
 
         case 'actualizar':
-            $memo->__SET('mem_id',             $_REQUEST['memoId']);
+/*            $memo->__SET('mem_id',             $_REQUEST['memoId']);
             $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
             $memo->__SET('mem_fecha_recep',     $_REQUEST['memoFechaRecep']);
             $memo->__SET('mem_fecha',           $_REQUEST['memoFecha']);
@@ -23,14 +23,14 @@ if(isset($_REQUEST['AccionMemo'])){
             $memo->__SET('mem_depto_id',        $_REQUEST['memoDepto']);
             $memo->__SET('mem_ccosto_id',       $_REQUEST['memoCcosto']); //deberia serl id
             //$memo->__SET('memo_url',            $_REQUEST['memoCodigoCcosto']); 
-            $memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']);
+            $memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']);*/
             $jsondata = $modelMemo->Actualizar($memo);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);
             break;
 
         case 'registrar':
-            $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
+/*            $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
             $memo->__SET('mem_fecha_recep',     $_REQUEST['memoFechaRecep']);
             $memo->__SET('mem_fecha',           $_REQUEST['memoFecha']);
             $memo->__SET('mem_fecha_analista',  $_REQUEST['memoFechaAnalista']);
@@ -38,7 +38,7 @@ if(isset($_REQUEST['AccionMemo'])){
             $memo->__SET('mem_depto_id',        $_REQUEST['memoDepto']);
             $memo->__SET('mem_ccosto_id',       $_REQUEST['memoCcosto']); //deberia serl id
             //$memo->__SET('memo_url',            $_REQUEST['memoCodigoCcosto']); 
-            $memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']);
+            $memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']);*/
 
             $jsondata = $modelMemo->Registrar($memo);
             header('Content-type: application/json; charset=utf-8');
@@ -46,13 +46,13 @@ if(isset($_REQUEST['AccionMemo'])){
             break;
 
         case 'eliminar':
-            $jsondata = $modelMemo->Eliminar($_REQUEST['memoId']);
+/*            $jsondata = $modelMemo->Eliminar($_REQUEST['memoId']);*/
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
 
         case 'obtener':
-            $jsondata = $modelMemo->Obtener($_REQUEST['memoId']);
+/*            $jsondata = $modelMemo->Obtener($_REQUEST['memoId']);*/
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);            
             break;
@@ -63,7 +63,7 @@ if(isset($_REQUEST['AccionMemo'])){
             echo json_encode($jsondata);
             break;
 
-        case 'registrartmp':
+        /*case 'registrartmp':
             $memo->__SET('memo_numero',             $_REQUEST['memoNum']);
             $memo->__SET('memo_fecha_recepcion',    $_REQUEST['memoFechRec']);
             $memo->__SET('memo_fecha',              $_REQUEST['memoFecha']);
@@ -73,7 +73,7 @@ if(isset($_REQUEST['AccionMemo'])){
             $jsondata = $modelMemo->Registrar($memo);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
-            break;
+            break;*/
     }
 }
 ?>
