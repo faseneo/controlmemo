@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
                 <h1 class="text-center">Ingreso memo </h1>
-                <form id="formIngresoMemo" name="formIngresoMemo" method="POST" action="" role="form">
+                <form id="formIngresoMemo" name="formIngresoMemo" method="POST" action="" enctype="multipart/form-data" role="form">
                     <input type="hidden" name="memoId" id="memoId" value="" />
                     <input type="hidden" name="AccionMemo" id="AccionMemo" value="registrar" />
                     <div class="messages"></div>
@@ -69,16 +69,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="memoNombreSolicitante">Nombre Solicitante</label>
-                                <input name="memoNombreSolicitante" id="memoNombreSolicitante" type="text"  class="form-control" >
+                                <label for="memoNombreSol">Nombre Solicitante</label>
+                                <input name="memoNombreSol" id="memoNombreSol" type="text"  class="form-control" >
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>                        
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="memoDeptoSolicitante">Departamento o Unidad Solicitante</label>
-                                <select name="memoDeptoSolicitante" id="memoDeptoSolicitante" class="form-control" required>
+                                <label for="memoDeptoSol">Departamento o Unidad Solicitante</label>
+                                <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" required>
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -87,15 +87,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="memoNombreDestinatario">Nombre Destinatario</label>
-                                <input name="memoNombreDestinatario" id="memoNombreDestinatario" type="text"  class="form-control" value="Leonel Durán" >
+                                <label for="memoNombreDest">Nombre Destinatario</label>
+                                <input name="memoNombreDest" id="memoNombreDest" type="text"  class="form-control" value="Leonel Durán" >
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>                        
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="memoDeptoDestinatario">Departamento o Unidad Destinatario</label>
-                                <select name="memoDeptoDestinatario" id="memoDeptoDestinatario" class="form-control" required>
+                                <label for="memoDeptoDest">Departamento o Unidad Destinatario</label>
+                                <select name="memoDeptoDest" id="memoDeptoDest" class="form-control" required>
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -125,7 +125,7 @@
                                                 <div class="col-lg-6">
                                                     <!-- <p id="archivoMemo"></p> -->
                                                     <label class="btn btn-primary btn-sm" for="memoFileList">
-                                                        <input id="memoFileList" name="memoFileList" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar otros archivos Anexos
+                                                        <input id="memoFileList" name="memoFileList[]" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar otros archivos Anexos
                                                     </label><span class='label label-info' id="memoFileListInfo"></span> &nbsp; &nbsp;
                                                     <button id="limpiar-archivo" type="button" class="btn btn-sm btn-default" data-dismiss="modal">Quitar Archivos</button>
                                                 </div>
@@ -208,5 +208,22 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal --> 
+    <div class="modal fade" id="ModalCargando" tabindex="-1" role="dialog" aria-labelledby="ModalCargandoLabel">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Guardando Memo</h4>
+          </div>
+          <div class="modal-body">
+            <div class="loader"></div>
+            <!-- <p id="msg" class="msg"></p> -->
+          </div>
+          <div class="modal-footer">
+           <!--  <button type="button" id="cerrarModalCargando" class="btn btn-default" data-dismiss="modal">Cerrar</button> -->
+          </div>
+        </div>
+      </div>
+    </div>    
 </body>
 </html> 

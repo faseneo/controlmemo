@@ -177,10 +177,10 @@
                 var nombre = archivo[0].name;
                 var peso = returnFileSize(archivo[0].size);
                 //console.log(nombre );
-                var lista="<tr>";
-                    lista += "<td>"+nombre+"</td>";
-                    lista += "<td>"+peso+"</td>";
-                    lista += "</tr>";
+                var lista = `<tr>
+                                <td>${nombre}</td>
+                                <td>${peso}</td>
+                            </tr>`;
                 $("#archivoMemo").append(lista);
             }
         });
@@ -206,16 +206,25 @@
         //funcion que graba datos basicos del memo para adquisiciones, recibios por la DAF
         $("#grabar-memo").click(function(e){
             e.preventDefault();
-            var datax = $("#formIngresoMemo").serializeArray();
-                $.each(datax, function(i, field){
+                /*$.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
-                });
-
+                });*/
+                var $loader = $('.loader');
+                var formData = new FormData(document.getElementById("formIngresoMemo"));
                 $.ajax({
-                    data: datax, 
+                    data: formData, 
                     type: "POST",
                     dataType: "json", 
-                    url: "controllers/controllermemo.php", 
+                    url: "controllers/controllermemo.php",
+                    cache:false,
+                    contentType:false,
+                    processData:false,
+                    beforeSend: function(){
+                        $('#ModalCargando').modal('show');
+                        $('#ModalCargando').on('shown.bs.modal', function () {
+                            $loader.show();
+                        });
+                    }                    
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     if ( console && console.log ) {
