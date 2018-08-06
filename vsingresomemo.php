@@ -25,7 +25,7 @@
                 <h1 class="text-center">Ingreso memo </h1>
                 <form id="formIngresoMemo" name="formIngresoMemo" method="POST" action="" enctype="multipart/form-data" role="form">
                     <input type="hidden" name="memoId" id="memoId" value="" />
-                    <input type="hidden" name="AccionMemo" id="AccionMemo" value="registrar" />
+                    <input type="hidden" name="Accionmem" id="Accionmem" value="registrar" />
                     <div class="messages"></div>
                     <div class="row">
                         <div class="col-md-4">
@@ -109,7 +109,7 @@
                                         <h4 class="panel-title">
                                             <a id="accord" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
                                             Agregar Archivos</a>
-                                            <a href="#" data-toggle="popover" title="Tipos de Archivos" data-content="pdf, jpg, png, doc, dox, xls, xlsx"><span class="glyphicon glyphicon-info-sign"></span></a>
+                                            <a href="#" data-toggle="tooltip" title="pdf, jpg, png, doc, dox, xls, xlsx" data-content="pdf, jpg, png, doc, dox, xls, xlsx"><span class="glyphicon glyphicon-info-sign"></span></a>
                                         </h4>
                                     </div>
                                     <div id="collapse1" class="panel-collapse collapse">
@@ -213,11 +213,11 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Guardando Memo</h4>
+            <h4 class="modal-title"></h4>
           </div>
           <div class="modal-body">
             <div class="loader"></div>
-            <!-- <p id="msg" class="msg"></p> -->
+            <p id="msg" class="msg">Guardando Memo</p>
           </div>
           <div class="modal-footer">
            <!--  <button type="button" id="cerrarModalCargando" class="btn btn-default" data-dismiss="modal">Cerrar</button> -->

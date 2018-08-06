@@ -1,0 +1,5 @@
+PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'controlmemo.memo_archivo7' doesn't exist in C:\xampp\htdocs\controlmemo\modelo\memoarchivo\modelmemoarchivo.php:86
+Stack trace:
+#0 C:\xampp\htdocs\controlmemo\modelo\memoarchivo\modelmemoarchivo.php(86): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemoarchivo.php(32): ModelMemoArchivo->Eliminar('3')
+#2 {main}111errorerror

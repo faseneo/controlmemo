@@ -1,10 +1,14 @@
 <?php
 //memo_archivo
 class MemoArchivos{
-    private $memo_arch_id;
-    private $memo_arch_url;
-
-    private $memo_arch_memo_id;
+    private $memoarch_id;
+    private $memoarch_url;
+    private $memoarch_name;
+    private $memoarch_type;
+    private $memoarch_size;
+    private $memoarch_fecha_registro;
+    private $memoarch_flag;
+    private $memoarch_memo_id;
 
     public function __GET($k){
         return $this->$k;
@@ -15,7 +19,7 @@ class MemoArchivos{
     }
 
     public function returnArray(){
-    	return get_object_vars($this);
-    }    
+        return get_object_vars($this);
+    }
 }
 ?>

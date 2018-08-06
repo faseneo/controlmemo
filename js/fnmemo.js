@@ -17,15 +17,17 @@
         $('#formDetalleMemo')[0].reset();
         $('#memoDetDescripcion').focus();
     }
+
     function limpiaFormCompra(){
         $('#formDetalleCompra')[0].reset();
         $('#detCompraNombreProd').focus();        
     }
+
     function aniomemo(){
         var date = new Date(document.getElementById("memoFecha").value);
         var anio = date.getFullYear();
         var mes = date.getMonth() < 10 ? "0"+(parseInt(date.getMonth())+1) : parseInt(date.getMonth())+1;
-        var dia = date.getDate() < 10 ? "0"+ (parseInt(date.getDate())+1): parseInt(date.getDate())+1;
+        var dia = date.getDate() < 10 ? "0"+ (parseInt(date.getDate())+1) : parseInt(date.getDate())+1;
         var fechamin = anio + "-" + mes + "-" + dia;
         //console.log(fechamin);
         $('#memoAnio').val(anio);
@@ -46,11 +48,12 @@
                 alert('ERROR: El campo Rut no debe ir vacío o con espacios en blanco');
                 document.getElementById('provRut').focus();
                 return false;
-            }                
+            }
         return true;
     }
 
     $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip(); 
         //Funcion que lista los deptos
         var getlistaDepto = function (){
             var datax = {
@@ -63,24 +66,24 @@
                 url: "controllers/controllerdepartamento.php", 
             })
             .done(function( data, textStatus, jqXHR ) {
-                $("#memoDeptoSolicitante").html("");
+                $("#memoDeptoSol").html("");
+                $("#memoDeptoDest").html("");
                 if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
                         + " \n data msg deptos : "+ data.message 
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
-                $("#memoDeptoSolicitante").append('<option value="0">Seleccionar...</option>');
-                $("#memoDeptoDestinatario").append('<option value="0">Seleccionar...</option>');
+                $("#memoDeptoSol").append('<option value="0">Seleccionar...</option>');
+                $("#memoDeptoDest").append('<option value="0">Seleccionar...</option>');
                 for(var i=0; i<data.datos.length;i++){
                    // console.log('id: ' + data.datos[i].depto_id + ' nombre Depto: ' + data.datos[i].depto_nombre);
                     opcion = '<option value=' + data.datos[i].depto_id + '>' + data.datos[i].depto_nombre + '</option>';
-                    $("#memoDeptoSolicitante").append(opcion);
-
+                    $("#memoDeptoSol").append(opcion);
                     if(data.datos[i].depto_id==34){
                         opcion = '<option value=' + data.datos[i].depto_id + ' selected>' + data.datos[i].depto_nombre + '</option>';
                     }
-                    $("#memoDeptoDestinatario").append(opcion);
+                    $("#memoDeptoDest").append(opcion);
                 }
 
             })
@@ -127,7 +130,7 @@
                 }
             });
         }
-    
+
         $("#limpiar-memo").click(function(e){
             e.preventDefault();
             limpiaFormMemo();
@@ -166,6 +169,7 @@
                 return (number/1048576).toFixed(1) + 'MB';
             }
         }
+
         $("#memoFile").change(function() {
             $("#archivoMemo").html("");
             var archivos = document.getElementById("memoFile");//Creamos un objeto con el elemento que contiene los archivos: el campo input file, que tiene el id = 'archivos'
@@ -184,6 +188,7 @@
                 $("#archivoMemo").append(lista);
             }
         });
+
         $("#memoFileList").change(function() {
             $("#listaArchivosMemo").html("");
             var archivos = document.getElementById("memoFileList");//Creamos un objeto con el elemento que contiene los archivos: el campo input file, que tiene el id = 'archivos'
@@ -243,8 +248,6 @@
                             + " \n jqXHR.status : " + jqXHR.status );
                     }
                 });
-
-
         });
 
         // Funcion que busca numero de resolucion y devuelve url ubicacion

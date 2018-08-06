@@ -7,41 +7,40 @@ require_once '../modelo/memoarchivo/modelmemoarchivo.php';
 
 // Logica
 $memoArch = new MemoArchivos();
-$modelMemoArch = new ModelMemoArch();
+$modelMemoArch = new ModelMemoArchivo();
 
 if(isset($_REQUEST['Accion'])){
-
     switch($_REQUEST['Accion']){
-
-        case 'actualizar':
+        /*case 'actualizar':
             $memoArch->__SET('memo_arch_id',        $_REQUEST['memoarchId']);
             $memoArch->__SET('memo_arch_url',    $_REQUEST['memoarchUrl']);
             $jsondata = $modelMemoArch->Actualizar($memoArch);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);
             break;
-
-        case 'registrar':
+*/
+/*        case 'registrar':
             $memoArch->__SET('memo_arch_url',    $_REQUEST['memoarchUrl']);            
             $jsondata = $modelMemoArch->Registrar($memoArch);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
-            break;
+            break;*/
 
         case 'eliminar':
-            $jsondata = $modelMemoArch->Eliminar($_REQUEST['memoarchId']);
+            $jsondata = $modelMemoArch->Eliminar($_REQUEST['id']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
 
         case 'obtener':
-            $jsondata = $modelMemoArch->Obtener($_REQUEST['memoarchId']);
+            $jsondata = $modelMemoArch->Obtener($_REQUEST['id']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);            
             break;
             
         case 'listar':
-            $jsondata = $modelMemoArch->Listar();
+            $jsondata = $modelMemoArch->Listar(isset($_REQUEST['memoid'])?$_REQUEST['memoid']:null);
+            //$jsondata = '{"algo":"prueba"}';
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            

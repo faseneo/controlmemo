@@ -9,9 +9,9 @@ require_once '../modelo/memo/modelmemo.php';
 $memo = new Memos();
 $modelMemo = new ModelMemo();
 
-if(isset($_REQUEST['AccionMemo'])){
+if(isset($_REQUEST['Accionmem'])){
 
-    switch($_REQUEST['AccionMemo']){
+    switch($_REQUEST['Accionmem']){
 
         case 'actualizar':
             $memo->__SET('mem_id',              $_REQUEST['memoId']);
@@ -19,15 +19,13 @@ if(isset($_REQUEST['AccionMemo'])){
             $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
             $memo->__SET('mem_fecha_recep',     $_REQUEST['memoFechaRecep']);
             $memo->__SET('mem_anio',            $_REQUEST['memoAnio']);
-            $memo->__SET('mem_materia',         $_REQUEST['memoMateria']);
-            $memo->__SET('mem_nom_sol',         $_REQUEST['memoNombreSol']); 
+            $memo->__SET('mem_materia',         utf8_decode($_REQUEST['memoMateria']));
+            $memo->__SET('mem_nom_sol',         utf8_decode($_REQUEST['memoNombreSol'])); 
             $memo->__SET('mem_depto_sol_id',    $_REQUEST['memoDeptoSol']);
-            $memo->__SET('mem_nom_dest',        $_REQUEST['memoNombreDest']); 
+            $memo->__SET('mem_nom_dest',        utf8_decode($_REQUEST['memoNombreDest']));
             $memo->__SET('mem_depto_dest_id',   $_REQUEST['memoDeptoDest']);
-/*            $memo->__SET('mem_archivo_memo',    $_REQUEST['memoFile']); 
-            $memo->__SET('mem_archivo_lista',   $_REQUEST['memoFileList']);*/
-            $memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']); 
-/*            $memo->__SET('mem_fecha_ingr',      $_REQUEST['memoDeptoSol']);*/
+            $memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']);
+
             $jsondata = $modelMemo->Actualizar($memo,$_FILES);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);
@@ -38,15 +36,12 @@ if(isset($_REQUEST['AccionMemo'])){
             $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
             $memo->__SET('mem_fecha_recep',     $_REQUEST['memoFechaRecep']);
             $memo->__SET('mem_anio',            $_REQUEST['memoAnio']);
-            $memo->__SET('mem_materia',         $_REQUEST['memoMateria']);
-            $memo->__SET('mem_nom_sol',         $_REQUEST['memoNombreSol']); 
+            $memo->__SET('mem_materia',         utf8_decode($_REQUEST['memoMateria']));
+            $memo->__SET('mem_nom_sol',         utf8_decode($_REQUEST['memoNombreSol'])); 
             $memo->__SET('mem_depto_sol_id',    $_REQUEST['memoDeptoSol']);
-            $memo->__SET('mem_nom_dest',        $_REQUEST['memoNombreDest']); 
+            $memo->__SET('mem_nom_dest',        utf8_decode($_REQUEST['memoNombreDest']));
             $memo->__SET('mem_depto_dest_id',   $_REQUEST['memoDeptoDest']);
-/*            $memo->__SET('mem_archivo_memo',  $_REQUEST['memoFile']); 
-            $memo->__SET('mem_archivo_lista',   $_REQUEST['memoFileList']);*/
             $memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']); 
-/*            $memo->__SET('mem_fecha_ingr',    $_REQUEST['memoDeptoSol']);*/
 
             $jsondata = $modelMemo->Registrar($memo,$_FILES);
             header('Content-type: application/json; charset=utf-8');

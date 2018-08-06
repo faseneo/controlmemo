@@ -1,8 +1,11 @@
 <?php
+ini_set('display_errors', 1);
 error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
 require_once("../config/config.php");
+require_once('../modelo/memoarchivo/entidadmemoarchivo.php');
+require_once("../modelo/memoarchivo/modelmemoarchivo.php");
+
 class ModelMemo {
     private $pdo;
 
@@ -19,74 +22,90 @@ class ModelMemo {
     public function Listar(){
         $jsonresponse = array();
         try{
-            $result = array();
-            $stm = $this->pdo->prepare("SELECT  mm.memo_id,
-                                                mm.memo_num_memo,
-                                                mm.memo_fecha_recepcion,
-                                                mm.memo_fecha_memo,
-                                                mm.memo_fecha_entrega_analista,
-                                                mm.memo_depto_id,
-                                                mm.memo_cc_id,
-                                                mm.memo_memo_estado_id,
-                                                mm.memo_fecha_ingreso
-                                        FROM memo as mm");
-            $stm->execute();
-            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $busq = new Memos();
-                    $busq->__SET('mem_id', $r->memo_id);
-                    $busq->__SET('mem_numero', $r->memo_num_memo);
-                    $busq->__SET('mem_fecha_recep', $r->memo_fecha_recepcion);
-                    $busq->__SET('mem_fecha', $r->memo_fecha_memo);
-                    $busq->__SET('mem_fecha_analista', $r->memo_fecha_entrega_analista);  
-                    $busq->__SET('mem_depto_id', $r->memo_depto_id);
-                    $busq->__SET('mem_ccosto_id', $r->memo_cc_id);
-                    $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);
-                    $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
-                $result[] = $busq->returnArray();
+            $consulta = "SELECT COUNT(*) FROM memo";
+            $res = $this->pdo->query($consulta);
+            if ($res->fetchColumn() == 0) {
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Memo sin elementos';                
+                $jsonresponse['datos'] = [];
+            }else{
+              $result = array();
+              $stm = $this->pdo->prepare("SELECT * FROM memo");
+              $stm->execute();
+              foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                  $busq = new Memos();
+                      $busq->__SET('mem_id', $r->memo_id);
+                      $busq->__SET('mem_numero', $r->memo_num_memo);
+                      $busq->__SET('mem_anio', $r->memo_anio);
+                      $busq->__SET('mem_fecha', $r->memo_fecha_memo);
+                      $busq->__SET('mem_fecha_recep', $r->memo_fecha_recepcion);
+                      $busq->__SET('mem_materia', $r->memo_materia);
+                      $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
+                      $busq->__SET('mem_depto_sol_id', $r->memo_depto_solicitante_id);
+                      $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
+                      $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
+                      $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);
+                      $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
+                  $result[] = $busq->returnArray();
+              }
+              $jsonresponse['success'] = true;
+              $jsonresponse['message'] = 'listado correctamente los memos';
+              $jsonresponse['datos'] = $result;
+              $stm=null;
             }
-            $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'listado correctamente';
-            $jsonresponse['datos'] = $result;
-            return $jsonresponse;
-        }
-        catch(Exception $e){
+            $res=null;
+        }catch(Exception $e){
             //die($e->getMessage());
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al listar Memos';
         }
+        $this->pdo=null;
+        return $jsonresponse;
     }
 
     public function Obtener($id){
         $jsonresponse = array();
         try{
-            $stm = $this->pdo
-                       ->prepare("SELECT  mm.memo_id,
-                                          mm.memo_num_memo,
-                                          mm.memo_fecha_recepcion,
-                                          mm.memo_fecha_memo,
-                                          mm.memo_fecha_entrega_analista,
-                                          mm.memo_depto_id,
-                                          mm.memo_cc_id,
-                                          mm.memo_memo_estado_id,
-                                          mm.memo_fecha_ingreso
-                                FROM memo as mm
-                                WHERE mm.memo_id = ?");
-            $stm->execute(array($id));
-            $r = $stm->fetch(PDO::FETCH_OBJ);
-            $busq = new Memos();
-                    $busq->__SET('mem_id', $r->memo_id);
-                    $busq->__SET('mem_numero', $r->memo_num_memo);
-                    $busq->__SET('mem_fecha_recep', $r->memo_fecha_recepcion);
-                    $busq->__SET('mem_fecha', $r->memo_fecha_memo);
-                    $busq->__SET('mem_fecha_analista', $r->memo_fecha_entrega_analista);  
-                    $busq->__SET('mem_depto_id', $r->memo_depto_id);
-                    $busq->__SET('mem_ccosto_id', $r->memo_cc_id);
-                    $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);
-                    $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
-
-            $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Se obtuvo los memos correctamente';
-            $jsonresponse['datos'] = $busq->returnArray();
+          $consulta = "SELECT COUNT(*) FROM memo";
+            $res = $this->pdo->query($consulta);
+            if ($res->fetchColumn() == 0) {
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Memo sin elementos';
+                $jsonresponse['datos'] = [];
+            }else{
+              $stm = $this->pdo->prepare("SELECT  *
+                                          FROM memo as mm
+                                          WHERE mm.memo_id = ?");
+              $stm->execute(array($id));
+              $r = $stm->fetch(PDO::FETCH_OBJ);
+              if($r){
+                $busq = new Memos();
+                          $busq->__SET('mem_id', $r->memo_id);
+                          $busq->__SET('mem_numero', $r->memo_num_memo);
+                          $busq->__SET('mem_anio', $r->memo_anio);
+                          $busq->__SET('mem_fecha', $r->memo_fecha_memo);
+                          $busq->__SET('mem_fecha_recep', $r->memo_fecha_recepcion);
+                          $busq->__SET('mem_materia', $r->memo_materia);
+                          $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
+                          $busq->__SET('mem_depto_sol_id', $r->memo_depto_solicitante_id);
+                          $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
+                          $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
+                          $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);
+                          $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
+                          $modelMemoArch = new ModelMemoArchivo();
+                          $arrayfile = $modelMemoArch->listar($r->memo_id);
+                          $busq->__SET('mem_archivos', $arrayfile['datos']);
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Se obtuvo el memo correctamente';
+                $jsonresponse['datos'] = $busq->returnArray();
+              }else{
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'NO exite el memo';
+                $jsonresponse['datos'] = [];
+              }
+              $stm=null;
+            }
+            $res=null;
         } catch (Exception $e){
             //die($e->getMessage());
             $jsonresponse['success'] = false;
@@ -111,39 +130,49 @@ class ModelMemo {
         return $jsonresponse;
     }
 
-    public function Registrar(Memos $data){
-        if($data->__GET('mem_fecha_recep')=="" || $data->__GET('mem_fecha_recep')==NULL) 
+    public function Registrar(Memos $data, $files){
+      
+/*        if($data->__GET('mem_fecha_recep')=="" || $data->__GET('mem_fecha_recep')==NULL) 
           $fecharecep=null;
         else
           $fecharecep=$data->__GET('mem_fecha_recep');
         if($data->__GET('mem_fecha')=="" || $data->__GET('mem_fecha')==NULL) 
           $fechamemo=null;
         else
-          $fechamemo=$data->__GET('mem_fecha');
-        if($data->__GET('mem_fecha_analista')=="" || $data->__GET('mem_fecha_analista')==NULL) 
-          $fechaanalista=null;
-        else
-          $fechaanalista=$data->__GET('mem_fecha_analista');
-
+          $fechamemo=$data->__GET('mem_fecha');*/
+      try{
         $jsonresponse = array();
-        try{
+        
             $sql = "INSERT INTO memo (memo_num_memo,
-                                      memo_fecha_recepcion,
+                                      memo_anio,
                                       memo_fecha_memo,
-                                      memo_fecha_entrega_analista,
-                                      memo_depto_id,
-                                      memo_cc_id,
+                                      memo_fecha_recepcion,
+                                      memo_materia,
+                                      memo_nombre_solicitante,
+                                      memo_depto_solicitante_id,
+                                      memo_nombre_destinatario,
+                                      memo_depto_destinatario_id,
                                       memo_memo_estado_id) 
-                    VALUES (?,?,?,?,?,?,?)";
+                    VALUES (?,?,?,?,?,?,?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('mem_numero'),
-                                                     $fecharecep,
-                                                     $fechamemo,
-                                                     $fechaanalista,
-                                                     $data->__GET('mem_depto_id'),
-                                                     $data->__GET('mem_ccosto_id'),
-                                                     $data->__GET('mem_estado_id'))
-                                              );
+                                                     $data->__GET('mem_anio'),
+                                                     $data->__GET('mem_fecha'),
+                                                     $data->__GET('mem_fecha_recep'),
+                                                     $data->__GET('mem_materia'),
+                                                     $data->__GET('mem_nom_sol'),
+                                                     $data->__GET('mem_depto_sol_id'),
+                                                     $data->__GET('mem_nom_dest'),
+                                                     $data->__GET('mem_depto_dest_id'),
+                                                     $data->__GET('mem_estado_id')
+                                              ));
+            var_dump($files);
+            $idmemo = $this->pdo->lastInsertId(); 
+            $modelMemoArch = new ModelMemoArchivo();
+            $arrayfile = $modelMemoArch->Registrar($files,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
+
+
+
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo ingresado correctamente'; 
         } catch (PDOException $pdoException){
