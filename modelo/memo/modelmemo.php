@@ -3,24 +3,30 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 require_once("../config/config.php");
+require_once("../modelo/conexion/conexion.php");
+
 require_once('../modelo/memoarchivo/entidadmemoarchivo.php');
 require_once("../modelo/memoarchivo/modelmemoarchivo.php");
+require_once("../modelo/logs/modelologs.php");
 
-class ModelMemo {
+class ModelMemo  {
     private $pdo;
+    public $jsonresponse = array();
 
     public function __CONSTRUCT(){
         try{
-            $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USERDB, PASSDB);
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);                
-        }
-        catch(Exception $e){
-            die($e->getMessage());
+          $conexion = new Conexion();
+            $this->pdo = $conexion->connect();
+        }catch(Exception $e){
+            $logs = new modelologs();
+            $trace=$e->getTraceAsString();
+              $logs->GrabarLogs($e->getMessage(),$trace);
+              $logs = null;
+              return null;
         }
     }
 
     public function Listar(){
-        $jsonresponse = array();
         try{
             $consulta = "SELECT COUNT(*) FROM memo";
             $res = $this->pdo->query($consulta);
@@ -54,17 +60,22 @@ class ModelMemo {
               $stm=null;
             }
             $res=null;
-        }catch(Exception $e){
-            //die($e->getMessage());
+        } catch (PDOException $pdoException){
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al listar Memos';
+            //$jsonresponse['errorQuery'] = $pdoException->getMessage();
+            $logs = new modelologs();
+            $trace=$pdoException->getTraceAsString();
+              $logs->GrabarLogs($pdoException->getMessage(),$trace);
+              $logs = null;
+        }finally {
+          $this->pdo=null;  
         }
-        $this->pdo=null;
+        
         return $jsonresponse;
     }
 
     public function Obtener($id){
-        $jsonresponse = array();
         try{
           $consulta = "SELECT COUNT(*) FROM memo";
             $res = $this->pdo->query($consulta);
@@ -107,15 +118,18 @@ class ModelMemo {
             }
             $res=null;
         } catch (Exception $e){
-            //die($e->getMessage());
             $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al obtener memos';             
+            $jsonresponse['message'] = 'Error al obtener memos';
+            $logs = new modelologs();
+            $trace=$pdoException->getTraceAsString();
+              $logs->GrabarLogs($pdoException->getMessage(),$trace);
+              $logs = null;
         }
+        $this->pdo=null;
         return $jsonresponse;
     }
 
-    public function Eliminar($id){
-        $jsonresponse = array();
+    /* public function Eliminar($id){
         try{
             $stm = $this->pdo->prepare("DELETE FROM memo WHERE memo_id = ? ");
             $stm->execute(array($id));
@@ -129,10 +143,10 @@ class ModelMemo {
         }
         return $jsonresponse;
     }
-
+    */
     public function Registrar(Memos $data, $files){
-      
-/*        if($data->__GET('mem_fecha_recep')=="" || $data->__GET('mem_fecha_recep')==NULL) 
+      //var_dump($data);
+        /*if($data->__GET('mem_fecha_recep')=="" || $data->__GET('mem_fecha_recep')==NULL) 
           $fecharecep=null;
         else
           $fecharecep=$data->__GET('mem_fecha_recep');
@@ -140,9 +154,8 @@ class ModelMemo {
           $fechamemo=null;
         else
           $fechamemo=$data->__GET('mem_fecha');*/
+          //exit(1);
       try{
-        $jsonresponse = array();
-        
             $sql = "INSERT INTO memo (memo_num_memo,
                                       memo_anio,
                                       memo_fecha_memo,
@@ -166,12 +179,11 @@ class ModelMemo {
                                                      $data->__GET('mem_depto_dest_id'),
                                                      $data->__GET('mem_estado_id')
                                               ));
-            var_dump($files);
-            $idmemo = $this->pdo->lastInsertId(); 
+            //var_dump($files);
+            /*$idmemo = $this->pdo->lastInsertId(); 
             $modelMemoArch = new ModelMemoArchivo();
             $arrayfile = $modelMemoArch->Registrar($files,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
-
-
+*/
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo ingresado correctamente'; 
@@ -183,9 +195,8 @@ class ModelMemo {
         }
         return $jsonresponse;
     }
-
+/*
     public function Actualizar(Memos $data){
-        $jsonresponse = array();
         //print_r($data);
         try{
             $sql = "UPDATE memo SET 
@@ -216,10 +227,9 @@ class ModelMemo {
             $jsonresponse['message'] = 'Error al actualizar memo';             
         }
         return $jsonresponse;
-    }
+    }*/
 
-    public function Listar2(){
-        $jsonresponse = array();
+  /*  public function Listar2(){
         try{
             $result = array();
              $stm = $this->pdo->prepare("SELECT   mm.memo_id,
@@ -251,7 +261,7 @@ class ModelMemo {
         catch(Exception $e){
             die($e->getMessage());
         }
-    }
+    }*/
 
 
 }

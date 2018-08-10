@@ -1,0 +1,22 @@
+fecha:09-08-2018(16:10:55) 
+metodo:Conexion 
+msg:SQLSTATE[HY000] [1044] Access denied for user ''@'localhost' to database 'controlmemo' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\conexion\conexion.php(15): PDO->__construct('mysql:host=loca...', 'roots', '', Array)
+#1 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(21): Conexion->connect()
+#2 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(10): ModelMemo->__CONSTRUCT()
+#3 {main} 
+fecha:09-08-2018(16:15:51) 
+metodo:Conexion 
+msg:SQLSTATE[HY000] [1044] Access denied for user ''@'localhost' to database 'controlmemo' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\conexion\conexion.php(15): PDO->__construct('mysql:host=loca...', 'roots', '', Array)
+#1 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(21): Conexion->connect()
+#2 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(10): ModelMemo->__CONSTRUCT()
+#3 {main} 
+fecha:09-08-2018(16:16:10) 
+metodo:Conexion 
+msg:SQLSTATE[HY000] [1044] Access denied for user ''@'localhost' to database 'controlmemo' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\conexion\conexion.php(15): PDO->__construct('mysql:host=loca...', 'roots', '', Array)
+#1 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(21): Conexion->connect()
+#2 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(10): ModelMemo->__CONSTRUCT()
+#3 {main} 
+

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
@@ -13,7 +13,7 @@ if(isset($_REQUEST['Accionmem'])){
 
     switch($_REQUEST['Accionmem']){
 
-        case 'actualizar':
+        /*case 'actualizar':
             $memo->__SET('mem_id',              $_REQUEST['memoId']);
             $memo->__SET('mem_fecha',           $_REQUEST['memoFecha']);
             $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
@@ -29,17 +29,17 @@ if(isset($_REQUEST['Accionmem'])){
             $jsondata = $modelMemo->Actualizar($memo,$_FILES);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);
-            break;
+            break;*/
 
         case 'registrar':
             $memo->__SET('mem_fecha',           $_REQUEST['memoFecha']);
             $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
             $memo->__SET('mem_fecha_recep',     $_REQUEST['memoFechaRecep']);
             $memo->__SET('mem_anio',            $_REQUEST['memoAnio']);
-            $memo->__SET('mem_materia',         utf8_decode($_REQUEST['memoMateria']));
-            $memo->__SET('mem_nom_sol',         utf8_decode($_REQUEST['memoNombreSol'])); 
+            $memo->__SET('mem_materia',         $_REQUEST['memoMateria']);
+            $memo->__SET('mem_nom_sol',         $_REQUEST['memoNombreSol']); 
             $memo->__SET('mem_depto_sol_id',    $_REQUEST['memoDeptoSol']);
-            $memo->__SET('mem_nom_dest',        utf8_decode($_REQUEST['memoNombreDest']));
+            $memo->__SET('mem_nom_dest',        $_REQUEST['memoNombreDest']);
             $memo->__SET('mem_depto_dest_id',   $_REQUEST['memoDeptoDest']);
             $memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']); 
 
@@ -47,12 +47,12 @@ if(isset($_REQUEST['Accionmem'])){
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
-
+        /*
         case 'eliminar':
             $jsondata = $modelMemo->Eliminar($_REQUEST['memoId']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
-            break;
+            break;*/
 
         case 'obtener':
             $jsondata = $modelMemo->Obtener($_REQUEST['memoId']);

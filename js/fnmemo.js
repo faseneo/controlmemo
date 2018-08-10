@@ -211,11 +211,16 @@
         //funcion que graba datos basicos del memo para adquisiciones, recibios por la DAF
         $("#grabar-memo").click(function(e){
             e.preventDefault();
-                /*$.each(datax, function(i, field){
+             var datax = $("#formIngresoMemo").serializeArray();
+                $.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
-                });*/
+                });
                 var $loader = $('.loader');
                 var formData = new FormData(document.getElementById("formIngresoMemo"));
+
+                var x = document.getElementById("formIngresoMemo").acceptCharset;
+                console.log("charset : " + x);
+
                 $.ajax({
                     data: formData, 
                     type: "POST",
@@ -238,6 +243,17 @@
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
                     }
+
+                    $('#ModalCargando').modal('hide');
+                    $('#ModalCargando').on('hidden.bs.modal', function () {
+                        $('#myModalLittle').modal('show');
+                        $('#myModalLittle').on('shown.bs.modal', function () {
+                            var modal2 = $(this);
+                            modal2.find('.modal-title').text('Mensaje');
+                            modal2.find('.msg').text(data.message);
+                            $('#cerrarModalLittle').focus();
+                        });
+                    });
 
                 })
                 .fail(function( jqXHR, textStatus, errorThrown ) {
