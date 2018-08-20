@@ -36,17 +36,68 @@
     }
 
     function validarFormulario(){
-        var txtNombre = document.getElementById('provNombre').value;
-        var txtRut = document.getElementById('provRut').value;
+        var txtMemFecha = document.getElementById('memoFecha').value;
+        var txtMemNum = document.getElementById('memoNum').value;
+        var txtMemAnio = document.getElementById("memoAnio").value;
+        var txtMemFechaRec = document.getElementById('memoFechaRecep').value;
+        var txtMemMat = document.getElementById('memoMateria').value;
+        var txtMemNomSol = document.getElementById('memoNombreSol').value;
+        var selMemDptoSol = document.getElementById('memoDeptoSol').selectedIndex;
+        var txtMemNomDest = document.getElementById('memoNombreDest').value;
+        var selMemDptoDest = document.getElementById('memoDeptoDest').selectedIndex;
+        var selMemEst = document.getElementById('memoEstado').selectedIndex;
+
             //Test campo obligatorio
-            if(txtNombre == null || txtNombre.length == 0 || /^\s+$/.test(txtNombre)){
-                alert('ERROR: El campo nombre no debe ir vacío o con espacios en blanco');
-                document.getElementById('provNombre').focus();
+            if(txtMemFecha == null || txtMemFecha.length == 0 || /^\s+$/.test(txtMemFecha)){
+                alert('ERROR: El campo Fecha no debe ir vacío o con espacios en blanco');
+                document.getElementById('memoFecha').focus();
                 return false;
             }
-            if(txtRut == null || txtRut.length == 0 || /^\s+$/.test(txtRut)){
-                alert('ERROR: El campo Rut no debe ir vacío o con espacios en blanco');
-                document.getElementById('provRut').focus();
+            if(txtMemNum == null || txtMemNum.length == 0 || /^\s+$/.test(txtMemNum)){
+                alert('ERROR: El campo Numero Memo no debe ir vacío o con espacios en blanco');
+                document.getElementById('memoNum').focus();
+                return false;
+            }
+            if( isNaN(txtMemAnio) ) {
+                alert('ERROR: El campo Año no debe ir vacío o con espacios en blanco');
+                document.getElementById('memoAnio').focus();                
+                return false;
+            }
+            if(txtMemFechaRec == null || txtMemFechaRec.length == 0 || /^\s+$/.test(txtMemFechaRec)){
+                alert('ERROR: El campo Fecha Recepción no debe ir vacío o con espacios en blanco');
+                document.getElementById('memoFechaRecep').focus();
+                return false;
+            }
+            if(txtMemMat == null || txtMemMat.length == 0 || /^\s+$/.test(txtMemMat)){
+                alert('ERROR: El campo Materia no debe ir vacío o con espacios en blanco');
+                document.getElementById('memoMateria').focus();
+                return false;
+            }
+            if(txtMemNomSol == null || txtMemNomSol.length == 0 || /^\s+$/.test(txtMemNomSol)){
+                alert('ERROR: El campo Nombre Solicitante no debe ir vacío o con espacios en blanco');
+                document.getElementById('memoNombreSol').focus();
+                return false;
+            }
+
+            if( selMemDptoSol == null || selMemDptoSol == 0 ) {
+                alert('ERROR: Debe seleccionar un Departamento o Unidad Solicitante');
+                document.getElementById('memoDeptoSol').focus();                
+                return false;
+            }
+
+           if(txtMemNomDest == null || txtMemNomDest.length == 0 || /^\s+$/.test(txtMemNomDest)){
+                alert('ERROR: El campo Nombre Destinatario no debe ir vacío o con espacios en blanco');
+                document.getElementById('memoNombreDest').focus();
+                return false;
+            }
+            if( selMemDptoDest == null || selMemDptoDest == 0 ) {
+                alert('ERROR: Debe seleccionar un Departamento o Unidad Destinatario');
+                document.getElementById('memoDeptoDest').focus();                
+                return false;
+            }
+            if( selMemEst == null || selMemEst == 0 ) {
+                alert('ERROR: El campo Estado no debe ir vacío o con espacios en blanco');
+                document.getElementById('memoEstado').focus();                
                 return false;
             }
         return true;
@@ -211,10 +262,11 @@
         //funcion que graba datos basicos del memo para adquisiciones, recibios por la DAF
         $("#grabar-memo").click(function(e){
             e.preventDefault();
-             var datax = $("#formIngresoMemo").serializeArray();
-                $.each(datax, function(i, field){
+            if(validarFormulario()==true){
+                //var datax = $("#formIngresoMemo").serializeArray();
+                /*$.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
-                });
+                });*/
                 var $loader = $('.loader');
                 var formData = new FormData(document.getElementById("formIngresoMemo"));
 
@@ -243,7 +295,6 @@
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
                     }
-
                     $('#ModalCargando').modal('hide');
                     $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
@@ -264,15 +315,16 @@
                             + " \n jqXHR.status : " + jqXHR.status );
                     }
                 });
+            }
         });
 
         // Funcion que busca numero de resolucion y devuelve url ubicacion
-/*        var buscaRes = function (){
+        /*var buscaRes = function (){
             var datax = $("#formBusquedaRes").serializeArray();
                 /*$.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
                 });*/
-/*                $.ajax({
+                /*$.ajax({
                     data: datax, 
                     type: "POST",
                     dataType: "json", 
@@ -333,7 +385,7 @@
 
         //si tiene numero memo Levanta modal nuevo detalle memo y graba el memo
         //$("#crea-detalle-memo").click(function(e){
- /*       $("#formIngresoMemo").on('submit',function(e){
+        /*$("#formIngresoMemo").on('submit',function(e){
             e.preventDefault();
                 var datax = $("#formIngresoMemo").serializeArray();
                 $.each(datax, function(i, field){
@@ -400,7 +452,7 @@
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
                     }
-                    graba=false;
+                    graba=fals;e
                     console.log("valor graba en el fail : "+ graba);
                 });
             }

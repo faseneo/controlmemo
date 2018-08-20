@@ -34,8 +34,8 @@ if(isset($_REQUEST['Accionmem'])){
         case 'registrar':
             $memo->__SET('mem_fecha',           $_REQUEST['memoFecha']);
             $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
-            $memo->__SET('mem_fecha_recep',     $_REQUEST['memoFechaRecep']);
             $memo->__SET('mem_anio',            $_REQUEST['memoAnio']);
+            $memo->__SET('mem_fecha_recep',     $_REQUEST['memoFechaRecep']);
             $memo->__SET('mem_materia',         $_REQUEST['memoMateria']);
             $memo->__SET('mem_nom_sol',         $_REQUEST['memoNombreSol']); 
             $memo->__SET('mem_depto_sol_id',    $_REQUEST['memoDeptoSol']);
@@ -47,6 +47,7 @@ if(isset($_REQUEST['Accionmem'])){
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
+            
         /*
         case 'eliminar':
             $jsondata = $modelMemo->Eliminar($_REQUEST['memoId']);

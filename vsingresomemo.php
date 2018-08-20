@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
                 <h1 class="text-center">Ingreso memo </h1>
-                <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" role="form" accept-charset="utf-8" action="recibe.php">
+                <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" role="form" accept-charset="utf-8" >
                     <input type="hidden" name="memoId" id="memoId" value="" />
                     <input type="hidden" name="Accionmem" id="Accionmem" value="registrar" />
                     <div class="messages"></div>
@@ -181,7 +181,6 @@
                             <button id="editar-memo" name="editar-memo" type="button" class="btn btn-warning">Editar</button>
                             <button id="actualizar-memo" name="actualizar-memo" type="button" class="btn btn-primary">Actualizar</button>
                             <button id="grabar-memo" name="grabar-memo" type="button" class="btn btn-primary">Grabar</button>
-                            <input type="submit" name="enviar" value="Enviar"> 
                             <button id="limpiar-memo" type="button" class="btn btn-default" data-dismiss="modal">Limpiar</button>
                             <button id="cancelar-memo" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                             <div class="help-block with-errors"></div>
