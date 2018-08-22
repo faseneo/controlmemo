@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
                 <h1 class="text-center">Ingreso memo </h1>
-                <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" role="form" accept-charset="utf-8" >
+                <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" accept-charset="utf-8" role="form" data-toggle="validator" >
                     <input type="hidden" name="memoId" id="memoId" value="" />
                     <input type="hidden" name="Accionmem" id="Accionmem" value="registrar" />
                     <div class="messages"></div>
@@ -31,8 +31,9 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="memoFecha">Fecha memo</label>
-                                <input name="memoFecha" id="memoFecha" type="date" class="form-control" required onchange="aniomemo();">
-                                <div class="help-block with-errors"></div>
+                                <input name="memoFecha" id="memoFecha" type="date" class="form-control" required onchange="aniomemo();" >
+                                <!-- <span class="glyphicon form-control-feedback" aria-hidden="true"></span> -->
+                                <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -70,7 +71,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="memoNombreSol">Nombre Solicitante</label>
-                                <input name="memoNombreSol" id="memoNombreSol" type="text"  class="form-control" >
+                                <input name="memoNombreSol" id="memoNombreSol" type="text"  class="form-control">
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>                        

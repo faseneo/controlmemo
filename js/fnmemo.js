@@ -24,12 +24,17 @@
     }
 
     function aniomemo(){
-        var date = new Date(document.getElementById("memoFecha").value);
+        var fecha = document.getElementById("memoFecha").value;
+        var date = new Date(fecha.replace(/-+/g, '/'));
+
+        console.log('fecha : ' + date);
+
         var anio = date.getFullYear();
-        var mes = date.getMonth() < 10 ? "0"+(parseInt(date.getMonth())+1) : parseInt(date.getMonth())+1;
-        var dia = date.getDate() < 10 ? "0"+ (parseInt(date.getDate())+1) : parseInt(date.getDate())+1;
+        var mes = date.getMonth() < 9 ? "0"+(parseInt(date.getMonth())+1) : parseInt(date.getMonth())+1;
+        console.log('dia: '+ date.getDate());
+        var dia = date.getDate() < 9 ? "0"+ (parseInt(date.getDate())+1) : parseInt(date.getDate())+1;
         var fechamin = anio + "-" + mes + "-" + dia;
-        //console.log(fechamin);
+        console.log(fechamin);
         $('#memoAnio').val(anio);
         $('#memoFechaRecep').attr('min', fechamin);
         $('#memoFechaRecep').val(fechamin);
@@ -49,16 +54,21 @@
 
             //Test campo obligatorio
             if(txtMemFecha == null || txtMemFecha.length == 0 || /^\s+$/.test(txtMemFecha)){
-                alert('ERROR: El campo Fecha no debe ir vacío o con espacios en blanco');
+                //alert('ERROR: El campo Fecha no debe ir vacío o con espacios en blanco');
+                $('#memoFecha').parent().attr('class','form-group has-error');
+                $('#memoFecha').parent().children('span').text('Debe ingresar fecha').show();
                 document.getElementById('memoFecha').focus();
                 return false;
+            }else{
+                $('#memoFecha').parent().attr('class','form-group has-success');
+                $('#memoFecha').parent().children('span').text('').hide();
             }
             if(txtMemNum == null || txtMemNum.length == 0 || /^\s+$/.test(txtMemNum)){
                 alert('ERROR: El campo Numero Memo no debe ir vacío o con espacios en blanco');
                 document.getElementById('memoNum').focus();
                 return false;
             }
-            if( isNaN(txtMemAnio) ) {
+            if( txtMemAnio == null || txtMemAnio.length == 0 || isNaN(txtMemAnio) ) {
                 alert('ERROR: El campo Año no debe ir vacío o con espacios en blanco');
                 document.getElementById('memoAnio').focus();                
                 return false;
@@ -104,6 +114,11 @@
     }
 
     $(document).ready(function(){
+        function inicio(){
+            $(".help-block").hide();
+        }
+        inicio();
+
         $('[data-toggle="tooltip"]').tooltip(); 
         //Funcion que lista los deptos
         var getlistaDepto = function (){
@@ -273,7 +288,7 @@
                 var x = document.getElementById("formIngresoMemo").acceptCharset;
                 console.log("charset : " + x);
 
-                $.ajax({
+                /*$.ajax({
                     data: formData, 
                     type: "POST",
                     dataType: "json", 
@@ -314,7 +329,7 @@
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
                     }
-                });
+                });*/
             }
         });
 
