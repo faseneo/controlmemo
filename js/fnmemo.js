@@ -53,6 +53,8 @@
         var selMemEst = document.getElementById('memoEstado').selectedIndex;
 
             //Test campo obligatorio
+            //pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+            //
             if(txtMemFecha == null || txtMemFecha.length == 0 || /^\s+$/.test(txtMemFecha)){
                 //alert('ERROR: El campo Fecha no debe ir vacío o con espacios en blanco');
                 $('#memoFecha').parent().attr('class','form-group has-error');
@@ -112,12 +114,40 @@
             }
         return true;
     }
-
+    function nombre_valido(valor,caso) {
+        switch(caso) {
+            case 'txt':
+                var reg = /^([a-z ñáéíóú]{2,60})$/i;        
+                break;
+            case 'txtnum':
+                var reg = /1^\s+$/;
+                break;
+            case 'num':
+                var reg = /^([1-9]{2,60})$/i;
+                break;
+        }
+        //var reg = /^([a-z ñáéíóú]{2,60})$/i;
+        if (reg.test(valor)) 
+            return true;
+        else 
+            return false;
+    }
     $(document).ready(function(){
         function inicio(){
             $(".help-block").hide();
         }
         inicio();
+        $("#memoMateria").focusout(function () {
+            if (!nombre_valido($(this).val(),'txtnum')) {
+                //$(".error.nombre").show();
+                $('#memoMateria').parent().attr('class','form-group has-error');
+                $('#memoMateria').parent().children('span').text('Debe ingresar texto valido').show();            
+            }else {
+                //$(".error.nombre").hide();
+                $('#memoMateria').parent().attr('class','form-group has-success');
+                $('#memoMateria').parent().children('span').text('').hide();
+            }
+        });
 
         $('[data-toggle="tooltip"]').tooltip(); 
         //Funcion que lista los deptos
@@ -211,13 +241,6 @@
             $('#memoFileList').val(null);
             $("#listaArchivosMemo").html("");
         });        
-
-        /* $("#limpiar-busca_res").click(function(e){
-            e.preventDefault();
-            $('#formBusquedaRes')[0].reset();
-            $('#msgres').html("");
-            $('#buscaNumRes').focus();
-        });*/
 
         deshabilitabotones();
         getlistaDepto();

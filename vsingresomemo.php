@@ -40,21 +40,21 @@
                             <div class="form-group">
                                 <label class="control-label" for="memoNum">Número Memo</label>
                                 <input name="memoNum" id="memoNum" type="text"  class="form-control" maxlength="5" required>
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-1">
                             <div class="form-group">
                                 <label class="control-label" for="memoAnio">Año</label>
                                 <input name="memoAnio" id="memoAnio" type="text"  class="form-control textocol1" maxlength="5"  readonly="">
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="memoFechaRecep">Fecha recepción memo</label>
                                 <input name="memoFechaRecep" id="memoFechaRecep" type="date" class="form-control" required>
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block"></span>
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                             <div class="form-group">
                                 <label for="memoMateria">Asunto o Materia</label>
                                 <textarea name="memoMateria" id="memoMateria" class="form-control"></textarea>
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block"></span>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                             <div class="form-group">
                                 <label for="memoNombreSol">Nombre Solicitante</label>
                                 <input name="memoNombreSol" id="memoNombreSol" type="text"  class="form-control">
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block"></span>
                             </div>
                         </div>                        
 
@@ -81,7 +81,7 @@
                                 <label for="memoDeptoSol">Departamento o Unidad Solicitante</label>
                                 <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" required>
                                 </select>
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block"></span>
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                             <div class="form-group">
                                 <label for="memoNombreDest">Nombre Destinatario</label>
                                 <input name="memoNombreDest" id="memoNombreDest" type="text"  class="form-control" value="Leonel Durán" >
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block"></span>
                             </div>
                         </div>                        
                         <div class="col-md-6">
@@ -98,7 +98,7 @@
                                 <label for="memoDeptoDest">Departamento o Unidad Destinatario</label>
                                 <select name="memoDeptoDest" id="memoDeptoDest" class="form-control" required>
                                 </select>
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block"></span>
                             </div>
                         </div>
                     </div>                    
@@ -175,7 +175,7 @@
                                 <label for="memoEstado">Estado</label>
                                 <select name="memoEstado" id="memoEstado" class="form-control">
                                 </select>
-                                <div class="help-block with-errors"></div>
+                                <span class="help-block"></span>
                             </div>
                         </div>
                         <div class="col-md-4 col-md-offset-4">
