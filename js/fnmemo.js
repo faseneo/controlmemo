@@ -77,10 +77,6 @@
             }
             // valida numero del memo
             if(txtMemNum == null || txtMemNum.length == 0 || /^\s+$/.test(txtMemNum)){
-                ///alert('ERROR: El campo Numero Memo no debe ir vacío o con espacios en blanco');
-                //document.getElementById('memoNum').focus();
-                //return false;
-
                 $('#memoNum').parent().attr('class','form-group has-error');
                 $('#memoNum').parent().children('span').text('El campo Numero Memo no debe ir vacío o con espacios en blanco').show();
                 document.getElementById('memoNum').focus();
@@ -90,7 +86,7 @@
                 $('#memoNum').parent().children('span').text('').hide();
                 //document.getElementById('memoNum').focus();
             }
-            //valida año ingreos memo
+            //valida año ingreso memo
             if( txtMemAnio == null || txtMemAnio.length == 0 || isNaN(txtMemAnio) ) {
                 alert('ERROR: El campo Año no debe ir vacío o con espacios en blanco');
                 document.getElementById('memoAnio').focus();                
@@ -157,36 +153,17 @@
             }
         return true;
     }
-    function nombre_valido(valor,caso) {
-        switch(caso) {
-            case 'txt':
-                var reg = /^([a-z ñáéíóú]{2,60})$/i;        
-                break;
-            case 'txtnum':
-                var reg = /^\s+$/;
-                break;
-            case 'num':
-                var reg = /^([1-9]{2,60})$/i;
-                break;
-        }
-        //var reg = /^([a-z ñáéíóú]{2,60})$/i;
-        if (reg.test(valor)) 
-            return true;
-        else 
-            return false;
-    }
+    
     $(document).ready(function(){
         function inicio(){
             $(".help-block").hide();
         }
         inicio();
         $("#memoMateria").focusout(function () {
-            if (!nombre_valido($(this).val(),'txtnum')) {
-                //$(".error.nombre").show();
+            if ( $(this).val() == null || $(this).val().length == 0 || /^\s+$/.test($(this).val())) {
                 $('#memoMateria').parent().attr('class','form-group has-error');
                 $('#memoMateria').parent().children('span').text('Debe ingresar texto valido').show();            
             }else {
-                //$(".error.nombre").hide();
                 $('#memoMateria').parent().attr('class','form-group has-success');
                 $('#memoMateria').parent().children('span').text('').hide();
             }
