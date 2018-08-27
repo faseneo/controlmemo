@@ -25,23 +25,21 @@
 
     function aniomemo(){
         var fecha = document.getElementById("memoFecha").value;
-        var date = new Date(fecha.replace(/-+/g, '/'));
-
-        console.log('fecha : ' + date);
+        var date = new Date(fecha.replace(/-+/g, '/')); 
 
         var anio = date.getFullYear();
         var mes = date.getMonth() < 9 ? "0"+(parseInt(date.getMonth())+1) : parseInt(date.getMonth())+1;
-        console.log('dia: '+ date.getDate());
-        var dia = date.getDate() < 9 ? "0"+ (parseInt(date.getDate())+1) : parseInt(date.getDate())+1;
+        var dia = date.getDate() < 9 ? "0"+ (parseInt(date.getDate())) : parseInt(date.getDate());
         var fechamin = anio + "-" + mes + "-" + dia;
-        console.log(fechamin);
+
         $('#memoAnio').val(anio);
         $('#memoFechaRecep').attr('min', fechamin);
         $('#memoFechaRecep').val(fechamin);
     }
-
+   
     function validarFormulario(){
         var txtMemFecha = document.getElementById('memoFecha').value;
+        console.log('fecha de input : '+txtMemFecha);
         var txtMemNum = document.getElementById('memoNum').value;
         var txtMemAnio = document.getElementById("memoAnio").value;
         var txtMemFechaRec = document.getElementById('memoFechaRecep').value;
@@ -53,32 +51,77 @@
         var selMemEst = document.getElementById('memoEstado').selectedIndex;
 
             //Test campo obligatorio
-            //pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-            //
+            //valida fecha ingreso memo
             if(txtMemFecha == null || txtMemFecha.length == 0 || /^\s+$/.test(txtMemFecha)){
-                //alert('ERROR: El campo Fecha no debe ir vacío o con espacios en blanco');
                 $('#memoFecha').parent().attr('class','form-group has-error');
                 $('#memoFecha').parent().children('span').text('Debe ingresar fecha').show();
                 document.getElementById('memoFecha').focus();
                 return false;
             }else{
-                $('#memoFecha').parent().attr('class','form-group has-success');
-                $('#memoFecha').parent().children('span').text('').hide();
+                if( validarFormatoFecha(txtMemFecha)){
+                    if(existeFecha(txtMemFecha)){
+                        $('#memoFecha').parent().attr('class','form-group has-success');
+                        $('#memoFecha').parent().children('span').text('').hide();
+                    }else{
+                        $('#memoFecha').parent().attr('class','form-group has-error');
+                        $('#memoFecha').parent().children('span').text('La fecha introducida no es valida.').show();
+                        document.getElementById('memoFecha').focus();
+                        return false;
+                    }
+                }else{
+                    $('#memoFecha').parent().attr('class','form-group has-error');
+                    $('#memoFecha').parent().children('span').text('El formato de la fecha es incorrecto.').show();
+                    document.getElementById('memoFecha').focus();
+                    return false;                
+                }
             }
+            // valida numero del memo
             if(txtMemNum == null || txtMemNum.length == 0 || /^\s+$/.test(txtMemNum)){
-                alert('ERROR: El campo Numero Memo no debe ir vacío o con espacios en blanco');
+                ///alert('ERROR: El campo Numero Memo no debe ir vacío o con espacios en blanco');
+                //document.getElementById('memoNum').focus();
+                //return false;
+
+                $('#memoNum').parent().attr('class','form-group has-error');
+                $('#memoNum').parent().children('span').text('El campo Numero Memo no debe ir vacío o con espacios en blanco').show();
                 document.getElementById('memoNum').focus();
-                return false;
+                return false;                
+            }else{
+                $('#memoNum').parent().attr('class','form-group has-success');
+                $('#memoNum').parent().children('span').text('').hide();
+                //document.getElementById('memoNum').focus();
             }
+            //valida año ingreos memo
             if( txtMemAnio == null || txtMemAnio.length == 0 || isNaN(txtMemAnio) ) {
                 alert('ERROR: El campo Año no debe ir vacío o con espacios en blanco');
                 document.getElementById('memoAnio').focus();                
                 return false;
+            }else{
+                $('#txtMemAnio').parent().attr('class','form-group has-success');
+                $('#txtMemAnio').parent().children('span').text('').hide();
             }
+
             if(txtMemFechaRec == null || txtMemFechaRec.length == 0 || /^\s+$/.test(txtMemFechaRec)){
-                alert('ERROR: El campo Fecha Recepción no debe ir vacío o con espacios en blanco');
+                $('#memoFechaRecep').parent().attr('class','form-group has-error');
+                $('#memoFechaRecep').parent().children('span').text('Debe ingresar fecha').show();
                 document.getElementById('memoFechaRecep').focus();
                 return false;
+            }else{
+                if( validarFormatoFecha(txtMemFechaRec)){
+                    if(existeFecha(txtMemFechaRec)){
+                        $('#memoFechaRecep').parent().attr('class','form-group has-success');
+                        $('#memoFechaRecep').parent().children('span').text('').hide();
+                    }else{
+                        $('#memoFechaRecep').parent().attr('class','form-group has-error');
+                        $('#memoFechaRecep').parent().children('span').text('La fecha introducida no es valida.').show();
+                        document.getElementById('memoFechaRecep').focus();
+                        return false;
+                    }
+                }else{
+                    $('#memoFechaRecep').parent().attr('class','form-group has-error');
+                    $('#memoFechaRecep').parent().children('span').text('El formato de la fecha es incorrecto.').show();
+                    document.getElementById('memoFechaRecep').focus();
+                    return false;                
+                }
             }
             if(txtMemMat == null || txtMemMat.length == 0 || /^\s+$/.test(txtMemMat)){
                 alert('ERROR: El campo Materia no debe ir vacío o con espacios en blanco');
@@ -120,7 +163,7 @@
                 var reg = /^([a-z ñáéíóú]{2,60})$/i;        
                 break;
             case 'txtnum':
-                var reg = /1^\s+$/;
+                var reg = /^\s+$/;
                 break;
             case 'num':
                 var reg = /^([1-9]{2,60})$/i;
