@@ -32,6 +32,16 @@ if(isset($_REQUEST['Accionmem'])){
             break;*/
 
         case 'registrar':
+              //var_dump($data);
+                /*if($data->__GET('mem_fecha_recep')=="" || $data->__GET('mem_fecha_recep')==NULL) 
+                  $fecharecep=null;
+                else
+                  $fecharecep=$data->__GET('mem_fecha_recep');
+                if($data->__GET('mem_fecha')=="" || $data->__GET('mem_fecha')==NULL) 
+                  $fechamemo=null;
+                else
+                  $fechamemo=$data->__GET('mem_fecha');*/
+                  //exit(1);        
             $memo->__SET('mem_fecha',           $_REQUEST['memoFecha']);
             $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
             $memo->__SET('mem_anio',            $_REQUEST['memoAnio']);

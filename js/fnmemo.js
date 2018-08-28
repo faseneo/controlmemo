@@ -51,7 +51,7 @@
         var selMemEst = document.getElementById('memoEstado').selectedIndex;
 
             //Test campo obligatorio
-            //valida fecha ingreso memo
+            //valida FECHA INGRESO MEMO
             if(txtMemFecha == null || txtMemFecha.length == 0 || /^\s+$/.test(txtMemFecha)){
                 $('#memoFecha').parent().attr('class','form-group has-error');
                 $('#memoFecha').parent().children('span').text('Debe ingresar fecha').show();
@@ -75,7 +75,7 @@
                     return false;                
                 }
             }
-            // valida numero del memo
+            // valida NUMERO DEL MEMO
             if(txtMemNum == null || txtMemNum.length == 0 || /^\s+$/.test(txtMemNum)){
                 $('#memoNum').parent().attr('class','form-group has-error');
                 $('#memoNum').parent().children('span').text('El campo Numero Memo no debe ir vacío o con espacios en blanco').show();
@@ -86,16 +86,17 @@
                 $('#memoNum').parent().children('span').text('').hide();
                 //document.getElementById('memoNum').focus();
             }
-            //valida año ingreso memo
+            //valida AÑO INGRESO MEMO
             if( txtMemAnio == null || txtMemAnio.length == 0 || isNaN(txtMemAnio) ) {
-                alert('ERROR: El campo Año no debe ir vacío o con espacios en blanco');
-                document.getElementById('memoAnio').focus();                
-                return false;
+                $('#memoAnio').parent().attr('class','form-group has-error');
+                $('#memoAnio').parent().children('span').text('El campo Año no debe ir vacío o con espacios en blanco').show();
+                //document.getElementById('memoAnio').focus();
+                return false;                
             }else{
-                $('#txtMemAnio').parent().attr('class','form-group has-success');
-                $('#txtMemAnio').parent().children('span').text('').hide();
+                $('#memoAnio').parent().attr('class','form-group has-success');
+                $('#memoAnio').parent().children('span').text('').hide();
             }
-
+            // valida FECHA RECEPCION MEMO
             if(txtMemFechaRec == null || txtMemFechaRec.length == 0 || /^\s+$/.test(txtMemFechaRec)){
                 $('#memoFechaRecep').parent().attr('class','form-group has-error');
                 $('#memoFechaRecep').parent().children('span').text('Debe ingresar fecha').show();
@@ -119,37 +120,65 @@
                     return false;                
                 }
             }
+            // valida MATERIA
             if(txtMemMat == null || txtMemMat.length == 0 || /^\s+$/.test(txtMemMat)){
-                alert('ERROR: El campo Materia no debe ir vacío o con espacios en blanco');
+                $('#memoMateria').parent().attr('class','form-group has-error');
+                $('#memoMateria').parent().children('span').text('El campo Materia no debe ir vacío o con espacios en blanco').show();
                 document.getElementById('memoMateria').focus();
                 return false;
+            }else{
+                $('#memoMateria').parent().attr('class','form-group has-success');
+                $('#memoMateria').parent().children('span').text('').hide();                
             }
+            //valida NOMBRE SOLICITANTE
             if(txtMemNomSol == null || txtMemNomSol.length == 0 || /^\s+$/.test(txtMemNomSol)){
-                alert('ERROR: El campo Nombre Solicitante no debe ir vacío o con espacios en blanco');
+                $('#memoNombreSol').parent().attr('class','form-group has-error');
+                $('#memoNombreSol').parent().children('span').text('El campo Nombre Solicitante no debe ir vacío o con espacios en blanco').show();
                 document.getElementById('memoNombreSol').focus();
                 return false;
+            }else{
+                $('#memoNombreSol').parent().attr('class','form-group has-success');
+                $('#memoNombreSol').parent().children('span').text('').hide();
             }
-
-            if( selMemDptoSol == null || selMemDptoSol == 0 ) {
-                alert('ERROR: Debe seleccionar un Departamento o Unidad Solicitante');
-                document.getElementById('memoDeptoSol').focus();                
-                return false;
+            //valida DEPARTAMENTO SOLICITANTE
+            if( selMemDptoSol == null || isNaN(selMemDptoSol) || selMemDptoSol == -1 ) {
+                $('#memoDeptoSol').parent().attr('class','form-group has-error');
+                $('#memoDeptoSol').parent().children('span').text('Debe seleccionar un Departamento o Unidad Solicitante').show();
+                document.getElementById('memoDeptoSol').focus();
+                return false;                
+            }else{
+                $('#memoDeptoSol').parent().attr('class','form-group has-success');
+                $('#memoDeptoSol').parent().children('span').text('').hide();
             }
-
-           if(txtMemNomDest == null || txtMemNomDest.length == 0 || /^\s+$/.test(txtMemNomDest)){
-                alert('ERROR: El campo Nombre Destinatario no debe ir vacío o con espacios en blanco');
+            //valida NOMBRE DESTINATARIO
+            if(txtMemNomDest == null || txtMemNomDest.length == 0 || /^\s+$/.test(txtMemNomDest)){
+                $('#memoNombreDest').parent().attr('class','form-group has-error');
+                $('#memoNombreDest').parent().children('span').text('El campo Nombre Destinatario no debe ir vacío o con espacios en blanco').show();
                 document.getElementById('memoNombreDest').focus();
-                return false;
+                return false;                
+            }else{
+                $('#memoNombreDest').parent().attr('class','form-group has-success');
+                $('#memoNombreDest').parent().children('span').text('').hide();
             }
-            if( selMemDptoDest == null || selMemDptoDest == 0 ) {
-                alert('ERROR: Debe seleccionar un Departamento o Unidad Destinatario');
-                document.getElementById('memoDeptoDest').focus();                
-                return false;
+            //valida DEPARTAMENTO DESTINATARIO
+            if( selMemDptoDest == null || isNaN(selMemDptoDest) || selMemDptoDest == -1 ) {
+                $('#memoDeptoDest').parent().attr('class','form-group has-error');
+                $('#memoDeptoDest').parent().children('span').text('Debe seleccionar un Departamento o Unidad Destinatario').show();
+                document.getElementById('memoDeptoDest').focus();
+                return false; 
+            }else{
+                $('#memoDeptoDest').parent().attr('class','form-group has-success');
+                $('#memoDeptoDest').parent().children('span').text('').hide();
             }
-            if( selMemEst == null || selMemEst == 0 ) {
-                alert('ERROR: El campo Estado no debe ir vacío o con espacios en blanco');
-                document.getElementById('memoEstado').focus();                
-                return false;
+            //valida ESTADO
+            if( selMemEst == null || isNaN(selMemEst) || selMemEst == -1 ) {
+                $('#memoEstado').parent().attr('class','form-group has-error');
+                $('#memoEstado').parent().children('span').text('El campo Estado no debe ir vacío o con espacios en blanco').show();
+                document.getElementById('memoEstado').focus();
+                return false;                 
+            }else{
+                $('#memoEstado').parent().attr('class','form-group has-success');
+                $('#memoEstado').parent().children('span').text('').hide();
             }
         return true;
     }
@@ -158,7 +187,7 @@
         function inicio(){
             $(".help-block").hide();
         }
-        inicio();
+        
         $("#memoMateria").focusout(function () {
             if ( $(this).val() == null || $(this).val().length == 0 || /^\s+$/.test($(this).val())) {
                 $('#memoMateria').parent().attr('class','form-group has-error');
@@ -168,8 +197,16 @@
                 $('#memoMateria').parent().children('span').text('').hide();
             }
         });
+        
+        inicio();
+        deshabilitabotones();
+        getlistaDepto();
+        getlistaEstadosMemo();
+        $('#grabar-memo').show();
+        $('#agregar-det-memo').show();
+        $('#agregar-det-memo-compra').show();
+        $('[data-toggle="tooltip"]').tooltip();
 
-        $('[data-toggle="tooltip"]').tooltip(); 
         //Funcion que lista los deptos
         var getlistaDepto = function (){
             var datax = {
@@ -261,13 +298,6 @@
             $('#memoFileList').val(null);
             $("#listaArchivosMemo").html("");
         });        
-
-        deshabilitabotones();
-        getlistaDepto();
-        getlistaEstadosMemo();
-        $('#grabar-memo').show();
-        $('#agregar-det-memo').show();
-        $('#agregar-det-memo-compra').show();
 
         function returnFileSize(number) {
             if(number < 1024) {

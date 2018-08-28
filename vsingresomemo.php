@@ -125,7 +125,6 @@
                                                      <button id="limpiar-archivo-memo" type="button" class="btn btn-sm btn-default" data-dismiss="modal">Quita Archivo Memo</button>
                                                 </div>
                                                 <div class="col-lg-6">
-                                                    <!-- <p id="archivoMemo"></p> -->
                                                     <label class="btn btn-primary btn-sm" for="memoFileList">
                                                         <input id="memoFileList" name="memoFileList[]" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx, .xls, .xlsx" multiple style="display:none">Agregar otros archivos Anexos
                                                     </label><span class='label label-info' id="memoFileListInfo"></span> &nbsp; &nbsp;
