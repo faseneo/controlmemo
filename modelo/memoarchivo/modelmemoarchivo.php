@@ -19,7 +19,7 @@ class ModelMemoArchivo {
     public function Listar($idmemo=NULL){
         $jsonresponse = array();
         try{
-         $consulta = "SELECT COUNT(*) FROM memo";
+        $consulta = "SELECT COUNT(*) FROM memo";
             $res = $this->pdo->query($consulta);
             if ($res->fetchColumn() == 0) {
                 $jsonresponse['success'] = true;

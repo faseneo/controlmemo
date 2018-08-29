@@ -4,7 +4,7 @@
     <?php include "header.php"; ?>
     <title>Ingreso memo</title>
     <script src="js/fnmemo.js"></script>
-    <script src="js/funcionesglobal.js"></script>
+    <script src="js/globalfn.js"></script>
     <style type="text/css">
         .alert {
             margin:5px;

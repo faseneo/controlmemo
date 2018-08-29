@@ -159,7 +159,7 @@ class ModelMemo  {
                                       memo_memo_estado_id) 
                     VALUES (?,?,?,?,?,?,?,?,?,?)";
 
-            $this->pdo->prepare($sql)->execute(array($data->__GET('mem_numero'),
+            /*$this->pdo->prepare($sql)->execute(array($data->__GET('mem_numero'),
                                                      $data->__GET('mem_anio'),
                                                      $data->__GET('mem_fecha'),
                                                      $data->__GET('mem_fecha_recep'),
@@ -169,12 +169,13 @@ class ModelMemo  {
                                                      $data->__GET('mem_nom_dest'),
                                                      $data->__GET('mem_depto_dest_id'),
                                                      $data->__GET('mem_estado_id')
-                                              ));
-            //var_dump($files);
-            /*$idmemo = $this->pdo->lastInsertId(); 
+                                              ));*/
+            var_dump($files);
+            //$idmemo = $this->pdo->lastInsertId(); 
+            $idmemo = 1;
             $modelMemoArch = new ModelMemoArchivo();
             $arrayfile = $modelMemoArch->Registrar($files,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
-*/
+
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo ingresado correctamente'; 
