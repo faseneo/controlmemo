@@ -29,7 +29,7 @@
 
         var anio = date.getFullYear();
         var mes = date.getMonth() < 9 ? "0"+(parseInt(date.getMonth())+1) : parseInt(date.getMonth())+1;
-        var dia = date.getDate() < 9 ? "0"+ (parseInt(date.getDate())) : parseInt(date.getDate());
+        var dia = date.getDate() < 10 ? "0"+ (parseInt(date.getDate())) : parseInt(date.getDate());
         var fechamin = anio + "-" + mes + "-" + dia;
 
         $('#memoAnio').val(anio);

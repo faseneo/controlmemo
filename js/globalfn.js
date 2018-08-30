@@ -1,8 +1,5 @@
     function validarFormatoFecha(campo) {
-        //console.log(campo);
         var date = campo.replace(/-+/g, '/'); 
-
-        //console.log('formato ' + date);
         var RegExPattern = /^\d{2,4}\/\d{1,2}\/\d{1,2}$/;
         if ((date.match(RegExPattern)) && (date!='')) {
             return true;
@@ -10,13 +7,13 @@
             return false;
         }
     }
+
     function existeFecha(fecha){
         var fechaf = fecha.split("-");
         var day = fechaf[2];
         var month = fechaf[1];
         var year = fechaf[0];
         var date = new Date(year,month,'0');
-        //console.log("existe : "+ date);
         if(year<1995) 
         	return false;
         if((day-0)>(date.getDate()-0)){
@@ -64,11 +61,9 @@
 
     function validaselectonline(param){
 		if( param.val() == null || param.val() == "" || param.val() < 0 ) { //isNaN(param.val())
-			console.log('paso error');
 			param.parent().attr('class','form-group has-error');
 			param.parent().children('span').text('Debe selecionar una opcion').show();
 		}else{
-			console.log('paso correcto');
 			param.parent().attr('class','form-group has-success');
 			param.parent().children('span').text('').hide();
 		}
