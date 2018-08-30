@@ -32,7 +32,7 @@ if(isset($_REQUEST['Accionmem'])){
             break;*/
 
         case 'registrar':
-              //var_dump($data);
+            //CODIGO TEMPORAL DONDE DEBERIA VALIDAR FECHA (NO SIRVE AUN)
                 /*if($data->__GET('mem_fecha_recep')=="" || $data->__GET('mem_fecha_recep')==NULL) 
                   $fecharecep=null;
                 else
@@ -41,7 +41,8 @@ if(isset($_REQUEST['Accionmem'])){
                   $fechamemo=null;
                 else
                   $fechamemo=$data->__GET('mem_fecha');*/
-                  //exit(1);        
+                  //exit(1);     
+                     
             $memo->__SET('mem_fecha',           $_REQUEST['memoFecha']);
             $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
             $memo->__SET('mem_anio',            $_REQUEST['memoAnio']);

@@ -407,7 +407,7 @@
                             $('#cerrarModalLittle').focus();
                         });
                     });
-
+                    limpiaFormMemo();
                 })
                 .fail(function( jqXHR, textStatus, errorThrown ) {
                     if ( console && console.log ) {

@@ -12,9 +12,9 @@
 			<ul class="nav navbar-nav">
 				<li class="active"><a href="/controlmemo/">Inicio</a></li>
 				<li><a href="vistabuscador2.php">Buscador</a></li>
-				<li><a href="vsingresomemo.php">Ingreso1</a></li>
-				<li><a href="vistaingmemo2.php">Ingreso2</a></li>
-				<li><a href="vistalistadomemo.php">Listado</a></li>
+				<li><a href="vsingresomemo.php">Ingreso Memo</a></li>
+				<!-- <li><a href="vistaingmemo2.php">Ingreso2</a></li> -->
+				<li><a href="vslistadomemos.php">Listado</a></li>
 				<li><a href="vistaresumenpend.php">Resumen pendientes</a></li>
 				<li><a href="vistacambiocontr.php">Cambiar contraseña</a></li>
 				<li class="dropdown">

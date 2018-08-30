@@ -145,7 +145,6 @@ class ModelMemo  {
     }
     */
     public function Registrar(Memos $data, $files){
-
       try{
             $sql = "INSERT INTO memo (memo_num_memo,
                                       memo_anio,
@@ -159,7 +158,7 @@ class ModelMemo  {
                                       memo_memo_estado_id) 
                     VALUES (?,?,?,?,?,?,?,?,?,?)";
 
-            /*$this->pdo->prepare($sql)->execute(array($data->__GET('mem_numero'),
+            $this->pdo->prepare($sql)->execute(array($data->__GET('mem_numero'),
                                                      $data->__GET('mem_anio'),
                                                      $data->__GET('mem_fecha'),
                                                      $data->__GET('mem_fecha_recep'),
@@ -169,16 +168,15 @@ class ModelMemo  {
                                                      $data->__GET('mem_nom_dest'),
                                                      $data->__GET('mem_depto_dest_id'),
                                                      $data->__GET('mem_estado_id')
-                                              ));*/
-            var_dump($files);
-            //$idmemo = $this->pdo->lastInsertId(); 
-            $idmemo = 1;
+                                              ));
+            $idmemo = $this->pdo->lastInsertId(); 
+
             $modelMemoArch = new ModelMemoArchivo();
             $arrayfile = $modelMemoArch->Registrar($files,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
 
-
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo ingresado correctamente'; 
+            $jsonresponse['messagefile'] = $arrayfile;
         } catch (PDOException $pdoException){
         //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
             $jsonresponse['success'] = false;
@@ -187,7 +185,7 @@ class ModelMemo  {
         }
         return $jsonresponse;
     }
-/*
+    /*
     public function Actualizar(Memos $data){
         //print_r($data);
         try{
@@ -221,7 +219,7 @@ class ModelMemo  {
         return $jsonresponse;
     }*/
 
-  /*  public function Listar2(){
+  /* public function Listar2(){
         try{
             $result = array();
              $stm = $this->pdo->prepare("SELECT   mm.memo_id,
@@ -254,9 +252,6 @@ class ModelMemo  {
             die($e->getMessage());
         }
     }*/
-
-
 }
-
 ?>
 

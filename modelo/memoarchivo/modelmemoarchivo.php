@@ -107,110 +107,119 @@ class ModelMemoArchivo {
         return $jsonresponse;
     }
     // ingreso del archio viene desde el modelmemo, 
-    /*
-    INSERT INTO `memo_archivo` (`memo_archivo_id`, `memo_archivo_url`, `memo_archivo_name`, `memo_archivo_type`, `memo_archivo_size`, `memo_archivo_fecha_registro`, `memo_archivo_principal_flag`, `memo_archivo_memo_id`) 
-    VALUES (NULL, 'archivos/memo23_otro.pdf', 'cotizacion_memo23.pdf', 'pdf', '230', CURRENT_TIMESTAMP, '0', '1');
-    */
     public function Registrar($files,$idmemo,$nummemmo,$aniomemo){
         $archivos = array();
-       /* var_dump(empty($files['memoFile']));
-        echo "<br>";        
-        var_dump($nombrearch);
-        echo "<br>";        
-        var_dump($urlarchivo);
-        echo "<br>";                
-        var_dump(RAIZ);
-        echo "<br>";        
-        var_dump(memoarch_directorio);
-        echo "<br>";
-        var_dump(memoarch_prefijo);
-        echo "<br>";*/
-        if(empty($files['memoFile'])){
-            $nombrearch = explode(".",$files['memoFile']['name']);
-            $largo = count($nombrearch)-1;
+        $jsonresponse = array();
+        try{
+            //graba archivo escaneado del memo
+            if(!empty($files['memoFile']['name'])){
+                $nombrearch = explode(".",$files['memoFile']['name']);
+                
+               // $arrayresponsesube = $this->subearchivo($nombrearch,$idmemo,$nummemmo,$aniomemo);
 
-            $urlarchivo = RAIZ.memoarch_directorio.memoarch_prefijo.$aniomemo.'_'.$nummemmo.'.'.$nombrearch[$largo];            
-            $data = new MemoArchivos();
-                $data->__SET('memoarch_url', $urlarchivo);
-                $data->__SET('memoarch_name',$files['memoFile']['name']);
-                $data->__SET('memoarch_type', $files['memoFile']['type']);
-                $data->__SET('memoarch_size', $files['memoFile']['size']);
-                $data->__SET('memoarch_flag', 1);
-                $data->__SET('memoarch_memo_id', $idmemo);
-                var_dump($data);
-            $dir=opendir(RAIZ.memoarch_directorio);  //Abre directorio donde se guardaran archivos
-            $origen = $files["tmp_name"];  // orgine temporal del archivo
-            $archivos[]=$files['memoFile']['name'];
-            if(move_uploaded_file($origen, $urlarchivo)) {
-                $sql="INSERT INTO memo_archivo (memo_archivo_url,memo_archivo_name,memo_archivo_type,memo_archivo_size,memo_archivo_principal_flag,memo_archivo_memo_id) VALUES (?,?,?,?,?,?)";
-                try{
-                    $this->pdo->prepare($sql)->execute(array($data->__GET('memoarch_url'),
-                                                             $data->__GET('memoarch_name'),
-                                                             $data->__GET('memoarch_type'),
-                                                             $data->__GET('memoarch_size'),
-                                                             $data->__GET('memoarch_flag'),
-                                                             $data->__GET('memoarch_memo_id')
-                                                                    ));
-                    $jsonresponse['success'] = true;
-                    $jsonresponse['message'] = 'Archivos cargados correctamente';
-                    //$jsonresponse['messagebd'] = 'Archivos guardados correctamente';
-                }catch (PDOException $pdoException){
-                        //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
-                    $jsonresponse['success'] = false;
-                    $jsonresponse['message'] = 'ERROR al subir Archivos'; 
-                    //$jsonresponse['messagebd'] = 'Error al insertar los archivos';
-                    $jsonresponse['errorQuery'] = $pdoException->getMessage();
-                }
-            }
-        }else{
+                $largo = count($nombrearch)-1;
+                $urlarchivodestino = RAIZ.memoarch_directorio.memoarch_prefijo.$aniomemo.'_'.$nummemmo.'.'.$nombrearch[$largo];
+                $urlarchivo = memoarch_directorio.memoarch_prefijo.$aniomemo.'_'.$nummemmo.'.'.$nombrearch[$largo];
 
-        }
+                $data = new MemoArchivos();
+                    $data->__SET('memoarch_url', $urlarchivo);
+                    $data->__SET('memoarch_name',$files['memoFile']['name']);
+                    $data->__SET('memoarch_type', $files['memoFile']['type']);
+                    $data->__SET('memoarch_size', $files['memoFile']['size']);
+                    $data->__SET('memoarch_flag', 1);
+                    $data->__SET('memoarch_memo_id', $idmemo);
 
-
-        //$this->Grabar($data);
-            /*
-            foreach($files as $key => $value){
-                if($files[$key]) {
-                    $dir=opendir(RAIZ);  //Abre directorio donde se guardaran archivos
-
-                    $nom = ($key=="cedula") ? "cedula_":"registro_social_";  //crea nombre generico por rut y tipoarchivo
-
-                    $destino = RAIZ.$nom.$_REQUEST['rut'].".pdf";  // crea url completa para guardar archivo
-                    $origen = $_FILES[$key]["tmp_name"];  // orgine temporal del archivo
-                    $urllink = $directorio.$nom.$_REQUEST['rut'].".pdf"; // url para base de datos
-
-                    if(move_uploaded_file($origen, $destino)) {    // mueve el archivo a su destino
-                        //echo "El archivo $urllink se ha almacenado en forma exitosa.<br>";
-                        try{
-                            $this->pdo->prepare($sql)->execute(array($data->__GET('alumbeca_rut'),
-                                                                        $value["name"],
-                                                                        $value["type"],
-                                                                        $value["size"],
-                                                                        $urllink
-                                                                    ));
-                            $jsonresponse['success'] = true;
-                            $jsonresponse['message'] = 'Archivos cargados correctamente';
-                            
-                            //$jsonresponse['messagebd'] = 'Archivos guardados correctamente';
-                        } catch (PDOException $pdoException){
-                             //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
-                            $jsonresponse['success'] = false;
-                            $jsonresponse['message'] = 'ERROR al subir Archivos'; 
-                            //$jsonresponse['messagebd'] = 'Error al insertar los archivos';
-                            $jsonresponse['errorQuery'] = $pdoException->getMessage();
-                        }
-                    } else {   
-                        //echo "Ha ocurrido un error, por favor inténtelo de nuevo.<br>";
-                        $jsonresponse['success'] = false;
-                        $jsonresponse['message'] = 'ERROR al subir Archivos'; 
+                $dir=opendir(RAIZ.memoarch_directorio);  //Abre directorio donde se guardaran archivos
+                $origen = $files['memoFile']["tmp_name"];  // origen temporal del archivo
+                //$archivos[]=$files['memoFile']['name'];
+                if(move_uploaded_file($origen, $urlarchivodestino)) {
+                    $arrayresponsegraba  = $this->Grabar($data);
+                    if ($arrayresponsegraba['success']){
+                        $jsonresponse['success'] = true;
+                        $jsonresponse['grabaarchivo'] = true;
+                        $jsonresponse['message'] = 'Archivos grabado correctamente';
+                    }else{
+                        $jsonresponse['success'] = $arrayresponsegraba['success'];
+                        $jsonresponse['grabaarchivo'] = true;
+                        $jsonresponse['message'] = $arrayresponsegraba['message'];
                     }
+                }else{
+                    $jsonresponse['success'] = false;
+                    $jsonresponse['grabaarchivo'] = false;
+                    $jsonresponse['message'] = 'Error al subir archivo';
                 }
-            }*/
-            
-    }
+                closedir($dir);
+            }else{
+                $jsonresponse['success'] = false;
+                $jsonresponse['messageMEM'] = 'ERROR al subir Archivos, campo vacio'; 
+            }
+            // Graba lista de archivos anexos del memo
 
-        public function Grabar(MemoArchivos $data){
-            $jsonresponse = array();
+            if(!empty($files['memoFileList']['name'][0])){
+                $dir=opendir(RAIZ.memoarch_directorio);  //Abre directorio donde se guardaran archivos
+
+                $totalArchivo = sizeof($files['memoFileList']['name']);  //total de archivos
+                for($i=0; $i<$totalArchivo; $i++ ){
+                    //$files['memoFileList']['name'][$i];
+
+                    $nombrearch = explode(".",$files['memoFileList']['name'][$i]);
+                    $largo = count($nombrearch)-1;
+                    $urlarchivodestino = RAIZ.memoarch_directorio.memoarch_prefijo.$aniomemo.'_'.$nummemmo.'_'.$i.'.'.$nombrearch[$largo];
+                    $urlarchivo = memoarch_directorio.memoarch_prefijo.$aniomemo.'_'.$nummemmo.'_'.$i.'.'.$nombrearch[$largo];
+                    $data = new MemoArchivos();
+                        $data->__SET('memoarch_url', $urlarchivo);
+                        $data->__SET('memoarch_name',$files['memoFileList']['name'][$i]);
+                        $data->__SET('memoarch_type', $files['memoFileList']['type'][$i]);
+                        $data->__SET('memoarch_size', $files['memoFileList']['size'][$i]);
+                        $data->__SET('memoarch_flag', 0);
+                        $data->__SET('memoarch_memo_id', $idmemo);
+
+                    $origen = $files['memoFileList']["tmp_name"][$i];  // origen temporal del archivo
+                    //closedir(RAIZ.memoarch_directorio);
+                    //VALIDAR QUE ARCHIVO SUBIO SIN ERRORES
+                    if(move_uploaded_file($origen, $urlarchivodestino)) {
+                        
+                        $arrayresponsegraba  = $this->Grabar($data);
+                        
+                        if ($arrayresponsegraba['success']){
+                            $jsonresponse['success'] = true;
+                            $jsonresponse['grabaarchivo'] = true;
+                            $jsonresponse['message'] = 'Archivos grabado correctamente';
+                        }else{
+                            $jsonresponse['success'] = $arrayresponsegraba['success'];
+                            $jsonresponse['grabaarchivo'] = true;
+                            $jsonresponse['message'] = $arrayresponsegraba['message'];
+                        }
+                    }else{
+                        $jsonresponse['success'] = false;
+                        $jsonresponse['grabaarchivo'] = false;
+                        $jsonresponse['message'] = 'Error al subir archivo';
+                    }                    
+                }
+                closedir($dir);
+            }else{
+                $jsonresponse['success'] = false;
+                $jsonresponse['messageMEMLIST'] = 'ERROR al subir Archivos, campo vacio'; 
+            }
+        }catch(Exception $e){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'ERROR al subir Archivos, campo vacio';
+            $jsonresponse['messageerror'] = $e->getMessage();
+        }
+        return $jsonresponse;
+    }
+    /*public function subearchivo(){
+        $jsonresponse = array();        
+        try{
+
+        }catch(Exception $e){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'ERROR al subir Archivos, campo vacio';
+            $jsonresponse['messageerror'] = $e->getMessage();
+        }
+    }*/
+    public function Grabar(MemoArchivos $data){
+        $jsonresponse = array();
             try{            
                 $sql = "INSERT INTO memo_archivo (memo_archivo_url, 
                                                 memo_archivo_name,
@@ -220,7 +229,7 @@ class ModelMemoArchivo {
                                                 memo_archivo_memo_id)
                         VALUES (?,?,?,?,?,?)";
 
-                $this->pdo->prepare($sql)->execute(array($data->__GET('memo_arch_url'),
+                $this->pdo->prepare($sql)->execute(array($data->__GET('memoarch_url'),
                                                         $data->__GET('memoarch_name'),
                                                         $data->__GET('memoarch_type'), 
                                                         $data->__GET('memoarch_size'),
@@ -229,17 +238,17 @@ class ModelMemoArchivo {
                                                     ));
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Memo archivo ingresado correctamente'; 
-            } catch (PDOException $pdoException){
+            }catch (PDOException $pdoException){
             //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
                 $jsonresponse['success'] = false;
                 $jsonresponse['message'] = 'Error al ingresar memo archivo';
                 $jsonresponse['errorQuery'] = $pdoException->getMessage();
             }
-            return $jsonresponse;
-        }
+        return $jsonresponse;
+    }
 
 
-/*
+    /*
     public function Actualizar(MemoArchivos $data){
         $jsonresponse = array();
         //print_r($data);
