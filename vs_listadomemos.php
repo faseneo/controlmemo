@@ -4,8 +4,7 @@
     <?php include "header.php"; ?>
     <title>Listado Memos</title>
     <script src="js/globalfn.js"></script>    
-    <script src="js/fnmemo.js"></script>
-    <script src="js/funcioneslistado.js"></script>
+    <script src="js/fn_listadomemos.js"></script>
     <!-- <style type="text/css">
         .alert {
             margin:5px;
@@ -21,41 +20,39 @@
             <div class="col-md-12 ">
                 <center><h1>Listado</h1></center><br><br>
                 <form id="contact-form" method="post" action="#" role="form">
-                    <div class="messages"></div>
-                    <div class="controls"> 
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">  
-                                <label for="usuario">Usuario</label>
+                               <label for="usuario">Usuario</label>
                                 <select name="usuario" id="usuario" class="form-control">
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>                                
                         <div class="col-md-6">
-                            <div class="form-group">
+                             <div class="form-group">
                                 <label for="memoEstado">Estado</label>  
                                 <select name="memoEstado" id="memoEstado" class="form-control">
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                    </div><br>
+                    </div>
+                </form>    
 
+                    <br>
                     <div class="row">     
                         <div class="col-md-12">      
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Número</th>
-                                        <th>Fecha</th>
-                                        <th>Orden compra manager</th>
-                                        <th>Número resolución</th>
-                                        <th>Orden compra Chilecompra</th>
-                                        <th>Ver</th>
-                                        <th>Anular</th>
-                                        <th>Asignar</th>
+                                        <th width="7%" >Número</th>
+                                        <th width="8%">Fecha</th>
+                                        <th width="35%">Materia</th>
+                                        <th width="10%">Orden compra manager</th>
+                                        <th width="10%">Número resolución</th>
+                                        <th width="10%">Orden compra Chilecompra</th>
+                                        <th width="20%">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="listamemos">
@@ -63,8 +60,8 @@
                             </table>
                         </div>
                     </div>
-                    </div>
-                </form>
+                  
+                
             </div><!-- /.8 -->
         </div> <!-- /.row-->
     </div> <!-- /.container-->

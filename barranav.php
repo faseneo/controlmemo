@@ -14,7 +14,7 @@
 				<li><a href="vistabuscador2.php">Buscador</a></li>
 				<li><a href="vsingresomemo.php">Ingreso Memo</a></li>
 				<!-- <li><a href="vistaingmemo2.php">Ingreso2</a></li> -->
-				<li><a href="vslistadomemos.php">Listado</a></li>
+				<li><a href="vs_listadomemos.php">Listado</a></li>
 				<li><a href="vistaresumenpend.php">Resumen pendientes</a></li>
 				<li><a href="vistacambiocontr.php">Cambiar contraseña</a></li>
 				<li class="dropdown">
@@ -22,12 +22,12 @@
 					<ul class="dropdown-menu">
 						<li><a href="mantenedordep.php">Dependencias</a></li>					
 						<li><a href="mantenedorcc.php">Centro de Costos</a></li>
-						<li><a href="mantenedordpto.php">Departamentos</a></li>
-						<li><a href="mantenedorperf.php">Perfiles</a></li>
-						<li><a href="mantenedorusu.php">Usuarios</a></li>
+						<li><a href="mt_departamento.php">Departamentos</a></li>
+<!-- 						<li><a href="mantenedorperf.php">Perfiles</a></li> -->
+						<li><a href="mt_usuarios.php">Usuarios</a></li>
 						<li><a href="mantenedorusurol.php">Usuario Rol</a></li>
 						<li><a href="mantenedorprov.php">Proveedores</a></li>
-						<li><a href="mantenedorproccompra.php">Procedimiento Compra</a></li>
+						<li><a href="mt_procedimientos.php">Procedimiento Compra</a></li>
 						<li><a href="mantenedormemodetest.php">Estado Detalle Memo</a></li>
 						<li><a href="mantenedormemoest.php">Estado Memos</a></li>
 						

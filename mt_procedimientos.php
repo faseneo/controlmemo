@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 	<?php include "header.php"; ?>
-	<script src="js/funcionesproccomp.js"></script>
+	<script src="js/fn_mt_procedimientos.js"></script>
 </head>
 <body>
 	<?php include "barranav.php"; ?>

@@ -4,26 +4,25 @@
             document.getElementById('actualizar-usuario').style.display = 'none';
         }
         function limpiaform(){
-            $("#usuId").val("");
-            $("#usuRut").val("");
-            $("#usuNombre").val("");
-			$("#usuPass").val("");
+            $('#formUsuario')[0].reset();
         }        
         function habilitaform(){
             $("#usuId").prop( "disabled", false );
             $("#usuRut").prop( "disabled", false );
             $("#usuNombre").prop( "disabled", false );
-			$("#usuPerfilId").prop( "disabled", false );
-			$("#usuPass").prop( "disabled", false);
+            $("#usuPass").prop( "disabled", false);
+			$("#usuRolId").prop( "disabled", false );
+			$("#usuEstadoId").prop( "disabled", false);
         }
         function deshabilitaform(){
             $("#usuId").prop( "disabled", true );
             $("#usuRut").prop( "disabled", true );
-            $("#usuNombre").prop( "disabled", true ); 
-			$("#usuPerfilId").prop( "disabled", true );
-			$("#usuPass").prop( "disabled", true );
+            $("#usuNombre").prop( "disabled", true );
+            $("#usuPass").prop( "disabled", true);
+            $("#usuRolId").prop( "disabled", true );
+            $("#usuEstadoId").prop( "disabled", true);
         }
-		var getlistaperfiles = function (){
+		function getlistaroles(){
             var datax = {
                 "Accion":"listar"
             }
@@ -31,23 +30,22 @@
                 data: datax, 
                 type: "GET",
                 dataType: "json", 
-                url: "controllers/controllerusuarioperfil.php",          
+                url: "controllers/controllerusuariorol.php",          
             })
             .done(function( data, textStatus, jqXHR ) {
-                $("#usuPerfilId").html("");
+                $("#usuRolId").html("");
                 if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
                         + " \n data msg : "+ data.message 
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
-                $("#usuPerfilId").append('<option value="0">Seleccionar...</option>');
+                //$("#usuRolId").append('<option value="0">Seleccionar...</option>');
                 for(var i=0; i<data.datos.length;i++){
-                    console.log('id: '+data.datos[i].usu_perfil_id + ' nombre: '+data.datos[i].usu_perfil_nombre);
-                    opcion = '<option value='+ data.datos[i].usu_perfil_id +'>'+data.datos[i].usu_perfil_nombre+'</option>';
-                    $("#usuPerfilId").append(opcion);
+                    console.log('id: '+data.datos[i].usuario_rol_id + ' nombre: '+data.datos[i].usuario_rol_nombre);
+                    opcion = '<option value='+ data.datos[i].usuario_rol_id +'>'+data.datos[i].usuario_rol_nombre+'</option>';
+                    $("#usuRolId").append(opcion);
                 }
-               // $("#listaperfil").append(fila);
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
                 if ( console && console.log ) {
@@ -58,6 +56,7 @@
                 }
             });
         }
+    getlistaroles();
     $(document).ready(function(){
         function validarFormulario(){   
             var txtRut = document.getElementById('usuRut').value;
@@ -103,13 +102,28 @@
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
                 for(var i=0; i<data.datos.length;i++){
+                    estado_id= parseInt(data.datos[i].usu_estado_id);
+                    switch(estado_id){
+                        case 0:
+                            estadonombre = 'Creado';
+                            break;
+                        case 1:
+                            estadonombre = 'Activo';
+                            break;
+                        case 2:
+                            estadonombre = 'Inactivo';
+                            break;
+                        default:
+                            estadonombre = 'Creado';
+                            break;
+                    }
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
-                                console.log('id: '+data.datos[i].usu_id + ' rut: '+data.datos[i].usu_rut + ' nombre: '+data.datos[i].usu_nombre + ' perfil: '+data.datos[i].usu_perfil_nombre + ' password: '+data.datos[i].usu_password);
+                                console.log('id: '+data.datos[i].usu_id + ' rut: '+data.datos[i].usu_rut + ' nombre: '+data.datos[i].usu_nombre + ' rol: '+data.datos[i].usu_rol_nombre + ' password: '+data.datos[i].usu_password);
 
                                 fila = '<tr><td>'+ data.datos[i].usu_rut +'</td>';
                                 fila += '<td>'+ data.datos[i].usu_nombre +'</td>';
-								fila += '<td>'+ data.datos[i].usu_perfil_nombre +'</td>';
-
+								fila += '<td>'+ data.datos[i].usu_rol_nombre +'</td>';
+                                fila += '<td>'+ estadonombre +'</td>';
                                 fila += '<td><button id="ver-usuario" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
                                 fila += ' onclick="verUsuario(\'ver\',\'' + data.datos[i].usu_id + '\')">';
@@ -132,13 +146,12 @@
                 }
             });
         }
-
         //Levanta modal nuevo centro de costos
         $("#crea-usuario").click(function(e){
             e.preventDefault();
             limpiaform();
             habilitaform();
-            getlistaperfiles();
+            getlistaroles();
             $("#Accion").val("registrar");
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
@@ -149,7 +162,6 @@
                 //$('#usuNombre');
             });
         });
-
         // implementacion boton para guardar el centro de costo
         $("#guardar-usuario").click(function(e){
             e.preventDefault();
@@ -294,10 +306,10 @@
     });
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
     function verUsuario(action, usuid){
-		
-		deshabilitaform();
-        deshabilitabotones();
-		getlistaperfiles();
+        limpiaform();
+		//deshabilitaform();
+        //deshabilitabotones();
+		//getlistaroles();
         var datay = {"usuId": usuid,
                      "Accion":"obtener"
                     };
@@ -319,9 +331,10 @@
             $("#usuRut").val(data.datos.usu_rut);
             $("#usuNombre").val(data.datos.usu_nombre);
             $("#usuPass").val(data.datos.usu_password);
-			$("#usuPerfilId").val(data.datos.usu_usu_perfil_id);
+			$("#usuRolId").val(data.datos.usu_rol_id).prop('selected',true);
+            $("#usuEstadoId").val(data.datos.usu_estado_id).prop('selected',true);
 
-            
+            deshabilitaform();
             $("#Accion").val(action);
 
             $('#myModal').on('shown.bs.modal', function () {

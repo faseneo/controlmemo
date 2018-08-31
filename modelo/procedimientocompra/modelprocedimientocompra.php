@@ -22,8 +22,9 @@ class ModelProcCompra {
             $result = array();
             $stm = $this->pdo->prepare("SELECT  pc.proc_compra_id,
                                                 pc.proc_compra_tipo,
-						pc.proc_prioridad
-                                        FROM procedimiento_compra as pc");
+						                        pc.proc_prioridad
+                                        FROM procedimiento_compra as pc
+                                        ORDER BY pc.proc_prioridad ASC");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new ProcCompra();

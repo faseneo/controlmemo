@@ -5,9 +5,10 @@ class Usuarios{
     private $usu_rut;
     private $usu_nombre;
     private $usu_password;
-    
-    private $usu_usu_perfil_id;
-	private $usu_perfil_nombre;
+    private $usu_rol_id;
+	private $usu_rol_nombre;
+    private $usu_estado_id;
+    private $usu_fecha_ing;
 
     public function __GET($k){
         return $this->$k;

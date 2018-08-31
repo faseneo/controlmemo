@@ -13,23 +13,25 @@ if(isset($_REQUEST['Accion'])){
     switch($_REQUEST['Accion']){
 
         case 'actualizar':
-            $usu->__SET('usu_id',            $_REQUEST['usuId']);
-            $usu->__SET('usu_rut',           $_REQUEST['usuRut']);
-            $usu->__SET('usu_nombre',        $_REQUEST['usuNombre']);
-            $usu->__SET('usu_password',      $_REQUEST['usuContr']);
-            $usu->__SET('usu_usu_perfil_id', $_REQUEST['usuarioperfil']);
-            $usu->__SET('usu_perfil_nombre', $_REQUEST['usuarioperfilnom']);
+            $usu->__SET('usu_id',           $_REQUEST['usuId']);
+            $usu->__SET('usu_rut',          $_REQUEST['usuRut']);
+            $usu->__SET('usu_nombre',       $_REQUEST['usuNombre']);
+            $usu->__SET('usu_password',     $_REQUEST['usuPass']);
+            $usu->__SET('usu_rol_id',       $_REQUEST['usuRolId']);
+            $usu->__SET('usu_estado_id',    $_REQUEST['usuEstadoId']);
+            /*$usu->__SET('usu_perfil_nombre', $_REQUEST['usuarioperfilnom']);*/
             $jsondata = $modelUsu->Actualizar($usu);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);
             break;
 
         case 'registrar':
-            $usu->__SET('usu_rut',           $_REQUEST['usuRut']);
-            $usu->__SET('usu_nombre',        $_REQUEST['usuNombre']);
-            $usu->__SET('usu_password',    $_REQUEST['usuContr']);
-            $usu->__SET('usu_usu_perfil_id', $_REQUEST['usuarioperfil']);
-			$usu->__SET('usu_perfil_nombre', $_REQUEST['usuarioperfilnom']);            
+            $usu->__SET('usu_rut',          $_REQUEST['usuRut']);
+            $usu->__SET('usu_nombre',       $_REQUEST['usuNombre']);
+            $usu->__SET('usu_password',     $_REQUEST['usuPass']);
+            $usu->__SET('usu_rol_id',       $_REQUEST['usuRolId']);
+            $usu->__SET('usu_estado_id',    $_REQUEST['usuEstadoId']);
+            /*$usu->__SET('usu_perfil_nombre', $_REQUEST['usuarioperfilnom']);*/
             $jsondata = $modelUsu->Registrar($usu);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);

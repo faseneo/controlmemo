@@ -9,7 +9,6 @@ require_once '../modelo/usuariorol/modelusuariorol.php';
 $usurol = new UsuarioRol();
 $modelUsurol = new ModelUsuarioRol();
 
-
 if(isset($_REQUEST['Accion'])){
 
     switch($_REQUEST['Accion']){

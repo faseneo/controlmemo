@@ -9,7 +9,7 @@
 
         <div class="container" style="margin-top:50px">
             <div class="row">
-				<div class="col-md-9">
+				<div class="col-md-10">
 					<h2 class="sub-header">Departamentos</h2>
 					<div class="table-responsive">
 						<!-- Añadimos un botón para el diálogo modal onclick="newServicio()"-->
@@ -18,8 +18,8 @@
 						<table class="table table-striped">
 							<thead>
 								<tr>
-									<th width="50%">Nombre</th>
-									<th width="50%">Acciones</th>
+									<th width="80%">Nombre</th>
+									<th width="20%">Acciones</th>
 								</tr>
 							</thead>
 							<tbody id="listadepto">
