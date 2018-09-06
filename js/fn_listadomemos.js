@@ -1,3 +1,5 @@
+    var usuarios;
+
     function getListadoEstadoMemos(){
             var datax = {
                 "Accion":"listar"
@@ -50,10 +52,15 @@
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
+                usuarios=data.datos;
+                console.log(usuarios);
                 for(var i=0; i<data.datos.length;i++){
                     console.log('id: ' + data.datos[i].usu_id + ' nombre: ' + data.datos[i].usu_nombre);
-                    opcion = '<option value=' + data.datos[i].usu_id + '>' + data.datos[i].usu_nombre + ' - '+ data.datos[i].usu_rol_nombre + '</option>';
+                    //opcion = '<option value=' + data.datos[i].usu_id + '>' + data.datos[i].usu_nombre + ' - '+ data.datos[i].usu_rol_nombre + '</option>';
+                    opcion = '<option value=' + data.datos[i].usu_id + '>' + data.datos[i].usu_nombre + '</option>';
                     $("#usuario").append(opcion);
+                    algo=usuarios[0]['usu_rol_nombre'];
+                    $('#rolUsuario').val(algo);
                 }
 
             })
@@ -66,6 +73,14 @@
                 }
             });
         }
+    function rolusu(){
+        //var valor = document.getElementById("usuario").value;
+        var posicion = document.getElementById("usuario").selectedIndex;
+        algo=usuarios[posicion]['usu_rol_nombre'];
+        $('#rolUsuario').val(algo);
+
+    }
+
     getListadoEstadoMemos();
     getListadoUsuarios();
 
@@ -82,10 +97,10 @@
             .done(function( data, textStatus, jqXHR ) {
                 $("#listamemos").html(""); 
                 if ( console && console.log ) {
-                    console.log( " data success : "+ data.success 
+                    /*console.log( " data success : "+ data.success 
                         + " \n data msg : "+ data.message 
                         + " \n textStatus : " + textStatus
-                        + " \n jqXHR.status : " + jqXHR.status );
+                        + " \n jqXHR.status : " + jqXHR.status );*/
                 }
                 for(var i=0; i<data.datos.length;i++){
                     console.log('id: ' + data.datos[i].mem_id + ' numero memo: ' + data.datos[i].mem_numero);

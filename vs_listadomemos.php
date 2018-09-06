@@ -21,15 +21,25 @@
                 <center><h1>Listado</h1></center><br><br>
                 <form id="contact-form" method="post" action="#" role="form">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">  
                                <label for="usuario">Usuario</label>
-                                <select name="usuario" id="usuario" class="form-control">
+                                <select name="usuario" id="usuario" class="form-control" onchange="rolusu();">
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
-                        </div>                                
-                        <div class="col-md-6">
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">  
+                               <label for="rolUsuario">Rol</label>
+                                <input type="text" name="rolUsuario" id="rolUsuario" class="form-control" readonly />
+                                
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
                              <div class="form-group">
                                 <label for="memoEstado">Estado</label>  
                                 <select name="memoEstado" id="memoEstado" class="form-control">
@@ -37,6 +47,11 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
+                        <div class="col-md-1">
+                             <div class="form-group"> <label for="memoEstado">algo.</label>  
+                                <button id="ver-memo" type="button" class="btn btn-xs btn-success" >Buscar</button>
+                            </div>
+                        </div>                        
                     </div>
                 </form>    
 

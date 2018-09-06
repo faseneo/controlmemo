@@ -32,7 +32,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="memoFecha">Fecha memo</label>
-                                <input name="memoFecha" id="memoFecha" type="date" class="form-control" required onchange="aniomemo();" >
+                                <input name="memoFecha" id="memoFecha" type="date" class="form-control" onchange="aniomemo();" required >
                                 <!-- <span class="glyphicon form-control-feedback" aria-hidden="true"></span> -->
                                 <span class="help-block"></span>
                             </div>

@@ -26,6 +26,7 @@ class ModeloLogs {
       fwrite($file,$logtrace." \n");
       //fwrite($file,$dispositivo." \n");
       //fwrite($file,implode('|',$item));
+      fwrite($file,"---------------------------------------------------------------------\n\r");
       fwrite($file,"\r");
       fclose($file);
     }

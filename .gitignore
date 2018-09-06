@@ -1,2 +1,5 @@
 # No incluir archivos de Jetbrains IDEs: PHPStorm / RubyMine
 .idea
+archivos
+listadoarchivos.txt
+listadocarpetas.txt
