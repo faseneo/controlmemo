@@ -73,6 +73,8 @@
                                 <tbody id="listamemos">
                                 </tbody>
                             </table>
+                            <ul id="paginador" class="pagination pagination-sm">
+                            </ul>
                         </div>
                     </div>
                   

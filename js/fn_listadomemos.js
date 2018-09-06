@@ -27,7 +27,7 @@
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
                 if ( console && console.log ) {
-                    console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
+                    console.log( " La solicitud getlistaEstados ha fallado,  textStatus : " +  textStatus 
                         + " \n errorThrown : "+ errorThrown
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
@@ -66,7 +66,7 @@
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
                 if ( console && console.log ) {
-                    console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
+                    console.log( " La solicitud getlistaUsuarios ha fallado,  textStatus : " +  textStatus 
                         + " \n errorThrown : "+ errorThrown
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
@@ -84,8 +84,105 @@
     getListadoEstadoMemos();
     getListadoUsuarios();
 
-    function getListadoMemos(){
+    function paginador(pag){
+            var cantidadMostrar = 10;  // total de numeros de paginas  a mostrar 
+            var registroPorPagina = 10; //total registro por pagina, debe coincidir con el modelo.listar
+            var compag = pag;
+            console.log("------------------------------------------");
+            console.log("pagina : "+ compag);
+                    var datax = {
+                        "Accionmem":"contar"
+                    }
+                    $.ajax({
+                        data: datax, 
+                        type: "GET",
+                        dataType: "json", 
+                        url: "controllers/controllermemo.php",
+                    })
+                    .done(function( data, textStatus, jqXHR ) {
+                       $("#paginador").html("");
+                        if ( console && console.log ) {
+                            console.log( " data success gettotal : "+ data.success 
+                                        + " \n data msg : "+ data.message 
+                                        + " \n textStatus : " + textStatus
+                                        + " \n jqXHR.status : " + jqXHR.status );
+                        }
+                        if(data.total > registroPorPagina){
+                                console.log("Total de registros :"+ data.total);
+                            // calcula total numero de paginas segun totalregistro dividos por numero de reg. por pagina.
+                            totalPag = Math.ceil(data.total/registroPorPagina);
+                                console.log("total paginas : "+totalPag);
+
+                            //calcula incremento para boton siguiente
+                            IncrimentNum =((compag +1)<=totalPag) ? (compag +1) : 1;
+                                console.log("incremento: "+IncrimentNum);
+                            //calcula decremento  para boton anterior
+                            DecrementNum =(compag -1) < 1 ?  1 : (compag -1);
+                                console.log("decremento: "+DecrementNum);
+                            if(totalPag<cantidadMostrar){
+                                cantidadMostrar=totalPag;
+                            }
+                            // valida primera pagina y deshabilita anterior
+                            if(pag == 1 ){
+                                pagina = "<li class='disabled'><a href='#'><span aria-hidden='true'>&laquo;</span></a></li>";
+                            }else{
+                                pagina = "<li><a href='#' onclick='getListadoMemos(" + DecrementNum + ")'><span aria-hidden='true'>&laquo;</span></a></li>";
+                            }
+                            console.log("calculo ceil : " + (Math.ceil(cantidadMostrar/2)-1));
+                            //valida y calcula desde hasta para paginador segun pagina actual
+                            desde=compag-(Math.ceil(cantidadMostrar/2)-1); //42 - 4   => ((10/2)-1) 
+                            hasta=compag+(Math.ceil(cantidadMostrar/2)); //42 + 5   => ((10/2)-1)
+                            console.log("desde ceil: "+desde);
+                            console.log("hasta ceil: "+hasta);                       
+                            //valida desde si menor a 1 y hasta menor a cantidadMostrar (siempre mostrar diez numeros de paginas)
+                            desde = (desde < 1) ? 1 : desde;
+                            hasta = (hasta < cantidadMostrar) ? cantidadMostrar : hasta;
+
+                            console.log("desde : " + desde);
+                            console.log("hasta : " + hasta);
+
+                            // valida y calcula ultimas 10 paginas del paginador
+                            desde = (hasta > totalPag) ? totalPag - (cantidadMostrar-1) : desde;
+                            hasta = (hasta > totalPag) ? totalPag : hasta;
+                            
+                            console.log("desde fin : " + desde);
+                            console.log("hasta fin : " + hasta);
+                            // dibuja  numeros de paginas en paginador
+                            for(i=desde; i<= hasta; i++){
+                                //Se valida la paginacion total de registros
+                                if(i <= totalPag){
+                                    //Validamos la pag activo
+                                    if(i==compag){
+                                        pagina+="<li class='active'><a href='#'>"+i+"</a></li>";
+                                    }else {
+                                        pagina += "<li><a href='#' onclick='getListadoMemos("+i+")'>"+i+"</a></li>";
+                                    }
+                                }
+                            }
+                            console.log(pagina);
+                            // valida ultima pagina y deshabilita siguiente
+                            if(pag == totalPag ){
+                                pagina += "<li class='disabled'><a href='#'><span aria-hidden='true'>&raquo;</span></a></li>";
+                            }else{
+                                pagina+= "<li><a href='#' onclick='getListadoMemos(" + IncrimentNum + ")'><span aria-hidden='true'>&raquo;</span></a></li>";
+                            }
+                             $("#paginador").html("");
+                             $("#paginador").append(pagina);
+                        }
+                    })
+                    .fail(function( jqXHR, textStatus, errorThrown ) {
+                        if ( console && console.log ) {
+                            console.log( " La solicitud getcuenta ha fallado,  textStatus : " +  textStatus 
+                                        + " \n errorThrown : "+ errorThrown
+                                        + " \n textStatus : " + textStatus
+                                        + " \n jqXHR.status : " + jqXHR.status );
+                        }
+                    });
+    }
+    function getListadoMemos(pag){
+            paginador(pag);
             var datax = {
+                "nump":pag,
                 "Accionmem":"listar"
             }
             $.ajax({
@@ -127,11 +224,11 @@
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
                 if ( console && console.log ) {
-                    console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
+                    console.log( " La solicitud getListadoMemos ha fallado,  textStatus : " +  textStatus 
                         + " \n errorThrown : "+ errorThrown
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
             });
     }
-    getListadoMemos();
+    getListadoMemos(1);

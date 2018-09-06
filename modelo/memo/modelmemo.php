@@ -26,20 +26,24 @@ class ModelMemo  {
         }
     }
 
-    public function Listar(){
+    public function Listar($numpag = 1){
+      $CantidadMostrar=10;
+      $compag         =(int)($numpag);
         try{
-            $consulta = "SELECT COUNT(*) FROM memo";
-            $res = $this->pdo->query($consulta);
-            if ($res->fetchColumn() == 0) {
+            $respuesta = $this->contarTotal();
+            $tot_reg = (int)$respuesta['total'];
+            if ($tot_reg == 0) {
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Memo sin elementos';                
                 $jsonresponse['datos'] = [];
             }else{
               $result = array();
-              $stm = $this->pdo->prepare("SELECT * FROM memo");
+              $reginicio = ($compag-1) * $CantidadMostrar;
+              $stm = $this->pdo->prepare("SELECT * FROM memo ORDER BY memo_fecha_recepcion ASC  LIMIT ".$reginicio.",".$CantidadMostrar);
               $stm->execute();
+              $totquery = 0;
               foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                  $busq = new Memos();
+                 $busq = new Memos();
                       $busq->__SET('mem_id', $r->memo_id);
                       $busq->__SET('mem_numero', $r->memo_num_memo);
                       $busq->__SET('mem_anio', $r->memo_anio);
@@ -53,20 +57,21 @@ class ModelMemo  {
                       $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);
                       $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
                   $result[] = $busq->returnArray();
+                  $totquery++;
               }
               $jsonresponse['success'] = true;
               $jsonresponse['message'] = 'listado correctamente los memos';
+              $jsonresponse['total'] = $totquery;
               $jsonresponse['datos'] = $result;
               $stm=null;
             }
             $res=null;
-        } catch (PDOException $pdoException){
+        } catch (PDOException $Exception){
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al listar Memos';
-            //$jsonresponse['errorQuery'] = $pdoException->getMessage();
             $logs = new modelologs();
-            $trace=$pdoException->getTraceAsString();
-              $logs->GrabarLogs($pdoException->getMessage(),$trace);
+            $trace = $Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
               $logs = null;
         }finally {
           $this->pdo=null;  
@@ -74,7 +79,30 @@ class ModelMemo  {
         
         return $jsonresponse;
     }
+    //cuenta total de memos en el sistema
+    public function contarTotal(){
+        $jsonresponse = array();
+        try{
+            $stm = $this->pdo->prepare("SELECT COUNT(memo_id) AS cantidad FROM memo ");
+            $stm->execute();
+            $total_reg = $stm->fetch(PDO::FETCH_OBJ);
 
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'correctamente';
+            $jsonresponse['total'] = $total_reg->cantidad;
+            $stm=null;
+        }
+        catch(Exception $Exception){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al contar los Memos';
+            $logs = new modelologs();
+            $trace = $Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;            
+        }
+      return $jsonresponse;        
+    }
+    //Obtiene datos del memo  por su id
     public function Obtener($id){
         try{
           $consulta = "SELECT COUNT(*) FROM memo";
@@ -117,12 +145,12 @@ class ModelMemo  {
               $stm=null;
             }
             $res=null;
-        } catch (Exception $e){
+        } catch (Exception $Exception){
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al obtener memos';
             $logs = new modelologs();
-            $trace=$pdoException->getTraceAsString();
-              $logs->GrabarLogs($pdoException->getMessage(),$trace);
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
               $logs = null;
         }
         $this->pdo=null;
@@ -177,11 +205,15 @@ class ModelMemo  {
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo ingresado correctamente'; 
             $jsonresponse['messagefile'] = $arrayfile;
-        } catch (PDOException $pdoException){
+        } catch (Exception $Exception){
         //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al ingresar Memo';
-            $jsonresponse['errorQuery'] = $pdoException->getMessage();
+            $jsonresponse['errorQuery'] = $Exception->getMessage();
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;            
         }
         return $jsonresponse;
     }

@@ -19,4 +19,53 @@ trace:#0 C:\xampp\htdocs\controlmemo\modelo\conexion\conexion.php(15): PDO->__co
 #1 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(21): Conexion->connect()
 #2 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(10): ModelMemo->__CONSTRUCT()
 #3 {main} 
-
+fecha:06-09-2018(22:53:19) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mem_id' in 'field list' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(82): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(81): ModelMemo->contarTotal()
+#2 {main} 
+---------------------------------------------------------------------
+fecha:06-09-2018(22:59:26) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mem_id' in 'field list' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(82): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(81): ModelMemo->contarTotal()
+#2 {main} 
+---------------------------------------------------------------------
+fecha:07-09-2018(00:25:06) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '-20,20' at line 1 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(43): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar(NULL)
+#2 {main} 
+---------------------------------------------------------------------
+fecha:07-09-2018(00:25:07) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '-20,20' at line 1 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(43): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar(NULL)
+#2 {main} 
+---------------------------------------------------------------------
+fecha:07-09-2018(00:25:07) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '-20,20' at line 1 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(43): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar(NULL)
+#2 {main} 
+---------------------------------------------------------------------
+fecha:07-09-2018(00:25:51) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '-20,20' at line 1 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(43): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar(NULL)
+#2 {main} 
+---------------------------------------------------------------------
+fecha:07-09-2018(00:26:40) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '-20,20' at line 1 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(43): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar(NULL)
+#2 {main} 
+---------------------------------------------------------------------
+
