@@ -12,14 +12,14 @@
             })
             .done(function( data, textStatus, jqXHR ) {
                 $("#memoEstado").html(""); 
-                if ( console && console.log ) {
+                /*if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
-                        + " \n data msg : "+ data.message 
+                        + " \n data msg estados memo : "+ data.message 
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
-                }
+                }*/
                 for(var i=0; i<data.datos.length;i++){
-                    console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
+                   //console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
                     opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_tipo + '</option>';
                     $("#memoEstado").append(opcion);
                 }
@@ -47,21 +47,20 @@
             })
             .done(function( data, textStatus, jqXHR ) {
                 $("#usuario").html(""); 
-                if ( console && console.log ) {
+                /*if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
-                        + " \n data msg : "+ data.message 
+                        + " \n data usuarios msg : "+ data.message 
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
-                }
+                }*/
                 usuarios=data.datos;
-                console.log(usuarios);
                 for(var i=0; i<data.datos.length;i++){
-                    console.log('id: ' + data.datos[i].usu_id + ' nombre: ' + data.datos[i].usu_nombre);
+                    //console.log('id: ' + data.datos[i].usu_id + ' nombre: ' + data.datos[i].usu_nombre);
                     //opcion = '<option value=' + data.datos[i].usu_id + '>' + data.datos[i].usu_nombre + ' - '+ data.datos[i].usu_rol_nombre + '</option>';
                     opcion = '<option value=' + data.datos[i].usu_id + '>' + data.datos[i].usu_nombre + '</option>';
                     $("#usuario").append(opcion);
-                    algo=usuarios[0]['usu_rol_nombre'];
-                    $('#rolUsuario').val(algo);
+                    nomrolusu=usuarios[0]['usu_rol_nombre'];
+                    $('#rolUsuario').val(nomrolusu);
                 }
 
             })
@@ -75,113 +74,60 @@
             });
     }
 
-    function rolusu(){
-        //var valor = document.getElementById("usuario").value;
-        var posicion = document.getElementById("usuario").selectedIndex;
-        algo=usuarios[posicion]['usu_rol_nombre'];
-        $('#rolUsuario').val(algo);
-    }
-
-    function paginador(pag){
+    // Funcion para paginar lista de memos
+    function paginador(pag,estado=0){
             var cantidadMostrar = 10;  // total de numeros de paginas  a mostrar 
             var registroPorPagina = 10; //total registro por pagina, debe coincidir con el modelo.listar
-            var compag = pag;
-            console.log("------------------------------------------");
-            console.log("pagina : "+ compag);
-                    var datax = {
-                        "Accionmem":"contar"
-                    }
-                    $.ajax({
+            var datax = {
+                        "Accionmem":"contar",
+                        "idest":estado
+                }
+            $("#paginador").html("");    
+            $("#totalmemos").html("");
+                $.ajax({
                         data: datax, 
                         type: "GET",
                         dataType: "json", 
                         url: "controllers/controllermemo.php",
-                    })
-                    .done(function( data, textStatus, jqXHR ) {
-                       $("#paginador").html("");
-                        if ( console && console.log ) {
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                        /*if ( console && console.log ) {
                             console.log( " data success gettotal : "+ data.success 
-                                        + " \n data msg : "+ data.message 
+                                        + " \n data totalmemos msg : "+ data.message 
                                         + " \n textStatus : " + textStatus
                                         + " \n jqXHR.status : " + jqXHR.status );
-                        }
-                        if(data.total > registroPorPagina){
-                                console.log("Total de registros :"+ data.total);
-                            // calcula total numero de paginas segun totalregistro dividos por numero de reg. por pagina.
-                            totalPag = Math.ceil(data.total/registroPorPagina);
-                                console.log("total paginas : "+totalPag);
-
-                            //calcula incremento para boton siguiente
-                            IncrimentNum =((compag +1)<=totalPag) ? (compag +1) : 1;
-                                console.log("incremento: "+IncrimentNum);
-                            //calcula decremento  para boton anterior
-                            DecrementNum =(compag -1) < 1 ?  1 : (compag -1);
-                                console.log("decremento: "+DecrementNum);
-                            if(totalPag<cantidadMostrar){
-                                cantidadMostrar=totalPag;
-                            }
-                            // valida primera pagina y deshabilita anterior
-                            if(pag == 1 ){
-                                pagina = "<li class='disabled'><a href='#'><span aria-hidden='true'>&laquo;</span></a></li>";
-                            }else{
-                                pagina = "<li><a href='#' onclick='getListadoMemos(" + DecrementNum + ")'><span aria-hidden='true'>&laquo;</span></a></li>";
-                            }
-                            console.log("calculo ceil : " + (Math.ceil(cantidadMostrar/2)-1));
-                            //valida y calcula desde hasta para paginador segun pagina actual
-                            desde=compag-(Math.ceil(cantidadMostrar/2)-1); //42 - 4   => ((10/2)-1) 
-                            hasta=compag+(Math.ceil(cantidadMostrar/2)); //42 + 5   => ((10/2)-1)
-                            console.log("desde ceil: "+desde);
-                            console.log("hasta ceil: "+hasta);                       
-                            //valida desde si menor a 1 y hasta menor a cantidadMostrar (siempre mostrar diez numeros de paginas)
-                            desde = (desde < 1) ? 1 : desde;
-                            hasta = (hasta < cantidadMostrar) ? cantidadMostrar : hasta;
-
-                            console.log("desde : " + desde);
-                            console.log("hasta : " + hasta);
-
-                            // valida y calcula ultimas 10 paginas del paginador
-                            desde = (hasta > totalPag) ? totalPag - (cantidadMostrar-1) : desde;
-                            hasta = (hasta > totalPag) ? totalPag : hasta;
-                            
-                            console.log("desde fin : " + desde);
-                            console.log("hasta fin : " + hasta);
-                            // dibuja  numeros de paginas en paginador
-                            for(i=desde; i<= hasta; i++){
-                                //Se valida la paginacion total de registros
-                                if(i <= totalPag){
-                                    //Validamos la pag activo
-                                    if(i==compag){
-                                        pagina+="<li class='active'><a href='#'>"+i+"</a></li>";
-                                    }else {
-                                        pagina += "<li><a href='#' onclick='getListadoMemos("+i+")'>"+i+"</a></li>";
-                                    }
-                                }
-                            }
-                            console.log(pagina);
-                            // valida ultima pagina y deshabilita siguiente
-                            if(pag == totalPag ){
-                                pagina += "<li class='disabled'><a href='#'><span aria-hidden='true'>&raquo;</span></a></li>";
-                            }else{
-                                pagina+= "<li><a href='#' onclick='getListadoMemos(" + IncrimentNum + ")'><span aria-hidden='true'>&raquo;</span></a></li>";
-                            }
-                             $("#paginador").html("");
-                             $("#paginador").append(pagina);
-                        }
-                    })
-                    .fail(function( jqXHR, textStatus, errorThrown ) {
-                        if ( console && console.log ) {
-                            console.log( " La solicitud getcuenta ha fallado,  textStatus : " +  textStatus 
-                                        + " \n errorThrown : "+ errorThrown
-                                        + " \n textStatus : " + textStatus
-                                        + " \n jqXHR.status : " + jqXHR.status );
-                        }
-                    });
+                        }*/
+                    $("#paginador").html("");                        
+                    $("#totalmemos").html(data.total);
+                    if(data.total > registroPorPagina){
+                        fnlista = "getListadoMemos";
+                        pagina = drawpaginador(pag,data.total,registroPorPagina,cantidadMostrar,fnlista);
+                        $("#paginador").html("");
+                        $("#paginador").append(pagina);
+                    }
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    if ( console && console.log ) {
+                        console.log( " La solicitud getcuenta ha fallado,  textStatus : " +  textStatus 
+                                    + " \n errorThrown : "+ errorThrown
+                                    + " \n textStatus : " + textStatus
+                                    + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                });
     }
-
-    function getListadoMemos(pag){
-            paginador(pag);
+    function buscaestado(){
+        var posicion = document.getElementById("memoEstado").selectedIndex;
+        console.log(posicion);
+        console.log(posicion.val());
+    }
+    // Funcion principal para listar los memos
+    /* ver una funcion que vaya a contar y vuelva si no llamar a listado memos*/
+    function getListadoMemos(pag,estado=0){
+            paginador(pag,estado);
+            var $loader = $('.loader');
             var datax = {
                 "nump":pag,
+                "idest":estado,
                 "Accionmem":"listar"
             }
             $.ajax({
@@ -205,27 +151,39 @@
                         + " \n jqXHR.status : " + jqXHR.status );*/
                 }
                 $('#ModalCargando').modal('hide');
-                for(var i=0; i<data.datos.length;i++){
-                    console.log('id: ' + data.datos[i].mem_id + ' numero memo: ' + data.datos[i].mem_numero);
-                    fila = '<tr><td>'+ data.datos[i].mem_anio + '-' + data.datos[i].mem_numero + '</td>';
-                    fila += '<td>'+ data.datos[i].mem_fecha +'</td>';
-                    fila += '<td>'+ data.datos[i].mem_materia +'</td>';
-                    fila += '<td>'+ '123' +'</td>';
-                    fila += '<td>'+ '2018-100700' +'</td>';
-                    fila += '<td>'+ 'OC-123' +'</td>';
-                    fila += '<td><button id="ver-memo" type="button" '
-                    fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
-                    fila += ' onclick="verMemo(\'ver\',\'' + data.datos[i].mem_id + '\')">';
-                    fila += 'Ver / Editar</button>';
-                    fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
-                    fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                    fila += 'onclick="deleteAnular(\''+ data.datos[i].mem_id +'\',\'' + data.datos[i].mem_anio +'\',\''
-                            + data.datos[i].mem_materia +'\')">';
-                    fila += 'Anular</button>';
-                    fila += ' <button id="Asignar" type="button" class="btn btn-xs btn-primary" >Asignar</button></td>';
-                    fila += '</tr>';
+                incrementotest=0;
+                if(data.datos.length>0){
+                    console.log('tiene elementos');
+                    for(var i=0; i<data.datos.length;i++){
+                        console.log('id: ' + data.datos[i].mem_id + ' numero memo: ' + data.datos[i].mem_numero);
+                        incrementotest++;
+                        fila = '<tr><td>'+ data.datos[i].mem_anio + '-' + data.datos[i].mem_numero + '</td>';
+                        fila += '<td>'+ data.datos[i].mem_fecha +'</td>';
+                        fila += '<td>'+ data.datos[i].mem_materia +'</td>';
+                        fila += '<td>'+ '123' + data.datos[i].mem_id +'</td>';
+                        fila += '<td>'+ '2018-1007' + data.datos[i].mem_id + '</td>';
+                        fila += '<td>'+ 'OC-123' + data.datos[i].mem_id + '</td>';
+                        fila += '<td>'+ data.datos[i].mem_estado_nombre +'</td>';
+                        fila += '<td><button id="ver-memo" type="button" ';
+                        fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"';
+                        fila += ' onclick="verMemo(\'ver\',\'' + data.datos[i].mem_id + '\')">';
+                        fila += 'Ver / Editar</button>';
+                        /*fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
+                        fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
+                        fila += 'onclick="deleteAnular(\''+ data.datos[i].mem_id +'\',\'' + data.datos[i].mem_anio +'\',\''
+                                + data.datos[i].mem_materia +'\')">';
+                        fila += 'Anular</button>';*/
+                        fila += ' <button id="Asignar" type="button" class="btn btn-xs btn-primary" >Asignar</button></td>';
+                        fila += '</tr>';
+                        $("#listamemos").append(fila);
+                    }                    
+                }else{
+                    console.log('noooo tiene elementos');
+                    fila = '<tr><td colspan="8">'+data.message+'</td><tr>';
                     $("#listamemos").append(fila);
                 }
+                
+                
 
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -242,4 +200,33 @@
         getListadoEstadoMemos();
         getListadoUsuarios();
         getListadoMemos(1);
+        $('.orden').click(function() {
+            var table = $(this).parents('table').eq(0);
+            var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+            this.asc = !this.asc;
+            if (!this.asc) {
+                rows = rows.reverse();
+            }
+            for (var i = 0; i < rows.length; i++) {
+                table.append(rows[i]);
+            }
+            setIcon($(this), this.asc);
+        });
+        $("#usuario").change(function(){
+            /* var posicion = document.getElementById("usuario").selectedIndex;
+            op=document.getElementById("usuario").options;
+            console.log(op[posicion].text);
+            $('#rolUsuario').val(op[posicion].text);*/
+            var posicion = document.getElementById("usuario").selectedIndex;
+            nomrol=usuarios[posicion]['usu_rol_nombre'];
+            $('#rolUsuario').val(nomrol);
+        });
+
+        $("#memoEstado").change(function(){
+            var idestado = document.getElementById("memoEstado").selectedIndex;
+            console.log($('#memoEstado').val());
+            //console.log('estado id : ' + idestado);
+            getListadoMemos(1,$('#memoEstado').val());
+        });
+
     });

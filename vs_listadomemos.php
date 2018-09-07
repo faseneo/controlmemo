@@ -5,32 +5,46 @@
     <title>Listado Memos</title>
     <script src="js/globalfn.js"></script>    
     <script src="js/fn_listadomemos.js"></script>
-    <!-- <style type="text/css">
-        .alert {
-            margin:5px;
-            padding: 5px;
-            height: 30px;
+    <style type="text/css">
+        .orden{
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
-    </style> -->
+
+        .sorting {
+            color: #337AB7;
+        }
+
+        .asc:after {
+            content: ' ↑';
+        }
+
+        .desc:after {
+            content: " ↓";
+        }
+    </style>
 </head>
 <body>
     <?php include "barranav.php"; ?>
     <div class="container" style="margin-top:50px"> 
         <div class="row"> 
             <div class="col-md-12 ">
-                <center><h1>Listado</h1></center><br><br>
+                <center><h2>Listado Memos <span class="badge" id="totalmemos"></span></h2><span class="badge" id="totalmemos"></span></center><br><br>
                 <form id="contact-form" method="post" action="#" role="form">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">  
                                <label for="usuario">Usuario</label>
-                                <select name="usuario" id="usuario" class="form-control" onchange="rolusu();">
+                                <select name="usuario" id="usuario" class="form-control" >
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">  
                                <label for="rolUsuario">Rol</label>
                                 <input type="text" name="rolUsuario" id="rolUsuario" class="form-control" readonly />
@@ -39,7 +53,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                              <div class="form-group">
                                 <label for="memoEstado">Estado</label>  
                                 <select name="memoEstado" id="memoEstado" class="form-control">
@@ -47,27 +61,28 @@
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        <div class="col-md-1">
-                             <div class="form-group"> <label for="memoEstado">algo.</label>  
-                                <button id="ver-memo" type="button" class="btn btn-xs btn-success" >Buscar</button>
-                            </div>
-                        </div>                        
+<!--                         <div class="col-md-1">
+                            <div class="form-group"> <label for="memoEstado">algo.</label>  
+                               <button id="ver-memo" type="button" class="btn btn-xs btn-success" >Buscar</button>
+                           </div>
+                       </div>  -->                       
                     </div>
                 </form>    
 
                     <br>
                     <div class="row">     
                         <div class="col-md-12">      
-                            <table class="table table-striped">
+                            <table class="table">
                                 <thead>
                                     <tr>
-                                        <th width="7%" >Número</th>
-                                        <th width="8%">Fecha</th>
-                                        <th width="35%">Materia</th>
-                                        <th width="10%">Orden compra manager</th>
-                                        <th width="10%">Número resolución</th>
-                                        <th width="10%">Orden compra Chilecompra</th>
-                                        <th width="20%">Acciones</th>
+                                        <th width="7%" class="orden">Año / Número</th>
+                                        <th width="8%" class="orden">Fecha Memo</th>
+                                        <th width="35%" class="orden">Materia o Asunto</th>
+                                        <th width="7%" class="orden">OC Manager</th>
+                                        <th width="10%" class="orden">Número Resolución</th>
+                                        <th width="8%" class="orden">OC Chilecompra</th>
+                                        <th width="12%" class="orden">Estado</th>
+                                        <th width="13%">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="listamemos">

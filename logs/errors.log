@@ -68,4 +68,11 @@ trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(43): PDOStatement
 #1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar(NULL)
 #2 {main} 
 ---------------------------------------------------------------------
+fecha:07-09-2018(22:33:08) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'ORDER BY m.memo_fecha_recepcion DESC  LIMIT 10,10' at line 3 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(58): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('2', '1')
+#2 {main} 
+---------------------------------------------------------------------
 

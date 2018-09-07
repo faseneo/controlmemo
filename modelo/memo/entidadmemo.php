@@ -14,6 +14,7 @@ class Memos{
     private $mem_archivos=array();
     private $mem_estado_id;
     private $mem_fecha_ingr;
+    private $mem_estado_nombre;
 
     public function __GET($k){
         return $this->$k;

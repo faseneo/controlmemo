@@ -68,3 +68,88 @@
 			param.parent().children('span').text('').hide();
 		}
     }
+
+    function drawpaginador(compag,total,filasPorPagina,cantidadMostrar,fnlista){
+        totalPag = Math.ceil(total/filasPorPagina);
+        var pagina="";
+            //console.log("total paginas : "+totalPag);
+            //calcula incremento para boton siguiente
+            IncrimentNum =((compag +1)<=totalPag) ? (compag +1) : 1;
+                //console.log("incremento: "+IncrimentNum);
+                //calcula decremento  para boton anterior
+            DecrementNum =(compag -1) < 1 ?  1 : (compag -1);
+                //console.log("decremento: "+DecrementNum);
+                if(totalPag<cantidadMostrar){
+                    cantidadMostrar=totalPag;
+                }
+                // valida primera pagina y deshabilita anterior
+                if(compag == 1 ){
+                    pagina = "<li class='disabled'><a href='#'><span aria-hidden='true'>&laquo;</span></a></li>";
+                }else{
+                    pagina = "<li><a href='#' onclick='" + fnlista + "(" + DecrementNum + ")'><span aria-hidden='true'>&laquo;</span></a></li>";
+                }
+                    //console.log("calculo ceil : " + (Math.ceil(cantidadMostrar/2)-1));
+                    //valida y calcula desde hasta para paginador segun pagina actual
+                desde=compag-(Math.ceil(cantidadMostrar/2)-1); //42 - 4   => ((10/2)-1) 
+                hasta=compag+(Math.ceil(cantidadMostrar/2)); //42 + 5   => ((10/2)-1)
+                    //console.log("desde ceil: "+desde);
+                    //console.log("hasta ceil: "+hasta);                       
+                    //valida desde si menor a 1 y hasta menor a cantidadMostrar (siempre mostrar diez numeros de paginas)
+                desde = (desde < 1) ? 1 : desde;
+                hasta = (hasta < cantidadMostrar) ? cantidadMostrar : hasta;
+                    //console.log("desde : " + desde);
+                    //console.log("hasta : " + hasta);
+                    // valida y calcula ultimas 10 paginas del paginador
+                desde = (hasta > totalPag) ? totalPag - (cantidadMostrar-1) : desde;
+                hasta = (hasta > totalPag) ? totalPag : hasta;
+                    //console.log("desde fin : " + desde);
+                    //console.log("hasta fin : " + hasta);
+                    // dibuja  numeros de paginas en paginador
+                for(i=desde; i<= hasta; i++){
+                    //Se valida la paginacion total de registros
+                    if(i <= totalPag){
+                        //Validamos la pag activo
+                        if(i==compag){
+                            pagina+="<li class='active'><a href='#'>"+i+"</a></li>";
+                        }else {
+                            pagina += "<li><a href='#' onclick='" + fnlista + "("+i+")'>"+i+"</a></li>";
+                        }
+                    }
+                }
+                //console.log(pagina);
+                // valida ultima pagina y deshabilita siguiente
+            if(compag == totalPag ){
+                pagina += "<li class='disabled'><a href='#'><span aria-hidden='true'>&raquo;</span></a></li>";
+            }else{
+                pagina+= "<li><a href='#' onclick='" + fnlista + "(" + IncrimentNum + ")'><span aria-hidden='true'>&raquo;</span></a></li>";
+            }
+        return pagina;
+    }
+
+    // funciones para ordenar tabla
+    function comparer(index) {
+        return function(a, b) {
+            var valA = getCellValue(a, index);
+            valB = getCellValue(b, index);
+
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.localeCompare(valB);
+        }
+    }
+    
+    function getCellValue(row, index) {
+        return $(row).children('td').eq(index).html();
+    }
+    
+    function setIcon(element, asc) {
+        $("th").each(function(index) {
+            $(this).removeClass("sorting");
+            $(this).removeClass("asc");
+            $(this).removeClass("desc");
+        });
+        element.addClass("sorting");
+        if (asc) 
+            element.addClass("asc");
+        else 
+            element.addClass("desc");
+    }
+    // FIN funciones para ordenar tabla

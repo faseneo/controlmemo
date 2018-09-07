@@ -26,20 +26,35 @@ class ModelMemo  {
         }
     }
 
-    public function Listar($numpag = 1){
+    public function Listar($numpag = 1,$estadoid = 0,$usuid=0){
       $CantidadMostrar=10;
       $compag         =(int)($numpag);
+
+      if($estadoid == 0){
+        $filtroestado = "";
+      }else{
+        $filtroestado = " AND m.memo_memo_estado_id=".$estadoid;
+      }
+      if($usuid == 0){
+        $filtrousuario = "";
+      }else{
+        $filtrousuario = " AND m.memo_memo_estado_id=".$usuid;
+      }      
         try{
-            $respuesta = $this->contarTotal();
+            $respuesta = $this->contarTotal($estadoid);
             $tot_reg = (int)$respuesta['total'];
             if ($tot_reg == 0) {
                 $jsonresponse['success'] = true;
-                $jsonresponse['message'] = 'Memo sin elementos';                
+                $jsonresponse['message'] = 'La búsqueda No arrojóo elementos';                
                 $jsonresponse['datos'] = [];
             }else{
               $result = array();
               $reginicio = ($compag-1) * $CantidadMostrar;
-              $stm = $this->pdo->prepare("SELECT * FROM memo ORDER BY memo_fecha_recepcion ASC  LIMIT ".$reginicio.",".$CantidadMostrar);
+              $stm = $this->pdo->prepare("SELECT * 
+                                          FROM memo AS m, memo_estado as me
+                                          WHERE m.memo_memo_estado_id = me.memo_estado_id "
+                                          .$filtroestado
+                                          ." ORDER BY m.memo_fecha_recepcion DESC  LIMIT ".$reginicio.",".$CantidadMostrar);
               $stm->execute();
               $totquery = 0;
               foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
@@ -55,6 +70,7 @@ class ModelMemo  {
                       $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
                       $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
                       $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);
+                      $busq->__SET('mem_estado_nombre', $r->memo_estado_tipo);
                       $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
                   $result[] = $busq->returnArray();
                   $totquery++;
@@ -80,10 +96,17 @@ class ModelMemo  {
         return $jsonresponse;
     }
     //cuenta total de memos en el sistema
-    public function contarTotal(){
+    public function contarTotal($estadoid = 0){
         $jsonresponse = array();
+        if($estadoid == 0){
+          $filtroestado = "";
+        }else{
+          $filtroestado = " AND m.memo_memo_estado_id=".$estadoid;
+        }        
         try{
-            $stm = $this->pdo->prepare("SELECT COUNT(memo_id) AS cantidad FROM memo ");
+            $stm = $this->pdo->prepare("SELECT COUNT(memo_id) AS cantidad 
+                                        FROM memo AS m
+                                        WHERE 1 ".$filtroestado);
             $stm->execute();
             $total_reg = $stm->fetch(PDO::FETCH_OBJ);
 
