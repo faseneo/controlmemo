@@ -3,7 +3,7 @@
 <head>
     <?php include "header.php"; ?>
     <title>Ingreso memo</title>
-    <script src="js/fnmemo.js"></script>
+    <script src="js/fn_memo.js"></script>
     <script src="js/globalfn.js"></script>
     <style type="text/css">
         .alert {

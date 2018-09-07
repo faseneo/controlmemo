@@ -33,7 +33,8 @@
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
             });
-        }
+    }
+
     function getListadoUsuarios(){
             var datax = {
                 "Accion":"listar"
@@ -72,17 +73,14 @@
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
             });
-        }
+    }
+
     function rolusu(){
         //var valor = document.getElementById("usuario").value;
         var posicion = document.getElementById("usuario").selectedIndex;
         algo=usuarios[posicion]['usu_rol_nombre'];
         $('#rolUsuario').val(algo);
-
     }
-
-    getListadoEstadoMemos();
-    getListadoUsuarios();
 
     function paginador(pag){
             var cantidadMostrar = 10;  // total de numeros de paginas  a mostrar 
@@ -179,6 +177,7 @@
                         }
                     });
     }
+
     function getListadoMemos(pag){
             paginador(pag);
             var datax = {
@@ -190,6 +189,12 @@
                 type: "GET",
                 dataType: "json", 
                 url: "controllers/controllermemo.php", 
+                beforeSend: function(){
+                        $('#ModalCargando').modal('show');
+                        $('#ModalCargando').on('shown.bs.modal', function () {
+                            $loader.show();
+                        });
+                    }
             })
             .done(function( data, textStatus, jqXHR ) {
                 $("#listamemos").html(""); 
@@ -199,6 +204,7 @@
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );*/
                 }
+                $('#ModalCargando').modal('hide');
                 for(var i=0; i<data.datos.length;i++){
                     console.log('id: ' + data.datos[i].mem_id + ' numero memo: ' + data.datos[i].mem_numero);
                     fila = '<tr><td>'+ data.datos[i].mem_anio + '-' + data.datos[i].mem_numero + '</td>';
@@ -231,4 +237,9 @@
                 }
             });
     }
-    getListadoMemos(1);
+
+    $(document).ready(function(){
+        getListadoEstadoMemos();
+        getListadoUsuarios();
+        getListadoMemos(1);
+    });
