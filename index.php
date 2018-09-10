@@ -23,7 +23,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label >Orden de compra manager</label>
+                                    <label >Orden de compra SAC</label>
                                     <input id="" type="text" name="" class="form-control">
                                     <div class="help-block with-errors"></div>
                                 </div>

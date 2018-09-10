@@ -75,4 +75,67 @@ trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(58): PDOStatement
 #1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('2', '1')
 #2 {main} 
 ---------------------------------------------------------------------
+fecha:10-09-2018(19:02:03) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'WHERE m.memo_memo_estado_id = me.memo_estado_id AND dep.dpto_id = mm.mem_depto_s' at line 3 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(145): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(70): ModelMemo->Obtener('3')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:10-09-2018(19:02:11) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(145): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(70): ModelMemo->Obtener('3')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:10-09-2018(19:02:47) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.mem_depto_sol_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(145): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(70): ModelMemo->Obtener('3')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:10-09-2018(19:04:36) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'm.memo_memo_estado_id = me.memo_estado_id AND dep.dpto_id = m.mem_depto_sol_id A' at line 2 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(61): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('2', '1', NULL)
+#2 {main} 
+---------------------------------------------------------------------
+fecha:10-09-2018(19:05:17) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'm.memo_memo_estado_id = me.memo_memo_estado_id AND dep.dpto_id = m.mem_depto_sol' at line 2 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(61): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('2', '1', NULL)
+#2 {main} 
+---------------------------------------------------------------------
+fecha:10-09-2018(19:05:43) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'm.memo_memo_estado_id = me.memo_estado_id AND dep.dpto_id = m.memo_depto_solicit' at line 2 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(61): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('2', '1', NULL)
+#2 {main} 
+---------------------------------------------------------------------
+fecha:10-09-2018(19:06:04) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'm.memo_memo_estado_id = me.memo_estado_id AND dep.dpto_id = m.memo_depto_solicit' at line 2 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(61): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('2', '1', '0')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:10-09-2018(19:07:13) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'm.memo_memo_estado_id = me.memo_estado_id AND dep.dpto_id = m.memo_depto_solicit' at line 2 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(63): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('2', '1', '0')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:10-09-2018(19:09:50) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'AND mtu.memo_tiene_usu_usuario_id=1 ORDER BY m.memo_fecha_recepcion DESC  LIMIT ' at line 2 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(64): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('2', '1', '1')
+#2 {main} 
+---------------------------------------------------------------------
 

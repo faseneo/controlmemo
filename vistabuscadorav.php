@@ -17,11 +17,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label >Fecha Memo</label>
-                                    <input id="" type="text" name="" class="form-control">
-                                    <div class="help-block with-errors"></div>
-                                </div>
+                                <label for="memoFecha">Fecha memo</label>
+                                <input name="memoFecha" id="memoFecha" type="date" class="form-control">
+                                <span class="help-block"></span>
+                            </div>                            
                             </div>
+                            
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="memoDepto" >Departamento</label>
@@ -34,8 +35,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label >Fecha recepción analista</label>
-                                    <input id="" type="text" name="" class="form-control">
+                                    <label for="memoFechaRecepcion">Fecha recepción analista</label>
+                                    <input name="memoFechaRecepcion" id="memoFechaRecepcion" type="date" class="form-control">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -70,8 +71,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label >Fecha factura</label>
-                                    <input id="" type="text" name="" class="form-control">
+                                    <label for="memoFechaFactura">Fecha factura</label>
+                                    <input name="memoFechaFactura" id="memoFechaFactura" type="date" class="form-control">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>

@@ -11,6 +11,7 @@ class Memos{
     private $mem_depto_sol_id;
     private $mem_nom_dest;
     private $mem_depto_dest_id;
+    private $mem_depto_dest_nom;
     private $mem_archivos=array();
     private $mem_estado_id;
     private $mem_fecha_ingr;

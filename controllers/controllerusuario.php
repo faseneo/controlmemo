@@ -54,6 +54,12 @@ if(isset($_REQUEST['Accion'])){
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            
+        case 'asignamemo':
+            //var_dump($_REQUEST);
+            $jsondata = $modelUsu->AsignaMemo($_REQUEST['asignausu'],$_REQUEST['memoId']);
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);
+            break;            
     }
 }
 

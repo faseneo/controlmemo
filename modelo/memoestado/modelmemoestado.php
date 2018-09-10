@@ -115,14 +115,14 @@ class ModelMemoEst{
         try{
             $sql = "UPDATE memo_estado SET 
                            memo_estado_tipo = ?,
-			   memo_prioridad = ?
+			               memo_prioridad = ?
                     WHERE  memo_estado_id = ?";
 
             $this->pdo->prepare($sql)
                  ->execute(array($data->__GET('memo_est_tipo'),
-                                 $data->__GET('memo_est_id'),
-				 $data->__GET('memo_priori'))
-                          );
+                                 $data->__GET('memo_priori'),
+				                 $data->__GET('memo_est_id'))
+                                );
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo estado actualizado correctamente';                 
         } catch (Exception $e){

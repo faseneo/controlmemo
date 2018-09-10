@@ -36,25 +36,31 @@ class ModelMemo  {
         $filtroestado = " AND m.memo_memo_estado_id=".$estadoid;
       }
       if($usuid == 0){
+        $agregatabla = "";
         $filtrousuario = "";
       }else{
-        $filtrousuario = " AND m.memo_memo_estado_id=".$usuid;
+        $agregatabla = " ,memo_tiene_usuario as mtu ";
+        $filtrousuario = " AND mtu.memo_tiene_usu_memo_id = m.memo_id AND mtu.memo_tiene_usu_usuario_id=".$usuid;
       }      
         try{
-            $respuesta = $this->contarTotal($estadoid);
+            $respuesta = $this->contarTotal($estadoid,$usuid);
             $tot_reg = (int)$respuesta['total'];
             if ($tot_reg == 0) {
                 $jsonresponse['success'] = true;
-                $jsonresponse['message'] = 'La búsqueda No arrojóo elementos';                
+                $jsonresponse['message'] = 'La búsqueda No arrojó elementos';                
                 $jsonresponse['datos'] = [];
             }else{
               $result = array();
               $reginicio = ($compag-1) * $CantidadMostrar;
-              $stm = $this->pdo->prepare("SELECT * 
-                                          FROM memo AS m, memo_estado as me
-                                          WHERE m.memo_memo_estado_id = me.memo_estado_id "
-                                          .$filtroestado
-                                          ." ORDER BY m.memo_fecha_recepcion DESC  LIMIT ".$reginicio.",".$CantidadMostrar);
+              $consulta="SELECT * 
+                            FROM memo AS m, memo_estado as me , departamento as dep "
+                            .$agregatabla.
+                            "WHERE m.memo_memo_estado_id = me.memo_estado_id AND dep.dpto_id = m.memo_depto_solicitante_id"
+                            .$filtroestado
+                            .$filtrousuario
+                            ." ORDER BY m.memo_fecha_recepcion DESC  LIMIT ".$reginicio.",".$CantidadMostrar;
+              //var_dump($consulta);
+              $stm = $this->pdo->prepare($consulta);
               $stm->execute();
               $totquery = 0;
               foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
@@ -67,6 +73,7 @@ class ModelMemo  {
                       $busq->__SET('mem_materia', $r->memo_materia);
                       $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
                       $busq->__SET('mem_depto_sol_id', $r->memo_depto_solicitante_id);
+                      $busq->__SET('mem_depto_dest_nom', $r->dpto_nombre);
                       $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
                       $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
                       $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);
@@ -96,17 +103,29 @@ class ModelMemo  {
         return $jsonresponse;
     }
     //cuenta total de memos en el sistema
-    public function contarTotal($estadoid = 0){
+    public function contarTotal($estadoid = 0, $usuid = 0){
         $jsonresponse = array();
         if($estadoid == 0){
           $filtroestado = "";
         }else{
           $filtroestado = " AND m.memo_memo_estado_id=".$estadoid;
-        }        
+        }   
+        if($usuid == 0){
+          $agregatabla = "";
+          $filtrousuario = "";
+        }else{
+          $agregatabla = ", memo_tiene_usuario as mtu ";
+          $filtrousuario = " AND mtu.memo_tiene_usu_memo_id = m.memo_id AND mtu.memo_tiene_usu_usuario_id=".$usuid;
+        }         
         try{
-            $stm = $this->pdo->prepare("SELECT COUNT(memo_id) AS cantidad 
-                                        FROM memo AS m
-                                        WHERE 1 ".$filtroestado);
+          $consulta="SELECT COUNT(memo_id) AS cantidad 
+                     FROM memo AS m "
+                     .$agregatabla
+                     ."WHERE 1 "
+                     .$filtroestado
+                     .$filtrousuario;
+
+           $stm = $this->pdo->prepare($consulta);
             $stm->execute();
             $total_reg = $stm->fetch(PDO::FETCH_OBJ);
 
@@ -136,8 +155,8 @@ class ModelMemo  {
                 $jsonresponse['datos'] = [];
             }else{
               $stm = $this->pdo->prepare("SELECT  *
-                                          FROM memo as mm
-                                          WHERE mm.memo_id = ?");
+                                          FROM memo as mm, departamento as dep, memo_estado as me
+                                          WHERE mm.memo_memo_estado_id = me.memo_estado_id AND dep.dpto_id = mm.memo_depto_solicitante_id And mm.memo_id = ?");
               $stm->execute(array($id));
               $r = $stm->fetch(PDO::FETCH_OBJ);
               if($r){
@@ -150,6 +169,7 @@ class ModelMemo  {
                           $busq->__SET('mem_materia', $r->memo_materia);
                           $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
                           $busq->__SET('mem_depto_sol_id', $r->memo_depto_solicitante_id);
+                          $busq->__SET('mem_depto_dest_nom', $r->dpto_nombre);
                           $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
                           $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
                           $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);

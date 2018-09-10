@@ -75,12 +75,10 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th width="7%" class="orden">Año / Número</th>
+                                        <th width="8%" class="orden">Año / Número</th>
                                         <th width="8%" class="orden">Fecha Memo</th>
-                                        <th width="35%" class="orden">Materia o Asunto</th>
-                                        <th width="7%" class="orden">OC Manager</th>
-                                        <th width="10%" class="orden">Número Resolución</th>
-                                        <th width="8%" class="orden">OC Chilecompra</th>
+                                        <th width="34%" class="orden">Materia o Asunto</th>
+                                        <th width="25%" class="orden">Departamento Solicitante</th>
                                         <th width="12%" class="orden">Estado</th>
                                         <th width="13%">Acciones</th>
                                     </tr>
@@ -88,6 +86,11 @@
                                 <tbody id="listamemos">
                                 </tbody>
                             </table>
+                            <div class="alert alert-warning " id="resultadofiltro">
+                                <!-- <button type="button" class="close" data-dismiss="alert">&times;</button> -->
+                                <span id="resultadofiltromsg"></span>
+                            </div>
+
                             <ul id="paginador" class="pagination pagination-sm">
                             </ul>
                         </div>
@@ -114,5 +117,62 @@
         </div>
       </div>
     </div>
+    <!-- Modal para asignar usuarios -->
+    <div class="modal fade" id="myModalAsiganUsu" tabindex="-1" role="dialog" aria-labelledby="myModalAsiganUsuLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title-form" id="myModalAsiganUsuLabel">Asigna Usuario</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form" name="formAsignaMem" id="formAsignaMem" method="POST" action="">
+                        <input type="hidden" name="Accion" id="Accion" value="asignamemo" />
+                        <input type="hidden" name="memoId" id="memoId" value="" />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="asignausu">Usuario (Analista)</label>
+                                    <select name="asignausu" id="asignausu" class="form-control" >
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <!-- <label for="asignausu">Datos Memo</label> -->
+                                    <p id="memonum"></p>
+                                    <p id="memomat"></p>
+                                </div>
+                            </div>
+                        </div>                        
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="asigna" name="asignas" type="button" class="btn btn-primary">Asignar</button>
+                    <button id="cancel" name="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!-- Modal mensajes cortos-->
+    <div class="modal fade" id="myModalLittle" tabindex="-1" role="dialog" aria-labelledby="myModalLittleLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Mensaje</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="msg" class="msg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cerrarModalLittle" class="btn btn-default" data-dismiss="modal">Continuar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->     
 </body>
 </html>

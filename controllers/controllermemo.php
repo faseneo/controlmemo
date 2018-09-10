@@ -73,12 +73,14 @@ if(isset($_REQUEST['Accionmem'])){
             break;
             
         case 'listar':
-            $jsondata = $modelMemo->Listar($_REQUEST['nump'],$_REQUEST['idest']);
+            $jsondata = $modelMemo->Listar($_REQUEST['nump'],$_REQUEST['idest'],$_REQUEST['idusu']);
+            //$jsondata = $modelMemo->Listar($_REQUEST['nump'],$_REQUEST['idest']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
+
         case 'contar':
-            $jsondata = $modelMemo->contarTotal($_REQUEST['idest']);
+            $jsondata = $modelMemo->contarTotal($_REQUEST['idest'], $_REQUEST['idusu']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            

@@ -160,6 +160,31 @@ class ModelUsuarios{
         }
         return $jsonresponse;
     }
+//revisar a quien esta asignado antes y cambiar el estado de la asignacion anterior
+//todos lo de la Secretaria estado 1, ver permisos para ayudante admin
+    public function AsignaMemo($usuid,$memid){
+        $jsonresponse = array();
+        try{
+            $sql = "INSERT INTO memo_tiene_usuario (memo_tiene_usu_memo_id,
+                                                    memo_tiene_usu_usuario_id,
+                                                    memo_tiene_usu_fecha_asigna,
+                                                    memo_tiene_usu_estado)
+                    VALUES (?,?,?)";
+
+            $this->pdo->prepare($sql)
+                 ->execute(array($memid,
+                                 $usuid, 
+                                 '1')
+                          );
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Memo asignado correctamente';                 
+        } catch (Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al asginar memo al usuario';             
+        }
+        return $jsonresponse;        
+    }
 
     public function Listar2(){
         $jsonresponse = array();
