@@ -1,4 +1,5 @@
     var usuarios;
+    
     function inicio(){
         $('#resultadofiltromsg').html("");
         $("#resultadofiltro").hide();
@@ -126,7 +127,7 @@
                 });
     }
 
-/*    function buscaestado(){
+    /*function buscaestado(){
         var posicion = document.getElementById("memoEstado").selectedIndex;
         console.log(posicion);
         console.log(posicion.val());
@@ -178,6 +179,7 @@
     /* ver una funcion que vaya a contar y vuelva si no llamar a listado memos*/
     function getListadoMemos(pag,estado=0,usuid=0){
         inicio();
+        console.log('Usuario ' + usuid);
         console.log('pagina ' + pag);
         console.log('estado ' +estado);
             paginador(pag,estado,usuid);
@@ -266,7 +268,7 @@
 
     $(document).ready(function(){
         //$('[data-toggle="tooltip"]').tooltip();
-
+        $("#titulolistado").hide();
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
         getListadoEstadoMemos();
         getListadoUsuarios();
@@ -333,15 +335,20 @@
             var posicion = document.getElementById("usuario").selectedIndex;
             if(posicion==0){
                 nomrol='n/a';
+                $('#titulolistado').hide();
+                $('#nombreusu').html("");
+                $('#estadousu').html("");
+
             }else{
                 nomrol=usuarios[posicion-1]['usu_rol_nombre'];
+                nombreUsuario = usuarios[posicion-1]['usu_nombre'];
+                $('#rolUsuario').val(nomrol);
+                $('#titulolistado').show();
+                $('#nombreusu').html(nombreUsuario);
+                //$('#estadousu').html($('#memoEstado').val());
             }
-            $('#rolUsuario').val(nomrol);
-
-              console.log('estado: '+$('#memoEstado').val());
-            console.log('usuid :'+$('#usuario').val());
-
-
+            console.log('estado select : '+$('#memoEstado').val());
+            console.log('usuid select :'+$('#usuario').val());
             getListadoMemos(1,$('#memoEstado').val(),$('#usuario').val());
         });
 
@@ -353,6 +360,4 @@
             //console.log('estado id : ' + idestado);
             getListadoMemos(1,$('#memoEstado').val(),$('#usuario').val());
         });
-
-
     });

@@ -167,7 +167,6 @@ class ModelUsuarios{
         try{
             $sql = "INSERT INTO memo_tiene_usuario (memo_tiene_usu_memo_id,
                                                     memo_tiene_usu_usuario_id,
-                                                    memo_tiene_usu_fecha_asigna,
                                                     memo_tiene_usu_estado)
                     VALUES (?,?,?)";
 

@@ -68,10 +68,13 @@
                        </div>  -->                       
                     </div>
                 </form>    
-
-                    <br>
-                    <div class="row">     
-                        <div class="col-md-12">      
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 id="titulolistado">Listado memos de : <span id="nombreusu"></span> <!-- - Estado <span id="estadousu"></span> --></h4>
+                        </div>
+                    </div>                    
+                    <div class="row">
+                        <div class="col-md-12">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -119,7 +122,7 @@
     </div>
     <!-- Modal para asignar usuarios -->
     <div class="modal fade" id="myModalAsiganUsu" tabindex="-1" role="dialog" aria-labelledby="myModalAsiganUsuLabel">
-        <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -132,7 +135,16 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="asignausu">Usuario (Analista)</label>
+                                    <label for="asignadatos">Datos Memo</label>
+                                    <p id="memonum"></p>
+                                    <p id="memomat"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="asignausu">Seleccione Analista</label>
                                     <select name="asignausu" id="asignausu" class="form-control" >
                                     </select>
                                     <div class="help-block with-errors"></div>
@@ -142,12 +154,11 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <!-- <label for="asignausu">Datos Memo</label> -->
-                                    <p id="memonum"></p>
-                                    <p id="memomat"></p>
+                                    <label for="asignaobs">Observacion</label>
+                                    <textarea class="form-control" rows="2" id="asignaobs" name="asignaobs" ></textarea>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
