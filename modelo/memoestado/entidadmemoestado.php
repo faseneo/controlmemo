@@ -3,7 +3,7 @@
 class MemoEst{
     private $memo_est_id;
     private $memo_est_tipo;
-    private $memo_priori;
+    private $memo_est_prioridad;
 
     public function __GET($k){
         return $this->$k;

@@ -47,8 +47,8 @@
 							<input id="memoestTipo" class="form-control" type="text" name="memoestTipo" value="" title="Ingrese un tipo" required />
 						</div>
 						<div class="form-group">
-							<label for="memoPrioridad">Prioridad</label>
-							<input id="memoPrioridad" class="form-control" type="text" name="memoPrioridad" value="" title="Ingrese prioridad" required />
+							<label for="memoestPrioridad">Prioridad</label>
+							<input id="memoestPrioridad" class="form-control" type="text" name="memoestPrioridad" value="" title="Ingrese prioridad" required />
 						</div>
 					</div>
 					<div class="modal-footer">
