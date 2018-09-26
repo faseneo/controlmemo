@@ -1,7 +1,7 @@
 <html>
     <head>
 	<?php include "header.php"; ?>
-	<script src="js/funcionesmemoest.js"></script>
+	<script src="js/fn_mt_memoestado.js"></script>
     </head>
     <body>
  

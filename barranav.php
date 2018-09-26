@@ -29,7 +29,7 @@
 						<li><a href="mantenedorprov.php">Proveedores</a></li>
 						<li><a href="mt_procedimientos.php">Procedimiento Compra</a></li>
 						<li><a href="mantenedormemodetest.php">Estado Detalle Memo</a></li>
-						<li><a href="mantenedormemoest.php">Estado Memos</a></li>
+						<li><a href="mt_memoestado.php">Estado Memos</a></li>
 						
 					</ul>
 				</li>
