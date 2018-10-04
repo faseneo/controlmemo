@@ -111,7 +111,7 @@
                                         <h4 class="panel-title">
                                             <a id="accord" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
                                                 Agregar Archivos</a>
-                                                <a href="#" data-toggle="tooltip" title="pdf, jpg, png, doc, dox, xls, xlsx" data-content="pdf, jpg, png, doc, dox, xls, xlsx"><span class="glyphicon glyphicon-info-sign"></span></a>
+                                                <a href="#" data-toggle="tooltip" title="Archivos que puede subir: pdf, jpg, png, doc, docx, xls, xlsx" data-content="pdf, jpg, png, doc, docx, xls, xlsx"><span class="glyphicon glyphicon-info-sign"></span></a>
                                             </h4>
                                         </div>
                                         <div id="collapse1" class="panel-collapse collapse">

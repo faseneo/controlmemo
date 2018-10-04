@@ -12,11 +12,12 @@ $modelMEst = new ModelMemoEst();
 if(isset($_REQUEST['Accion'])){
 
     switch($_REQUEST['Accion']){
-
         case 'actualizar':
             $MEst->__SET('memo_est_id',         $_REQUEST['memoestId']);
             $MEst->__SET('memo_est_tipo',       $_REQUEST['memoestTipo']);
 			$MEst->__SET('memo_est_prioridad',  $_REQUEST['memoestPrioridad']);
+            $MEst->__SET('memo_est_activo',     $_REQUEST['memoestActivo']);
+            $MEst->__SET('memo_est_seccion_id', $_REQUEST['memoestSeccionId']);
             $jsondata = $modelMEst->Actualizar($MEst);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);
@@ -24,7 +25,9 @@ if(isset($_REQUEST['Accion'])){
 
         case 'registrar':
             $MEst->__SET('memo_est_tipo',       $_REQUEST['memoestTipo']);
-			$MEst->__SET('memo_est_prioridad',  $_REQUEST['memoestPrioridad']);            
+			$MEst->__SET('memo_est_prioridad',  $_REQUEST['memoestPrioridad']);
+            $MEst->__SET('memo_est_activo',     $_REQUEST['memoestActivo']);
+            $MEst->__SET('memo_est_seccion_id', $_REQUEST['memoestSeccionId']);            
             $jsondata = $modelMEst->Registrar($MEst);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
@@ -44,6 +47,11 @@ if(isset($_REQUEST['Accion'])){
             
         case 'listar':
             $jsondata = $modelMEst->Listar();
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);
+            break;
+        case 'listarmin':
+            $jsondata = $modelMEst->ListarMin();
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            

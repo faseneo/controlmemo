@@ -30,7 +30,7 @@
 						<li><a href="mt_procedimientos.php">Procedimiento Compra</a></li>
 						<li><a href="mantenedormemodetest.php">Estado Detalle Memo</a></li>
 						<li><a href="mt_memoestado.php">Estado Memos</a></li>
-						
+						<li><a href="mt_seccion.php">Sección</a></li>
 					</ul>
 				</li>
 			</ul>

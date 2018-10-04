@@ -1,12 +1,8 @@
 <?php
 //memo_estado
-class MemoEst{
-    private $memo_est_id;
-    private $memo_est_tipo;
-    private $memo_est_prioridad;
-    private $memo_est_seccion_id;
-    private $memo_est_seccion_nombre;
-    private $memo_est_activo;
+class Seccion{
+    private $sec_id;
+    private $sec_nombre;
 
     public function __GET($k){
         return $this->$k;

@@ -34,3 +34,10 @@ select#detalleestadomemo{
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.fila1:nth-child(even)>td {
+    background-color: #d9ecd8;
+}
+.fila2:nth-child(even)>td {
+    background-color: #d8e9fd;
+}

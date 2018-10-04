@@ -15,12 +15,14 @@
 						<!-- Añadimos un botón para el diálogo modal onclick="newServicio()"-->
 						<button type="button" id="crea-memoest" class="btn btn-sm btn-primary"
 								data-toggle="modal" data-target="#myModal" >NUEVO</button> 
-						<table class="table table-striped">
+						<table class="table table-striped" id="listadoestados">
 							<thead>
 								<tr>
-									<th width="30%">Tipo</th>
-									<th width="30%">Prioridad</th>
-									<th width="30%">Acciones</th>
+									<th width="30%">Nombre estado</th>
+									<th width="20%">Seccion</th>
+									<th width="15%">Prioridad</th>
+									<th width="15%">Activo</th>
+									<th width="20%">Acciones</th>
 								</tr>
 							</thead>
 							<tbody id="listamemoestado"> 
@@ -43,13 +45,25 @@
 					<input type="hidden" name="Accion" id="Accion" value="" />
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="memoestTipo">Tipo</label>
+							<label for="memoestTipo">Nombre Estado</label>
 							<input id="memoestTipo" class="form-control" type="text" name="memoestTipo" value="" title="Ingrese un tipo" required />
 						</div>
 						<div class="form-group">
 							<label for="memoestPrioridad">Prioridad</label>
 							<input id="memoestPrioridad" class="form-control" type="text" name="memoestPrioridad" value="" title="Ingrese prioridad" required />
 						</div>
+						<div class="form-group">
+							<label for="memoestActivo">Activo</label>
+							<select name="memoestActivo" id="memoestActivo" class="form-control">
+								<option value="0">NO</option>
+								<option value="1" selected>SI</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="memoestSeccionId">Seccion</label>
+							<select name="memoestSeccionId" id="memoestSeccionId" class="form-control">
+							</select>							
+						</div>						
 					</div>
 					<div class="modal-footer">
 						<button id="editar-memoest" name="editar-memoest" type="button" class="btn btn-warning">Editar</button>

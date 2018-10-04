@@ -160,8 +160,8 @@ class ModelUsuarios{
         }
         return $jsonresponse;
     }
-//revisar a quien esta asignado antes y cambiar el estado de la asignacion anterior
-//todos lo de la Secretaria estado 1, ver permisos para ayudante admin
+    //revisar a quien esta asignado antes y cambiar el estado de la asignacion anterior
+    //todos lo de la Secretaria estado 1, ver permisos para ayudante admin
     public function AsignaMemo($usuid,$memid){
         $jsonresponse = array();
         try{
@@ -170,14 +170,13 @@ class ModelUsuarios{
                                                     memo_tiene_usu_estado)
                     VALUES (?,?,?)";
 
-            $this->pdo->prepare($sql)
-                 ->execute(array($memid,
-                                 $usuid, 
-                                 '1')
-                          );
+            $this->pdo->prepare($sql)->execute(array($memid,
+                                                     $usuid, 
+                                                     '1')
+                                              );
             $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Memo asignado correctamente';                 
-        } catch (Exception $e){
+            $jsonresponse['message'] = 'Memo asignado correctamente';
+        }catch(Exception $e){
             //die($e->getMessage());
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al asginar memo al usuario';             
@@ -189,10 +188,10 @@ class ModelUsuarios{
         $jsonresponse = array();
         try{
             $result = array();
-             $stm = $this->pdo->prepare("SELECT  us.usuario_id,
+            $stm = $this->pdo->prepare("SELECT  us.usuario_id,
                                                 us.usuario_rut,
                                                 us.usuario_nombre,
-                                                  us.usuario_usu_rol_id,
+                                                us.usuario_usu_rol_id,
                                                 us.usuario_estado,
                                                 us.usuario_fecha_ingreso,
                                                 ur.usu_rol_nombre
@@ -216,6 +215,5 @@ class ModelUsuarios{
             die($e->getMessage());
         }
     }
-
 }
 ?>

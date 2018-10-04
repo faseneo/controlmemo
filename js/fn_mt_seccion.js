@@ -1,94 +1,31 @@
         function deshabilitabotones(){
-            document.getElementById('editar-memoest').style.display = 'none';
-            document.getElementById('guardar-memoest').style.display = 'none';
-            document.getElementById('actualizar-memoest').style.display = 'none';
+            document.getElementById('editar-seccion').style.display = 'none';
+            document.getElementById('guardar-seccion').style.display = 'none';
+            document.getElementById('actualizar-seccion').style.display = 'none';
         }
         function limpiaform(){
-            $("#memoestId").val("");
-            $("#memoestTipo").val("");
-			$("#memoestPrioridad").val("");
-            //$("#memoestActivo").val("");
-            //$("#memoestSeccionId").val("");
+            $("#secId").val("");
+            $("#secNombre").val("");
         }        
         function habilitaform(){
-            $("#memoestId").prop( "disabled", false );
-            $("#memoestTipo").prop( "disabled", false );
-            $("#memoestPrioridad").prop( "disabled", false );
-            $("#memoestActivo").prop( "disabled", false );
-            $("#memoestSeccionId").prop( "disabled", false );
+            $("#secId").prop( "disabled", false );
+            $("#secNombre").prop( "disabled", false );
         }
         function deshabilitaform(){
-            $("#memoestId").prop( "disabled", true );
-            $("#memoestTipo").prop( "disabled", true );
-            $("#memoestPrioridad").prop( "disabled", true );
-            $("#memoestActivo").prop( "disabled", true );
-            $("#memoestSeccionId").prop( "disabled", true );            
+            $("#secId").prop( "disabled", true );
+            $("#secNombre").prop( "disabled", true );
         }
-        var getlistaseccion = function (){
-            var datax = {
-                "Accion":"listar"
-            }
-            $.ajax({
-                data: datax, 
-                type: "GET",
-                dataType: "json", 
-                url: "controllers/controllerseccion.php", 
-            })
-            .done(function( data, textStatus, jqXHR ) {
-                $("#memoestSeccionId").html("");
-                if ( console && console.log ) {
-                    console.log( " data success : "+ data.success 
-                        + " \n data msg : "+ data.message 
-                        + " \n textStatus : " + textStatus
-                        + " \n jqXHR.status : " + jqXHR.status );
-                }
-                for(var i=0; i<data.datos.length;i++){
-                    console.log('id: '+data.datos[i].sec_id + ' tipo: '+data.datos[i].sec_nombre);
-                    opcion = '<option value='+ data.datos[i].sec_id +'>'+data.datos[i].sec_nombre+'</option>';
-                    $("#memoestSeccionId").append(opcion);
-                }
-            })
-            .fail(function( jqXHR, textStatus, errorThrown ) {
-                if ( console && console.log ) {
-                    console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
-                        + " \n errorThrown : "+ errorThrown
-                        + " \n textStatus : " + textStatus
-                        + " \n jqXHR.status : " + jqXHR.status );
-                }
-            });
-        }
-    getlistaseccion();
+
     $(document).ready(function(){
         function validarFormulario(){
-            var txtTipo = document.getElementById('memoestTipo').value;
-            var txtPriori = document.getElementById('memoestPrioridad').value;
-            var selEstActivo = document.getElementById('memoestActivo').selectedIndex;
-            var selEstSeccion = document.getElementById('memoestSeccionId').selectedIndex;
+            var txtNombre = document.getElementById('secNombre').value;
                 //Test campo obligatorio
-                if(txtTipo == null || txtTipo.length == 0 || /^\s+$/.test(txtTipo)){
-                    alert('ERROR: El campo Nombre Estado no debe ir vacío o con espacios en blanco');
-                    document.getElementById('memoestTipo').focus();
+                if(txtNombre == null || txtNombre.length == 0 || /^\s+$/.test(txtNombre)){
+                    alert('ERROR: El campo nombre no debe ir vacío o con espacios en blanco');
+                    document.getElementById('secNombre').focus();
                     return false;
                 } 
-                if(txtPriori == null || txtPriori.length == 0 || /^\s+$/.test(txtPriori)){
-                    alert('ERROR: El campo Prioridad no debe ir vacío o con espacios en blanco');
-                    document.getElementById('memoestPrioridad').focus();
-                    return false;
-                }
-                if( selEstActivo == null || isNaN(selEstActivo) || selEstActivo == -1 ) {
-                    /*$('#memoestActivo').parent().attr('class','form-group has-error');
-                    $('#memoestActivo').parent().children('span').text('Debe seleccionar un Departamento o Unidad Solicitante').show();*/
-                    alert('ERROR: Debe selecciona una opcion');
-                    document.getElementById('memoestActivo').focus();
-                    return false;
-                }
-                if( selEstSeccion == null || isNaN(selEstSeccion) || selEstSeccion == -1 ) {
-                    /*$('#memoestActivo').parent().attr('class','form-group has-error');
-                    $('#memoestActivo').parent().children('span').text('Debe seleccionar un Departamento o Unidad Solicitante').show();*/
-                    alert('ERROR: Debe selecciona una opcion');
-                    document.getElementById('memoestSeccionId').focus();
-                    return false;                    
-                }
+
             return true;
         }         
         deshabilitabotones();
@@ -101,10 +38,10 @@
                 data: datax, 
                 type: "GET",
                 dataType: "json", 
-                url: "controllers/controllermemoestado.php", 
+                url: "controllers/controllerseccion.php", 
             })
             .done(function( data, textStatus, jqXHR ) {
-                $("#listamemoestado").html("");
+                $("#listadoseccion").html("");
                 if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
                         + " \n data msg : "+ data.message 
@@ -113,28 +50,22 @@
                 }
                 for(var i=0; i<data.datos.length;i++){
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
-                                console.log('id: '+data.datos[i].memo_est_id + ' tipo: '+data.datos[i].memo_est_tipo);
-                                $clasetr = (data.datos[i].memo_est_seccion_id % 2) ? 'class="fila1"':'class="fila2"';
-                                var activo = data.datos[i].memo_est_activo == 1 ? 'Activo':'Inactivo';
+                                console.log('id: '+data.datos[i].sec_id + ' tipo: '+data.datos[i].sec_nombre);
 
-                                fila = '<tr '+$clasetr+'>';
-                                fila += '<td>'+ data.datos[i].memo_est_tipo +'</td>';
-                                fila += '<td>'+ data.datos[i].memo_est_seccion_nombre +'</td>';
-                                fila += '<td>'+ data.datos[i].memo_est_prioridad +'</td>';
-                                fila += '<td>'+ activo +'</td>';
-                                fila += '<td><button id="ver-memoest" type="button" '
+                                fila = '<tr><td>'+ data.datos[i].sec_nombre +'</td>';
+                                fila += '<td><button id="ver-seccion" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
-                                fila += ' onclick="verMemoEst(\'ver\',\'' + data.datos[i].memo_est_id + '\')">';
+                                fila += ' onclick="verSeccion(\'ver\',\'' + data.datos[i].sec_id + '\')">';
                                 fila += 'Ver / Editar</button>';
                                 fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
                                 fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                                fila += 'onclick="deleteMemoEst(\''+ data.datos[i].memo_est_id +'\',\''
-                                + data.datos[i].memo_est_tipo +'\')">';
+                                fila += 'onclick="deleteSeccion(\''+ data.datos[i].sec_id +'\',\''
+                                + data.datos[i].sec_nombre +'\')">';
                                 fila += 'Eliminar</button></td>';
                                 fila += '</tr>';
-                                $("#listamemoestado").append(fila);
-                }
-            })
+                                $("#listadoseccion").append(fila);
+                            }
+                        })
             .fail(function( jqXHR, textStatus, errorThrown ) {
                 if ( console && console.log ) {
                     console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
@@ -146,25 +77,25 @@
         }
 
         //Levanta modal nuevo centro de costos
-        $("#crea-memoest").click(function(e){
+        $("#crea-seccion").click(function(e){
             e.preventDefault();
             limpiaform();
             habilitaform();
             $("#Accion").val("registrar");
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
-                modal.find('.modal-title-form').text('Creación Memo Estado');  
+                modal.find('.modal-title-form').text('Creación Seccion');  
                 deshabilitabotones();
-                $('#guardar-memoest').show();
-                $('#memoestTipo').focus();
+                $('#guardar-seccion').show();
+                $('#secNombre').focus();
             });
         });
 
         // implementacion boton para guardar el centro de costo
-        $("#guardar-memoest").click(function(e){
+        $("#guardar-seccion").click(function(e){
             e.preventDefault();
             if(validarFormulario()==true){
-                var datax = $("#formMemoEst").serializeArray();
+                var datax = $("#formSeccion").serializeArray();
                 $.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
                 });
@@ -172,7 +103,7 @@
                     data: datax, 
                     type: "POST",
                     dataType: "json", 
-                    url: "controllers/controllermemoestado.php", 
+                    url: "controllers/controllerseccion.php", 
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     if ( console && console.log ) {
@@ -204,21 +135,21 @@
         });
 
         //Cambia boton y habilita form para actualizar
-        $("#editar-memoest").click(function(e){
+        $("#editar-seccion").click(function(e){
             e.preventDefault();
-            $('.modal-title-form').text('Editar Memo Estado');
+            $('.modal-title-form').text('Editar Seccion');
             habilitaform();
             deshabilitabotones();
-            $('#actualizar-memoest').show();
+            $('#actualizar-seccion').show();
             $("#Accion").val("actualizar");               
         });
 
         //  envia los nuevos datos para actualizar
-        $("#actualizar-memoest").click(function(e){
+        $("#actualizar-seccion").click(function(e){
                     // Detenemos el comportamiento normal del evento click sobre el elemento clicado
                     e.preventDefault();
                     if(validarFormulario()==true){
-                        var datax = $("#formMemoEst").serializeArray();
+                        var datax = $("#formSeccion").serializeArray();
                         /*   $.each(datax, function(i, field){
                             console.log("contenido del form = "+ field.name + ":" + field.value + " ");
                         });*/
@@ -226,7 +157,7 @@
                             data: datax,    // En data se puede utilizar un objeto JSON, un array o un query string
                             type: "POST",   //Cambiar a type: POST si necesario
                             dataType: "json",  // Formato de datos que se espera en la respuesta
-                            url: "controllers/controllermemoestado.php",  // URL a la que se enviará la solicitud Ajax
+                            url: "controllers/controllerseccion.php",  // URL a la que se enviará la solicitud Ajax
                         })
                         .done(function( data, textStatus, jqXHR ) {
                             if ( console && console.log ) {
@@ -257,10 +188,10 @@
                     }
                 });
         // Envia los datos para eliminar
-        $("#eliminar-memoest").click(function(e){
+        $("#eliminar-seccion").click(function(e){
             e.preventDefault();
             console.log("paso");
-            var datax = $("#formDeleteMemoEst").serializeArray();
+            var datax = $("#formDeleteSeccion").serializeArray();
 
             console.log("paso2");
 
@@ -272,7 +203,7 @@
                         data: datax, 
                         type: "POST",
                         dataType: "json", 
-                        url: "controllers/controllermemoestado.php",
+                        url: "controllers/controllerseccion.php",
                     })
                     .done(function(data,textStatus,jqXHR ) {
                         if ( console && console.log ) {
@@ -304,16 +235,16 @@
         getlista();
     });
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
-    function verMemoEst(action, memoestid){
+    function verSeccion(action, secId){
         deshabilitabotones();
-        var datay = {"memoestId": memoestid,
+        var datay = {"secId": secId,
                      "Accion":"obtener"
                     };
         $.ajax({
             data: datay, 
             type: "POST",
             dataType: "json", 
-            url: "controllers/controllermemoestado.php",
+            url: "controllers/controllerseccion.php",
         })
         .done(function(data,textStatus,jqXHR ) {
             if ( console && console.log ) {
@@ -322,11 +253,8 @@
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
             }
-            $("#memoestId").val(data.datos.memo_est_id);
-            $("#memoestTipo").val(data.datos.memo_est_tipo);
-            $("#memoestPrioridad").val(data.datos.memo_est_prioridad);
-            $("#memoestActivo").val(data.datos.memo_est_activo);
-            $("#memoestSeccionId").val(data.datos.memo_est_seccion_id);
+            $("#secId").val(data.datos.sec_id);
+            $("#secNombre").val(data.datos.sec_nombre);
 
             deshabilitaform();
             $("#Accion").val(action);
@@ -334,13 +262,13 @@
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
                 if (action === 'actualizar'){
-                    modal.find('.modal-title-form').text('Actualizar Memo Estado');
-                    $('#guardar-memoest').hide();                    
-                    $('#actualizar-memoest').show();   
+                    modal.find('.modal-title-form').text('Actualizar Seccion');
+                    $('#guardar-seccion').hide();                    
+                    $('#actualizar-seccion').show();   
                 }else if (action === 'ver'){
-                    modal.find('.modal-title-form').text('Datos Memo Estado');
+                    modal.find('.modal-title-form').text('Datos Seccion');
                     deshabilitabotones();
-                    $('#editar-memoest').show();   
+                    $('#editar-seccion').show();   
                 }
 
             });
@@ -355,10 +283,10 @@
         });
     }
     // Funcion que levanta modal para eliminar centro de costo 
-    function deleteMemoEst(idmemoest, nameMemoest){     
-        document.formDeleteMemoEst.memoestId.value = idmemoest;
-        document.formDeleteMemoEst.nameMemoest.value = nameMemoest;
-        document.formDeleteMemoEst.Accion.value = "eliminar";
+    function deleteSeccion(idseccion, nameSeccion){     
+        document.formDeleteSeccion.secId.value = idseccion;
+        document.formDeleteSeccion.nameSeccion.value = nameSeccion;
+        document.formDeleteSeccion.Accion.value = "eliminar";
         $('#myModalDelete').on('shown.bs.modal', function () {
             $('#myInput').focus()
         });
