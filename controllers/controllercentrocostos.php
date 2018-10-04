@@ -45,6 +45,12 @@ if(isset($_REQUEST['Accion'])){
             $jsondata = $modelCentroc->Listar();
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
+            break;
+
+        case 'listarmin':
+            $jsondata = $modelCentroc->ListarMin();
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);
             break;            
     }
 }

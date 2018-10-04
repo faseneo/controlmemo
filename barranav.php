@@ -21,7 +21,7 @@
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">Mantendor<span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a href="mantenedordep.php">Dependencias</a></li>					
-						<li><a href="mantenedorcc.php">Centro de Costos</a></li>
+						<li><a href="mt_centrocosto.php">Centro de Costos</a></li>
 						<li><a href="mt_departamento.php">Departamentos</a></li>
 <!-- 						<li><a href="mantenedorperf.php">Perfiles</a></li> -->
 						<li><a href="mt_usuarios.php">Usuarios</a></li>

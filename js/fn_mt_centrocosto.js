@@ -1,5 +1,25 @@
+    function deshabilitabotones(){
+        document.getElementById('editar-cecosto').style.display = 'none';
+        document.getElementById('guardar-cecosto').style.display = 'none';
+        document.getElementById('actualizar-cecosto').style.display = 'none';
+    }
+    function limpiaform(){
+        $("#ccCodigo").val("");
+        $("#ccNombre").val("");
+        //$("#ccDependencia").val("");
+    }        
+    function habilitaform(){
+        $("#ccCodigo").prop( "disabled", false );
+        $("#ccNombre").prop( "disabled", false );
+        $("#ccDependencia").prop( "disabled", false );
+    }
+    function deshabilitaform(){
+        $("#ccCodigo").prop( "disabled", true );
+        $("#ccNombre").prop( "disabled", true );
+        $("#ccDependencia").prop( "disabled", true );
+    }
            //funcion para listar los cecostos
-        var getlistaDep = function (){
+    var getlistaDep = function (){
             var datax = {
                 "Accion":"listar"
             }
@@ -31,28 +51,8 @@
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
             });
-        }
-    function deshabilitabotones(){
-        document.getElementById('editar-cecosto').style.display = 'none';
-        document.getElementById('guardar-cecosto').style.display = 'none';
-        document.getElementById('actualizar-cecosto').style.display = 'none';
     }
-    function limpiaform(){
-        $("#ccCodigo").val("");
-        $("#ccNombre").val("");
-        $("#ccDependencia").val("");
-    }        
-    function habilitaform(){
-        $("#ccCodigo").prop( "disabled", false );
-        $("#ccNombre").prop( "disabled", false );
-        $("#ccDependencia").prop( "disabled", false );
-    }
-    function deshabilitaform(){
-        $("#ccCodigo").prop( "disabled", true );
-        $("#ccNombre").prop( "disabled", true );
-        $("#ccDependencia").prop( "disabled", true );
-    }
-
+    getlistaDep();
     $(document).ready(function(){
         //funcion para validar campos del formulario
         function validarFormulario(){
@@ -97,6 +97,7 @@
                                 fila = '<tr>';
                                 fila += '<td>'+ data.datos[i].ccosto_codigo +'</td>';
                                 fila += '<td>'+ data.datos[i].ccosto_nombre +'</td>';
+                                fila += '<td>'+ data.datos[i].ccosto_dep_nombre +'</td>';
                                 fila += '<td><button id="ver-cecosto" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
                                 fila += ' onclick="verCecosto(\'ver\',\'' + data.datos[i].ccosto_codigo + '\')">';
@@ -125,7 +126,7 @@
             e.preventDefault();
             limpiaform();
             habilitaform();
-            getlistaDep();
+            //getlistaDep();
             $("#Accion").val("registrar");
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
@@ -282,7 +283,7 @@
     function verCecosto(action, ccid){
         deshabilitabotones();
         deshabilitaform();        
-        getlistaDep();
+        //getlistaDep();
         var datay = {"ccCodigo": ccid,
                      "Accion":"obtener"
                     };
@@ -302,6 +303,8 @@
             $("#ccCodigo").val(data.datos.ccosto_codigo);
             $("#ccNombre").val(data.datos.ccosto_nombre);
             $("#ccDependencia").val(data.datos.ccosto_dep_codigo);
+
+            console.log('dependencia : '+data.datos.ccosto_dep_codigo);
             $("#Accion").val(action);
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);

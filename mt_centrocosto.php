@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
 	<?php include "header.php"; ?>
-	<script src="js/funcionescc.js"></script>
+	<script src="js/fn_mt_centrocosto.js"></script>
 </head>
 <body>
 	<?php include "barranav.php"; ?>
 	<div class="container" style="margin-top:50px">
 		<div class="row">
-			<div class="col-md-9">  
+			<div class="col-md-12">  
 				<h2 class="sub-header">Centro de Costos</h2>
 				<div class="table-responsive">
 					<button type="button" id="crea-cecosto" class="btn btn-sm btn-primary"
@@ -16,9 +16,10 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th width="15%">Código</th>
-								<th width="60%">Nombre</th>
-								<th width="25%">Acciones</th>
+								<th width="10%">Código</th>
+								<th width="45%">Nombre</th>
+								<th width="30%">Nombre</th>
+								<th width="15%">Acciones</th>
 							</tr>
 						</thead>
 						<tbody id="listacecostos">
