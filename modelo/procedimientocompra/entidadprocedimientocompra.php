@@ -4,7 +4,7 @@ class ProcCompra{
     private $proc_comp_id;
     private $proc_comp_tipo;
     private $proc_priori;
-    
+    private $proc_activo;
 
     public function __GET($k){
         return $this->$k;

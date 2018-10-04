@@ -6,24 +6,27 @@
     function limpiaform(){
         $("#proccompId").val("");
         $("#proccompTipo").val("");
-        $("#procPriori").val("");
+        $("#proccompPrioridad").val("");
     }        
     function habilitaform(){
         $("#proccompId").prop( "disabled", false );
         $("#proccompTipo").prop( "disabled", false );
-        $("#procPriori").prop( "disabled", false );
+        $("#proccompPrioridad").prop( "disabled", false );
+        $("#proccompActivo").prop( "disabled", false );
     }
     function deshabilitaform(){
         $("#proccompId").prop( "disabled", true );
         $("#proccompTipo").prop( "disabled", true );
-        $("#procPriori").prop( "disabled", true );
+        $("#proccompPrioridad").prop( "disabled", true );
+        $("#proccompActivo").prop( "disabled", true );
     }
 
     $(document).ready(function(){
         //funcion para validar campos del formulario
         function validarFormulario(){
             var txtTipo = document.getElementById('proccompTipo').value;
-            var txtPriori = document.getElementById('procPriori').value;
+            var txtPriori = document.getElementById('proccompPrioridad').value;
+            var proctActivo = document.getElementById('proccompActivo').selectedIndex;
                 //Test campo obligatorio
                 if(txtTipo == null || txtTipo.length == 0 || /^\s+$/.test(txtTipo)){
                     alert('ERROR: El campo tipo no debe ir vacío o con espacios en blanco');
@@ -32,9 +35,14 @@
                 }   
                 if(txtPriori == null || txtPriori.length == 0 || /^\s+$/.test(txtPriori)){
                     alert('ERROR: El campo prioridad no debe ir vacío o con espacios en blanco');
-                    document.getElementById('procPriori').focus();
+                    document.getElementById('proccompPrioridad').focus();
                     return false;
-                }          
+                }
+                if( proctActivo == null || isNaN(proctActivo) || proctActivo == -1 ) {
+                    alert('ERROR: Debe selecciona una opcion');
+                    document.getElementById('proccompActivo').focus();
+                    return false;
+                }                
             return true;
         }         
         //funcion para listar los cecostos
@@ -59,10 +67,11 @@
                 for(var i=0; i<data.datos.length;i++){
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
                                 console.log('id: '+data.datos[i].proc_comp_id + ' tipo: '+data.datos[i].proc_comp_tipo);
+                                var activo = data.datos[i].proc_activo == 1 ? 'Activo':'Inactivo';
 
                                 fila = '<tr><td>'+ data.datos[i].proc_comp_tipo +'</td>';
-                                fila += '<td>'+ data.datos[i].proc_priori +'</td>';
-
+                                fila += '<td>' + data.datos[i].proc_priori +'</td>';
+                                fila += '<td>' + activo + '</td>';
                                 fila += '<td><button id="ver-proccomp" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
                                 fila += ' onclick="verProcComp(\'ver\',\'' + data.datos[i].proc_comp_id + '\')">';
@@ -264,7 +273,8 @@
             }
             $("#proccompId").val(data.datos.proc_comp_id);
             $("#proccompTipo").val(data.datos.proc_comp_tipo);
-            $("#procPriori").val(data.datos.proc_priori);
+            $("#proccompPrioridad").val(data.datos.proc_priori);
+            $("#proccompActivo").val(data.datos.proc_activo);
 
             deshabilitaform();
             $("#Accion").val(action);

@@ -16,9 +16,10 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th width="30%">Tipo</th>
-								<th width="30%">Prioridad</th>
-								<th width="30%">Acciones</th> 
+								<th width="40%">Nombre Procedimiento</th>
+								<th width="20%">Prioridad</th>
+								<th width="20%">Activo</th>
+								<th width="20%">Acciones</th> 
 							</tr>
 						</thead>
 						<tbody id="listaproccomp">
@@ -41,13 +42,20 @@
 					<input type="hidden" name="Accion" id="Accion" value="" />
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="proccompTipo">Tipo</label>
+							<label for="proccompTipo">Nombre Procedimiento</label>
 							<input id="proccompTipo" class="form-control" type="text" name="proccompTipo" value="" title="Ingrese un Tipo" required />
 						</div>
 						<div class="form-group">
-							<label for="procPriori">Prioridad</label>
-							<input id="procPriori" class="form-control" type="text" name="procPriori" value="" title="Ingrese prioridad" required />
-						</div>
+							<label for="proccompPrioridad">Prioridad</label>
+							<input id="proccompPrioridad" class="form-control" type="number" name="proccompPrioridad" value="" title="Ingrese prioridad" required />
+						</div>						
+						<div class="form-group">
+							<label for="proccompActivo">Activo</label>
+							<select name="proccompActivo" id="proccompActivo" class="form-control">
+								<option value="0">NO</option>
+								<option value="1" selected>SI</option>
+							</select>
+						</div>						
 					</div>
 					<div class="modal-footer">
 						<button id="editar-proccomp" name="editar-proccomp" type="button" class="btn btn-warning">Editar</button>

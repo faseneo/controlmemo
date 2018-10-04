@@ -15,17 +15,18 @@ if(isset($_REQUEST['Accion'])){
 
         case 'actualizar':
             $procComp->__SET('proc_comp_id',        $_REQUEST['proccompId']);
-            $procComp->__SET('proc_comp_tipo',    $_REQUEST['proccompTipo']);
-            $procComp->__SET('proc_priori',         $_REQUEST['procPriori']);
-
+            $procComp->__SET('proc_comp_tipo',      $_REQUEST['proccompTipo']);
+            $procComp->__SET('proc_priori',         $_REQUEST['proccompPrioridad']);
+            $procComp->__SET('proc_activo',         $_REQUEST['proccompActivo']);
             $jsondata = $modelProcComp->Actualizar($procComp);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);
             break;
 
         case 'registrar':
-            $procComp->__SET('proc_comp_tipo',    $_REQUEST['proccompTipo']);
-            $procComp->__SET('proc_priori',    $_REQUEST['procPriori']);            
+            $procComp->__SET('proc_comp_tipo',  $_REQUEST['proccompTipo']);
+            $procComp->__SET('proc_priori',     $_REQUEST['proccompPrioridad']);
+            $procComp->__SET('proc_activo',     $_REQUEST['proccompActivo']);
             $jsondata = $modelProcComp->Registrar($procComp);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
@@ -47,7 +48,13 @@ if(isset($_REQUEST['Accion'])){
             $jsondata = $modelProcComp->Listar();
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
-            break;            
+            break;
+
+        case 'listarmin':
+            $jsondata = $modelProcComp->ListarMin();
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);
+            break;
     }
 }
 

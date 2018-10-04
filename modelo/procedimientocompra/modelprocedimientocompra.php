@@ -22,15 +22,17 @@ class ModelProcCompra {
             $result = array();
             $stm = $this->pdo->prepare("SELECT  pc.proc_compra_id,
                                                 pc.proc_compra_tipo,
-						                        pc.proc_prioridad
+						                        pc.proc_compra_prioridad,
+                                                pc.proc_compra_activo
                                         FROM procedimiento_compra as pc
-                                        ORDER BY pc.proc_prioridad ASC");
+                                        ORDER BY pc.proc_compra_prioridad ASC");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new ProcCompra();
-                    $busq->__SET('proc_comp_id', $r->proc_compra_id);
-                    $busq->__SET('proc_comp_tipo', $r->proc_compra_tipo);
-                    $busq->__SET('proc_priori', $r->proc_prioridad);                    
+                    $busq->__SET('proc_comp_id',    $r->proc_compra_id);
+                    $busq->__SET('proc_comp_tipo',  $r->proc_compra_tipo);
+                    $busq->__SET('proc_priori',     $r->proc_compra_prioridad);
+                    $busq->__SET('proc_activo',     $r->proc_compra_activo);
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;
@@ -48,19 +50,20 @@ class ModelProcCompra {
     public function Obtener($id){
        $jsonresponse = array();
         try{
-            $stm = $this->pdo
-                       ->prepare("SELECT pc.proc_compra_id,
-                                         pc.proc_compra_tipo,
-					 pc.proc_prioridad
-                                FROM procedimiento_compra as pc
-                                WHERE pc.proc_compra_id = ?");
+            $stm = $this->pdo->prepare("SELECT  pc.proc_compra_id,
+                                                pc.proc_compra_tipo,
+                                                pc.proc_compra_prioridad,
+                                                pc.proc_compra_activo
+                                        FROM procedimiento_compra as pc
+                                        WHERE pc.proc_compra_id = ?");
             $stm->execute(array($id));
             $r = $stm->fetch(PDO::FETCH_OBJ);
 
             $busq = new ProcCompra();
-                    $busq->__SET('proc_comp_id', $r->proc_compra_id);
-                    $busq->__SET('proc_comp_tipo', $r->proc_compra_tipo);
-                    $busq->__SET('proc_priori', $r->proc_prioridad);
+                    $busq->__SET('proc_comp_id',    $r->proc_compra_id);
+                    $busq->__SET('proc_comp_tipo',  $r->proc_compra_tipo);
+                    $busq->__SET('proc_priori',     $r->proc_compra_prioridad);
+                    $busq->__SET('proc_activo',     $r->proc_compra_activo);
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Se obtuvo procedimiento de compra correctamente';
             $jsonresponse['datos'] = $busq->returnArray();
@@ -75,8 +78,7 @@ class ModelProcCompra {
     public function Eliminar($id){
         $jsonresponse = array();
         try{
-            $stm = $this->pdo
-                      ->prepare("DELETE FROM procedimiento_compra WHERE proc_compra_id = ? ");
+            $stm = $this->pdo->prepare("DELETE FROM procedimiento_compra WHERE proc_compra_id = ? ");
             $stm->execute(array($id));
 
             $jsonresponse['success'] = true;
@@ -92,11 +94,13 @@ class ModelProcCompra {
     public function Registrar(ProcCompra $data){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO procedimiento_compra (proc_compra_tipo, proc_prioridad) 
-                    VALUES (?,?)";
+            $sql = "INSERT INTO procedimiento_compra (proc_compra_tipo, proc_compra_prioridad,proc_compra_activo) 
+                    VALUES (?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('proc_comp_tipo'),
-							 $data->__GET('proc_priori'))
+							                         $data->__GET('proc_priori'),
+                                                     $data->__GET('proc_activo')
+                                                     )
                                               );
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Procedimiento de compra ingresado correctamente'; 
@@ -116,14 +120,16 @@ class ModelProcCompra {
         try{
             $sql = "UPDATE procedimiento_compra SET 
                            proc_compra_tipo = ?,
-			   proc_prioridad = ?
+			               proc_compra_prioridad = ?,
+                           proc_compra_activo = ?
                     WHERE  proc_compra_id = ?";
 
-            $this->pdo->prepare($sql)
-                 ->execute(array($data->__GET('proc_comp_tipo'),
-                                 $data->__GET('proc_comp_id'),
-				 $data->__GET('proc_priori'))
-                          );
+            $this->pdo->prepare($sql)->execute(array($data->__GET('proc_comp_tipo'),
+                                                     $data->__GET('proc_priori'),
+				                                     $data->__GET('proc_activo'),
+                                                     $data->__GET('proc_comp_id')
+                                                    )
+                                                );
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Procedimiento de compra actualizado correctamente';                 
         } catch (Exception $e){
@@ -140,14 +146,17 @@ class ModelProcCompra {
             $result = array();
              $stm = $this->pdo->prepare("SELECT  pc.proc_compra_id,
                                                  pc.proc_compra_tipo,
-												 pc.proc_prioridad
-                                        FROM procedimiento_compra as pc");
+                                                 pc.proc_compra_prioridad,
+                                                 pc.proc_compra_activo
+                                        FROM procedimiento_compra as pc
+                                        ORDER BY pc.proc_compra_prioridad ASC");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new ProcCompra();
-                    $busq->__SET('proc_comp_id', $r->proc_compra_id);
-                    $busq->__SET('proc_comp_tipo', $r->proc_compra_tipo); 
-                    $busq->__SET('proc_priori', $r->proc_prioridad);
+                    $busq->__SET('proc_comp_id',    $r->proc_compra_id);
+                    $busq->__SET('proc_comp_tipo',  $r->proc_compra_tipo);
+                    $busq->__SET('proc_priori',     $r->proc_compra_prioridad);
+                    $busq->__SET('proc_activo',     $r->proc_compra_activo);
                 $result[] = $busq;
             }
             return $result;
@@ -156,6 +165,36 @@ class ModelProcCompra {
             die($e->getMessage());
         }
     }
+
+    public function ListarMin(){
+        $jsonresponse = array();
+        try{
+            $result = array();
+            $stm = $this->pdo->prepare("SELECT  pc.proc_compra_id,
+                                                pc.proc_compra_tipo
+                                        FROM procedimiento_compra as pc
+                                        WHERE pc.proc_compra_activo=1
+                                        ORDER BY pc.proc_compra_prioridad ASC");
+            $stm->execute();
+            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                $busq = new ProcCompra();
+                    $busq->__SET('proc_comp_id',    $r->proc_compra_id);
+                    $busq->__SET('proc_comp_tipo',  $r->proc_compra_tipo);
+                    $busq->__SET('proc_priori',     $r->proc_compra_prioridad);
+                    $busq->__SET('proc_activo',     $r->proc_compra_activo);
+                $result[] = $busq->returnArray();
+            }
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'listado correctamente';
+            $jsonresponse['datos'] = $result;
+            return $jsonresponse;
+        }
+        catch(Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al listar procedimientos de compras';
+        }
+    }    
 }
 
 
