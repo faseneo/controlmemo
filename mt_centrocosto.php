@@ -17,8 +17,8 @@
 						<thead>
 							<tr>
 								<th width="10%">Código</th>
-								<th width="45%">Nombre</th>
-								<th width="30%">Nombre</th>
+								<th width="45%">Nombre Centro de Costos</th>
+								<th width="30%">Unidad de dependencia</th>
 								<th width="15%">Acciones</th>
 							</tr>
 						</thead>
@@ -45,7 +45,7 @@
 							<input id="ccCodigo" name="ccCodigo" class="form-control" rows="3"  title="Ingrese una Codigo" />
 						</div>
 						<div class="form-group">
-							<label for="ccNombre">Nombre</label>
+							<label for="ccNombre">Nombre Centro de Costos</label>
 							<input id="ccNombre" class="form-control" type="text" name="ccNombre" value="" title="Ingrese un nombre" required />
 						</div>
 						<div class="form-group">

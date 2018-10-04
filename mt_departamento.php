@@ -1,7 +1,7 @@
 <html>
     <head>
 	<?php include "header.php"; ?>
-	<script src="js/funcionesdpto.js"></script>  
+	<script src="js/fn_mt_depto.js"></script>  
     </head>
     <body>
 
