@@ -26,7 +26,7 @@
 <!-- 						<li><a href="mantenedorperf.php">Perfiles</a></li> -->
 						<li><a href="mt_usuarios.php">Usuarios</a></li>
 						<li><a href="mantenedorusurol.php">Usuario Rol</a></li>
-						<li><a href="mantenedorprov.php">Proveedores</a></li>
+						<li><a href="mt_proveedores.php">Proveedores</a></li>
 						<li><a href="mt_procedimientos.php">Procedimiento Compra</a></li>
 						<li><a href="mantenedormemodetest.php">Estado Detalle Memo</a></li>
 						<li><a href="mt_memoestado.php">Estado Memos</a></li>
