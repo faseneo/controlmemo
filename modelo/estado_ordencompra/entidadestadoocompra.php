@@ -1,9 +1,10 @@
 <?php
 //memo_detalle_estado
-class MemoDetEst{
-    private $memo_det_est_id;
-    private $memo_det_est_tipo;
-	private $memo_det_priori;
+class EstadoOCompra{
+    private $est_oc_id;
+    private $est_oc_tipo;
+	private $est_oc_prioridad;
+    private $est_oc_activo;
 
     public function __GET($k){
         return $this->$k;

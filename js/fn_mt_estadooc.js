@@ -1,38 +1,48 @@
         function deshabilitabotones(){
-            document.getElementById('editar-memodetest').style.display = 'none';
-            document.getElementById('guardar-memodetest').style.display = 'none';
-            document.getElementById('actualizar-memodetest').style.display = 'none';
+            document.getElementById('editar-estadoOC').style.display = 'none';
+            document.getElementById('guardar-estadoOC').style.display = 'none';
+            document.getElementById('actualizar-estadoOC').style.display = 'none';
         }
         function limpiaform(){
-            $("#memodetestId").val("");
-            $("#memodetestTipo").val("");
-            $("#memodetPriori").val("");
+            $("#estadoOCId").val("");
+            $("#estadoOCTipo").val("");
+            $("#estadoOCPriori").val("");
+            //$("#estadoOCActivo").val("");
         }        
         function habilitaform(){
-            $("#memodetestId").prop( "disabled", false );
-            $("#memodetestTipo").prop( "disabled", false );
-            $("#memodetPriori").prop( "disabled", false );
+            $("#estadoOCId").prop( "disabled", false );
+            $("#estadoOCTipo").prop( "disabled", false );
+            $("#estadoOCPriori").prop( "disabled", false );
+            $("#estadoOCActivo").prop( "disabled", false );
         }
         function deshabilitaform(){
-            $("#memodetestId").prop( "disabled", true );
-            $("#memodetestTipo").prop( "disabled", true );
-            $("#memodetPriori").prop( "disabled", true );
+            $("#estadoOCId").prop( "disabled", true );
+            $("#estadoOCTipo").prop( "disabled", true );
+            $("#estadoOCPriori").prop( "disabled", true );
+            $("#estadoOCActivo").prop( "disabled", true );
         }
 $(document).ready(function(){
         function validarFormulario(){
-            var txtTipo = document.getElementById('memodetestTipo').value;
-            var txtPriori = document.getElementById('memodetPriori').value;
+            var txtTipo = document.getElementById('estadoOCTipo').value;
+            var txtPriori = document.getElementById('estadoOCPriori').value;
+            var selEstActivo = document.getElementById('estadoOCActivo').selectedIndex;
+
                 //Test campo obligatorio
                 if(txtTipo == null || txtTipo.length == 0 || /^\s+$/.test(txtTipo)){
                     alert('ERROR: El campo tipo no debe ir vacío o con espacios en blanco');
-                    document.getElementById('memodetestTipo').focus();
+                    document.getElementById('estadoOCTipo').focus();
                     return false;
                 }
                 if(txtPriori == null || txtPriori.length == 0 || /^\s+$/.test(txtPriori)){
                     alert('ERROR: El campo prioridad no debe ir vacío o con espacios en blanco');
-                    document.getElementById('memodetPriori').focus();
+                    document.getElementById('estadoOCPriori').focus();
                     return false;
-                }              
+                }
+                if( selEstActivo == null || isNaN(selEstActivo) || selEstActivo == -1 ) {
+                    alert('ERROR: Debe selecciona una opcion');
+                    document.getElementById('estadoOCActivo').focus();
+                    return false;
+                }                
             return true;
         }         
         deshabilitabotones();
@@ -45,10 +55,10 @@ $(document).ready(function(){
                 data: datax, 
                 type: "GET",
                 dataType: "json", 
-                url: "controllers/controllermemodetalleestado.php", 
+                url: "controllers/controllerestadoocompra.php", 
             })
             .done(function( data, textStatus, jqXHR ) {
-                $("#listamemodetest").html("");
+                $("#listaestadoOC").html("");
                 if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
                         + " \n data msg : "+ data.message 
@@ -57,22 +67,24 @@ $(document).ready(function(){
                 }
                 for(var i=0; i<data.datos.length;i++){
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
-                                console.log('id: '+data.datos[i].memo_det_est_id + ' tipo: '+data.datos[i].memo_det_est_tipo);
+                                console.log('id: '+data.datos[i].est_oc_id + ' tipo: '+data.datos[i].est_oc_tipo);
+                               var activo = data.datos[i].est_oc_activo == 1 ? 'Activo':'Inactivo';
 
-                                fila = '<tr><td>'+ data.datos[i].memo_det_est_tipo +'</td>';
-                                fila += '<td>'+ data.datos[i].memo_det_priori +'</td>';
+                                fila = '<tr><td>'+ data.datos[i].est_oc_tipo +'</td>';
+                                fila += '<td>'+ data.datos[i].est_oc_prioridad +'</td>';
+                                fila += '<td>'+ activo +'</td>';
 
-                                fila += '<td><button id="ver-memodetest" type="button" '
+                                fila += '<td><button id="ver-estadoOC" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
-                                fila += ' onclick="verMemoDetEst(\'ver\',\'' + data.datos[i].memo_det_est_id + '\')">';
+                                fila += ' onclick="verestadoOC(\'ver\',\'' + data.datos[i].est_oc_id + '\')">';
                                 fila += 'Ver / Editar</button>';
                                 fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
                                 fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                                fila += 'onclick="deleteMemoDetEst(\''+ data.datos[i].memo_det_est_id +'\',\''
-                                + data.datos[i].memo_det_est_tipo +'\')">';
+                                fila += 'onclick="deleteestadoOC(\''+ data.datos[i].est_oc_id +'\',\''
+                                + data.datos[i].est_oc_tipo +'\')">';
                                 fila += 'Eliminar</button></td>';
                                 fila += '</tr>';
-                                $("#listamemodetest").append(fila);
+                                $("#listaestadoOC").append(fila);
                             }
                         })
             .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -86,25 +98,25 @@ $(document).ready(function(){
         }
 
         //Levanta modal nuevo centro de costos
-        $("#crea-memodetest").click(function(e){
+        $("#crea-estadoOC").click(function(e){
             e.preventDefault();
             limpiaform();
             habilitaform();
             $("#Accion").val("registrar");
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
-                modal.find('.modal-title-form').text('Creación Memo Detalle Estado');  
+                modal.find('.modal-title-form').text('Creación Estado Orden de Compra');  
                 deshabilitabotones();
-                $('#guardar-memodetest').show();
-                $('#memodetestTipo').focus();
+                $('#guardar-estadoOC').show();
+                $('#estadoOCTipo').focus();
             });
         });
 
         // implementacion boton para guardar el centro de costo
-        $("#guardar-memodetest").click(function(e){
+        $("#guardar-estadoOC").click(function(e){
             e.preventDefault();
             if(validarFormulario()==true){
-                var datax = $("#formMemoDetEst").serializeArray();
+                var datax = $("#formestadoOC").serializeArray();
                 $.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
                 });
@@ -112,7 +124,7 @@ $(document).ready(function(){
                     data: datax, 
                     type: "POST",
                     dataType: "json", 
-                    url: "controllers/controllermemodetalleestado.php", 
+                    url: "controllers/controllerestadoocompra.php", 
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     if ( console && console.log ) {
@@ -144,21 +156,21 @@ $(document).ready(function(){
         });
 
         //Cambia boton y habilita form para actualizar
-        $("#editar-memodetest").click(function(e){
+        $("#editar-estadoOC").click(function(e){
             e.preventDefault();
-            $('.modal-title-form').text('Editar Memo Detalle Estado');
+            $('.modal-title-form').text('Editar Estado Orden de Compra');
             habilitaform();
             deshabilitabotones();
-            $('#actualizar-memodetest').show();
+            $('#actualizar-estadoOC').show();
             $("#Accion").val("actualizar");               
         });
 
         //  envia los nuevos datos para actualizar
-        $("#actualizar-memodetest").click(function(e){
+        $("#actualizar-estadoOC").click(function(e){
                     // Detenemos el comportamiento normal del evento click sobre el elemento clicado
                     e.preventDefault();
                     if(validarFormulario()==true){
-                        var datax = $("#formMemoDetEst").serializeArray();
+                        var datax = $("#formestadoOC").serializeArray();
                         /*   $.each(datax, function(i, field){
                             console.log("contenido del form = "+ field.name + ":" + field.value + " ");
                         });*/
@@ -166,7 +178,7 @@ $(document).ready(function(){
                             data: datax,    // En data se puede utilizar un objeto JSON, un array o un query string
                             type: "POST",   //Cambiar a type: POST si necesario
                             dataType: "json",  // Formato de datos que se espera en la respuesta
-                            url: "controllers/controllermemodetalleestado.php",  // URL a la que se enviará la solicitud Ajax
+                            url: "controllers/controllerestadoocompra.php",  // URL a la que se enviará la solicitud Ajax
                         })
                         .done(function( data, textStatus, jqXHR ) {
                             if ( console && console.log ) {
@@ -197,10 +209,10 @@ $(document).ready(function(){
                     }
                 });
         // Envia los datos para eliminar
-        $("#eliminar-memodetest").click(function(e){
+        $("#eliminar-estadoOC").click(function(e){
             e.preventDefault();
             console.log("paso");
-            var datax = $("#formDeleteMemoDetEst").serializeArray();
+            var datax = $("#formDeleteestadoOC").serializeArray();
 
             console.log("paso2");
 
@@ -212,7 +224,7 @@ $(document).ready(function(){
                         data: datax, 
                         type: "POST",
                         dataType: "json", 
-                        url: "controllers/controllermemodetalleestado.php",
+                        url: "controllers/controllerestadoocompra.php",
                     })
                     .done(function(data,textStatus,jqXHR ) {
                         if ( console && console.log ) {
@@ -244,16 +256,16 @@ $(document).ready(function(){
         getlista();
     });
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
-    function verMemoDetEst(action, memodetestid){
+    function verestadoOC(action, estadoOC_id){
         deshabilitabotones();
-        var datay = {"memodetestId": memodetestid,
+        var datay = {"estadoOCId": estadoOC_id,
                      "Accion":"obtener"
                     };
         $.ajax({
             data: datay, 
             type: "POST",
             dataType: "json", 
-            url: "controllers/controllermemodetalleestado.php",
+            url: "controllers/controllerestadoocompra.php",
         })
         .done(function(data,textStatus,jqXHR ) {
             if ( console && console.log ) {
@@ -262,9 +274,10 @@ $(document).ready(function(){
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
             }
-            $("#memodetestId").val(data.datos.memo_det_est_id);
-            $("#memodetestTipo").val(data.datos.memo_det_est_tipo);
-            $("#memodetPriori").val(data.datos.memo_det_priori);
+            $("#estadoOCId").val(data.datos.est_oc_id);
+            $("#estadoOCTipo").val(data.datos.est_oc_tipo);
+            $("#estadoOCPriori").val(data.datos.est_oc_prioridad);
+            $("#estadoOCActivo").val(data.datos.est_oc_activo);
 
             deshabilitaform();
             $("#Accion").val(action);
@@ -272,13 +285,13 @@ $(document).ready(function(){
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
                 if (action === 'actualizar'){
-                    modal.find('.modal-title-form').text('Actualizar Memo Detalle Estado');
-                    $('#guardar-memodetest').hide();                    
-                    $('#actualizar-memodetest').show();   
+                    modal.find('.modal-title-form').text('Actualizar Estado Orden de Compra');
+                    $('#guardar-estadoOC').hide();                    
+                    $('#actualizar-estadoOC').show();   
                 }else if (action === 'ver'){
-                    modal.find('.modal-title-form').text('Datos Memo Detalle Estado');
+                    modal.find('.modal-title-form').text('Datos Estado Orden de Compra');
                     deshabilitabotones();
-                    $('#editar-memodetest').show();   
+                    $('#editar-estadoOC').show();   
                 }
 
             });
@@ -293,10 +306,10 @@ $(document).ready(function(){
         });
     }
     // Funcion que levanta modal para eliminar centro de costo 
-    function deleteMemoDetEst(idmemodetest, nameMemoDetEst){     
-        document.formDeleteMemoDetEst.memodetestId.value = idmemodetest;
-        document.formDeleteMemoDetEst.nameMemoDetEst.value = nameMemoDetEst;
-        document.formDeleteMemoDetEst.Accion.value = "eliminar";
+    function deleteestadoOC(idestadoOC, nameestadoOC){     
+        document.formDeleteestadoOC.estadoOCId.value = idestadoOC;
+        document.formDeleteestadoOC.nameestadoOC.value = nameestadoOC;
+        document.formDeleteestadoOC.Accion.value = "eliminar";
         $('#myModalDelete').on('shown.bs.modal', function () {
             $('#myInput').focus()
         });
