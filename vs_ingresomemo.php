@@ -27,7 +27,6 @@
                 <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" accept-charset="utf-8" role="form" data-toggle="validator" >
                     <input type="hidden" name="memoId" id="memoId" value="" />
                     <input type="hidden" name="Accionmem" id="Accionmem" value="registrar" />
-                    <div class="messages"></div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">

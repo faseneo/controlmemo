@@ -2,24 +2,24 @@
 <html lang="es">
 <head>
 	<?php include "header.php"; ?>
-	<script src="js/funcionesprov.js"></script>
+	<script src="js/fn_mt_proveedores.js"></script>
 </head>
 <body>
 	<?php include "barranav.php"; ?>
 	<div class="container" style="margin-top:50px">
 		<div class="row">
-			<div class="col-md-9">  
+			<div class="col-md-12">  
 				<h2 class="sub-header">Proveedores</h2>
 				<div class="table-responsive">
-					<button type="button" id="crea-prov" class="btn btn-sm btn-primary"
-					data-toggle="modal" data-target="#myModal" >NUEVO</button> 
+					<button type="button" id="crea-prov" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal">NUEVO</button> 
 					<table class="table table-striped">
 						<thead>
 							<tr>
 								<th width="10%">Rut</th>
-								<th width="50%">Nombre</th>
-								<th width="25%">Nombre Contacto</th>
-								<th width="15%">Acciones</th>
+								<th width="44%">Nombre Empresa / Razón Social</th>
+								<th width="18%">Nombre Contacto</th>
+								<th width="14%">Telefono Contacto</th>
+								<th width="14%">Acciones</th>
 							</tr>
 						</thead>
 						<tbody id="listaprov">
@@ -31,7 +31,7 @@
 	</div>
 
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		<div class="modal-dialog" role="document">
+		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -41,50 +41,94 @@
 					<input type="hidden" name="provId" id="provId" value="" />
 					<input type="hidden" name="Accion" id="Accion" value="" />
 					<div class="modal-body">
-						<div class="form-group">
-							<label for="provRut">Rut</label>
-							<input id="provRut" name="provRut" class="form-control" title="Ingrese un Rut" />
+	 					<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="provRut">Rut</label>
+									<input id="provRut" name="provRut" class="form-control" title="Ingrese un Rut" />
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="provNombre">Nombre Empresa / Razón Social</label>
+									<input id="provNombre" class="form-control" type="text" name="provNombre" value="" title="Ingrese un nombre" required />
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="provFono">Telefono</label>
+									<input id="provFono" class="form-control" type="text" name="provFono" value="" title="Ingrese un nombre" required />
+									<span class="help-block"></span>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="provNombre">Nombre</label>
-							<input id="provNombre" class="form-control" type="text" name="provNombre" value="" title="Ingrese un nombre" required />
+	 					<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="provDireccion">Dirección</label>
+									<input id="provDireccion" class="form-control" type="text" name="provDireccion" value="" 
+									title="Ingrese un nombre" required />
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="provCiudad">Ciudad</label>
+									<input id="provCiudad" class="form-control" type="text" name="provCiudad" value="" title="Ingrese un nombre" required />
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="col-md-5">
+								<div class="form-group">
+									<label for="provRegion">Región</label>
+									<input id="provRegion" class="form-control" type="text" name="provRegion" value="" title="Ingrese un nombre" required />
+									<span class="help-block"></span>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="provFono">Telefono</label>
-							<input id="provFono" class="form-control" type="text" name="provFono" value="" title="Ingrese un nombre" required />
-						</div>						
-						<div class="form-group">
-							<label for="provDireccion">Dirección</label>
-							<input id="provDireccion" class="form-control" type="text" name="provDireccion" value="" title="Ingrese un nombre" required />
+	 					<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="provCuenta">Cuenta</label>
+									<input id="provCuenta" class="form-control" type="text" name="provCuenta" value="" title="Ingrese un nombre" required />
+									<span class="help-block"></span>
+								</div>
+							</div>
+	 					</div>
+	 					<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="provContNombre">Nombre Contacto</label>
+									<input id="provContNombre" class="form-control" type="text" name="provContNombre" value="" title="Ingrese un nombre" required />
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="col-md-5">
+								<div class="form-group">
+									<label for="provContEmail">Email Contacto</label>
+									<input id="provContEmail" class="form-control" type="text" name="provContEmail" value="" title="Ingrese un nombre" required />
+									<span class="help-block"></span>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="provContFono">Telefono Contacto</label>
+									<input id="provContFono" class="form-control" type="text" name="provContFono" value="" title="Ingrese un nombre" required />
+									<span class="help-block"></span>
+								</div>
+							</div>
+	 					</div>
+	 					<div class="row">
+							<div class="col-md-4">
+								<div class="form-group">
+									<label for="provEstado">Estado</label>
+									<input id="provEstado" class="form-control" type="text" name="provEstado" value="" title="Ingrese un nombre" required />
+									<span class="help-block"></span>
+								</div>
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="provCiudad">Ciudad</label>
-							<input id="provCiudad" class="form-control" type="text" name="provCiudad" value="" title="Ingrese un nombre" required />
-						</div>
-						<div class="form-group">
-							<label for="provRegion">Región</label>
-							<input id="provRegion" class="form-control" type="text" name="provRegion" value="" title="Ingrese un nombre" required />
-						</div>
-						<div class="form-group">
-							<label for="provCuenta">Cuenta</label>
-							<input id="provCuenta" class="form-control" type="text" name="provCuenta" value="" title="Ingrese un nombre" required />
-						</div>
-						<div class="form-group">
-							<label for="provContNombre">Nombre Contacto</label>
-							<input id="provContNombre" class="form-control" type="text" name="provContNombre" value="" title="Ingrese un nombre" required />
-						</div>
-						<div class="form-group">
-							<label for="provContEmail">Email Contacto</label>
-							<input id="provContEmail" class="form-control" type="text" name="provContEmail" value="" title="Ingrese un nombre" required />
-						</div>
-						<div class="form-group">
-							<label for="provContFono">Telefono Contacto</label>
-							<input id="provContFono" class="form-control" type="text" name="provContFono" value="" title="Ingrese un nombre" required />
-						</div>
-						<div class="form-group">
-							<label for="provEstado">Estado</label>
-							<input id="provEstado" class="form-control" type="text" name="provEstado" value="" title="Ingrese un nombre" required />
-						</div>						
 					</div>
 					<div class="modal-footer">
 						<button id="editar-prov" name="editar-prov" type="button" class="btn btn-warning">Editar</button>

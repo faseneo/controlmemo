@@ -17,8 +17,8 @@ if(isset($_REQUEST['Accion'])){
             $prov->__SET('prov_id',             $_REQUEST['provId']);
             $prov->__SET('prov_nombre',         $_REQUEST['provNombre']);
             $prov->__SET('prov_rut',            $_REQUEST['provRut']);
-            $prov->__SET('prov_direccion',      $_REQUEST['provDireccion']);
             $prov->__SET('prov_fono',           $_REQUEST['provFono']);
+            $prov->__SET('prov_direccion',      $_REQUEST['provDireccion']);
             $prov->__SET('prov_ciudad',         $_REQUEST['provCiudad']);
             $prov->__SET('prov_region',         $_REQUEST['provRegion']);
             $prov->__SET('prov_cuenta',         $_REQUEST['provCuenta']);
@@ -26,7 +26,6 @@ if(isset($_REQUEST['Accion'])){
             $prov->__SET('prov_contacto_email', $_REQUEST['provContEmail']);
             $prov->__SET('prov_contacto_fono',  $_REQUEST['provContFono']);
             $prov->__SET('prov_estado',         $_REQUEST['provEstado']);
-
             $jsondata = $modelProv->Actualizar($prov);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);

@@ -179,3 +179,11 @@ trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(129): PDOStatemen
 #2 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('1', '1', '1')
 #3 {main} 
 ---------------------------------------------------------------------
+fecha:05-10-2018(16:46:54) 
+metodo: 
+msg:SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\proveedor\modelproveedor.php(191): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllerproveedor.php(29): ModelProveedores->Actualizar(Object(Proveedores))
+#2 {main} 
+---------------------------------------------------------------------
+

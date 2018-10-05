@@ -7,16 +7,43 @@
         $("#provId").val("");
         $("#provNombre").val("");
         $("#provRut").val("");
-    }        
+        $("#provFono").val("");
+        $("#provDireccion").val("");
+        $("#provCiudad").val("");
+        $("#provRegion").val("");
+        $("#provCuenta").val("");
+        $("#provContNombre").val("");
+        $("#provContEmail").val("");
+        $("#provContFono").val("");
+        $("#provEstado").val("");
+    }
     function habilitaform(){
         $("#provId").prop( "disabled", false );
         $("#provNombre").prop( "disabled", false );
         $("#provRut").prop( "disabled", false );
+        $("#provFono").prop( "disabled", false );
+        $("#provDireccion").prop( "disabled", false );
+        $("#provCiudad").prop( "disabled", false );
+        $("#provRegion").prop( "disabled", false );
+        $("#provCuenta").prop( "disabled", false );
+        $("#provContNombre").prop( "disabled", false );
+        $("#provContEmail").prop( "disabled", false );
+        $("#provContFono").prop( "disabled", false );
+        $("#provEstado").prop( "disabled", false );
     }
     function deshabilitaform(){
         $("#provId").prop( "disabled", true );
         $("#provNombre").prop( "disabled", true );
         $("#provRut").prop( "disabled", true );
+        $("#provFono").prop( "disabled", true );
+        $("#provDireccion").prop( "disabled", true );
+        $("#provCiudad").prop( "disabled", true );
+        $("#provRegion").prop( "disabled", true );
+        $("#provCuenta").prop( "disabled", true );
+        $("#provContNombre").prop( "disabled", true );
+        $("#provContEmail").prop( "disabled", true );
+        $("#provContFono").prop( "disabled", true );
+        $("#provEstado").prop( "disabled", true );        
     }
 
     $(document).ready(function(){
@@ -59,9 +86,12 @@
                 for(var i=0; i<data.datos.length;i++){
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
                                 console.log('id: '+data.datos[i].prov_id + ' nombre: '+data.datos[i].prov_nombre);
-
-                                fila = '<tr><td>'+ data.datos[i].prov_nombre +'</td>';
+                                fila = '<tr>';
                                 fila += '<td>'+ data.datos[i].prov_rut +'</td>';
+                                fila += '<td>'+ data.datos[i].prov_nombre +'</td>';
+                                fila += '<td>'+ data.datos[i].prov_contacto_nombre +'</td>';
+                                fila += '<td>'+ data.datos[i].prov_contacto_fono +'</td>';
+
                                 fila += '<td><button id="ver-cecosto" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
                                 fila += ' onclick="verProv(\'ver\',\'' + data.datos[i].prov_id + '\')">';
@@ -73,8 +103,8 @@
                                 fila += 'Eliminar</button></td>';
                                 fila += '</tr>';
                                 $("#listaprov").append(fila);
-                            }
-                        })
+                }
+            })
             .fail(function( jqXHR, textStatus, errorThrown ) {
                 if ( console && console.log ) {
                     console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
@@ -262,9 +292,17 @@
                     + " \n jqXHR.status : " + jqXHR.status );
             }
             $("#provId").val(data.datos.prov_id);
-            $("#provNombre").val(data.datos.prov_nombre);
             $("#provRut").val(data.datos.prov_rut);
-
+            $("#provNombre").val(data.datos.prov_nombre);
+            $("#provFono").val(data.datos.prov_fono);
+            $("#provDireccion").val(data.datos.prov_direccion);
+            $("#provCiudad").val(data.datos.prov_ciudad);
+            $("#provRegion").val(data.datos.prov_region);
+            $("#provCuenta").val(data.datos.prov_cuenta);
+            $("#provContNombre").val(data.datos.prov_contacto_nombre);
+            $("#provContEmail").val(data.datos.prov_contacto_email);
+            $("#provContFono").val(data.datos.prov_contacto_fono);
+            $("#provEstado").val(data.datos.prov_estado);
             deshabilitaform();
             $("#Accion").val(action);
 

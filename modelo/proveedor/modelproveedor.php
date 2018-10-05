@@ -3,6 +3,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 require_once("../config/config.php");
+require_once("../modelo/logs/modelologs.php");
+
 class ModelProveedores{
     private $pdo;
 
@@ -170,7 +172,7 @@ class ModelProveedores{
                            proveedor_contacto_nombre = ?,
                            proveedor_contacto_email = ?,
                            proveedor_contacto_fono = ?,
-                           proveedor_estado
+                           proveedor_estado = ?
                     WHERE  proveedor_id = ?";
 
             $this->pdo->prepare($sql)->execute(array( $data->__GET('prov_nombre'),
@@ -183,16 +185,21 @@ class ModelProveedores{
                                                             $data->__GET('prov_contacto_nombre'),
                                                             $data->__GET('prov_contacto_email'),
                                                             $data->__GET('prov_contacto_fono'),
-                                                            $data->__GET('prov_estado')
+                                                            $data->__GET('prov_estado'),
                                                             $data->__GET('prov_id')
                                                      ) 
                                                 ); 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Proveedor actualizado correctamente';                 
-        } catch (Exception $e){
-            //die($e->getMessage());
+        } catch (Exception $Exception){
+        //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
             $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al actualizar proveedor';             
+            $jsonresponse['message'] = 'Error al actualizar proveedor';
+            $jsonresponse['errorQuery'] = $Exception->getMessage();
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;            
         }
         return $jsonresponse;
     }
