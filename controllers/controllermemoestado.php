@@ -46,7 +46,7 @@ if(isset($_REQUEST['Accion'])){
             break;
             
         case 'listar':
-            $jsondata = $modelMEst->Listar();
+            $jsondata = $modelMEst->Listar($_REQUEST['seccion']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;

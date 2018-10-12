@@ -9,7 +9,7 @@
     <div class="container" style="margin-top:50px">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
-                <center><h1>Ingreso detalle memo</h1></center><br><br>
+                <center><h1>Ingreso Orden de Compra</h1></center><br><br>
                 <form id="contact-form" method="post" action="#" role="form">
                     <div class="messages"></div>
                     <div class="controls">

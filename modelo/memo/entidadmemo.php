@@ -13,9 +13,11 @@ class Memos{
     private $mem_depto_dest_id;
     private $mem_depto_dest_nom;
     private $mem_archivos=array();
-    private $mem_estado_id;
     private $mem_fecha_ingr;
+
+    private $mem_estado_id;
     private $mem_estado_nombre;
+    private $mem_estado_obs;
 
     public function __GET($k){
         return $this->$k;
@@ -29,4 +31,19 @@ class Memos{
     	return get_object_vars($this);
     }    
 }
+/*
+proveedor_id
+proveedor_rut
+proveedor_nombre
+proveedor_direccion
+proveedor_fono
+proveedor_ciudad
+proveedor_region
+proveedor_cuenta
+proveedor_contacto_nombre
+proveedor_contacto_email
+proveedor_contacto_fono
+proveedor_estado
+
+ */
 ?>

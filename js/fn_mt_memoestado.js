@@ -95,7 +95,8 @@
         //funcion para listar los cecostos
         var getlista = function (){
             var datax = {
-                "Accion":"listar"
+                "Accion":"listar",
+                'seccion':'null'
             }
             $.ajax({
                 data: datax, 

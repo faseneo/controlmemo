@@ -162,18 +162,24 @@ class ModelUsuarios{
     }
     //revisar a quien esta asignado antes y cambiar el estado de la asignacion anterior
     //todos lo de la Secretaria estado 1, ver permisos para ayudante admin
-    public function AsignaMemo($usuid,$memid){
+    public function AsignaMemo($usuid,$memid,$coment){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO memo_tiene_usuario (memo_tiene_usu_memo_id,
-                                                    memo_tiene_usu_usuario_id,
-                                                    memo_tiene_usu_estado)
-                    VALUES (?,?,?)";
+            $sql = "INSERT INTO asigna_usuario (asigna_usuario_memo_id,
+                                                asigna_usuario_usuario_id,
+                                                asigna_usuario_comentario,
+                                                asigna_usuario_estado)
+                    VALUES ($memid,$usuid,'$coment',1)";
 
-            $this->pdo->prepare($sql)->execute(array($memid,
-                                                     $usuid, 
+            /*$this->pdo->prepare($sql)->execute(array($memid,
+                                                     $usuid,
+                                                     $coment, 
                                                      '1')
-                                              );
+                                              );*/
+                                              var_dump($sql);
+            $stm= $this->pdo->prepare($sql);
+            $stm->execute();
+
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo asignado correctamente';
         }catch(Exception $e){

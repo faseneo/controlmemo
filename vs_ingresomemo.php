@@ -169,7 +169,7 @@
                          </div>
                      </div>                    
                      <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="memoEstado">Estado</label>
                                 <select name="memoEstado" id="memoEstado" class="form-control">
@@ -177,7 +177,14 @@
                                 <span class="help-block"></span>
                             </div>
                         </div>
-                        <div class="col-md-4 col-md-offset-4">
+                        <div class="col-md-5">                            
+                            <div class="form-group">
+                                <label for="memoObservacion">Observación</label>
+                                <textarea name="memoObservacion" id="memoObservacion" class="form-control"></textarea>
+                                <span class="help-block"></span>
+                            </div>                            
+                        </div>
+                        <div class="col-md-4">
                             <button id="editar-memo" name="editar-memo" type="button" class="btn btn-warning">Editar</button>
                             <button id="actualizar-memo" name="actualizar-memo" type="button" class="btn btn-primary">Actualizar</button>
                             <button id="grabar-memo" name="grabar-memo" type="button" class="btn btn-primary">Grabar</button>

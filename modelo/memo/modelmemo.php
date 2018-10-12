@@ -33,14 +33,14 @@ class ModelMemo  {
       if($estadoid == 0){
         $filtroestado = "";
       }else{
-        $filtroestado = " AND m.memo_memo_estado_id=".$estadoid;
+        $filtroestado = " AND me.memo_estado_id=".$estadoid;
       }
       if($usuid == 0){
         $agregatabla = "";
         $filtrousuario = "";
       }else{
-        $agregatabla = " ,memo_tiene_usuario as mtu ";
-        $filtrousuario = " AND mtu.memo_tiene_usu_memo_id = m.memo_id AND mtu.memo_tiene_usu_usuario_id=".$usuid;
+        $agregatabla = " ,asigna_usuario as mtu ";
+        $filtrousuario = " AND mtu.asigna_usuario_memo_id = m.memo_id AND mtu.asigna_usuario_usuario_id=".$usuid;
       }      
         try{
             $respuesta = $this->contarTotal($estadoid,$usuid);
@@ -53,9 +53,11 @@ class ModelMemo  {
               $result = array();
               $reginicio = ($compag-1) * $CantidadMostrar;
               $consulta="SELECT * 
-                            FROM memo AS m, memo_estado as me , departamento as dep "
-                            .$agregatabla.
-                            "WHERE m.memo_memo_estado_id = me.memo_estado_id AND dep.dpto_id = m.memo_depto_solicitante_id"
+                            FROM memo AS m, cambio_estados as ce, memo_estado as me , departamento as dep "
+                            .$agregatabla
+                            ."WHERE ce.cambio_estados_memo_id = m.memo_id "
+                            ."AND ce.cambio_estados_memo_estado_id = me.memo_estado_id "
+                            ."AND dep.dpto_id = m.memo_depto_solicitante_id "
                             .$filtroestado
                             .$filtrousuario
                             ." ORDER BY m.memo_fecha_recepcion DESC  LIMIT ".$reginicio.",".$CantidadMostrar;
@@ -76,7 +78,7 @@ class ModelMemo  {
                       $busq->__SET('mem_depto_dest_nom', $r->dpto_nombre);
                       $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
                       $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
-                      $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);
+                      $busq->__SET('mem_estado_id', $r->memo_estado_id);
                       $busq->__SET('mem_estado_nombre', $r->memo_estado_tipo);
                       $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
                   $result[] = $busq->returnArray();
@@ -108,18 +110,18 @@ class ModelMemo  {
         if($estadoid == 0){
           $filtroestado = "";
         }else{
-          $filtroestado = " AND m.memo_memo_estado_id=".$estadoid;
+          $filtroestado = " AND ce.cambio_estados_memo_id = m.memo_id AND ce.cambio_estados_memo_estado_id=".$estadoid;
         }   
         if($usuid == 0){
           $agregatabla = "";
           $filtrousuario = "";
         }else{
-          $agregatabla = ", memo_tiene_usuario as mtu ";
-          $filtrousuario = " AND mtu.memo_tiene_usu_memo_id = m.memo_id AND mtu.memo_tiene_usu_usuario_id=".$usuid;
+          $agregatabla = ", asigna_usuario as mtu ";
+          $filtrousuario = " AND mtu.asigna_usuario_memo_id = m.memo_id AND mtu.asigna_usuario_usuario_id=".$usuid;
         }         
         try{
           $consulta="SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m "
+                     FROM memo AS m , cambio_estados as ce "
                      .$agregatabla
                      ."WHERE 1 "
                      .$filtroestado
@@ -225,9 +227,9 @@ class ModelMemo  {
                                       memo_nombre_solicitante,
                                       memo_depto_solicitante_id,
                                       memo_nombre_destinatario,
-                                      memo_depto_destinatario_id,
-                                      memo_memo_estado_id) 
-                    VALUES (?,?,?,?,?,?,?,?,?,?)";
+                                      memo_depto_destinatario_id
+                                      ) 
+                    VALUES (?,?,?,?,?,?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('mem_numero'),
                                                      $data->__GET('mem_anio'),
@@ -237,11 +239,19 @@ class ModelMemo  {
                                                      $data->__GET('mem_nom_sol'),
                                                      $data->__GET('mem_depto_sol_id'),
                                                      $data->__GET('mem_nom_dest'),
-                                                     $data->__GET('mem_depto_dest_id'),
-                                                     $data->__GET('mem_estado_id')
+                                                     $data->__GET('mem_depto_dest_id')
                                               ));
             $idmemo = $this->pdo->lastInsertId(); 
+            $idestado = $data->__GET('mem_estado_id');
+            $obsestado = $data->__GET('mem_estado_obs');
 
+            $sqlinsertaestados="INSERT INTO cambio_estados (cambio_estados_memo_id,
+                                                            cambio_estados_memo_estado_id,
+                                                            cambio_estados_observacion)
+                                VALUES ($idmemo, $idestado, '$obsestado')";
+            $stm = $this->pdo->prepare($sqlinsertaestados);
+            $stm->execute();
+            //var_dump($sqlinsertaestados); exit(1);
             $modelMemoArch = new ModelMemoArchivo();
             $arrayfile = $modelMemoArch->Registrar($files,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
 

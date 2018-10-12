@@ -16,19 +16,29 @@ class ModelMemoEst{
         }
     }
 
-    public function Listar(){
+    public function Listar($seccion = null){
         $jsonresponse = array();
         try{
+            //var_dump($seccion);
             $result = array();
-            $stm = $this->pdo->prepare("SELECT  me.memo_estado_id,
+            if($seccion != 'null'){
+                $filtro = " AND me.memo_estado_seccion_id = ".$seccion;
+            }else{
+                $filtro = "";
+            }
+            //var_dump($filtro);
+            $consulta = "SELECT  me.memo_estado_id,
                                                 me.memo_estado_tipo,
                                                 me.memo_estado_prioridad,
                                                 me.memo_estado_activo,
                                                 sec.seccion_id,
                                                 sec.seccion_nombre
                                         FROM memo_estado as me, seccion as sec
-                                        WHERE sec.seccion_id = me.memo_estado_seccion_id
-                                        ORDER BY sec.seccion_id ASC, me.memo_estado_prioridad ASC");
+                                        WHERE sec.seccion_id = me.memo_estado_seccion_id "
+                                        .$filtro
+                                        ." ORDER BY sec.seccion_id ASC, me.memo_estado_prioridad ASC";
+            //var_dump($consulta);
+            $stm = $this->pdo->prepare($consulta);
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new MemoEst();

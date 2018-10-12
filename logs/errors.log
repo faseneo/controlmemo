@@ -186,4 +186,147 @@ trace:#0 C:\xampp\htdocs\controlmemo\modelo\proveedor\modelproveedor.php(191): P
 #1 C:\xampp\htdocs\controlmemo\controllers\controllerproveedor.php(29): ModelProveedores->Actualizar(Object(Proveedores))
 #2 {main} 
 ---------------------------------------------------------------------
+fecha:05-10-2018(19:24:29) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(65): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('1', '0', '0')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(19:43:45) 
+metodo: 
+msg:SQLSTATE[42S02]: Base table or view not found: 1146 Table 'controlmemo.memo_tiene_usuario' doesn't exist 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(131): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(46): ModelMemo->contarTotal('1', '1')
+#2 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(76): ModelMemo->Listar('1', '1', '1')
+#3 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:04:27) 
+metodo: 
+msg:SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'observacion)' at line 4 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(252): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(58): ModelMemo->Registrar(Object(Memos), Array)
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:13:13) 
+metodo: 
+msg:SQLSTATE[42S02]: Base table or view not found: 1146 Table 'controlmemo.memo_tiene_usuario' doesn't exist 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(131): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(84): ModelMemo->contarTotal('', '3')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:13:13) 
+metodo: 
+msg:SQLSTATE[42S02]: Base table or view not found: 1146 Table 'controlmemo.memo_tiene_usuario' doesn't exist 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(131): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(46): ModelMemo->contarTotal('', '3')
+#2 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(77): ModelMemo->Listar('1', '', '3')
+#3 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:17:36) 
+metodo: 
+msg:SQLSTATE[42S02]: Base table or view not found: 1146 Table 'controlmemo.memo_tiene_usuario' doesn't exist 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(131): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(84): ModelMemo->contarTotal('', '3')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:17:36) 
+metodo: 
+msg:SQLSTATE[42S02]: Base table or view not found: 1146 Table 'controlmemo.memo_tiene_usuario' doesn't exist 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(131): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(46): ModelMemo->contarTotal('', '3')
+#2 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(77): ModelMemo->Listar('1', '', '3')
+#3 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:21:33) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:25:37) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:26:51) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:27:15) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:28:51) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:29:55) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:30:20) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:31:25) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(20:32:54) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(21:32:34) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(21:42:16) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(21:53:00) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
+fecha:05-10-2018(21:54:32) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
 

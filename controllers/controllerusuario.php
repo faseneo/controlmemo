@@ -53,10 +53,11 @@ if(isset($_REQUEST['Accion'])){
             $jsondata = $modelUsu->Listar();
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
-            break;            
+            break;
+            
         case 'asignamemo':
-            //var_dump($_REQUEST);
-            $jsondata = $modelUsu->AsignaMemo($_REQUEST['asignausu'],$_REQUEST['memoId']);
+            var_dump($_REQUEST);
+            $jsondata = $modelUsu->AsignaMemo($_REQUEST['asignausu'],$_REQUEST['memoId'],$_REQUEST['asignaobs']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            

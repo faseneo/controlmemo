@@ -227,7 +227,8 @@
     //Funcion que lista los estado del memo
     function getlistaEstadosMemo (){
         var datax = {
-            "Accion":"listar"
+            'Accion':'listar',
+            'seccion':'2'
         }
         $.ajax({
             data: datax, 
