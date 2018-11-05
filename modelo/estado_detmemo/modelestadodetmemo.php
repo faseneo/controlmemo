@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 require_once("../config/config.php");
-class ModelEstadoOCompra{
+class ModelEstadoDetMemo{
     private $pdo;
 
     public function __CONSTRUCT(){
@@ -20,18 +20,19 @@ class ModelEstadoOCompra{
         $jsonresponse = array();
         try{
             $result = array();
-            $stm = $this->pdo->prepare("SELECT  oc.estado_oc_id,
-                                                oc.estado_oc_tipo,
-												oc.estado_oc_prioridad,
-                                                oc.estado_oc_activo
-                                        FROM estado_orden_compra as oc");
+            $stm = $this->pdo->prepare("SELECT  edm.estado_detmemo_id,
+                                                edm.estado_detmemo_tipo,
+												edm.estado_detmemo_orden,
+                                                edm.estado_detmemo_descripcion,
+                                                edm.estado_detmemo_activo
+                                        FROM estado_detalle_memo as edm");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $busq = new EstadoOCompra();
-                    $busq->__SET('est_oc_id',            $r->estado_oc_id);
-                    $busq->__SET('est_oc_tipo',         $r->estado_oc_tipo);
-                    $busq->__SET('est_oc_prioridad',    $r->estado_oc_prioridad);
-                    $busq->__SET('est_oc_activo',       $r->estado_oc_activo);
+                $busq = new EstadoDetMemo();
+                    $busq->__SET('est_detmemo_id',          $r->estado_detmemo_id);
+                    $busq->__SET('est_detmemo_tipo',        $r->estado_detmemo_tipo);
+                    $busq->__SET('est_detmemo_orden',       $r->estado_detmemo_orden);
+                    $busq->__SET('est_detmemo_activo',      $r->estado_detmemo_activo);
                 $result[] = $busq->returnArray();
             }
 
@@ -50,19 +51,20 @@ class ModelEstadoOCompra{
     public function Obtener($id){
         $jsonresponse = array();
         try{
-            $stm = $this->pdo->prepare("SELECT  oc.estado_oc_id,
-                                                oc.estado_oc_tipo,
-                                                oc.estado_oc_prioridad,
-                                                oc.estado_oc_activo
-                                        FROM estado_orden_compra as oc
-                                        WHERE oc.estado_oc_id = ?");
+            $stm = $this->pdo->prepare("SELECT  edm.estado_detmemo_id,
+                                                edm.estado_detmemo_tipo,
+                                                edm.estado_detmemo_orden,
+                                                edm.estado_detmemo_descripcion,
+                                                edm.estado_detmemo_activo
+                                        FROM estado_detalle_memo as edm
+                                        WHERE edm.estado_detmemo_id = ?");
             $stm->execute(array($id));
             $r = $stm->fetch(PDO::FETCH_OBJ);
-            $busq = new EstadoOCompra();
-                    $busq->__SET('est_oc_id',           $r->estado_oc_id);
-                    $busq->__SET('est_oc_tipo',         $r->estado_oc_tipo);
-                    $busq->__SET('est_oc_prioridad',    $r->estado_oc_prioridad);
-                    $busq->__SET('est_oc_activo',       $r->estado_oc_activo);
+            $busq = new EstadoDetMemo();
+                    $busq->__SET('est_detmemo_id',          $r->estado_detmemo_id);
+                    $busq->__SET('est_detmemo_tipo',        $r->estado_detmemo_tipo);
+                    $busq->__SET('est_detmemo_orden',       $r->estado_detmemo_orden);
+                    $busq->__SET('est_detmemo_activo',      $r->estado_detmemo_activo);
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Se obtuvo estado orden de compra correctamente';
@@ -78,7 +80,7 @@ class ModelEstadoOCompra{
     public function Eliminar($id){
         $jsonresponse = array();
         try{
-            $stm = $this->pdo->prepare("DELETE FROM estado_orden_compra WHERE estado_oc_id = ? ");
+            $stm = $this->pdo->prepare("DELETE FROM estado_detalle_memo WHERE estado_detmemo_id = ? ");
             $stm->execute(array($id));
             $this->pdo->commit();
             $jsonresponse['success'] = true;
@@ -91,15 +93,15 @@ class ModelEstadoOCompra{
         return $jsonresponse;
     }
 
-    public function Registrar(EstadoOCompra $data){
+    public function Registrar(EstadoDetMemo $data){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO estado_orden_compra (estado_oc_tipo, estado_oc_prioridad, estado_oc_activo ) 
+            $sql = "INSERT INTO estado_detalle_memo (estado_detmemo_tipo, estado_detmemo_orden, estado_detmemo_activo ) 
                     VALUES (?,?,?)";
 
-            $this->pdo->prepare($sql)->execute(array($data->__GET('est_oc_tipo'),
-													 $data->__GET('est_oc_prioridad'),
-                                                     $data->__GET('est_oc_activo')
+            $this->pdo->prepare($sql)->execute(array($data->__GET('est_detmemo_tipo'),
+													 $data->__GET('est_detmemo_orden'),
+                                                     $data->__GET('est_detmemo_activo')
                                                      )
                                               );
             $jsonresponse['success'] = true;
@@ -114,20 +116,20 @@ class ModelEstadoOCompra{
         return $jsonresponse;
     }
 
-    public function Actualizar(EstadoOCompra $data){
+    public function Actualizar(EstadoDetMemo $data){
         $jsonresponse = array();
         //print_r($data);
         try{
-            $sql = "UPDATE estado_orden_compra SET 
-                           estado_oc_tipo = ?,
-						   estado_oc_prioridad = ?,
-                           estado_oc_activo = ?
-                    WHERE  estado_oc_id = ?";
+            $sql = "UPDATE estado_detalle_memo SET 
+                           estado_detmemo_tipo = ?,
+						   estado_detmemo_orden = ?,
+                           estado_detmemo_activo = ?
+                    WHERE  estado_detmemo_id = ?";
 
-            $this->pdo->prepare($sql)->execute(array($data->__GET('est_oc_tipo'),
-                                                     $data->__GET('est_oc_prioridad'),
-                                                     $data->__GET('est_oc_activo'),
-                                                     $data->__GET('est_oc_id')
+            $this->pdo->prepare($sql)->execute(array($data->__GET('est_detmemo_tipo'),
+                                                     $data->__GET('est_detmemo_orden'),
+                                                     $data->__GET('est_detmemo_activo'),
+                                                     $data->__GET('est_detmemo_id')
                                                      )
                                                 );
             $jsonresponse['success'] = true;
@@ -144,18 +146,18 @@ class ModelEstadoOCompra{
         $jsonresponse = array();
         try{
             $result = array();
-             $stm = $this->pdo->prepare("SELECT  oc.estado_oc_id,
-                                                 oc.estado_oc_tipo,
-                                                 oc.estado_oc_prioridad,
-                                                 oc.estado_oc_activo
-                                        FROM estado_orden_compra as oc");
+             $stm = $this->pdo->prepare("SELECT  edm.estado_detmemo_id,
+                                                 edm.estado_detmemo_tipo,
+                                                 edm.estado_detmemo_orden,
+                                                 edm.estado_detmemo_activo
+                                        FROM estado_detalle_memo as edm");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $busq = new EstadoOCompra();
-                    $busq->__SET('est_oc_id',            $r->estado_oc_id);
-                    $busq->__SET('est_oc_tipo',         $r->estado_oc_tipo);
-                    $busq->__SET('est_oc_prioridad',    $r->estado_oc_prioridad);
-                    $busq->__SET('est_oc_activo',       $r->estado_oc_activo);
+                $busq = new EstadoDetMemo();
+                    $busq->__SET('est_detmemo_id',          $r->estado_detmemo_id);
+                    $busq->__SET('est_detmemo_tipo',        $r->estado_detmemo_tipo);
+                    $busq->__SET('est_detmemo_orden',       $r->estado_detmemo_orden);
+                    $busq->__SET('est_detmemo_activo',      $r->estado_detmemo_activo);
                 $result[] = $busq;
             }
             return $result;
@@ -169,16 +171,16 @@ class ModelEstadoOCompra{
         $jsonresponse = array();
         try{
             $result = array();
-            $stm = $this->pdo->prepare("SELECT  oc.estado_oc_id,
-                                                oc.estado_oc_tipo
-                                        FROM estado_orden_compra as oc
-                                        WHERE oc.estado_oc_activo = 1
-                                        ORDER BY  oc.estado_oc_prioridad ASC");
+            $stm = $this->pdo->prepare("SELECT  edm.estado_detmemo_id,
+                                                edm.estado_detmemo_tipo
+                                        FROM estado_detalle_memo as edm
+                                        WHERE edm.estado_detmemo_activo = 1
+                                        ORDER BY  edm.estado_detmemo_orden ASC");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $busq = new EstadoOCompra();
-                    $busq->__SET('est_oc_id',            $r->estado_oc_id);
-                    $busq->__SET('est_oc_tipo',         $r->estado_oc_tipo);
+                $busq = new EstadoDetMemo();
+                    $busq->__SET('est_detmemo_id',            $r->estado_detmemo_id);
+                    $busq->__SET('est_detmemo_tipo',         $r->estado_detmemo_tipo);
                 $result[] = $busq->returnArray();
             }
 

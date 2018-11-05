@@ -8,8 +8,8 @@
     <?php include "barranav.php"; ?>
     <div class="container" style="margin-top:50px">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
-                <center><h1>Ingreso Orden de Compra</h1></center><br><br>
+            <div class="col-lg-10 col-lg-offset-1">
+                <center><h1>Ingreso Detalle Memo</h1></center><br><br>
                 <form id="contact-form" method="post" action="#" role="form">
                     <div class="messages"></div>
                     <div class="controls">
@@ -23,7 +23,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label >Procedimiento de compra</label>
                                     <select name="select" class="form-control">
@@ -46,55 +46,32 @@
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label >Rut proveedor</label>
+                                    <input id="" type="text" name="" class="form-control">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>                            
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label >Número orden de compra Sistema Interno</label>
+                                    <input id="" type="text" name="" class="form-control">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>                        
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label >Número orden compra Chilecompra</label>
                                     <input id="" type="text" name="" class="form-control">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label >Rut proveedor</label>
-                                    <input id="" type="text" name="" class="form-control">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
+
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label >Certificado disponibilidad presupuestaria</label>
-                                    <input id="" type="text" name="" class="form-control">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label >Número orden compra manager</label>
-                                    <input id="" type="text" name="" class="form-control">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label >Fecha factura</label>
-                                    <input id="" type="text" name="" class="form-control">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label >Número factura</label>
-                                    <input id="" type="text" name="" class="form-control">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group"><br>

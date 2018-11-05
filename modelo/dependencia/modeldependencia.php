@@ -8,8 +8,7 @@ class ModelDependencia {
 
     public function __CONSTRUCT(){
         try{
-
-            $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USERDB, PASSDB);
+            $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USERDB, PASSDB,array(PDO::MYSQL_ATTR_INIT_COMMAND => CHARSETDB));
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);                
         }
         catch(Exception $e){
@@ -28,7 +27,7 @@ class ModelDependencia {
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new Dependencia();
                     $busq->__SET('dep_codigo', $r->dependencia_codigo);
-                    $busq->__SET('dep_nombre', utf8_encode($r->dependencia_nombre));
+                    $busq->__SET('dep_nombre', $r->dependencia_nombre);
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;
@@ -55,7 +54,7 @@ class ModelDependencia {
             $r = $stm->fetch(PDO::FETCH_OBJ);
             $busq = new Dependencia();
                  $busq->__SET('dep_codigo', $r->dependencia_codigo);
-                 $busq->__SET('dep_nombre', utf8_encode($r->dependencia_nombre));
+                 $busq->__SET('dep_nombre', $r->dependencia_nombre);
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Se obtuvo las Dependencia correctamente';

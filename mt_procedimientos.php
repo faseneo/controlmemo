@@ -46,8 +46,8 @@
 							<input id="proccompTipo" class="form-control" type="text" name="proccompTipo" value="" title="Ingrese un Tipo" required />
 						</div>
 						<div class="form-group">
-							<label for="proccompPrioridad">Prioridad</label>
-							<input id="proccompPrioridad" class="form-control" type="number" name="proccompPrioridad" value="" title="Ingrese prioridad" required />
+							<label for="proccompOrden">Prioridad</label>
+							<input id="proccompOrden" class="form-control" type="number" name="proccompOrden" value="" title="Ingrese prioridad" required />
 						</div>						
 						<div class="form-group">
 							<label for="proccompActivo">Activo</label>

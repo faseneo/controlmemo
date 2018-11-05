@@ -6,21 +6,21 @@
         function limpiaform(){
             $("#memoestId").val("");
             $("#memoestTipo").val("");
-			$("#memoestPrioridad").val("");
+			$("#memoestOrden").val("");
             //$("#memoestActivo").val("");
             //$("#memoestSeccionId").val("");
         }        
         function habilitaform(){
             $("#memoestId").prop( "disabled", false );
             $("#memoestTipo").prop( "disabled", false );
-            $("#memoestPrioridad").prop( "disabled", false );
+            $("#memoestOrden").prop( "disabled", false );
             $("#memoestActivo").prop( "disabled", false );
             $("#memoestSeccionId").prop( "disabled", false );
         }
         function deshabilitaform(){
             $("#memoestId").prop( "disabled", true );
             $("#memoestTipo").prop( "disabled", true );
-            $("#memoestPrioridad").prop( "disabled", true );
+            $("#memoestOrden").prop( "disabled", true );
             $("#memoestActivo").prop( "disabled", true );
             $("#memoestSeccionId").prop( "disabled", true );            
         }
@@ -61,7 +61,7 @@
     $(document).ready(function(){
         function validarFormulario(){
             var txtTipo = document.getElementById('memoestTipo').value;
-            var txtPriori = document.getElementById('memoestPrioridad').value;
+            var txtPriori = document.getElementById('memoestOrden').value;
             var selEstActivo = document.getElementById('memoestActivo').selectedIndex;
             var selEstSeccion = document.getElementById('memoestSeccionId').selectedIndex;
                 //Test campo obligatorio
@@ -72,7 +72,7 @@
                 } 
                 if(txtPriori == null || txtPriori.length == 0 || /^\s+$/.test(txtPriori)){
                     alert('ERROR: El campo Prioridad no debe ir vacío o con espacios en blanco');
-                    document.getElementById('memoestPrioridad').focus();
+                    document.getElementById('memoestOrden').focus();
                     return false;
                 }
                 if( selEstActivo == null || isNaN(selEstActivo) || selEstActivo == -1 ) {
@@ -121,7 +121,7 @@
                                 fila = '<tr '+$clasetr+'>';
                                 fila += '<td>'+ data.datos[i].memo_est_tipo +'</td>';
                                 fila += '<td>'+ data.datos[i].memo_est_seccion_nombre +'</td>';
-                                fila += '<td>'+ data.datos[i].memo_est_prioridad +'</td>';
+                                fila += '<td>'+ data.datos[i].memo_est_orden +'</td>';
                                 fila += '<td>'+ activo +'</td>';
                                 fila += '<td><button id="ver-memoest" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
@@ -325,7 +325,7 @@
             }
             $("#memoestId").val(data.datos.memo_est_id);
             $("#memoestTipo").val(data.datos.memo_est_tipo);
-            $("#memoestPrioridad").val(data.datos.memo_est_prioridad);
+            $("#memoestOrden").val(data.datos.memo_est_orden);
             $("#memoestActivo").val(data.datos.memo_est_activo);
             $("#memoestSeccionId").val(data.datos.memo_est_seccion_id);
 

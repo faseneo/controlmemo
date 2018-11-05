@@ -15,7 +15,7 @@ if(isset($_REQUEST['Accion'])){
         case 'actualizar':
             $MEst->__SET('memo_est_id',         $_REQUEST['memoestId']);
             $MEst->__SET('memo_est_tipo',       $_REQUEST['memoestTipo']);
-			$MEst->__SET('memo_est_prioridad',  $_REQUEST['memoestPrioridad']);
+			$MEst->__SET('memo_est_orden',      $_REQUEST['memoestOrden']);
             $MEst->__SET('memo_est_activo',     $_REQUEST['memoestActivo']);
             $MEst->__SET('memo_est_seccion_id', $_REQUEST['memoestSeccionId']);
             $jsondata = $modelMEst->Actualizar($MEst);
@@ -25,7 +25,7 @@ if(isset($_REQUEST['Accion'])){
 
         case 'registrar':
             $MEst->__SET('memo_est_tipo',       $_REQUEST['memoestTipo']);
-			$MEst->__SET('memo_est_prioridad',  $_REQUEST['memoestPrioridad']);
+			$MEst->__SET('memo_est_orden',      $_REQUEST['memoestOrden']);
             $MEst->__SET('memo_est_activo',     $_REQUEST['memoestActivo']);
             $MEst->__SET('memo_est_seccion_id', $_REQUEST['memoestSeccionId']);            
             $jsondata = $modelMEst->Registrar($MEst);

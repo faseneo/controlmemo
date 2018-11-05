@@ -18,7 +18,7 @@
 								<tr>
 									<th width="15%">Rut</th>
 									<th width="35%">Nombre</th>
-									<th width="15%">Perfil</th>
+									<th width="15%">Rol Ususario</th>
 									<th width="15%">Estado</th>
 									<th width="20%">Acciones</th>
 								</tr>
@@ -54,7 +54,7 @@
 							<input id="usuPass" name="usuPass" type="password" class="form-control" rows="3"  title="Ingrese contraseña" />
 						</div>
 						<div class="form-group">
-							<label for="usuRolId">Rol</label>
+							<label for="usuRolId">Rol Usuario</label>
 								<select name="usuRolId" id="usuRolId" class="form-control">
                                 </select>
 						</div>

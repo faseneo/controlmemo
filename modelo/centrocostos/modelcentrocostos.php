@@ -41,7 +41,7 @@ class ModelCentroCostos {
             return $jsonresponse;
         }
         catch(Exception $e){
-            //die($e->getMessage());
+            die($e->getMessage());
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al listar los Centro de Costos';
         }

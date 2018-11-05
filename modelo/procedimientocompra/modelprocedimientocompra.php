@@ -22,16 +22,16 @@ class ModelProcCompra {
             $result = array();
             $stm = $this->pdo->prepare("SELECT  pc.proc_compra_id,
                                                 pc.proc_compra_tipo,
-						                        pc.proc_compra_prioridad,
+						                        pc.proc_compra_orden,
                                                 pc.proc_compra_activo
                                         FROM procedimiento_compra as pc
-                                        ORDER BY pc.proc_compra_prioridad ASC");
+                                        ORDER BY pc.proc_compra_orden ASC");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new ProcCompra();
                     $busq->__SET('proc_comp_id',    $r->proc_compra_id);
                     $busq->__SET('proc_comp_tipo',  $r->proc_compra_tipo);
-                    $busq->__SET('proc_priori',     $r->proc_compra_prioridad);
+                    $busq->__SET('proc_orden',     $r->proc_compra_orden);
                     $busq->__SET('proc_activo',     $r->proc_compra_activo);
                 $result[] = $busq->returnArray();
             }
@@ -52,7 +52,7 @@ class ModelProcCompra {
         try{
             $stm = $this->pdo->prepare("SELECT  pc.proc_compra_id,
                                                 pc.proc_compra_tipo,
-                                                pc.proc_compra_prioridad,
+                                                pc.proc_compra_orden,
                                                 pc.proc_compra_activo
                                         FROM procedimiento_compra as pc
                                         WHERE pc.proc_compra_id = ?");
@@ -62,7 +62,7 @@ class ModelProcCompra {
             $busq = new ProcCompra();
                     $busq->__SET('proc_comp_id',    $r->proc_compra_id);
                     $busq->__SET('proc_comp_tipo',  $r->proc_compra_tipo);
-                    $busq->__SET('proc_priori',     $r->proc_compra_prioridad);
+                    $busq->__SET('proc_orden',     $r->proc_compra_orden);
                     $busq->__SET('proc_activo',     $r->proc_compra_activo);
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Se obtuvo procedimiento de compra correctamente';
@@ -94,11 +94,11 @@ class ModelProcCompra {
     public function Registrar(ProcCompra $data){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO procedimiento_compra (proc_compra_tipo, proc_compra_prioridad,proc_compra_activo) 
+            $sql = "INSERT INTO procedimiento_compra (proc_compra_tipo, proc_compra_orden,proc_compra_activo) 
                     VALUES (?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('proc_comp_tipo'),
-							                         $data->__GET('proc_priori'),
+							                         $data->__GET('proc_orden'),
                                                      $data->__GET('proc_activo')
                                                      )
                                               );
@@ -120,12 +120,12 @@ class ModelProcCompra {
         try{
             $sql = "UPDATE procedimiento_compra SET 
                            proc_compra_tipo = ?,
-			               proc_compra_prioridad = ?,
+			               proc_compra_orden = ?,
                            proc_compra_activo = ?
                     WHERE  proc_compra_id = ?";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('proc_comp_tipo'),
-                                                     $data->__GET('proc_priori'),
+                                                     $data->__GET('proc_orden'),
 				                                     $data->__GET('proc_activo'),
                                                      $data->__GET('proc_comp_id')
                                                     )
@@ -146,16 +146,16 @@ class ModelProcCompra {
             $result = array();
              $stm = $this->pdo->prepare("SELECT  pc.proc_compra_id,
                                                  pc.proc_compra_tipo,
-                                                 pc.proc_compra_prioridad,
+                                                 pc.proc_compra_orden,
                                                  pc.proc_compra_activo
                                         FROM procedimiento_compra as pc
-                                        ORDER BY pc.proc_compra_prioridad ASC");
+                                        ORDER BY pc.proc_compra_orden ASC");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new ProcCompra();
                     $busq->__SET('proc_comp_id',    $r->proc_compra_id);
                     $busq->__SET('proc_comp_tipo',  $r->proc_compra_tipo);
-                    $busq->__SET('proc_priori',     $r->proc_compra_prioridad);
+                    $busq->__SET('proc_orden',     $r->proc_compra_orden);
                     $busq->__SET('proc_activo',     $r->proc_compra_activo);
                 $result[] = $busq;
             }
@@ -174,13 +174,13 @@ class ModelProcCompra {
                                                 pc.proc_compra_tipo
                                         FROM procedimiento_compra as pc
                                         WHERE pc.proc_compra_activo=1
-                                        ORDER BY pc.proc_compra_prioridad ASC");
+                                        ORDER BY pc.proc_compra_orden ASC");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new ProcCompra();
                     $busq->__SET('proc_comp_id',    $r->proc_compra_id);
                     $busq->__SET('proc_comp_tipo',  $r->proc_compra_tipo);
-                    $busq->__SET('proc_priori',     $r->proc_compra_prioridad);
+                    $busq->__SET('proc_orden',     $r->proc_compra_orden);
                     $busq->__SET('proc_activo',     $r->proc_compra_activo);
                 $result[] = $busq->returnArray();
             }

@@ -329,4 +329,11 @@ trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatemen
 #1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
 #2 {main} 
 ---------------------------------------------------------------------
+fecha:25-10-2018(22:07:54) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(162): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+#2 {main} 
+---------------------------------------------------------------------
 

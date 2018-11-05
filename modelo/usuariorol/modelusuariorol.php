@@ -9,7 +9,7 @@ class ModelUsuarioRol {
 
     public function __CONSTRUCT(){
         try{
-            $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USERDB, PASSDB);
+            $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USERDB, PASSDB,array(PDO::MYSQL_ATTR_INIT_COMMAND => CHARSETDB));
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);                
         }
         catch(Exception $e){
@@ -28,7 +28,7 @@ class ModelUsuarioRol {
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new UsuarioRol();
                     $busq->__SET('usuario_rol_id', $r->usu_rol_id);
-                    $busq->__SET('usuario_rol_nombre', utf8_encode($r->usu_rol_nombre));
+                    $busq->__SET('usuario_rol_nombre', $r->usu_rol_nombre);
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;

@@ -29,14 +29,14 @@ class ModelMemoEst{
             //var_dump($filtro);
             $consulta = "SELECT  me.memo_estado_id,
                                                 me.memo_estado_tipo,
-                                                me.memo_estado_prioridad,
+                                                me.memo_estado_orden,
                                                 me.memo_estado_activo,
                                                 sec.seccion_id,
                                                 sec.seccion_nombre
                                         FROM memo_estado as me, seccion as sec
                                         WHERE sec.seccion_id = me.memo_estado_seccion_id "
                                         .$filtro
-                                        ." ORDER BY sec.seccion_id ASC, me.memo_estado_prioridad ASC";
+                                        ." ORDER BY sec.seccion_id ASC, me.memo_estado_orden ASC";
             //var_dump($consulta);
             $stm = $this->pdo->prepare($consulta);
             $stm->execute();
@@ -44,7 +44,7 @@ class ModelMemoEst{
                 $busq = new MemoEst();
                     $busq->__SET('memo_est_id', $r->memo_estado_id);
                     $busq->__SET('memo_est_tipo', $r->memo_estado_tipo);
-                    $busq->__SET('memo_est_prioridad', $r->memo_estado_prioridad);
+                    $busq->__SET('memo_est_orden', $r->memo_estado_orden);
                     $busq->__SET('memo_est_activo', $r->memo_estado_activo);
                     $busq->__SET('memo_est_seccion_id', $r->seccion_id);
                     $busq->__SET('memo_est_seccion_nombre', $r->seccion_nombre);
@@ -67,7 +67,7 @@ class ModelMemoEst{
         try{
             $stm = $this->pdo->prepare("SELECT me.memo_estado_id,
                                                 me.memo_estado_tipo,
-                                                me.memo_estado_prioridad,
+                                                me.memo_estado_orden,
                                                 me.memo_estado_activo,
                                                 sec.seccion_id,
                                                 sec.seccion_nombre
@@ -78,7 +78,7 @@ class ModelMemoEst{
             $busq = new MemoEst();
                 $busq->__SET('memo_est_id', $r->memo_estado_id);
                 $busq->__SET('memo_est_tipo', $r->memo_estado_tipo);
-                $busq->__SET('memo_est_prioridad', $r->memo_estado_prioridad);
+                $busq->__SET('memo_est_orden', $r->memo_estado_orden);
                 $busq->__SET('memo_est_activo', $r->memo_estado_activo);
                 $busq->__SET('memo_est_seccion_id', $r->seccion_id);
                 $busq->__SET('memo_est_seccion_nombre', $r->seccion_nombre);
@@ -113,11 +113,11 @@ class ModelMemoEst{
     public function Registrar(MemoEst $data){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO memo_estado (memo_estado_tipo, memo_estado_prioridad, memo_estado_activo, memo_estado_seccion_id) 
+            $sql = "INSERT INTO memo_estado (memo_estado_tipo, memo_estado_orden, memo_estado_activo, memo_estado_seccion_id) 
                     VALUES (?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array(   $data->__GET('memo_est_tipo'),
-                                                        $data->__GET('memo_est_prioridad'),
+                                                        $data->__GET('memo_est_orden'),
                                                         $data->__GET('memo_est_activo'),
                                                         $data->__GET('memo_est_seccion_id')
                                                     )
@@ -140,12 +140,12 @@ class ModelMemoEst{
         try{
             $sql = "UPDATE memo_estado SET 
                            memo_estado_tipo = ?,
-			               memo_estado_prioridad = ?,
+			               memo_estado_orden = ?,
                            memo_estado_activo = ?,
                            memo_estado_seccion_id = ?
                     WHERE  memo_estado_id = ?";
             $this->pdo->prepare($sql)->execute(array($data->__GET('memo_est_tipo'),
-                                                     $data->__GET('memo_est_prioridad'),
+                                                     $data->__GET('memo_est_orden'),
                                                      $data->__GET('memo_est_activo'),
                                                      $data->__GET('memo_est_seccion_id'),
                                                      $data->__GET('memo_est_id')
@@ -167,14 +167,14 @@ class ModelMemoEst{
             $result = array();
              $stm = $this->pdo->prepare("SELECT me.memo_estado_id,
                                                 me.memo_estado_tipo,
-                                                me.memo_estado_prioridad
+                                                me.memo_estado_orden
                                         FROM memo_estado as me");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new MemoEst();
                     $busq->__SET('memo_est_id', $r->memo_estado_id);
                     $busq->__SET('memo_est_tipo', $r->memo_estado_tipo); 
-                    $busq->__SET('memo_est_prioridad', $r->memo_estado_prioridad);
+                    $busq->__SET('memo_est_orden', $r->memo_estado_orden);
                 $result[] = $busq;
             }
             return $result;
@@ -191,13 +191,13 @@ class ModelMemoEst{
                                         FROM memo_estado as me, seccion as sec
                                         WHERE sec.seccion_id = me.memo_estado_seccion_id
                                         AND me.memo_estado_activo = 1
-                                        ORDER BY me.memo_estado_prioridad ASC ");
+                                        ORDER BY me.memo_estado_orden ASC ");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new MemoEst();
                     $busq->__SET('memo_est_id', $r->memo_estado_id);
                     $busq->__SET('memo_est_tipo', $r->memo_estado_tipo);
-                    $busq->__SET('memo_est_prioridad', $r->memo_estado_prioridad);
+                    $busq->__SET('memo_est_orden', $r->memo_estado_orden);
                     $busq->__SET('memo_est_activo', $r->memo_estado_activo);
                     $busq->__SET('memo_est_seccion_nombre', $r->seccion_nombre);                    
                 $result[] = $busq->returnArray();

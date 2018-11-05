@@ -9,7 +9,7 @@ class ModelDepartamento {
 
     public function __CONSTRUCT(){
         try{
-            $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USERDB, PASSDB);
+            $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USERDB, PASSDB,array(PDO::MYSQL_ATTR_INIT_COMMAND => CHARSETDB));
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);                
         }
         catch(Exception $e){
@@ -27,8 +27,8 @@ class ModelDepartamento {
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new Departamentos();
-                    $busq->__SET('depto_id', $r->dpto_id);
-                    $busq->__SET('depto_nombre', utf8_encode($r->dpto_nombre));
+                    $busq->__SET('depto_id',        $r->dpto_id);
+                    $busq->__SET('depto_nombre',    $r->dpto_nombre);
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;
@@ -54,8 +54,8 @@ class ModelDepartamento {
             $stm->execute(array($id));
             $r = $stm->fetch(PDO::FETCH_OBJ);
             $busq = new Departamentos();
-                    $busq->__SET('depto_id', $r->dpto_id);
-                    $busq->__SET('depto_nombre', $r->dpto_nombre);
+                    $busq->__SET('depto_id',        $r->dpto_id);
+                    $busq->__SET('depto_nombre',    $r->dpto_nombre);
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Se obtuvo los Departamentos correctamente';
@@ -137,7 +137,7 @@ class ModelDepartamento {
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new Departamentos();
-                    $busq->__SET('depto_id', $r->dpto_id);
+                    $busq->__SET('depto_id',     $r->dpto_id);
                     $busq->__SET('depto_nombre', $r->dpto_nombre);
                 $result[] = $busq;
             }
