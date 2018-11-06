@@ -1,7 +1,7 @@
 <html>
     <head>
 	<?php include "header.php"; ?>
-	<script src="js/fn_mt_estadooc.js"></script>
+	<script src="js/fn_mt_estadodetmemo.js"></script>
     </head>
     <body>
  
@@ -10,21 +10,21 @@
         <div class="container" style="margin-top:50px">
             <div class="row">
 				<div class="col-md-8 col-md-offset-2">
-					<h2 class="sub-header">Estado Orden de Compra</h2>
+					<h2 class="sub-header">Estado Detalle Memo</h2>
 					<div class="table-responsive">
 						<!-- Añadimos un botón para el diálogo modal onclick="newServicio()"-->
-						<button type="button" id="crea-estadoOC" class="btn btn-sm btn-primary"
+						<button type="button" id="crea-estadoDM" class="btn btn-sm btn-primary"
 								data-toggle="modal" data-target="#myModal" >NUEVO</button> 
 						<table class="table table-striped">
 							<thead>
 								<tr>
 									<th width="50%">Nombre Estado</th>
-									<th width="15%">Prioridad</th>
+									<th width="15%">Orden</th>
 									<th width="15%">Activo</th>
 									<th width="20%">Acciones</th>
 								</tr>
 							</thead>
-							<tbody id="listaestadoOC">
+							<tbody id="listaestadoDM">
 							</tbody>
 		 				</table>
 					</div>
@@ -37,32 +37,32 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title-form" id="myModalLabel">Estado Orden de Compra</h4>
+					<h4 class="modal-title-form" id="myModalLabel">Estado Detalle Memo</h4>
 				</div>
-				<form role="form" name="formestadoOC" id="formestadoOC" method="post" action="">
-					<input type="hidden" name="estadoOCId" id="estadoOCId" value="" />
+				<form role="form" name="formestadoDM" id="formestadoDM" method="post" action="">
+					<input type="hidden" name="estadoDMId" id="estadoDMId" value="" />
 					<input type="hidden" name="Accion" id="Accion" value="" />
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="estadoOCTipo">Nombre Estado</label>
-							<input id="estadoOCTipo" class="form-control" type="text" name="estadoOCTipo" value="" title="Ingrese un tipo" required />
+							<label for="estadoDMTipo">Nombre Estado</label>
+							<input id="estadoDMTipo" class="form-control" type="text" name="estadoDMTipo" value="" title="Ingrese un tipo" required />
 						</div>
 						<div class="form-group">
-							<label for="estadoOCPriori">Prioridad</label>
-							<input id="estadoOCPriori" class="form-control" type="text" name="estadoOCPriori" value="" title="Ingrese una prioridad" required />
+							<label for="estadoDMOrden">Orden</label>
+							<input id="estadoDMOrden" class="form-control" type="text" name="estadoDMOrden" value="" title="Ingrese numero orden" required />
 						</div>
 						<div class="form-group">
-							<label for="estadoOCActivo">Activo</label>
-							<select name="estadoOCActivo" id="estadoOCActivo" class="form-control">
+							<label for="estadoDMActivo">Activo</label>
+							<select name="estadoDMActivo" id="estadoDMActivo" class="form-control">
 								<option value="0">NO</option>
 								<option value="1" selected>SI</option>
 							</select>
 						</div>						
 					</div>
 					<div class="modal-footer">
-						<button id="editar-estadoOC" name="editar-estadoOC" type="button" class="btn btn-warning">Editar</button>
-						<button id="actualizar-estadoOC" name="actualizar-estadoOC" type="button" class="btn btn-primary">Actualizar</button>
-						<button id="guardar-estadoOC" name="guardar-estadoOC" type="button" class="btn btn-primary">Guardar</button>
+						<button id="editar-estadoDM" name="editar-estadoDM" type="button" class="btn btn-warning">Editar</button>
+						<button id="actualizar-estadoDM" name="actualizar-estadoDM" type="button" class="btn btn-primary">Actualizar</button>
+						<button id="guardar-estadoDM" name="guardar-estadoDM" type="button" class="btn btn-primary">Guardar</button>
 						<button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 					</div>
 				</form>
@@ -78,20 +78,20 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title" id="myModalDeleteLabel">Eliminación de Memo Detalle Estado</h4>
 				</div>
-				<form role="form" name="formDeleteestadoOC" id="formDeleteestadoOC" method="post" action="">
-					<input type="hidden" name="estadoOCId" id="estadoOCId" value="" />
+				<form role="form" name="formDeleteestadoDM" id="formDeleteestadoDM" method="post" action="">
+					<input type="hidden" name="estadoDMId" id="estadoDMId" value="" />
 					<input type="hidden" name="Accion" id="Accion" value="" />
 					<div class="modal-body">
 						<div class="input-group">
 							<label for="pregunta">¿Está Seguro de eliminar Memo Detalle Estado seleccionado?</label>
 						</div>       
 						<div class="input-group">
-							<label for="nameestadoOC">Memo Detalle Estado</label>
-							<input type="text" class="form-control" id="nameestadoOC" name="nameestadoOC" placeholder="" readonly>
+							<label for="nameestadoDM">Memo Detalle Estado</label>
+							<input type="text" class="form-control" id="nameestadoDM" name="nameestadoDM" placeholder="" readonly>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button id="eliminar-estadoOC" name="eliminar-estadoOC" type="button" class="btn btn-primary">Aceptar</button>
+						<button id="eliminar-estadoDM" name="eliminar-estadoDM" type="button" class="btn btn-primary">Aceptar</button>
 						<button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 					</div>
 				</form>
