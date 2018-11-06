@@ -17,6 +17,7 @@ if(isset($_REQUEST['Accion'])){
             $procComp->__SET('proc_comp_id',        $_REQUEST['proccompId']);
             $procComp->__SET('proc_comp_tipo',      $_REQUEST['proccompTipo']);
             $procComp->__SET('proc_orden',          $_REQUEST['proccompOrden']);
+            $procComp->__SET('proc_descrip',        $_REQUEST['proccompDescrip']);
             $procComp->__SET('proc_activo',         $_REQUEST['proccompActivo']);
             $jsondata = $modelProcComp->Actualizar($procComp);
             header('Content-type: application/json; charset=utf-8');
@@ -26,6 +27,7 @@ if(isset($_REQUEST['Accion'])){
         case 'registrar':
             $procComp->__SET('proc_comp_tipo',  $_REQUEST['proccompTipo']);
             $procComp->__SET('proc_orden',      $_REQUEST['proccompOrden']);
+            $procComp->__SET('proc_descrip',        $_REQUEST['proccompDescrip']);
             $procComp->__SET('proc_activo',     $_REQUEST['proccompActivo']);
             $jsondata = $modelProcComp->Registrar($procComp);
             header('Content-type: application/json; charset=utf-8');

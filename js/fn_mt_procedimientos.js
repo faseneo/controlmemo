@@ -7,17 +7,20 @@
         $("#proccompId").val("");
         $("#proccompTipo").val("");
         $("#proccompOrden").val("");
+        $("#proccompDescrip").val("");
     }        
     function habilitaform(){
         $("#proccompId").prop( "disabled", false );
         $("#proccompTipo").prop( "disabled", false );
         $("#proccompOrden").prop( "disabled", false );
+        $("#proccompDescrip").prop( "disabled", false );
         $("#proccompActivo").prop( "disabled", false );
     }
     function deshabilitaform(){
         $("#proccompId").prop( "disabled", true );
         $("#proccompTipo").prop( "disabled", true );
         $("#proccompOrden").prop( "disabled", true );
+        $("#proccompDescrip").prop( "disabled", true );
         $("#proccompActivo").prop( "disabled", true );
     }
 
@@ -26,6 +29,7 @@
         function validarFormulario(){
             var txtTipo = document.getElementById('proccompTipo').value;
             var txtPriori = document.getElementById('proccompOrden').value;
+            var txtDescrip = document.getElementById('proccompDescrip').value;
             var proctActivo = document.getElementById('proccompActivo').selectedIndex;
                 //Test campo obligatorio
                 if(txtTipo == null || txtTipo.length == 0 || /^\s+$/.test(txtTipo)){
@@ -33,6 +37,11 @@
                     document.getElementById('proccompTipo').focus();
                     return false;
                 }   
+                if(txtDescrip == null || txtDescrip.length == 0 || /^\s+$/.test(txtDescrip)){
+                    alert('ERROR: El campo prioridad no debe ir vacío o con espacios en blanco');
+                    document.getElementById('proccompDescrip').focus();
+                    return false;
+                }                
                 if(txtPriori == null || txtPriori.length == 0 || /^\s+$/.test(txtPriori)){
                     alert('ERROR: El campo prioridad no debe ir vacío o con espacios en blanco');
                     document.getElementById('proccompOrden').focus();
@@ -70,6 +79,7 @@
                                 var activo = data.datos[i].proc_activo == 1 ? 'Activo':'Inactivo';
 
                                 fila = '<tr><td>'+ data.datos[i].proc_comp_tipo +'</td>';
+                                fila += '<td>' + data.datos[i].proc_descrip +'</td>';
                                 fila += '<td>' + data.datos[i].proc_orden +'</td>';
                                 fila += '<td>' + activo + '</td>';
                                 fila += '<td><button id="ver-proccomp" type="button" '
@@ -271,8 +281,10 @@
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
             }
+            console.log(data.datos.proc_descrip);
             $("#proccompId").val(data.datos.proc_comp_id);
             $("#proccompTipo").val(data.datos.proc_comp_tipo);
+            $("#proccompDescrip").val(data.datos.proc_descrip);
             $("#proccompOrden").val(data.datos.proc_orden);
             $("#proccompActivo").val(data.datos.proc_activo);
 

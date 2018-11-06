@@ -8,7 +8,7 @@
 	<?php include "barranav.php"; ?>
 	<div class="container" style="margin-top:50px">
 		<div class="row">
-			<div class="col-md-9">  
+			<div class="col-md-10">  
 				<h2 class="sub-header">Procedimiento de Compras</h2>
 				<div class="table-responsive">
 					<button type="button" id="crea-proccomp" class="btn btn-sm btn-primary"
@@ -16,9 +16,10 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th width="40%">Nombre Procedimiento</th>
-								<th width="20%">Prioridad</th>
-								<th width="20%">Activo</th>
+								<th width="30%">Nombre Procedimiento</th>
+								<th width="30%">Descripcion</th>
+								<th width="10%">Orden</th>
+								<th width="10%">Activo</th>
 								<th width="20%">Acciones</th> 
 							</tr>
 						</thead>
@@ -46,7 +47,11 @@
 							<input id="proccompTipo" class="form-control" type="text" name="proccompTipo" value="" title="Ingrese un Tipo" required />
 						</div>
 						<div class="form-group">
-							<label for="proccompOrden">Prioridad</label>
+							<label for="proccompDescrip">Descripción</label>
+							<input id="proccompDescrip" class="form-control" type="text" name="proccompDescrip" value="" title="Ingrese un Tipo" required />
+						</div>						
+						<div class="form-group">
+							<label for="proccompOrden">Orden</label>
 							<input id="proccompOrden" class="form-control" type="number" name="proccompOrden" value="" title="Ingrese prioridad" required />
 						</div>						
 						<div class="form-group">
