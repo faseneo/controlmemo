@@ -1,12 +1,11 @@
-<html>
-    <head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
 	<?php include "header.php"; ?>
 	<script src="js/fn_mt_depto.js"></script>  
-    </head>
-    <body>
-
- <?php include "barranav.php"; ?>
-
+</head>
+<body>
+	<?php include "barranav.php"; ?>
         <div class="container" style="margin-top:50px">
             <div class="row">
 				<div class="col-md-10">
@@ -29,8 +28,7 @@
 				</div>
 			</div>
 		</div>
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -103,6 +101,5 @@
 			</div>
 		</div>
 	</div>
-
-    </body>
+</body>
 </html>

@@ -20,17 +20,19 @@
 				<li class="dropdown">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#">Mantendor<span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						<li><a href="mt_dependencia.php">Dependencias</a></li>					
 						<li><a href="mt_centrocosto.php">Centro de Costos</a></li>
 						<li><a href="mt_departamento.php">Departamentos</a></li>
-<!-- 						<li><a href="mantenedorperf.php">Perfiles</a></li> -->
+						<li><a href="mt_dependencia.php">Dependencias</a></li>
+						<li><a href="mt_procedimientos.php">Procedimiento Compra</a></li>
+						<li><a href="mt_proveedores.php">Proveedores</a></li>
 						<li><a href="mt_usuarios.php">Usuarios</a></li>
 						<li><a href="mantenedorusurol.php">Usuario Rol</a></li>
-						<li><a href="mt_proveedores.php">Proveedores</a></li>
-						<li><a href="mt_procedimientos.php">Procedimiento Compra</a></li>
+						<li><a href="mt_seccion.php">Sección</a></li>
 						<li><a href="mt_estadodetmemo.php">Estado Detalle Memo</a></li>
 						<li><a href="mt_memoestado.php">Estado Memos</a></li>
-						<li><a href="mt_seccion.php">Sección</a></li>
+						<li><a href="mt_estadoasignacion.php">Estado Asignacion Memos</a></li>
+						<li><a href="mt_asignadificultad.php">Dificultad Asignacion</a></li>
+						<li><a href="mt_asignaprioridad.php">Prioridad Asignacion</a></li>
 					</ul>
 				</li>
 			</ul>
