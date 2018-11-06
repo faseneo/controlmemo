@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.0
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-08-2018 a las 16:38:37
--- Versión del servidor: 10.1.31-MariaDB
--- Versión de PHP: 7.2.4
+-- Tiempo de generación: 07-11-2018 a las 00:05:56
+-- Versión del servidor: 10.1.30-MariaDB
+-- Versión de PHP: 5.6.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -25,12 +25,111 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `asigna_dificultad`
+--
+
+CREATE TABLE `asigna_dificultad` (
+  `asigna_dificultad_id` int(11) NOT NULL,
+  `asigna_dificultad_texto` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `asigna_dificultad`
+--
+
+INSERT INTO `asigna_dificultad` (`asigna_dificultad_id`, `asigna_dificultad_texto`) VALUES
+(1, 'Alta'),
+(2, 'Media'),
+(3, 'Baja');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asigna_prioridad`
+--
+
+CREATE TABLE `asigna_prioridad` (
+  `asigna_prioridad_id` int(11) NOT NULL,
+  `asigna_prioridad_texto` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asigna_usuario`
+--
+
+CREATE TABLE `asigna_usuario` (
+  `asigna_usuario_id` int(11) NOT NULL,
+  `asigna_usuario_memo_id` int(11) NOT NULL,
+  `asigna_usuario_usuario_id` int(11) NOT NULL,
+  `asigna_usuario_comentario` varchar(255) NOT NULL,
+  `asigna_usuario_estado_asignacion_id` int(11) NOT NULL,
+  `asigna_usuario_fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `asigna_usuario_asigna_prioridad_id` int(11) NOT NULL,
+  `asigna_usuario_asigna_dificultad_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asocia_resolucion`
+--
+
+CREATE TABLE `asocia_resolucion` (
+  `asocia_resolucion_id` int(11) NOT NULL,
+  `asocia_resolucion_memo_id` int(11) NOT NULL,
+  `asocia_resolucion_memo_res_is` int(11) NOT NULL,
+  `asocia_resolucion_fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `asocia_resolucion_comentario` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cambio_estados`
+--
+
+CREATE TABLE `cambio_estados` (
+  `cambio_estados_id` int(11) NOT NULL,
+  `cambio_estados_memo_id` int(11) NOT NULL,
+  `cambio_estados_memo_estado_id` int(11) NOT NULL,
+  `cambio_estados_observacion` varchar(255) DEFAULT NULL,
+  `cambio_estados_fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `cambio_estados`
+--
+
+INSERT INTO `cambio_estados` (`cambio_estados_id`, `cambio_estados_memo_id`, `cambio_estados_memo_estado_id`, `cambio_estados_observacion`, `cambio_estados_fecha`) VALUES
+(1, 1, 1, 'Ingresado por Jani', '2018-10-05 17:26:31'),
+(2, 2, 1, 'algo nuevo', '2018-10-05 17:58:05'),
+(3, 4, 1, 'algo nuevo', '2018-10-05 18:12:54');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cambio_estados_detmemo`
+--
+
+CREATE TABLE `cambio_estados_detmemo` (
+  `cambio_estados_detmemo_id` int(11) NOT NULL,
+  `cambio_estados_detmemo_detmemo_id` int(11) NOT NULL,
+  `cambio_estados_detmemo_estado_detmemo_id` int(11) NOT NULL,
+  `cambio_estados_detmemo_observacion` varchar(255) NOT NULL,
+  `cambio_estados_detmemo_fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `centro_costos`
 --
 
 CREATE TABLE `centro_costos` (
   `cc_codigo` int(11) NOT NULL,
-  `cc_nombre` varchar(150) DEFAULT NULL,
+  `cc_nombre` varchar(150) NOT NULL,
   `cc_dependencia_codigo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -400,7 +499,7 @@ INSERT INTO `departamento` (`dpto_id`, `dpto_nombre`) VALUES
 
 CREATE TABLE `dependencia` (
   `dependencia_codigo` int(11) NOT NULL,
-  `dependencia_nombre` varchar(100) DEFAULT NULL
+  `dependencia_nombre` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -435,12 +534,163 @@ INSERT INTO `dependencia` (`dependencia_codigo`, `dependencia_nombre`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `detalle_memo`
+--
+
+CREATE TABLE `detalle_memo` (
+  `detmemo_id` int(11) NOT NULL,
+  `detmemo_descripcion` varchar(300) DEFAULT NULL,
+  `detmemo_ocnum_chilecompra` varchar(50) DEFAULT NULL COMMENT 'Numero orden compra chilecompra',
+  `detmemo_ocnum_sistema_interno` varchar(50) DEFAULT NULL COMMENT 'Numero orden compra manager',
+  `detmemo_monto_total` float DEFAULT NULL,
+  `detmemo_contacto_nombre` varchar(45) DEFAULT NULL,
+  `detmemo_proc_compra_id` int(11) NOT NULL,
+  `detmemo_proveedor_id` int(11) NOT NULL,
+  `detmemo_fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `detmemo_memo_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_memo_archivo`
+--
+
+CREATE TABLE `detalle_memo_archivo` (
+  `detmemo_archivo_id` int(11) NOT NULL,
+  `detmemo_archivo_url` varchar(200) NOT NULL,
+  `detmemo_archivo_name` varchar(255) NOT NULL,
+  `detmemo_archivo_type` varchar(20) NOT NULL,
+  `detmemo_archivo_size` float NOT NULL,
+  `detmemo_archivo_fecha_registro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `detmemo_archivo_detmemo_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detalle_orden_compra`
+--
+
+CREATE TABLE `detalle_orden_compra` (
+  `detalle_ocompra_id` int(11) NOT NULL,
+  `detalle_ocompra_descripcion_item` varchar(200) NOT NULL,
+  `detalle_ocompra_cantidad` float NOT NULL,
+  `detalle_ocompra_valor` float NOT NULL,
+  `detalle_ocompra_total` float NOT NULL,
+  `detalle_ocompra_detmemo_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `detmemo_tiene_doctributario`
+--
+
+CREATE TABLE `detmemo_tiene_doctributario` (
+  `detmemo_tiene_doctributario_id` int(11) NOT NULL,
+  `detmemo_tiene_doctributario_detmemo_id` int(11) NOT NULL,
+  `detmemo_tiene_doctributario_doc_tributario_id` int(11) NOT NULL,
+  `detmemo_tiene_doctributario_fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `documento_tributario`
+--
+
+CREATE TABLE `documento_tributario` (
+  `doc_tributario_id` int(11) NOT NULL,
+  `doc_tributario_numero` int(11) NOT NULL,
+  `doc_tributario_monto` float NOT NULL,
+  `doc_tributario_fecha` date NOT NULL,
+  `doc_tributario_fecha_recepcion` date DEFAULT NULL,
+  `doc_tributario_tipo_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `doc_tributario_tipo`
+--
+
+CREATE TABLE `doc_tributario_tipo` (
+  `doc_tributario_tipo_id` int(11) NOT NULL,
+  `doc_tributario_tipo_nombre` varchar(30) NOT NULL COMMENT 'factura,boleta'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estado_asignacion`
+--
+
+CREATE TABLE `estado_asignacion` (
+  `estado_asignacion_id` int(11) NOT NULL,
+  `estado_asignacion_texto` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `estado_asignacion`
+--
+
+INSERT INTO `estado_asignacion` (`estado_asignacion_id`, `estado_asignacion_texto`) VALUES
+(1, 'No leido'),
+(2, 'Leido'),
+(3, 'Se necesitan mas datos'),
+(4, 'Confirmada');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `estado_detalle_memo`
+--
+
+CREATE TABLE `estado_detalle_memo` (
+  `estado_detmemo_id` int(11) NOT NULL,
+  `estado_detmemo_tipo` varchar(50) NOT NULL,
+  `estado_detmemo_orden` tinyint(4) NOT NULL,
+  `estado_detmemo_descripcion` varchar(128) DEFAULT NULL,
+  `estado_detmemo_activo` tinyint(4) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='										';
+
+--
+-- Volcado de datos para la tabla `estado_detalle_memo`
+--
+
+INSERT INTO `estado_detalle_memo` (`estado_detmemo_id`, `estado_detmemo_tipo`, `estado_detmemo_orden`, `estado_detmemo_descripcion`, `estado_detmemo_activo`) VALUES
+(1, 'En Gestión', 1, NULL, 1),
+(2, 'Compra parcial', 2, NULL, 1),
+(3, 'Compra Realizada', 3, NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `historial_cambios`
+--
+
+CREATE TABLE `historial_cambios` (
+  `historial_cambios_id` int(11) NOT NULL,
+  `historial_cambios_tipo_id` int(11) NOT NULL,
+  `historial_cambios_tabla` varchar(128) NOT NULL,
+  `historial_cambios_pk` varchar(255) NOT NULL,
+  `historial_cambios_campo_nombre` varchar(128) NOT NULL,
+  `historial_cambios_valor_anterior` varchar(1000) NOT NULL,
+  `historial_cambios_valor_nuevo` varchar(1000) NOT NULL,
+  `historial_cambios_fecha_transaccion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `historial_cambios_usuario_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `historial_cambios_tipo`
 --
 
 CREATE TABLE `historial_cambios_tipo` (
   `hist_camb_tipo_id` int(11) NOT NULL,
-  `hist_camb_tipo_texto` varchar(30) DEFAULT NULL
+  `hist_camb_tipo_texto` varchar(30) NOT NULL COMMENT 'insert,update,delete'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -452,7 +702,7 @@ CREATE TABLE `historial_cambios_tipo` (
 CREATE TABLE `memo` (
   `memo_id` int(11) NOT NULL,
   `memo_num_memo` varchar(10) NOT NULL,
-  `memo_anio` smallint(6) DEFAULT NULL,
+  `memo_anio` smallint(6) NOT NULL,
   `memo_materia` varchar(400) NOT NULL,
   `memo_fecha_memo` date NOT NULL,
   `memo_fecha_recepcion` date NOT NULL,
@@ -460,27 +710,20 @@ CREATE TABLE `memo` (
   `memo_nombre_solicitante` varchar(60) NOT NULL,
   `memo_depto_destinatario_id` int(11) NOT NULL,
   `memo_nombre_destinatario` varchar(60) NOT NULL,
-  `memo_memo_estado_id` int(11) NOT NULL,
-  `memo_fecha_ingreso` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `memo_fecha_ingreso` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `memo_cc_codigo` int(11) NOT NULL,
+  `memo_fecha_cdp` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `memo`
 --
 
-INSERT INTO `memo` (`memo_id`, `memo_num_memo`, `memo_anio`, `memo_materia`, `memo_fecha_memo`, `memo_fecha_recepcion`, `memo_depto_solicitante_id`, `memo_nombre_solicitante`, `memo_depto_destinatario_id`, `memo_nombre_destinatario`, `memo_memo_estado_id`, `memo_fecha_ingreso`) VALUES
-(1, '23', 2018, 'prueba', '2018-07-17', '2018-07-23', 1, 'Pino', 20, 'Leonel Duran', 1, '2018-07-24 20:23:59'),
-(2, '25A', 2018, 'Prueba dos memo 25a', '2018-07-19', '2018-07-24', 1, 'Pino', 20, 'Leonel Duran', 1, '2018-07-24 20:28:36'),
-(3, '12', 2018, 'Prueba', '2018-07-05', '2018-07-12', 1, 'JUan', 34, 'Leonel Durán', 1, '2018-08-01 15:18:42'),
-(4, '12', 2018, 'Prueba de ñoños', '2018-07-09', '2018-07-11', 2, 'José', 34, 'Leonel Durán', 1, '2018-08-01 15:22:12'),
-(5, '12', 2018, 'Prueba de ñoños', '2018-07-09', '2018-07-11', 2, 'José', 34, 'Leonel Durán', 1, '2018-08-01 19:08:38'),
-(6, '12', 2018, 'Prueba de ñoños', '2018-07-09', '2018-07-11', 2, 'José', 34, 'Leonel Durán', 1, '2018-08-01 19:11:50'),
-(7, '12', 2018, 'Prueba de ñoños', '2018-07-09', '2018-07-11', 2, 'José', 34, 'Leonel Durán', 1, '2018-08-01 19:20:13'),
-(8, '12', 2018, 'Prueba de ñoños', '2018-07-09', '2018-07-11', 2, 'José', 34, 'Leonel Durán', 1, '2018-08-01 20:36:16'),
-(9, '34', 2018, 'Prueba con acéntos malos y ñoñerías', '2018-08-01', '2018-08-08', 1, 'Juan Ñoño', 34, 'Leonel Durán', 1, '2018-08-10 20:19:41'),
-(10, '34', 2018, 'Segunda prueba con acéntos malos y ñoñerías', '2018-08-01', '2018-08-08', 4, 'Manuel  Ñoño', 34, 'Leonel Durán', 1, '2018-08-10 20:20:56'),
-(11, '56', 2018, 'Tercera prueba con acentós y ñoñerías', '2018-08-02', '2018-08-08', 8, 'José García Nuñez', 34, 'Leonel Durán', 1, '2018-08-10 20:28:03'),
-(12, '', 0, '', '0000-00-00', '0000-00-00', 0, '', 34, 'Leonel Durán', 1, '2018-08-13 15:09:03');
+INSERT INTO `memo` (`memo_id`, `memo_num_memo`, `memo_anio`, `memo_materia`, `memo_fecha_memo`, `memo_fecha_recepcion`, `memo_depto_solicitante_id`, `memo_nombre_solicitante`, `memo_depto_destinatario_id`, `memo_nombre_destinatario`, `memo_fecha_ingreso`, `memo_cc_codigo`, `memo_fecha_cdp`) VALUES
+(1, '250', 2018, 'Prueba', '2018-10-01', '2018-10-04', 1, 'Juan Perez', 34, 'Leonel Duran', '2018-10-05 17:24:21', 0, NULL),
+(2, '123', 2018, 'Pruena dos', '2018-10-02', '2018-10-05', 3, 'Juan perez', 34, 'Leonel Durán', '2018-10-05 17:57:17', 0, NULL),
+(3, '456', 2018, 'Compra pc', '2018-09-26', '2018-10-01', 2, 'Todos', 34, 'Leonel Durán', '2018-10-05 18:04:27', 0, NULL),
+(4, '1234', 2018, 'prueba uno dos tres', '2018-09-28', '2018-10-02', 2, 'juan', 34, 'Leonel Durán', '2018-10-05 18:12:54', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -492,7 +735,7 @@ CREATE TABLE `memo_archivo` (
   `memo_archivo_id` int(11) NOT NULL,
   `memo_archivo_url` varchar(255) NOT NULL,
   `memo_archivo_name` varchar(255) NOT NULL,
-  `memo_archivo_type` varchar(20) NOT NULL,
+  `memo_archivo_type` varchar(80) NOT NULL,
   `memo_archivo_size` float NOT NULL,
   `memo_archivo_fecha_registro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `memo_archivo_principal_flag` tinyint(4) NOT NULL,
@@ -504,84 +747,8 @@ CREATE TABLE `memo_archivo` (
 --
 
 INSERT INTO `memo_archivo` (`memo_archivo_id`, `memo_archivo_url`, `memo_archivo_name`, `memo_archivo_type`, `memo_archivo_size`, `memo_archivo_fecha_registro`, `memo_archivo_principal_flag`, `memo_archivo_memo_id`) VALUES
-(1, 'archivos/memo23.pdf', 'memo_registro_curricular_a_finanza.pdf', 'pdf', 123, '2018-07-24 20:27:06', 1, 1),
-(2, 'archivos/memo23_otro.pdf', 'cotizacion_memo23.pdf', 'pdf', 230, '2018-07-25 16:27:29', 0, 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `memo_detalle`
---
-
-CREATE TABLE `memo_detalle` (
-  `memo_det_id` int(11) NOT NULL,
-  `memo_det_proc_compra_id` int(11) NOT NULL,
-  `memo_det_num_oc_chc` varchar(20) DEFAULT NULL COMMENT 'Numero orden compra chilecompra',
-  `memo_det_num_oc_manager` varchar(20) DEFAULT NULL COMMENT 'Numero orden compra manager',
-  `memo_det_proveedor_id` int(11) NOT NULL,
-  `memo_det_fecha_cdp` date DEFAULT NULL COMMENT 'certificado disponibilidad presupuestaria',
-  `memo_det_num_factura` int(11) DEFAULT NULL,
-  `memo_det_fecha_factura` date DEFAULT NULL,
-  `memo_det_monto_total` float DEFAULT NULL,
-  `memo_det_observaciones` varchar(250) DEFAULT NULL,
-  `memo_det_memo_id` int(11) NOT NULL,
-  `memo_det_cc_codigo` int(11) NOT NULL,
-  `memo_det_memo_detalle_estado_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `memo_detalle_archivo`
---
-
-CREATE TABLE `memo_detalle_archivo` (
-  `memo_det_archivo_id` int(11) NOT NULL,
-  `memo_det_archivo_url` varchar(200) NOT NULL,
-  `memo_det_archivo_name` varchar(255) NOT NULL,
-  `memo_det_archivo_type` varchar(20) NOT NULL,
-  `memo_det_archivo_size` float NOT NULL,
-  `memo_det_archivo_fecha_registro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `memo_det_archivo_memo_det_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `memo_detalle_compra`
---
-
-CREATE TABLE `memo_detalle_compra` (
-  `memo_det_compra_id` int(11) NOT NULL,
-  `memo_det_compra_nombre_producto` varchar(120) DEFAULT NULL,
-  `memo_det_compra_cantidad` float DEFAULT NULL,
-  `memo_det_compra_valor` float DEFAULT NULL,
-  `memo_det_compra_total` float DEFAULT NULL,
-  `memo_det_compra_memo_det_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `memo_detalle_estado`
---
-
-CREATE TABLE `memo_detalle_estado` (
-  `memo_detalle_estado_id` int(11) NOT NULL,
-  `memo_detalle_estado_tipo` varchar(50) NOT NULL,
-  `memo_detalle_prioridad` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `memo_detalle_estado`
---
-
-INSERT INTO `memo_detalle_estado` (`memo_detalle_estado_id`, `memo_detalle_estado_tipo`, `memo_detalle_prioridad`) VALUES
-(1, 'En proceso', 0),
-(2, 'Opcion de Compra nula', 0),
-(3, 'Sin efecto', 0),
-(4, 'Sin gestion', 0),
-(5, 'Terminado', 0);
+(1, 'archivos/archivo_memo_2018_123.png', 'modeloDatos_controlmemo.png', 'image/png', 113036, '2018-10-05 17:57:17', 1, 2),
+(2, 'archivos/archivo_memo_2018_1234.png', 'modeloDatos_controlmemo.png', 'image/png', 113036, '2018-10-05 18:12:54', 1, 4);
 
 -- --------------------------------------------------------
 
@@ -592,60 +759,34 @@ INSERT INTO `memo_detalle_estado` (`memo_detalle_estado_id`, `memo_detalle_estad
 CREATE TABLE `memo_estado` (
   `memo_estado_id` int(11) NOT NULL,
   `memo_estado_tipo` varchar(50) NOT NULL,
-  `memo_prioridad` tinyint(4) NOT NULL
+  `memo_estado_orden` tinyint(4) NOT NULL,
+  `memo_estado_descripcion` varchar(128) NOT NULL,
+  `memo_estado_seccion_id` int(11) NOT NULL,
+  `memo_estado_activo` tinyint(4) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `memo_estado`
 --
 
-INSERT INTO `memo_estado` (`memo_estado_id`, `memo_estado_tipo`, `memo_prioridad`) VALUES
-(1, 'Ingresado sin Autorizacion', 0),
-(2, 'En Proceso', 0),
-(3, 'Sin efecto', 0),
-(4, 'Sin gestion', 0),
-(5, 'Terminado', 0);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `memo_historial_cambios`
---
-
-CREATE TABLE `memo_historial_cambios` (
-  `memo_hist_cam_id` int(11) NOT NULL,
-  `memo_hist_cam_usuario_id` int(11) NOT NULL,
-  `memo_hist_cam_memo_id` int(11) NOT NULL,
-  `memo_hist_cam_campo_nombre` varchar(25) NOT NULL,
-  `memo_hist_cam_valor_anterior` varchar(255) NOT NULL,
-  `memo_hist_cam_valor_nuevo` varchar(255) NOT NULL,
-  `memo_hist_cam_tipo_id` int(11) NOT NULL,
-  `memo_hist_cam_fecha_modifica` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `memo_relacion`
---
-
-CREATE TABLE `memo_relacion` (
-  `memo_relacion_id` int(11) NOT NULL,
-  `memo_relacion_origen_id` int(10) UNSIGNED NOT NULL,
-  `memo_relacion_destino_id` int(10) UNSIGNED NOT NULL,
-  `memo_relacion_relacion_tipo_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `memo_relacion_tipo`
---
-
-CREATE TABLE `memo_relacion_tipo` (
-  `memo_relacion_tipo_id` int(11) NOT NULL,
-  `memo_relacion_tipo_nombre` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `memo_estado` (`memo_estado_id`, `memo_estado_tipo`, `memo_estado_orden`, `memo_estado_descripcion`, `memo_estado_seccion_id`, `memo_estado_activo`) VALUES
+(1, 'Ingresado', 1, '', 2, 1),
+(2, 'Archivado', 2, '', 2, 1),
+(3, 'Derivado', 3, '', 2, 1),
+(4, 'Con CDP PPTO', 4, '', 2, 1),
+(5, 'Con CDP de PlanificaciÃ³n', 5, '', 2, 1),
+(6, 'Anulado', 6, '', 2, 1),
+(7, 'Rechazado', 7, '', 2, 1),
+(9, 'En Proceso', 3, '', 3, 1),
+(10, 'Sin Efecto', 5, '', 3, 0),
+(11, 'En GestiÃ³n', 2, '', 3, 1),
+(12, 'OC Nula', 4, '', 3, 1),
+(13, 'Terminado', 5, '', 3, 1),
+(14, 'Recibido', 1, '', 4, 1),
+(15, 'Aprobado', 2, '', 4, 1),
+(16, 'Sin Asignar', 1, '', 3, 1),
+(17, 'Asignado', 1, '', 3, 1),
+(18, 'En espera de Factura', 4, '', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -654,24 +795,9 @@ CREATE TABLE `memo_relacion_tipo` (
 --
 
 CREATE TABLE `memo_resoluciones` (
-  `memo_res_is` int(11) NOT NULL,
+  `memo_res_id` int(11) NOT NULL,
   `memo_res_num` varchar(15) NOT NULL,
-  `memo_res_url` varchar(300) NOT NULL,
-  `memo_res_memo_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `memo_tiene_usuario`
---
-
-CREATE TABLE `memo_tiene_usuario` (
-  `memo_tiene_usu_id` int(11) NOT NULL,
-  `memo_tiene_usu_memo_id` int(11) NOT NULL,
-  `memo_tiene_usu_usuario_id` int(11) NOT NULL,
-  `memo_tiene_usu_fecha_asigna` datetime NOT NULL,
-  `memo_tiene_usu_estado` int(11) NOT NULL
+  `memo_res_url` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -694,19 +820,22 @@ CREATE TABLE `perfil_permisos` (
 CREATE TABLE `procedimiento_compra` (
   `proc_compra_id` int(11) NOT NULL,
   `proc_compra_tipo` varchar(50) NOT NULL,
-  `proc_prioridad` tinyint(4) NOT NULL
+  `proc_compra_orden` tinyint(4) NOT NULL,
+  `proc_compra_descripcion` varchar(256) DEFAULT NULL,
+  `proc_compra_activo` tinyint(4) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `procedimiento_compra`
 --
 
-INSERT INTO `procedimiento_compra` (`proc_compra_id`, `proc_compra_tipo`, `proc_prioridad`) VALUES
-(1, 'Convenio Marco (CM)', 0),
-(2, 'Compra directa', 0),
-(3, 'Gran compra', 0),
-(4, 'Licitacion Publica / Privada', 0),
-(5, 'Trato directo', 0);
+INSERT INTO `procedimiento_compra` (`proc_compra_id`, `proc_compra_tipo`, `proc_compra_orden`, `proc_compra_descripcion`, `proc_compra_activo`) VALUES
+(1, 'Convenio Marco (CM)', 2, 'Valor de compra hasta 1000 UTM', 1),
+(2, 'Compra directa', 3, NULL, 1),
+(3, 'Gran compra', 4, NULL, 1),
+(4, 'Licitacion Publica / Privada', 5, NULL, 1),
+(5, 'Trato directo', 6, NULL, 1),
+(6, 'Caja Chica', 1, 'Caja chica del departamento solicitante', 1);
 
 -- --------------------------------------------------------
 
@@ -716,9 +845,48 @@ INSERT INTO `procedimiento_compra` (`proc_compra_id`, `proc_compra_tipo`, `proc_
 
 CREATE TABLE `proveedor` (
   `proveedor_id` int(11) NOT NULL,
+  `proveedor_rut` varchar(12) NOT NULL,
   `proveedor_nombre` varchar(180) NOT NULL,
-  `proveedor_rut` varchar(10) NOT NULL
+  `proveedor_direccion` varchar(128) DEFAULT NULL,
+  `proveedor_fono` varchar(15) DEFAULT NULL,
+  `proveedor_ciudad` varchar(100) DEFAULT NULL,
+  `proveedor_region` varchar(100) DEFAULT NULL,
+  `proveedor_cuenta` varchar(30) DEFAULT NULL,
+  `proveedor_contacto_nombre` varchar(80) DEFAULT NULL,
+  `proveedor_contacto_email` varchar(120) DEFAULT NULL,
+  `proveedor_contacto_fono` varchar(15) DEFAULT NULL,
+  `proveedor_estado` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `proveedor`
+--
+
+INSERT INTO `proveedor` (`proveedor_id`, `proveedor_rut`, `proveedor_nombre`, `proveedor_direccion`, `proveedor_fono`, `proveedor_ciudad`, `proveedor_region`, `proveedor_cuenta`, `proveedor_contacto_nombre`, `proveedor_contacto_email`, `proveedor_contacto_fono`, `proveedor_estado`) VALUES
+(1, '96781350-8', 'EDENRED CHILE SOCIEDAD ANONIMA', 'Andrés Bello 2687', '+56223539000', 'Las Condes', 'Metropolitana', '', 'Juan Perez', 'jperez@edenred.cl', '+56223539001', 'Activo'),
+(2, '96775870-1', 'WEI CHILE S.A.', 'Avda. Pedro de Valdivia 2550', '+56223790000', 'Ñuñoa', 'Metropolitana', '', 'Jose Garcia García', 'jgarcia@wei.cl', '+56223790020', 'Activo');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `seccion`
+--
+
+CREATE TABLE `seccion` (
+  `seccion_id` int(11) NOT NULL,
+  `seccion_nombre` varchar(50) NOT NULL,
+  `seccion_descripcion` varchar(128) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `seccion`
+--
+
+INSERT INTO `seccion` (`seccion_id`, `seccion_nombre`, `seccion_descripcion`) VALUES
+(1, 'No definido', NULL),
+(2, 'Secretaria DAF', NULL),
+(3, 'Adquisiciones', NULL),
+(4, 'PlanificaciÃ³n', NULL);
 
 -- --------------------------------------------------------
 
@@ -735,6 +903,16 @@ CREATE TABLE `usuario` (
   `usuario_estado` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:creado,1:activo, 2:inactivo (se podria agregar bloqueado y eliminado)',
   `usuario_fecha_ingreso` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`usuario_id`, `usuario_rut`, `usuario_nombre`, `usuario_password`, `usuario_usu_rol_id`, `usuario_estado`, `usuario_fecha_ingreso`) VALUES
+(1, '1-9', 'Juan Pérez', '123456', 3, 1, '2018-08-31 14:15:15'),
+(2, '3-7', 'José García', '123456', 3, 1, '2018-08-31 14:15:48'),
+(3, '2-8', 'Marí­a José Garcés', '123456', 1, 1, '2018-08-31 14:40:34'),
+(4, '4-6', 'Carolina', '123456', 4, 1, '2018-08-31 14:57:51');
 
 -- --------------------------------------------------------
 
@@ -755,7 +933,7 @@ CREATE TABLE `usuario_perfil` (
 
 CREATE TABLE `usuario_rol` (
   `usu_rol_id` int(11) NOT NULL,
-  `usu_rol_nombre` varchar(64) DEFAULT NULL
+  `usu_rol_nombre` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -766,11 +944,59 @@ INSERT INTO `usuario_rol` (`usu_rol_id`, `usu_rol_nombre`) VALUES
 (1, 'Administrador'),
 (2, 'Supevisor'),
 (3, 'Analista'),
-(4, 'Secretaria');
+(4, 'Secretaria'),
+(5, 'Gestión Pago');
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `asigna_dificultad`
+--
+ALTER TABLE `asigna_dificultad`
+  ADD PRIMARY KEY (`asigna_dificultad_id`);
+
+--
+-- Indices de la tabla `asigna_prioridad`
+--
+ALTER TABLE `asigna_prioridad`
+  ADD PRIMARY KEY (`asigna_prioridad_id`);
+
+--
+-- Indices de la tabla `asigna_usuario`
+--
+ALTER TABLE `asigna_usuario`
+  ADD PRIMARY KEY (`asigna_usuario_id`),
+  ADD KEY `fk_memo_has_usuarios_usuarios1_idx` (`asigna_usuario_usuario_id`),
+  ADD KEY `fk_memo_has_usuarios_memo1_idx` (`asigna_usuario_memo_id`),
+  ADD KEY `fk_asigna_usuario_estado_asignacion1_idx` (`asigna_usuario_estado_asignacion_id`),
+  ADD KEY `fk_asigna_usuario_asigna_prioridad1_idx` (`asigna_usuario_asigna_prioridad_id`),
+  ADD KEY `fk_asigna_usuario_asigna_dificultad1_idx` (`asigna_usuario_asigna_dificultad_id`);
+
+--
+-- Indices de la tabla `asocia_resolucion`
+--
+ALTER TABLE `asocia_resolucion`
+  ADD PRIMARY KEY (`asocia_resolucion_id`),
+  ADD KEY `fk_memo_has_memo_resoluciones_memo_resoluciones1_idx` (`asocia_resolucion_memo_res_is`),
+  ADD KEY `fk_memo_has_memo_resoluciones_memo1_idx` (`asocia_resolucion_memo_id`);
+
+--
+-- Indices de la tabla `cambio_estados`
+--
+ALTER TABLE `cambio_estados`
+  ADD PRIMARY KEY (`cambio_estados_id`),
+  ADD KEY `fk_memo_has_memo_estado_memo_estado1_idx` (`cambio_estados_memo_estado_id`),
+  ADD KEY `fk_memo_has_memo_estado_memo1_idx` (`cambio_estados_memo_id`);
+
+--
+-- Indices de la tabla `cambio_estados_detmemo`
+--
+ALTER TABLE `cambio_estados_detmemo`
+  ADD PRIMARY KEY (`cambio_estados_detmemo_id`),
+  ADD KEY `fk_detalle_memo_has_estado_detalle_memo_estado_detalle_memo_idx` (`cambio_estados_detmemo_estado_detmemo_id`),
+  ADD KEY `fk_detalle_memo_has_estado_detalle_memo_detalle_memo1_idx` (`cambio_estados_detmemo_detmemo_id`);
 
 --
 -- Indices de la tabla `centro_costos`
@@ -792,6 +1018,70 @@ ALTER TABLE `dependencia`
   ADD PRIMARY KEY (`dependencia_codigo`);
 
 --
+-- Indices de la tabla `detalle_memo`
+--
+ALTER TABLE `detalle_memo`
+  ADD PRIMARY KEY (`detmemo_id`),
+  ADD KEY `fk_detalle_memo_procedimiento_compra1_idx` (`detmemo_proc_compra_id`),
+  ADD KEY `fk_detalle_memo_proveedor1_idx` (`detmemo_proveedor_id`),
+  ADD KEY `fk_detalle_memo_memo1_idx` (`detmemo_memo_id`);
+
+--
+-- Indices de la tabla `detalle_memo_archivo`
+--
+ALTER TABLE `detalle_memo_archivo`
+  ADD PRIMARY KEY (`detmemo_archivo_id`),
+  ADD KEY `fk_detalle_memo_archivo_detalle_memo1_idx` (`detmemo_archivo_detmemo_id`);
+
+--
+-- Indices de la tabla `detalle_orden_compra`
+--
+ALTER TABLE `detalle_orden_compra`
+  ADD PRIMARY KEY (`detalle_ocompra_id`),
+  ADD KEY `fk_detalle_orden_compra_detalle_memo1_idx` (`detalle_ocompra_detmemo_id`);
+
+--
+-- Indices de la tabla `detmemo_tiene_doctributario`
+--
+ALTER TABLE `detmemo_tiene_doctributario`
+  ADD PRIMARY KEY (`detmemo_tiene_doctributario_id`),
+  ADD KEY `fk_detalle_memo_has_documento_tributario_documento_tributar_idx` (`detmemo_tiene_doctributario_doc_tributario_id`),
+  ADD KEY `fk_detalle_memo_has_documento_tributario_detalle_memo1_idx` (`detmemo_tiene_doctributario_detmemo_id`);
+
+--
+-- Indices de la tabla `documento_tributario`
+--
+ALTER TABLE `documento_tributario`
+  ADD PRIMARY KEY (`doc_tributario_id`),
+  ADD KEY `fk_documento_tributario_doc_tributario_tipo1_idx` (`doc_tributario_tipo_id`);
+
+--
+-- Indices de la tabla `doc_tributario_tipo`
+--
+ALTER TABLE `doc_tributario_tipo`
+  ADD PRIMARY KEY (`doc_tributario_tipo_id`);
+
+--
+-- Indices de la tabla `estado_asignacion`
+--
+ALTER TABLE `estado_asignacion`
+  ADD PRIMARY KEY (`estado_asignacion_id`);
+
+--
+-- Indices de la tabla `estado_detalle_memo`
+--
+ALTER TABLE `estado_detalle_memo`
+  ADD PRIMARY KEY (`estado_detmemo_id`);
+
+--
+-- Indices de la tabla `historial_cambios`
+--
+ALTER TABLE `historial_cambios`
+  ADD PRIMARY KEY (`historial_cambios_id`),
+  ADD KEY `fk_memo_historial_historial_tipo1_idx` (`historial_cambios_tipo_id`),
+  ADD KEY `fk_historial_cambios_usuario1_idx` (`historial_cambios_usuario_id`);
+
+--
 -- Indices de la tabla `historial_cambios_tipo`
 --
 ALTER TABLE `historial_cambios_tipo`
@@ -802,9 +1092,9 @@ ALTER TABLE `historial_cambios_tipo`
 --
 ALTER TABLE `memo`
   ADD PRIMARY KEY (`memo_id`),
-  ADD KEY `fk_memo_memo_estado1_idx` (`memo_memo_estado_id`),
   ADD KEY `idx_memo_depto_solicitante` (`memo_depto_solicitante_id`),
-  ADD KEY `idx_memo_depto_destinatario` (`memo_depto_destinatario_id`);
+  ADD KEY `idx_memo_depto_destinatario` (`memo_depto_destinatario_id`),
+  ADD KEY `fk_memo_centro_costos1_idx` (`memo_cc_codigo`);
 
 --
 -- Indices de la tabla `memo_archivo`
@@ -814,80 +1104,17 @@ ALTER TABLE `memo_archivo`
   ADD KEY `fk_memo_archivo_memo1_idx` (`memo_archivo_memo_id`);
 
 --
--- Indices de la tabla `memo_detalle`
---
-ALTER TABLE `memo_detalle`
-  ADD PRIMARY KEY (`memo_det_id`),
-  ADD KEY `fk_memo_detalle_memo1_idx` (`memo_det_memo_id`),
-  ADD KEY `fk_memo_detalle_proveedor1_idx` (`memo_det_proveedor_id`),
-  ADD KEY `fk_memo_detalle_memo_detalle_estado1_idx` (`memo_det_memo_detalle_estado_id`),
-  ADD KEY `fk_memo_detalle_procedimiento_compra1_idx` (`memo_det_proc_compra_id`),
-  ADD KEY `fk_memo_detalle_centro_costos1_idx` (`memo_det_cc_codigo`);
-
---
--- Indices de la tabla `memo_detalle_archivo`
---
-ALTER TABLE `memo_detalle_archivo`
-  ADD PRIMARY KEY (`memo_det_archivo_id`),
-  ADD KEY `fk_memo_detalle_archivo_memo_detalle1_idx` (`memo_det_archivo_memo_det_id`);
-
---
--- Indices de la tabla `memo_detalle_compra`
---
-ALTER TABLE `memo_detalle_compra`
-  ADD PRIMARY KEY (`memo_det_compra_id`),
-  ADD KEY `fk_memo_detalle_compra_memo_detalle1_idx` (`memo_det_compra_memo_det_id`);
-
---
--- Indices de la tabla `memo_detalle_estado`
---
-ALTER TABLE `memo_detalle_estado`
-  ADD PRIMARY KEY (`memo_detalle_estado_id`);
-
---
 -- Indices de la tabla `memo_estado`
 --
 ALTER TABLE `memo_estado`
-  ADD PRIMARY KEY (`memo_estado_id`);
-
---
--- Indices de la tabla `memo_historial_cambios`
---
-ALTER TABLE `memo_historial_cambios`
-  ADD PRIMARY KEY (`memo_hist_cam_id`),
-  ADD KEY `fk_memo_historial_usuario1_idx` (`memo_hist_cam_usuario_id`),
-  ADD KEY `fk_memo_historial_memo1_idx` (`memo_hist_cam_memo_id`),
-  ADD KEY `fk_memo_historial_historial_tipo1_idx` (`memo_hist_cam_tipo_id`);
-
---
--- Indices de la tabla `memo_relacion`
---
-ALTER TABLE `memo_relacion`
-  ADD PRIMARY KEY (`memo_relacion_id`),
-  ADD KEY `fk_memo_relacion_memo_relacion_tipo1_idx` (`memo_relacion_relacion_tipo_id`),
-  ADD KEY `idx_relacion_origen` (`memo_relacion_origen_id`),
-  ADD KEY `idx_relacion_destino` (`memo_relacion_destino_id`);
-
---
--- Indices de la tabla `memo_relacion_tipo`
---
-ALTER TABLE `memo_relacion_tipo`
-  ADD PRIMARY KEY (`memo_relacion_tipo_id`);
+  ADD PRIMARY KEY (`memo_estado_id`),
+  ADD KEY `fk_memo_estado_seccion1_idx` (`memo_estado_seccion_id`);
 
 --
 -- Indices de la tabla `memo_resoluciones`
 --
 ALTER TABLE `memo_resoluciones`
-  ADD PRIMARY KEY (`memo_res_is`),
-  ADD KEY `fk_memo_resoluciones_memo1_idx` (`memo_res_memo_id`);
-
---
--- Indices de la tabla `memo_tiene_usuario`
---
-ALTER TABLE `memo_tiene_usuario`
-  ADD PRIMARY KEY (`memo_tiene_usu_id`,`memo_tiene_usu_memo_id`,`memo_tiene_usu_usuario_id`),
-  ADD KEY `fk_memo_has_usuarios_usuarios1_idx` (`memo_tiene_usu_usuario_id`),
-  ADD KEY `fk_memo_has_usuarios_memo1_idx` (`memo_tiene_usu_memo_id`);
+  ADD PRIMARY KEY (`memo_res_id`);
 
 --
 -- Indices de la tabla `perfil_permisos`
@@ -906,6 +1133,12 @@ ALTER TABLE `procedimiento_compra`
 --
 ALTER TABLE `proveedor`
   ADD PRIMARY KEY (`proveedor_id`);
+
+--
+-- Indices de la tabla `seccion`
+--
+ALTER TABLE `seccion`
+  ADD PRIMARY KEY (`seccion_id`);
 
 --
 -- Indices de la tabla `usuario`
@@ -931,16 +1164,118 @@ ALTER TABLE `usuario_rol`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `asigna_dificultad`
+--
+ALTER TABLE `asigna_dificultad`
+  MODIFY `asigna_dificultad_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `asigna_prioridad`
+--
+ALTER TABLE `asigna_prioridad`
+  MODIFY `asigna_prioridad_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `asigna_usuario`
+--
+ALTER TABLE `asigna_usuario`
+  MODIFY `asigna_usuario_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `asocia_resolucion`
+--
+ALTER TABLE `asocia_resolucion`
+  MODIFY `asocia_resolucion_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `cambio_estados`
+--
+ALTER TABLE `cambio_estados`
+  MODIFY `cambio_estados_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `cambio_estados_detmemo`
+--
+ALTER TABLE `cambio_estados_detmemo`
+  MODIFY `cambio_estados_detmemo_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `centro_costos`
+--
+ALTER TABLE `centro_costos`
+  MODIFY `cc_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=500102;
+
+--
 -- AUTO_INCREMENT de la tabla `departamento`
 --
 ALTER TABLE `departamento`
   MODIFY `dpto_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
+-- AUTO_INCREMENT de la tabla `dependencia`
+--
+ALTER TABLE `dependencia`
+  MODIFY `dependencia_codigo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=500001;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_memo`
+--
+ALTER TABLE `detalle_memo`
+  MODIFY `detmemo_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_orden_compra`
+--
+ALTER TABLE `detalle_orden_compra`
+  MODIFY `detalle_ocompra_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `detmemo_tiene_doctributario`
+--
+ALTER TABLE `detmemo_tiene_doctributario`
+  MODIFY `detmemo_tiene_doctributario_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `documento_tributario`
+--
+ALTER TABLE `documento_tributario`
+  MODIFY `doc_tributario_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `doc_tributario_tipo`
+--
+ALTER TABLE `doc_tributario_tipo`
+  MODIFY `doc_tributario_tipo_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `estado_asignacion`
+--
+ALTER TABLE `estado_asignacion`
+  MODIFY `estado_asignacion_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `estado_detalle_memo`
+--
+ALTER TABLE `estado_detalle_memo`
+  MODIFY `estado_detmemo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `historial_cambios`
+--
+ALTER TABLE `historial_cambios`
+  MODIFY `historial_cambios_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `historial_cambios_tipo`
+--
+ALTER TABLE `historial_cambios_tipo`
+  MODIFY `hist_camb_tipo_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `memo`
 --
 ALTER TABLE `memo`
-  MODIFY `memo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `memo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `memo_archivo`
@@ -949,52 +1284,16 @@ ALTER TABLE `memo_archivo`
   MODIFY `memo_archivo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `memo_detalle`
---
-ALTER TABLE `memo_detalle`
-  MODIFY `memo_det_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `memo_detalle_compra`
---
-ALTER TABLE `memo_detalle_compra`
-  MODIFY `memo_det_compra_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `memo_detalle_estado`
---
-ALTER TABLE `memo_detalle_estado`
-  MODIFY `memo_detalle_estado_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
 -- AUTO_INCREMENT de la tabla `memo_estado`
 --
 ALTER TABLE `memo_estado`
-  MODIFY `memo_estado_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT de la tabla `memo_historial_cambios`
---
-ALTER TABLE `memo_historial_cambios`
-  MODIFY `memo_hist_cam_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `memo_relacion`
---
-ALTER TABLE `memo_relacion`
-  MODIFY `memo_relacion_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `memo_estado_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `memo_resoluciones`
 --
 ALTER TABLE `memo_resoluciones`
-  MODIFY `memo_res_is` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `memo_tiene_usuario`
---
-ALTER TABLE `memo_tiene_usuario`
-  MODIFY `memo_tiene_usu_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `memo_res_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `perfil_permisos`
@@ -1006,29 +1305,66 @@ ALTER TABLE `perfil_permisos`
 -- AUTO_INCREMENT de la tabla `procedimiento_compra`
 --
 ALTER TABLE `procedimiento_compra`
-  MODIFY `proc_compra_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `proc_compra_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `proveedor_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `proveedor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `seccion`
+--
+ALTER TABLE `seccion`
+  MODIFY `seccion_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `usuario_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `usuario_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario_rol`
 --
 ALTER TABLE `usuario_rol`
-  MODIFY `usu_rol_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `usu_rol_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `asigna_usuario`
+--
+ALTER TABLE `asigna_usuario`
+  ADD CONSTRAINT `fk_asigna_usuario_asigna_dificultad1` FOREIGN KEY (`asigna_usuario_asigna_dificultad_id`) REFERENCES `asigna_dificultad` (`asigna_dificultad_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_asigna_usuario_asigna_prioridad1` FOREIGN KEY (`asigna_usuario_asigna_prioridad_id`) REFERENCES `asigna_prioridad` (`asigna_prioridad_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_asigna_usuario_estado_asignacion1` FOREIGN KEY (`asigna_usuario_estado_asignacion_id`) REFERENCES `estado_asignacion` (`estado_asignacion_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_memo_has_usuarios_memo1` FOREIGN KEY (`asigna_usuario_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_memo_has_usuarios_usuarios1` FOREIGN KEY (`asigna_usuario_usuario_id`) REFERENCES `usuario` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `asocia_resolucion`
+--
+ALTER TABLE `asocia_resolucion`
+  ADD CONSTRAINT `fk_memo_has_memo_resoluciones_memo1` FOREIGN KEY (`asocia_resolucion_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_memo_has_memo_resoluciones_memo_resoluciones1` FOREIGN KEY (`asocia_resolucion_memo_res_is`) REFERENCES `memo_resoluciones` (`memo_res_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `cambio_estados`
+--
+ALTER TABLE `cambio_estados`
+  ADD CONSTRAINT `fk_memo_has_memo_estado_memo1` FOREIGN KEY (`cambio_estados_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_memo_has_memo_estado_memo_estado1` FOREIGN KEY (`cambio_estados_memo_estado_id`) REFERENCES `memo_estado` (`memo_estado_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `cambio_estados_detmemo`
+--
+ALTER TABLE `cambio_estados_detmemo`
+  ADD CONSTRAINT `fk_detalle_memo_has_estado_detalle_memo_detalle_memo1` FOREIGN KEY (`cambio_estados_detmemo_detmemo_id`) REFERENCES `detalle_memo` (`detmemo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_detalle_memo_has_estado_detalle_memo_estado_detalle_memo1` FOREIGN KEY (`cambio_estados_detmemo_estado_detmemo_id`) REFERENCES `estado_detalle_memo` (`estado_detmemo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `centro_costos`
@@ -1037,10 +1373,50 @@ ALTER TABLE `centro_costos`
   ADD CONSTRAINT `fk_centro_costos_dependencia1` FOREIGN KEY (`cc_dependencia_codigo`) REFERENCES `dependencia` (`dependencia_codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
+-- Filtros para la tabla `detalle_memo`
+--
+ALTER TABLE `detalle_memo`
+  ADD CONSTRAINT `fk_detalle_memo_memo1` FOREIGN KEY (`detmemo_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_detalle_memo_procedimiento_compra1` FOREIGN KEY (`detmemo_proc_compra_id`) REFERENCES `procedimiento_compra` (`proc_compra_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_detalle_memo_proveedor1` FOREIGN KEY (`detmemo_proveedor_id`) REFERENCES `proveedor` (`proveedor_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `detalle_memo_archivo`
+--
+ALTER TABLE `detalle_memo_archivo`
+  ADD CONSTRAINT `fk_detalle_memo_archivo_detalle_memo1` FOREIGN KEY (`detmemo_archivo_detmemo_id`) REFERENCES `detalle_memo` (`detmemo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `detalle_orden_compra`
+--
+ALTER TABLE `detalle_orden_compra`
+  ADD CONSTRAINT `fk_detalle_orden_compra_detalle_memo1` FOREIGN KEY (`detalle_ocompra_detmemo_id`) REFERENCES `detalle_memo` (`detmemo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `detmemo_tiene_doctributario`
+--
+ALTER TABLE `detmemo_tiene_doctributario`
+  ADD CONSTRAINT `fk_detalle_memo_has_documento_tributario_detalle_memo1` FOREIGN KEY (`detmemo_tiene_doctributario_detmemo_id`) REFERENCES `detalle_memo` (`detmemo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_detalle_memo_has_documento_tributario_documento_tributario1` FOREIGN KEY (`detmemo_tiene_doctributario_doc_tributario_id`) REFERENCES `documento_tributario` (`doc_tributario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `documento_tributario`
+--
+ALTER TABLE `documento_tributario`
+  ADD CONSTRAINT `fk_documento_tributario_doc_tributario_tipo1` FOREIGN KEY (`doc_tributario_tipo_id`) REFERENCES `doc_tributario_tipo` (`doc_tributario_tipo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Filtros para la tabla `historial_cambios`
+--
+ALTER TABLE `historial_cambios`
+  ADD CONSTRAINT `fk_historial_cambios_usuario1` FOREIGN KEY (`historial_cambios_usuario_id`) REFERENCES `usuario` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_memo_historial_historial_tipo1` FOREIGN KEY (`historial_cambios_tipo_id`) REFERENCES `historial_cambios_tipo` (`hist_camb_tipo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
 -- Filtros para la tabla `memo`
 --
 ALTER TABLE `memo`
-  ADD CONSTRAINT `fk_memo_memo_estado1` FOREIGN KEY (`memo_memo_estado_id`) REFERENCES `memo_estado` (`memo_estado_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_memo_centro_costos1` FOREIGN KEY (`memo_cc_codigo`) REFERENCES `centro_costos` (`cc_codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `memo_archivo`
@@ -1049,53 +1425,10 @@ ALTER TABLE `memo_archivo`
   ADD CONSTRAINT `fk_memo_archivo_memo1` FOREIGN KEY (`memo_archivo_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `memo_detalle`
+-- Filtros para la tabla `memo_estado`
 --
-ALTER TABLE `memo_detalle`
-  ADD CONSTRAINT `fk_memo_detalle_centro_costos1` FOREIGN KEY (`memo_det_cc_codigo`) REFERENCES `centro_costos` (`cc_codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_memo_detalle_memo1` FOREIGN KEY (`memo_det_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_memo_detalle_memo_detalle_estado1` FOREIGN KEY (`memo_det_memo_detalle_estado_id`) REFERENCES `memo_detalle_estado` (`memo_detalle_estado_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_memo_detalle_procedimiento_compra1` FOREIGN KEY (`memo_det_proc_compra_id`) REFERENCES `procedimiento_compra` (`proc_compra_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_memo_detalle_proveedor1` FOREIGN KEY (`memo_det_proveedor_id`) REFERENCES `proveedor` (`proveedor_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `memo_detalle_archivo`
---
-ALTER TABLE `memo_detalle_archivo`
-  ADD CONSTRAINT `fk_memo_detalle_archivo_memo_detalle1` FOREIGN KEY (`memo_det_archivo_memo_det_id`) REFERENCES `memo_detalle` (`memo_det_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `memo_detalle_compra`
---
-ALTER TABLE `memo_detalle_compra`
-  ADD CONSTRAINT `fk_memo_detalle_compra_memo_detalle1` FOREIGN KEY (`memo_det_compra_memo_det_id`) REFERENCES `memo_detalle` (`memo_det_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `memo_historial_cambios`
---
-ALTER TABLE `memo_historial_cambios`
-  ADD CONSTRAINT `fk_memo_historial_historial_tipo1` FOREIGN KEY (`memo_hist_cam_tipo_id`) REFERENCES `historial_cambios_tipo` (`hist_camb_tipo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_memo_historial_memo1` FOREIGN KEY (`memo_hist_cam_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_memo_historial_usuario1` FOREIGN KEY (`memo_hist_cam_usuario_id`) REFERENCES `usuario` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `memo_relacion`
---
-ALTER TABLE `memo_relacion`
-  ADD CONSTRAINT `fk_memo_relacion_memo_relacion_tipo1` FOREIGN KEY (`memo_relacion_relacion_tipo_id`) REFERENCES `memo_relacion_tipo` (`memo_relacion_tipo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `memo_resoluciones`
---
-ALTER TABLE `memo_resoluciones`
-  ADD CONSTRAINT `fk_memo_resoluciones_memo1` FOREIGN KEY (`memo_res_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `memo_tiene_usuario`
---
-ALTER TABLE `memo_tiene_usuario`
-  ADD CONSTRAINT `fk_memo_has_usuarios_memo1` FOREIGN KEY (`memo_tiene_usu_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_memo_has_usuarios_usuarios1` FOREIGN KEY (`memo_tiene_usu_usuario_id`) REFERENCES `usuario` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `memo_estado`
+  ADD CONSTRAINT `fk_memo_estado_seccion1` FOREIGN KEY (`memo_estado_seccion_id`) REFERENCES `seccion` (`seccion_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `usuario`
