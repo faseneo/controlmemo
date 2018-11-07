@@ -29,6 +29,8 @@
 	define('memoarch_prefijo','archivo_memo_');
     define('memoarch_prefijo_otro','archivo_memo_');
     define('memoarch_directorio','archivos/');
+    
     define('logdirectorio','logs/');
     define('logarchivoerror','errors.log');
+    define('logarchivoquerys','querys.log');
 ?>

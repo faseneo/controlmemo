@@ -1,0 +1,14 @@
+Fecha:08-11-2018(00:48:50) 
+Metodo:contarTotal 
+Consulta:SELECT COUNT(memo_id) AS cantidad 
+                     FROM memo AS m WHERE 1  
+Resultado:4 
+---------------------------------------------------------------------
+
+Fecha:08-11-2018(00:48:50) 
+Metodo:Listar 
+Consulta:SELECT * 
+                            FROM memo AS m, cambio_estados as ce, memo_estado as me , departamento as dep WHERE ce.cambio_estados_memo_id = m.memo_id AND ce.cambio_estados_memo_estado_id = me.memo_estado_id AND dep.dpto_id = m.memo_depto_solicitante_id  ORDER BY m.memo_fecha_recepcion DESC  LIMIT 0,10 
+Resultado:4 
+---------------------------------------------------------------------
+

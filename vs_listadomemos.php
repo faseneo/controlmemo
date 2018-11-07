@@ -13,7 +13,6 @@
             -ms-user-select: none;
             user-select: none;
         }
-
         .sorting {
             color: #337AB7;
         }

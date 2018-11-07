@@ -6,7 +6,8 @@
     }
     function getListadoEstadoMemos(){
             var datax = {
-                "Accion":"listar"
+                "Accion":"listarmin",
+                'seccion':'null'
             }
             $.ajax({
                 data: datax,  
@@ -25,7 +26,7 @@
                 $("#memoEstado").append('<option value="0">Todos</option>');
                 for(var i=0; i<data.datos.length;i++){
                    //console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
-                    opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_tipo + '</option>';
+                    opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_seccion_nombre + ' - ' + data.datos[i].memo_est_tipo + '</option>';
                     $("#memoEstado").append(opcion);
                 }
 
@@ -85,7 +86,7 @@
     }
 
     // Funcion para paginar lista de memos
-    function paginador(pag,estado=0,usuid=0){
+    function paginador(pag,estado=0,usuid=0,total=0){
             var cantidadMostrar = 10;  // total de numeros de paginas  a mostrar 
             var registroPorPagina = 10; //total registro por pagina, debe coincidir con el modelo.listar
             var datax = {
@@ -95,19 +96,26 @@
                 }
             $("#paginador").html("");    
             $("#totalmemos").html("");
-                $.ajax({
+            $("#totalmemos").html(total);
+                    if(total > registroPorPagina){
+                        fnlista = "getListadoMemos";
+                        pagina = drawpaginador(pag,data.total,registroPorPagina,cantidadMostrar,fnlista);
+                        $("#paginador").html("");
+                        $("#paginador").append(pagina);
+                    }
+                /*$.ajax({
                         data: datax, 
                         type: "GET",
                         dataType: "json", 
                         url: "controllers/controllermemo.php",
                 })
                 .done(function( data, textStatus, jqXHR ) {
-                        /*if ( console && console.log ) {
+                        if ( console && console.log ) {
                             console.log( " data success gettotal : "+ data.success 
                                         + " \n data totalmemos msg : "+ data.message 
                                         + " \n textStatus : " + textStatus
                                         + " \n jqXHR.status : " + jqXHR.status );
-                        }*/
+                        }
                     $("#paginador").html("");                        
                     $("#totalmemos").html(data.total);
                     if(data.total > registroPorPagina){
@@ -124,7 +132,7 @@
                                     + " \n textStatus : " + textStatus
                                     + " \n jqXHR.status : " + jqXHR.status );
                     }
-                });
+                });*/
     }
 
     /*function buscaestado(){
@@ -182,7 +190,7 @@
         console.log('Usuario ' + usuid);
         console.log('pagina ' + pag);
         console.log('estado ' +estado);
-            paginador(pag,estado,usuid);
+            //paginador(pag,estado,usuid);
             var $loader = $('.loader');
             var datax = {
                 "nump":pag,
@@ -214,6 +222,7 @@
                 incrementotest=0;
                 if(data.datos.length>0){
                     //console.log('tiene elementos');
+                    paginador(pag,estado,usuid,data.total);
                     for(var i=0; i<data.datos.length;i++){
                         //console.log('id: ' + data.datos[i].mem_id + ' numero memo: ' + data.datos[i].mem_numero);
                         var materia = data.datos[i].mem_materia.length > 50 ? data.datos[i].mem_materia.substr(0, 50)+'...' : data.datos[i].mem_materia;
@@ -338,6 +347,7 @@
                 $('#titulolistado').hide();
                 $('#nombreusu').html("");
                 $('#estadousu').html("");
+                $('#rolUsuario').val('n/a');
 
             }else{
                 nomrol=usuarios[posicion-1]['usu_rol_nombre'];
@@ -347,6 +357,7 @@
                 $('#nombreusu').html(nombreUsuario);
                 //$('#estadousu').html($('#memoEstado').val());
             }
+            //getListadoEstadoMemos();
             console.log('estado select : '+$('#memoEstado').val());
             console.log('usuid select :'+$('#usuario').val());
             getListadoMemos(1,$('#memoEstado').val(),$('#usuario').val());

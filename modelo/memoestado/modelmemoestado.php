@@ -8,7 +8,7 @@ class ModelMemoEst{
 
     public function __CONSTRUCT(){
         try{
-            $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USERDB, PASSDB);
+            $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USERDB, PASSDB,array(PDO::MYSQL_ATTR_INIT_COMMAND => CHARSETDB));
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);                
         }
         catch(Exception $e){
@@ -19,14 +19,12 @@ class ModelMemoEst{
     public function Listar($seccion = null){
         $jsonresponse = array();
         try{
-            //var_dump($seccion);
             $result = array();
             if($seccion != 'null'){
                 $filtro = " AND me.memo_estado_seccion_id = ".$seccion;
             }else{
                 $filtro = "";
             }
-            //var_dump($filtro);
             $consulta = "SELECT  me.memo_estado_id,
                                                 me.memo_estado_tipo,
                                                 me.memo_estado_orden,
@@ -37,7 +35,6 @@ class ModelMemoEst{
                                         WHERE sec.seccion_id = me.memo_estado_seccion_id "
                                         .$filtro
                                         ." ORDER BY sec.seccion_id ASC, me.memo_estado_orden ASC";
-            //var_dump($consulta);
             $stm = $this->pdo->prepare($consulta);
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
@@ -187,13 +184,20 @@ class ModelMemoEst{
         try{
             $result = array();
             $stm = $this->pdo->prepare("SELECT  me.memo_estado_id,
-                                                me.memo_estado_tipo
+                                                me.memo_estado_tipo,
+                                                sec.seccion_nombre
                                         FROM memo_estado as me, seccion as sec
                                         WHERE sec.seccion_id = me.memo_estado_seccion_id
                                         AND me.memo_estado_activo = 1
-                                        ORDER BY me.memo_estado_orden ASC ");
+                                        ORDER BY sec.seccion_nombre ASC,  me.memo_estado_orden ASC ");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                $fila = array('memo_est_id'=>$r->memo_estado_id,
+                              'memo_est_tipo'=>$r->memo_estado_tipo,
+                              'memo_est_seccion_nombre'=>$r->seccion_nombre);
+                $result[]=$fila;
+            }
+            /*foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new MemoEst();
                     $busq->__SET('memo_est_id', $r->memo_estado_id);
                     $busq->__SET('memo_est_tipo', $r->memo_estado_tipo);
@@ -201,7 +205,7 @@ class ModelMemoEst{
                     $busq->__SET('memo_est_activo', $r->memo_estado_activo);
                     $busq->__SET('memo_est_seccion_nombre', $r->seccion_nombre);                    
                 $result[] = $busq->returnArray();
-            }
+            }*/
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'listado correctamente';
             $jsonresponse['datos'] = $result;

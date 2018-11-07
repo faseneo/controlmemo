@@ -8,6 +8,7 @@ require_once("../modelo/conexion/conexion.php");
 require_once('../modelo/memoarchivo/entidadmemoarchivo.php');
 require_once("../modelo/memoarchivo/modelmemoarchivo.php");
 require_once("../modelo/logs/modelologs.php");
+require_once("../modelo/logs/modelologsquerys.php");
 
 class ModelMemo  {
     private $pdo;
@@ -84,6 +85,10 @@ class ModelMemo  {
                   $result[] = $busq->returnArray();
                   $totquery++;
               }
+              $logsq = new ModeloLogsQuerys();
+                $logsq->GrabarLogsQuerys($consulta,$totquery,'Listar');
+                $logsq = null;
+
               $jsonresponse['success'] = true;
               $jsonresponse['message'] = 'listado correctamente los memos';
               $jsonresponse['total'] = $totquery;
@@ -108,8 +113,10 @@ class ModelMemo  {
     public function contarTotal($estadoid = 0, $usuid = 0){
         $jsonresponse = array();
         if($estadoid == 0){
+          $tablaestado = "";
           $filtroestado = "";
         }else{
+          $tablaestado = ", cambio_estados as ce ";
           $filtroestado = " AND ce.cambio_estados_memo_id = m.memo_id AND ce.cambio_estados_memo_estado_id=".$estadoid;
         }   
         if($usuid == 0){
@@ -121,13 +128,15 @@ class ModelMemo  {
         }         
         try{
           $consulta="SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m , cambio_estados as ce "
+                     FROM memo AS m "
+                     .$tablaestado
                      .$agregatabla
                      ."WHERE 1 "
                      .$filtroestado
                      .$filtrousuario;
 
-           $stm = $this->pdo->prepare($consulta);
+
+            $stm = $this->pdo->prepare($consulta);
             $stm->execute();
             $total_reg = $stm->fetch(PDO::FETCH_OBJ);
 
@@ -135,13 +144,16 @@ class ModelMemo  {
             $jsonresponse['message'] = 'correctamente';
             $jsonresponse['total'] = $total_reg->cantidad;
             $stm=null;
+            $logsq = new ModeloLogsQuerys();
+              $logsq->GrabarLogsQuerys($consulta,$total_reg->cantidad,'contarTotal');
+              $logsq = null;
         }
         catch(Exception $Exception){
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al contar los Memos';
             $logs = new modelologs();
             $trace = $Exception->getTraceAsString();
-              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs->GrabarLogs($Exception->getMessage(),$trace,'contarTotal');
               $logs = null;            
         }
       return $jsonresponse;        
@@ -157,8 +169,15 @@ class ModelMemo  {
                 $jsonresponse['datos'] = [];
             }else{
               $stm = $this->pdo->prepare("SELECT  *
-                                          FROM memo as mm, departamento as dep, memo_estado as me
-                                          WHERE mm.memo_memo_estado_id = me.memo_estado_id AND dep.dpto_id = mm.memo_depto_solicitante_id And mm.memo_id = ?");
+                                          FROM memo as mm, departamento as dep
+                                          WHERE dep.dpto_id = mm.memo_depto_solicitante_id 
+                                          AND mm.memo_id = ?");
+                                          /*              SELECT  *
+                                          FROM memo as mm, departamento as dep, cambio_estados as ce, memo_estado as me
+                                          WHERE ce.cambio_estados_memo_id = mm.memo_id
+                                          AND ce.cambio_estados_memo_estado_id = me.memo_estado_id
+                                          AND dep.dpto_id = mm.memo_depto_solicitante_id 
+                                          AND mm.memo_id = ?*/
               $stm->execute(array($id));
               $r = $stm->fetch(PDO::FETCH_OBJ);
               if($r){
@@ -166,19 +185,29 @@ class ModelMemo  {
                           $busq->__SET('mem_id', $r->memo_id);
                           $busq->__SET('mem_numero', $r->memo_num_memo);
                           $busq->__SET('mem_anio', $r->memo_anio);
+                          $busq->__SET('mem_materia', $r->memo_materia);
                           $busq->__SET('mem_fecha', $r->memo_fecha_memo);
                           $busq->__SET('mem_fecha_recep', $r->memo_fecha_recepcion);
-                          $busq->__SET('mem_materia', $r->memo_materia);
-                          $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
+
                           $busq->__SET('mem_depto_sol_id', $r->memo_depto_solicitante_id);
-                          $busq->__SET('mem_depto_dest_nom', $r->dpto_nombre);
-                          $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
+                          $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
+
+                          $busq->__SET('mem_depto_sol_nom', $r->dpto_nombre);
+                          
                           $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
-                          $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);
+                          $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
+
                           $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
+                          $busq->__SET('mem_cc_codigo', $r->memo_cc_codigo);
+                          $busq->__SET('mem_fecha_cdp', $r->memo_fecha_cdp);
+
                           $modelMemoArch = new ModelMemoArchivo();
+                          
                           $arrayfile = $modelMemoArch->listar($r->memo_id);
-                          $busq->__SET('mem_archivos', $arrayfile['datos']);
+                            $busq->__SET('mem_archivos', $arrayfile['datos']);
+                          $arrayestados = $this->ObtenerCambiosEstadosMemo($r->memo_id);
+                            $busq->__SET('mem_estados', $arrayestados['datos']);
+
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Se obtuvo el memo correctamente';
                 $jsonresponse['datos'] = $busq->returnArray();
@@ -201,7 +230,56 @@ class ModelMemo  {
         $this->pdo=null;
         return $jsonresponse;
     }
+    public function ObtenerCambiosEstadosMemo($idmemo){
+         try{
+          $consulta = "SELECT COUNT(*) FROM cambio_estados where cambio_estados_memo_id = ".$idmemo;
+            $res = $this->pdo->query($consulta);
+            if ($res->fetchColumn() == 0) {
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Cambios Estados  sin elementos';
+                $jsonresponse['datos'] = [];
+            }else{
+              $stm = $this->pdo->prepare("SELECT  cambio_estados_memo_estado_id,
+                                                  memo_estado_tipo,
+                                                  cambio_estados_observacion,
+                                                  cambio_estados_fecha,
+                                                  memo_estado_seccion_id
+                                          FROM cambio_estados as ce, 
+                                               memo_estado as me 
+                                          WHERE memo_estado_id = cambio_estados_memo_estado_id 
+                                          AND cambio_estados_memo_id = ?");
 
+              $stm->execute(array($idmemo));
+              //$r = $stm->fetch(PDO::FETCH_OBJ);
+
+
+                foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                    $fila = array('estado_id'=>$r->cambio_estados_memo_estado_id,
+                                  'estado_tipo'=>$r->memo_estado_tipo,
+                                  'observacion'=>$r->cambio_estados_observacion,
+                                  'fecha'=>$r->cambio_estados_fecha,
+                                  'seccion_id'=>$r->memo_estado_seccion_id);
+                    $result[]=$fila;
+                }
+
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Se Cambios Estados correctamente';
+                $jsonresponse['datos'] = $result;
+
+              $stm=null;
+            }
+            $res=null;
+        } catch (Exception $Exception){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al obtener Cambios Estados';
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;
+        }
+        $this->pdo=null;
+        return $jsonresponse;
+    }
     /* public function Eliminar($id){
         try{
             $stm = $this->pdo->prepare("DELETE FROM memo WHERE memo_id = ? ");
