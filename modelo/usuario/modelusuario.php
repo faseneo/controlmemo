@@ -53,6 +53,43 @@ class ModelUsuarios{
 		return $jsonresponse;
     }
 
+    public function Listarxrol($rolid){
+        $jsonresponse = array();
+        try{
+            $result = array();
+            $stm = $this->pdo->prepare("SELECT  us.usuario_id,
+                                                us.usuario_rut,
+                                                us.usuario_nombre,
+                                                us.usuario_usu_rol_id,
+                                                us.usuario_estado,
+                                                us.usuario_fecha_ingreso,
+                                                ur.usu_rol_nombre
+                                        FROM usuario as us ,usuario_rol as ur
+                                        WHERE us.usuario_usu_rol_id= ur.usu_rol_id AND  ur.usu_rol_id = ?");
+            
+            $stm->execute(array($rolid));
+            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                $busq = new Usuarios(); 
+                    $busq->__SET('usu_id',          $r->usuario_id);
+                    $busq->__SET('usu_rut',         $r->usuario_rut);
+                    $busq->__SET('usu_nombre',      $r->usuario_nombre); 
+                    $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
+                    $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
+                    $busq->__SET('usu_estado_id',   $r->usuario_estado);
+                    $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
+                $result[] = $busq->returnArray();
+            }
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'listado correctamente';
+            $jsonresponse['datos'] = $result;
+        }
+        catch(Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al listar los usuarios';
+        } 
+        return $jsonresponse;
+    }
     public function Obtener($id){
         $jsonresponse = array();
         try{
@@ -190,6 +227,61 @@ class ModelUsuarios{
         return $jsonresponse;        
     }
 
+    public function valida($rut,$pass){
+        $jsonresponse = array();
+        try{
+            $consulta = "SELECT COUNT(*) FROM usuario where usuario_rut = '".$rut."' AND usuario_password = '".$pass."'";
+            
+            $res = $this->pdo->query($consulta);
+            if ($res->fetchColumn() == 0) {
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Usuario o contraseña incorreto';
+                $jsonresponse['datos'] = [];
+            }else{
+                $stm = $this->pdo->prepare("SELECT  us.usuario_id,
+                                                    us.usuario_rut,
+                                                    us.usuario_nombre,
+                                                    us.usuario_password,
+                                                    us.usuario_usu_rol_id,
+                                                    us.usuario_estado,
+                                                    us.usuario_fecha_ingreso,
+                                                    ur.usu_rol_nombre
+                                            FROM usuario as us ,usuario_rol as ur
+                                            WHERE us.usuario_usu_rol_id= ur.usu_rol_id
+                                            AND us.usuario_rut = ? AND us.usuario_password = ?");
+                $stm->execute(array($rut,$pass));
+                $r = $stm->fetch(PDO::FETCH_OBJ);
+
+                $busq = new Usuarios();
+                        $busq->__SET('usu_id',          $r->usuario_id);
+                        $busq->__SET('usu_rut',         $r->usuario_rut);
+                        $busq->__SET('usu_nombre',      $r->usuario_nombre); 
+                        $busq->__SET('usu_password',    $r->usuario_password);
+                        $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
+                        $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
+                        $busq->__SET('usu_estado_id',   $r->usuario_estado);
+                        $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
+                
+                $result = $busq->returnArray();
+                
+                session_start();
+                   $_SESSION["autentica"] = "SIP";
+                   $_SESSION["rut"] = $r->usuario_rut;
+                   $_SESSION["rol"] = $r->usuario_usu_rol_id;
+                   $_SESSION["datos"] = $result;
+
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Validado correctamente';
+                $jsonresponse['datos'] = $result;
+            }
+
+        }catch(Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al validar usuario';             
+        }
+        return $jsonresponse;    
+    }
     public function Listar2(){
         $jsonresponse = array();
         try{

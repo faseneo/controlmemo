@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -157,6 +160,24 @@
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="asignadif">Seleccione Dificultad</label>
+                                    <select name="asignadif" id="asignadif" class="form-control" >
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="asignaprio">Seleccione Prioridad</label>
+                                    <select name="asignaprio" id="asignaprio" class="form-control" >
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>                            
                         </div>
                         <div class="row">
                             <div class="col-md-12">

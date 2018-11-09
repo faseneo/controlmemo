@@ -1,4 +1,5 @@
 <?php
+session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
@@ -8,6 +9,7 @@ require_once '../modelo/usuario/modelusuario.php';
 // Logica
 $usu = new Usuarios();
 $modelUsu = new ModelUsuarios();
+
 if(isset($_REQUEST['Accion'])){
 
     switch($_REQUEST['Accion']){
@@ -54,13 +56,35 @@ if(isset($_REQUEST['Accion'])){
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
-            
-        case 'asignamemo':
-            var_dump($_REQUEST);
-            $jsondata = $modelUsu->AsignaMemo($_REQUEST['asignausu'],$_REQUEST['memoId'],$_REQUEST['asignaobs']);
+
+        case 'listarxrol':
+            $jsondata = $modelUsu->Listarxrol($_REQUEST['rolId']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            
+        case 'asignamemo':
+            //var_dump($_REQUEST);
+            $jsondata = $modelUsu->AsignaMemo($_REQUEST['asignausu'],$_REQUEST['memoId'],$_REQUEST['asignaobs']);
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);
+            break;
+
+        case 'valida':
+            //var_dump($_SESSION);
+                $rut=$_REQUEST['formRut'];
+                $pass=$_REQUEST['formPass'];
+            $jsondata = $modelUsu->Valida($_REQUEST['formRut'],$_REQUEST['formPass']);
+
+            
+            header ("Location: ../principal.php");
+
+            //var_dump($jsondata);
+            /*if($jsondata){
+
+            }*/
+            //header('Content-type: application/json; charset=utf-8');
+            //echo json_encode($jsondata);
+            break;           
     }
 }
 

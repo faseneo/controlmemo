@@ -1,5 +1,9 @@
-<html>
-    <head>
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
 		<?php include "header.php"; ?>
 		<script src="js/fn_mt_usuarios.js"></script>
     </head>

@@ -40,6 +40,76 @@
                 }
             });
     }
+    function getListadoDificultad(){
+            var datax = {
+                "Accion":"listar",
+            }
+            $.ajax({
+                data: datax,  
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerasignadificultad.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                $("#asignadif").html(""); 
+                /*if ( console && console.log ) {
+                    console.log( " data success : "+ data.success 
+                        + " \n data msg estados memo : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }*/
+                for(var i=0; i<data.datos.length;i++){
+                   //console.log('id: '+data.datos[i].adificultad_id + ' nombre: '+data.datos[i].adificultad_texto);
+                   //
+                    opcion = '<option value=' + data.datos[i].adificultad_id + '>' + data.datos[i].adificultad_texto + '</option>';
+                    $("#asignadif").append(opcion);
+                }
+
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlistaEstados ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+    }    
+    function getListadoPrioridad(){
+            var datax = {
+                "Accion":"listar",
+            }
+            $.ajax({
+                data: datax,  
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerasignaprioridad.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                $("#asignaprio").html(""); 
+                /*if ( console && console.log ) {
+                    console.log( " data success : "+ data.success 
+                        + " \n data msg estados memo : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }*/
+                for(var i=0; i<data.datos.length;i++){
+                   //console.log('id: '+data.datos[i].aprioridad_id + ' nombre: '+data.datos[i].aprioridad_texto);
+                   //
+                    opcion = '<option value=' + data.datos[i].aprioridad_id + '>' + data.datos[i].aprioridad_texto + '</option>';
+                    $("#asignaprio").append(opcion);
+                }
+
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlistaEstados ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+    }     
 
     function getListadoSecciones(){
             var datax = {
@@ -88,7 +158,6 @@
             })
             .done(function( data, textStatus, jqXHR ) {
                 $("#usuario").html(""); 
-                $("#asignausu").html(""); 
                 /*if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
                         + " \n data usuarios msg : "+ data.message 
@@ -105,6 +174,46 @@
                     //opcion = '<option value=' + data.datos[i].usu_id + '>' + data.datos[i].usu_nombre + ' - '+ data.datos[i].usu_rol_nombre + '</option>';
                     opcion = '<option value=' + data.datos[i].usu_id + '>' + data.datos[i].usu_nombre + '</option>';
                     $("#usuario").append(opcion);
+                }
+
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlistaUsuarios ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+    }
+    function getListadoUsuariosxrol(){
+            var datax = {
+                "Accion":"listarxrol",
+                "rolId":3,
+            }
+            $.ajax({
+                data: datax,  
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerusuario.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+               
+                $("#asignausu").html(""); 
+                /*if ( console && console.log ) {
+                    console.log( " data success : "+ data.success 
+                        + " \n data usuarios msg : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }*/
+                usuarios=data.datos;
+                //console.log(usuarios);
+                $("#usuario").append('<option value="0">Todos</option>');
+                //nomrolusu=usuarios[0]['usu_rol_nombre'];
+                $('#rolUsuario').val('n/a');
+                for(var i=0; i<data.datos.length;i++){
+                    //console.log('id: ' + data.datos[i].usu_id + ' nombre: ' + data.datos[i].usu_nombre);
+                    //opcion = '<option value=' + data.datos[i].usu_id + '>' + data.datos[i].usu_nombre + ' - '+ data.datos[i].usu_rol_nombre + '</option>';
                     opcion2 = '<option value=' + data.datos[i].usu_id + '>' + data.datos[i].usu_nombre + ' - '+ data.datos[i].usu_rol_nombre + '</option>';
                     $("#asignausu").append(opcion2);
                 }
@@ -118,7 +227,7 @@
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
             });
-    }
+    }    
 
     // Funcion para paginar lista de memos
     function paginador(pag,estado=0,usuid=0,total=0){
@@ -321,6 +430,9 @@
         getListadoEstadoMemos();
         getListadoSecciones();
         getListadoUsuarios();
+        getListadoUsuariosxrol();
+        getListadoDificultad();
+        getListadoPrioridad();
         getListadoMemos(1,0,0,0);
 
         $('#asigna').click(function(e){

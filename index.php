@@ -1,62 +1,79 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <?php include "header.php"; ?>    
-    <title>Buscador</title>
+    <?php include "header.php"; ?>
+    <title>Listado Memos</title>
+    <script src="js/fn_valida.js"></script>
 </head>
 <body>
-    <?php include "barranav.php"; ?>
-    <div class="container" style="margin-top:50px">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
-                <center><h1>Buscador</h1></center><br><br>
-                <form id="contact-form" method="post" action="#" role="form">
-                    <div class="messages"></div>
-                    <div class="controls">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label >Número Memo</label>
-                                    <input id="" type="text" name="" class="form-control">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label >Orden de compra SAC</label>
-                                    <input id="" type="text" name="" class="form-control">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label >Orden de compra Chilecompra</label>
-                                    <input id="" type="text" name="" class="form-control">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label >Número de resolución</label>
-                                    <input id="" type="text" name="" class="form-control">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <center>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <input type="submit" class="btn btn-success btn-send" value="Buscar">
-                                </div>
-                            </div><br>
-                            <a href="vistabuscadorav.php">Búsqueda avanzada</a>
-                        </center>
-                    </div>
-                </form>
-            </div><!-- /.8 -->
-        </div> <!-- /.row-->
-    </div> <!-- /.container-->
-</body>
-</html>
+  <div class="container">
+    <!-- <div class="row">
+      <div class="col-sm-12">
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>                        
+              </button>
+              <a class="navbar-brand" href="http://www.umce.cl">UMCE</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://www.umce.cl">Universidad Metropolitana de Ciencias de la Educación</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div> -->
+    <br><br><br><br>
+    <div class="row">
+      <div class="col-sm-4 col-sm-offset-4">
+        <div >
+          <h3>Sistema Control Adquisiciones</h3>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3 col-sm-offset-4">
+        <br><h3 class="form-signin-heading">Ingrese sus datos</h3><br><br>
+      </div>
+    </div>
+    <form class="form-signin" method="post" action="controllers/controllerusuario.php">
+      <input type="hidden" id="Accion" name="Accion" value="valida">
+      <div class="row">
+        <div class="col-sm-3 col-sm-offset-4" >
+            <div class="form-group">
+              <label for="formRut">Rut</label>
+              <input type="text" class="form-control" name="formRut" id="formRut" placeholder="">
+            </div>
+            <div class="form-group">
+              <label for="formPass">Contraseña</label>
+              <input type="password" class="form-control" id="formPass" name="formPass"  placeholder="">
+            </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 col-sm-offset-4" style="text-align:center">
+          <button class="btn btn-small btn-primary" type="submit">Entrar al sistema</button>
+        </div>
+      </div>      
+    </form>
+    <br>
+     <div class="row">
+        <div class="col-sm-3 col-sm-offset-4" style="text-align:center">
+          <h6>
+            <p>Escriba los datos como en el siguiente ejemplo:</p>
+            <p>Rut: 12345678-9 / Fecha nac.: 1-1-1901</p>
+          </h6>
+        </div>
+      </div> 
+      <hr>
+  </div>    
+  <footer>
+       <p><center><h5>Si tiene alg&uacute;n problema para ingresar debe acercarse a su asistente social</h5></center></p>
+  </footer>
+ </body>
+ </html>
