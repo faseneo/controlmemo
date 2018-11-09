@@ -1,9 +1,33 @@
 
-fecha:07-11-2018(23:33:56) 
+fecha:09-11-2018(00:58:34) 
 metodo: 
-msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mm.memo_memo_estado_id' in 'where clause' 
-trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(174): PDOStatement->execute(Array)
-#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(71): ModelMemo->Obtener('2')
+msg:SQLSTATE[42000]: Syntax error or access violation: 1066 Not unique table/alias: 'mes' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(139): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(77): ModelMemo->Listar('1', '0', '0', '2')
 #2 {main} 
 ---------------------------------------------------------------------
-
+
+fecha:09-11-2018(01:00:32) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ces.cambio_estados_memo_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(139): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(77): ModelMemo->Listar('1', '0', '0', '0')
+#2 {main} 
+---------------------------------------------------------------------
+
+fecha:09-11-2018(01:00:46) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ces.cambio_estados_memo_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(139): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(77): ModelMemo->Listar('1', '0', '0', '0')
+#2 {main} 
+---------------------------------------------------------------------
+
+fecha:09-11-2018(01:03:49) 
+metodo: 
+msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ces.memo_estado_id' in 'where clause' 
+trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(139): PDOStatement->execute()
+#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(77): ModelMemo->Listar('1', '1', '0', '2')
+#2 {main} 
+---------------------------------------------------------------------
+

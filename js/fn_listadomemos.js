@@ -41,6 +41,41 @@
             });
     }
 
+    function getListadoSecciones(){
+            var datax = {
+                "Accion":"listar"
+            }
+            $.ajax({
+                data: datax,  
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerseccion.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                $("#memoSeccion").html(""); 
+                /*if ( console && console.log ) {
+                    console.log( " data success : "+ data.success 
+                        + " \n data msg estados memo : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }*/
+                $("#memoSeccion").append('<option value="0">Todos</option>');
+                for(var i=0; i<data.datos.length;i++){
+                   //console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
+                    opcion = '<option value=' + data.datos[i].sec_id + '>' + data.datos[i].sec_nombre + '</option>';
+                    $("#memoSeccion").append(opcion);
+                }
+
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlistaEstados ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+    }
     function getListadoUsuarios(){
             var datax = {
                 "Accion":"listar"
@@ -185,17 +220,19 @@
     }
     // Funcion principal para listar los memos
     /* ver una funcion que vaya a contar y vuelva si no llamar a listado memos*/
-    function getListadoMemos(pag,estado=0,usuid=0){
+    function getListadoMemos(pag,estado=0,usuid=0,secid=0){
         inicio();
         console.log('Usuario ' + usuid);
         console.log('pagina ' + pag);
-        console.log('estado ' +estado);
+        console.log('estado ' + estado);
+        console.log('SECCION ' + estado);
             //paginador(pag,estado,usuid);
             var $loader = $('.loader');
             var datax = {
                 "nump":pag,
                 "idest":estado,
                 "idusu":usuid,
+                "idsec":secid,
                 "Accionmem":"listar"
             }
             $.ajax({
@@ -233,7 +270,9 @@
                         fila += '<td>'+ data.datos[i].mem_fecha +'</td>';
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_materia + '">'+ materia +'</a></td>';
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_depto_dest_nom + '">' + depto  + '</a></td>'
-                        fila += '<td>'+ data.datos[i].mem_estado_nombre +'</td>';
+                        
+                        fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_estado_fechamod + '">' + data.datos[i].mem_estado_nombre + '</a></td>'
+
                         fila += '<td><button id="ver-memo" type="button" ';
                         fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"';
                         fila += ' onclick="verMemo(\'ver\',\'' + data.datos[i].mem_id + '\')">';
@@ -280,8 +319,9 @@
         $("#titulolistado").hide();
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
         getListadoEstadoMemos();
+        getListadoSecciones();
         getListadoUsuarios();
-        getListadoMemos(1,0,0);
+        getListadoMemos(1,0,0,0);
 
         $('#asigna').click(function(e){
             e.preventDefault();
@@ -311,7 +351,7 @@
                         $('#cerrarModalLittle').focus();
                     });
 
-                getListadoMemos(1,0,idusu); //listar los del usuarios asignado
+                getListadoMemos(1,0,idusu,0); //listar los del usuarios asignado
                 
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -360,7 +400,7 @@
             //getListadoEstadoMemos();
             console.log('estado select : '+$('#memoEstado').val());
             console.log('usuid select :'+$('#usuario').val());
-            getListadoMemos(1,$('#memoEstado').val(),$('#usuario').val());
+            getListadoMemos(1,$('#memoEstado').val(),$('#usuario').val(),$('#memoSeccion').val());
         });
 
         $("#memoEstado").change(function(e){
@@ -369,6 +409,14 @@
             console.log('estado: '+$('#memoEstado').val());
             console.log('usuid :'+$('#usuario').val());
             //console.log('estado id : ' + idestado);
-            getListadoMemos(1,$('#memoEstado').val(),$('#usuario').val());
+            getListadoMemos(1,$('#memoEstado').val(),$('#usuario').val(),$('#memoSeccion').val());
         });
+        $("#memoSeccion").change(function(e){
+            e.preventDefault();
+            var idseccion = document.getElementById("memoSeccion").selectedIndex;
+            console.log('SECCION: '+$('#memoSeccion').val());
+            console.log('usuid :'+$('#usuario').val());
+            //console.log('estado id : ' + idestado);
+            getListadoMemos(1,$('#memoEstado').val(),$('#usuario').val(),$('#memoSeccion').val());
+        });        
     });

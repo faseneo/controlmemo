@@ -26,23 +26,71 @@ class ModelMemo  {
               return null;
         }
     }
+    /*
+SELECT m.memo_id, m.memo_num_memo, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre, 
+(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me WHERE me.memo_estado_id=ce.cambio_estados_memo_estado_id AND ce.cambio_estados_memo_id=m.memo_id order by ce.cambio_estados_id DESC limit 1) as estado,
+(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me WHERE me.memo_estado_id=ce.cambio_estados_memo_estado_id AND ce.cambio_estados_memo_id=m.memo_id order by ce.cambio_estados_id DESC limit 1) as fechamodificacion
+FROM memo AS m, departamento as dep 
+WHERE dep.dpto_id = m.memo_depto_solicitante_id 
+GROUP BY m.memo_id
+ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
+-------------------------------------------------------
+SELECT m.memo_id, m.memo_num_memo, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre, 
+(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me WHERE me.memo_estado_id=ce.cambio_estados_memo_estado_id AND ce.cambio_estados_memo_id=m.memo_id order by ce.cambio_estados_id DESC limit 1) as estado
+FROM memo AS m, departamento as dep, cambio_estados as ces, memo_estado as mes
+WHERE dep.dpto_id = m.memo_depto_solicitante_id AND ces.cambio_estados_memo_id=m.memo_id  AND mes.memo_estado_id=ces.cambio_estados_memo_estado_id AND mes.memo_estado_seccion_id=2
+GROUP BY m.memo_id
+ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
+---------------------------------------------------------
 
-    public function Listar($numpag = 1,$estadoid = 0,$usuid=0){
+SELECT m.memo_id, m.memo_num_memo, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre, 
+(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me WHERE me.memo_estado_id=ce.cambio_estados_memo_estado_id AND ce.cambio_estados_memo_id=m.memo_id AND me.memo_estado_seccion_id=2 order by ce.cambio_estados_id DESC limit 1) as estado,
+(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me WHERE me.memo_estado_id=ce.cambio_estados_memo_estado_id AND ce.cambio_estados_memo_id=m.memo_id AND me.memo_estado_seccion_id=2 order by ce.cambio_estados_id DESC limit 1) as fechamodificacion
+FROM memo AS m, departamento as dep, cambio_estados as ces, memo_estado as mes
+WHERE dep.dpto_id = m.memo_depto_solicitante_id AND ces.cambio_estados_memo_id=m.memo_id  AND mes.memo_estado_id=ces.cambio_estados_memo_estado_id AND mes.memo_estado_seccion_id=2
+GROUP BY m.memo_id
+ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
+
+
+     */
+
+    public function Listar($numpag = 1, $estadoid = 0, $usuid=0, $secid=0){
       $CantidadMostrar=10;
       $compag         =(int)($numpag);
 
-      if($estadoid == 0){
-        $filtroestado = "";
-      }else{
-        $filtroestado = " AND me.memo_estado_id=".$estadoid;
-      }
       if($usuid == 0){
         $agregatabla = "";
         $filtrousuario = "";
       }else{
         $agregatabla = " ,asigna_usuario as mtu ";
         $filtrousuario = " AND mtu.asigna_usuario_memo_id = m.memo_id AND mtu.asigna_usuario_usuario_id=".$usuid;
-      }      
+      }
+
+      if($estadoid == 0){
+        $filtroestado = "";
+        $filtroestado2 = "";
+        $agregatablacamest ="";
+      }else{
+        $filtroestado = " AND me.memo_estado_id=".$estadoid;
+        $filtroestado2 = " AND ces.cambio_estados_memo_id=".$estadoid;
+        $agregatablacamest =",cambio_estados as ces ";
+      }
+
+      if($secid==0){
+        $filtroseccion = "";
+        $filtroseccion2 = "";
+        $agregatablaestado = "";
+      }else{
+        $filtroseccion = " AND me.memo_estado_seccion_id=".$secid;
+        $agregatablaestado = ", memo_estado as mes ";
+        if($estadoid == 0){
+          $agregatablaestado .=", cambio_estados as ces ";
+        }
+        $filtroseccion2 = " AND ces.cambio_estados_memo_id=m.memo_id 
+                           AND mes.memo_estado_id=ces.cambio_estados_memo_estado_id 
+                           AND mes.memo_estado_seccion_id=".$secid;
+      }
+
         try{
             $respuesta = $this->contarTotal($estadoid,$usuid);
             $tot_reg = (int)$respuesta['total'];
@@ -53,16 +101,40 @@ class ModelMemo  {
             }else{
               $result = array();
               $reginicio = ($compag-1) * $CantidadMostrar;
-              $consulta="SELECT * 
-                            FROM memo AS m, cambio_estados as ce, memo_estado as me , departamento as dep "
-                            .$agregatabla
-                            ."WHERE ce.cambio_estados_memo_id = m.memo_id "
-                            ."AND ce.cambio_estados_memo_estado_id = me.memo_estado_id "
-                            ."AND dep.dpto_id = m.memo_depto_solicitante_id "
+
+              $consulta = "SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,";
+
+              $consulta .= "(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
+                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
+                            AND ce.cambio_estados_memo_id=m.memo_id "
+                            .$filtroseccion
                             .$filtroestado
-                            .$filtrousuario
-                            ." ORDER BY m.memo_fecha_recepcion DESC  LIMIT ".$reginicio.",".$CantidadMostrar;
-              //var_dump($consulta);
+                            ." ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,";
+
+              $consulta .= "(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
+                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
+                            AND ce.cambio_estados_memo_id=m.memo_id "
+                            .$filtroseccion
+                            .$filtroestado
+                            ." ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif";
+
+              $consulta .= " FROM memo AS m, departamento as dep"
+                           .$agregatablacamest
+                           .$agregatablaestado
+                           .$agregatabla;
+
+              $consulta .= " WHERE dep.dpto_id = m.memo_depto_solicitante_id"
+                            .$filtroseccion2
+                            .$filtroestado2
+                            .$filtrousuario;
+              $consulta .= " GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC";
+
+              $consulta .= " LIMIT ".$reginicio.",".$CantidadMostrar;
+
+              $logsq = new ModeloLogsQuerys();
+                $logsq->GrabarLogsQuerys($consulta,'0','Listar');
+                $logsq = null;
+
               $stm = $this->pdo->prepare($consulta);
               $stm->execute();
               $totquery = 0;
@@ -74,20 +146,13 @@ class ModelMemo  {
                       $busq->__SET('mem_fecha', $r->memo_fecha_memo);
                       $busq->__SET('mem_fecha_recep', $r->memo_fecha_recepcion);
                       $busq->__SET('mem_materia', $r->memo_materia);
-                      $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
-                      $busq->__SET('mem_depto_sol_id', $r->memo_depto_solicitante_id);
                       $busq->__SET('mem_depto_dest_nom', $r->dpto_nombre);
-                      $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
-                      $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
-                      $busq->__SET('mem_estado_id', $r->memo_estado_id);
                       $busq->__SET('mem_estado_nombre', $r->memo_estado_tipo);
-                      $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
+                      $busq->__SET('mem_estado_fechamod', $r->memo_estado_fecha_modif);
                   $result[] = $busq->returnArray();
                   $totquery++;
               }
-              $logsq = new ModeloLogsQuerys();
-                $logsq->GrabarLogsQuerys($consulta,$totquery,'Listar');
-                $logsq = null;
+
 
               $jsonresponse['success'] = true;
               $jsonresponse['message'] = 'listado correctamente los memos';

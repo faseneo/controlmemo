@@ -23,8 +23,9 @@ class Memos{
     
     private $mem_estados=array();
     /*private $mem_estado_id;
+    private $mem_estado_obs;*/  
     private $mem_estado_nombre;
-    private $mem_estado_obs;*/
+    private $mem_estado_fechamod;
 
     public function __GET($k){
         return $this->$k;

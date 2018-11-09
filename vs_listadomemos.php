@@ -43,7 +43,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">  
                                <label for="rolUsuario">Rol</label>
                                 <input type="text" name="rolUsuario" id="rolUsuario" class="form-control" readonly />
@@ -52,14 +52,22 @@
                             </div>
                         </div>
 
-                        <div class="col-md-5">
+                        <div class="col-md-3">
+                             <div class="form-group">
+                                <label for="memoSeccion">Sección</label>  
+                                <select name="memoSeccion" id="memoSeccion" class="form-control">
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                              <div class="form-group">
                                 <label for="memoEstado">Estado</label>  
                                 <select name="memoEstado" id="memoEstado" class="form-control">
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
-                        </div>
+                        </div>                        
 <!--                         <div class="col-md-1">
                             <div class="form-group"> <label for="memoEstado">algo.</label>  
                                <button id="ver-memo" type="button" class="btn btn-xs btn-success" >Buscar</button>

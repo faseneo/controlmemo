@@ -1,14 +1,21 @@
-Fecha:08-11-2018(00:48:50) 
+---------------------------------------------------------------------
+
+Fecha:09-11-2018(01:09:29) 
 Metodo:contarTotal 
 Consulta:SELECT COUNT(memo_id) AS cantidad 
                      FROM memo AS m WHERE 1  
 Resultado:4 
 ---------------------------------------------------------------------
 
-Fecha:08-11-2018(00:48:50) 
+Fecha:09-11-2018(01:09:29) 
 Metodo:Listar 
-Consulta:SELECT * 
-                            FROM memo AS m, cambio_estados as ce, memo_estado as me , departamento as dep WHERE ce.cambio_estados_memo_id = m.memo_id AND ce.cambio_estados_memo_estado_id = me.memo_estado_id AND dep.dpto_id = m.memo_depto_solicitante_id  ORDER BY m.memo_fecha_recepcion DESC  LIMIT 0,10 
-Resultado:4 
+Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
+                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
+                            AND ce.cambio_estados_memo_id=m.memo_id  AND me.memo_estado_seccion_id=2 ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
+                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
+                            AND ce.cambio_estados_memo_id=m.memo_id  AND me.memo_estado_seccion_id=2 ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep, memo_estado as mes , cambio_estados as ces  WHERE dep.dpto_id = m.memo_depto_solicitante_id AND ces.cambio_estados_memo_id=m.memo_id 
+                           AND mes.memo_estado_id=ces.cambio_estados_memo_estado_id 
+                           AND mes.memo_estado_seccion_id=2 ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
+Resultado:0 
 ---------------------------------------------------------------------
 
