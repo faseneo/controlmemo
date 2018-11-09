@@ -2,6 +2,7 @@
  $val = $_SESSION["autentica"];
  $rut = $_SESSION["rut"];
  $rol = $_SESSION["rol"];
+ $nombre = $_SESSION["nombre"];
  // 1_admin, 2_super, 3_analisa, 4_secre, 5_gestion
 ?>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -59,6 +60,7 @@
 				?>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#">Bienvend@ <?php echo $nombre; ?></a></li>
 				<li><a href="vistacambiocontr.php">Cambiar contraseña</a></li>
 				<li><a href="salir.php">Logout</a></li>
 				<!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span>Registrarse</a></li> -->

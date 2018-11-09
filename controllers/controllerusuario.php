@@ -61,10 +61,15 @@ if(isset($_REQUEST['Accion'])){
             $jsondata = $modelUsu->Listarxrol($_REQUEST['rolId']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
-            break;            
+            break;
+
         case 'asignamemo':
             //var_dump($_REQUEST);
-            $jsondata = $modelUsu->AsignaMemo($_REQUEST['asignausu'],$_REQUEST['memoId'],$_REQUEST['asignaobs']);
+            $jsondata = $modelUsu->AsignaMemo($_REQUEST['asignausu'],
+                                              $_REQUEST['memoId'],
+                                              $_REQUEST['asignadif'],
+                                              $_REQUEST['asignaprio'],
+                                              $_REQUEST['asignaobs']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;

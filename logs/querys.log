@@ -1,31 +1,28 @@
----------------------------------------------------------------------
-
-Fecha:09-11-2018(01:09:29) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-
-Fecha:09-11-2018(01:09:29) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  AND me.memo_estado_seccion_id=2 ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  AND me.memo_estado_seccion_id=2 ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep, memo_estado as mes , cambio_estados as ces  WHERE dep.dpto_id = m.memo_depto_solicitante_id AND ces.cambio_estados_memo_id=m.memo_id 
-                           AND mes.memo_estado_id=ces.cambio_estados_memo_estado_id 
-                           AND mes.memo_estado_seccion_id=2 ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
+Fecha:09-11-2018(16:09:27) 
+Metodo:AsignaMemo 
+Consulta:INSERT INTO asigna_usuario (asigna_usuario_memo_id,
+                                                asigna_usuario_usuario_id,
+                                                asigna_usuario_comentario,
+                                                asigna_usuario_asigna_prioridad_id,
+                                                asigna_usuario_asigna_dificultad_id,
+                                                asigna_usuario_estado_asignacion_id)
+                    VALUES (3,2,'Ver el lunes por favor',1,1,1) 
 Resultado:0 
 ---------------------------------------------------------------------
 
-Fecha:09-11-2018(14:41:48) 
+Fecha:09-11-2018(16:09:27) 
+Metodo:contarTotal 
+Consulta:SELECT COUNT(memo_id) AS cantidad 
+                     FROM memo AS m , asigna_usuario as mtu WHERE 1  AND mtu.asigna_usuario_memo_id = m.memo_id AND mtu.asigna_usuario_usuario_id=2 
+Resultado:1 
+---------------------------------------------------------------------
+Fecha:09-11-2018(16:24:26) 
 Metodo:contarTotal 
 Consulta:SELECT COUNT(memo_id) AS cantidad 
                      FROM memo AS m WHERE 1  
 Resultado:4 
 ---------------------------------------------------------------------
-Fecha:09-11-2018(14:41:48) 
+Fecha:09-11-2018(16:24:26) 
 Metodo:Listar 
 Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
                             WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
@@ -34,373 +31,13 @@ Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion,
                             AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
 Resultado:0 
 ---------------------------------------------------------------------
-Fecha:09-11-2018(14:42:41) 
+Fecha:09-11-2018(16:24:31) 
 Metodo:contarTotal 
 Consulta:SELECT COUNT(memo_id) AS cantidad 
                      FROM memo AS m WHERE 1  
 Resultado:4 
 ---------------------------------------------------------------------
-Fecha:09-11-2018(14:42:41) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(14:57:00) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(14:57:00) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(14:58:34) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(14:58:34) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(14:59:41) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(14:59:41) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:01:46) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:01:46) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:01:51) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:01:51) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:19) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:19) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:49) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:49) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:49) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:49) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:49) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:49) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:49) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:49) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:59) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:09:59) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:10:33) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:10:33) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:10:59) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:10:59) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:10:59) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:10:59) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:12:29) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:12:29) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:16:51) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:16:51) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:17:22) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:17:22) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:17:28) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:17:28) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:17:32) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:17:32) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:17:52) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:17:52) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:19:06) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:19:06) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:19:24) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:19:24) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:19:45) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:19:45) 
-Metodo:Listar 
-Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_tipo,(SELECT ce.cambio_estados_fecha FROM cambio_estados as ce, memo_estado as me 
-                            WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
-                            AND ce.cambio_estados_memo_id=m.memo_id  ORDER BY ce.cambio_estados_id DESC limit 1) as memo_estado_fecha_modif FROM memo AS m, departamento as dep WHERE dep.dpto_id = m.memo_depto_solicitante_id GROUP BY m.memo_id ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC LIMIT 0,10 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:19:58) 
-Metodo:contarTotal 
-Consulta:SELECT COUNT(memo_id) AS cantidad 
-                     FROM memo AS m WHERE 1  
-Resultado:4 
----------------------------------------------------------------------
-Fecha:09-11-2018(15:19:58) 
+Fecha:09-11-2018(16:24:31) 
 Metodo:Listar 
 Consulta:SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre,(SELECT me.memo_estado_tipo FROM cambio_estados as ce, memo_estado as me 
                             WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 

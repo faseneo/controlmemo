@@ -110,7 +110,6 @@
                 }
             });
     }     
-
     function getListadoSecciones(){
             var datax = {
                 "Accion":"listar"
@@ -206,9 +205,9 @@
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
                 }*/
-                usuarios=data.datos;
+                //usuarios=data.datos;
                 //console.log(usuarios);
-                $("#usuario").append('<option value="0">Todos</option>');
+                //$("#usuario").append('<option value="0">Todos</option>');
                 //nomrolusu=usuarios[0]['usu_rol_nombre'];
                 $('#rolUsuario').val('n/a');
                 for(var i=0; i<data.datos.length;i++){

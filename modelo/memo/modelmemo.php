@@ -61,6 +61,9 @@ ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
       if($usuid == 0){
         $agregatabla = "";
         $filtrousuario = "";
+      }elseif($usuid == 4){
+        $agregatabla = "";
+        $filtrousuario = "";
       }else{
         $agregatabla = " ,asigna_usuario as mtu ";
         $filtrousuario = " AND mtu.asigna_usuario_memo_id = m.memo_id AND mtu.asigna_usuario_usuario_id=".$usuid;
@@ -185,6 +188,9 @@ ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
           $filtroestado = " AND ce.cambio_estados_memo_id = m.memo_id AND ce.cambio_estados_memo_estado_id=".$estadoid;
         }   
         if($usuid == 0){
+          $agregatabla = "";
+          $filtrousuario = "";
+        }elseif($usuid == 4){
           $agregatabla = "";
           $filtrousuario = "";
         }else{

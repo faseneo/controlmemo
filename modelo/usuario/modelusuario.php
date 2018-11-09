@@ -3,6 +3,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 require_once("../config/config.php");
+require_once("../modelo/logs/modelologs.php");
+require_once("../modelo/logs/modelologsquerys.php");
 class ModelUsuarios{
     private $pdo;
 
@@ -199,21 +201,27 @@ class ModelUsuarios{
     }
     //revisar a quien esta asignado antes y cambiar el estado de la asignacion anterior
     //todos lo de la Secretaria estado 1, ver permisos para ayudante admin
-    public function AsignaMemo($usuid,$memid,$coment){
+    public function AsignaMemo($usuid,$memid,$dif,$prio,$coment){
         $jsonresponse = array();
         try{
             $sql = "INSERT INTO asigna_usuario (asigna_usuario_memo_id,
                                                 asigna_usuario_usuario_id,
                                                 asigna_usuario_comentario,
-                                                asigna_usuario_estado)
-                    VALUES ($memid,$usuid,'$coment',1)";
+                                                asigna_usuario_asigna_prioridad_id,
+                                                asigna_usuario_asigna_dificultad_id,
+                                                asigna_usuario_estado_asignacion_id)
+                    VALUES ($memid,$usuid,'$coment',$prio,$dif,1)";
 
             /*$this->pdo->prepare($sql)->execute(array($memid,
                                                      $usuid,
                                                      $coment, 
                                                      '1')
                                               );*/
-                                              var_dump($sql);
+            //                                  var_dump($sql);
+            $logsq = new ModeloLogsQuerys();
+                $logsq->GrabarLogsQuerys($sql,'0','AsignaMemo');
+                $logsq = null;
+
             $stm= $this->pdo->prepare($sql);
             $stm->execute();
 
@@ -267,6 +275,7 @@ class ModelUsuarios{
                 session_start();
                    $_SESSION["autentica"] = "SIP";
                    $_SESSION["rut"] = $r->usuario_rut;
+                   $_SESSION["nombre"] = $r->usuario_nombre;
                    $_SESSION["rol"] = $r->usuario_usu_rol_id;
                    $_SESSION["datos"] = $result;
 
