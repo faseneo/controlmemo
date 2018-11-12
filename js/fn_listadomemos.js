@@ -376,7 +376,7 @@
                         incrementotest++;
                         fila = '<tr><td>'+ data.datos[i].mem_anio + '-' + data.datos[i].mem_numero + '</td>';
                         fila += '<td>'+ data.datos[i].mem_fecha +'</td>';
-                        fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_materia + '">'+ materia +'</a></td>';
+                        fila += '<td><a href="vs_ingresomemo.php?memId=' + data.datos[i].mem_id + '" data-toggle="tooltip" title="' + data.datos[i].mem_materia + '">'+ materia +'</a></td>';
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_depto_dest_nom + '">' + depto  + '</a></td>'
                         
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_estado_fechamod + '">' + data.datos[i].mem_estado_nombre + '</a></td>'

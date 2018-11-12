@@ -296,10 +296,80 @@
         });
     }
 
+    //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
+    function verMemo(memId){
+        deshabilitabotones();
+        //deshabilitaform();        
+        //getlistaDep();
+        var datay = {"memoId": memId,
+                     "Accionmem":"obtener"
+                    };
+        $.ajax({
+            data: datay, 
+            type: "POST",
+            dataType: "json", 
+            url: "controllers/controllermemo.php",
+        })
+        .done(function(data,textStatus,jqXHR ) {
+            if ( console && console.log ) {
+                console.log( " data success : "+ data.success 
+                    + " \n data msg : "+ data.message 
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+            $("#memoFecha").val(data.datos.mem_fecha);
+            $("#memoNum").val(data.datos.mem_numero);
+            $("#memoAnio").val(data.datos.mem_anio);
+            $("#memoFechaRecep").val(data.datos.mem_fecha_recep);
+            $("#memoMateria").val(data.datos.mem_materia);
+            $("#memoNombreSol").val(data.datos.mem_nom_sol);
+            $("#memoDeptoSol").val(data.datos.mem_depto_sol_id);
+            $("#memoNombreDest").val(data.datos.mem_nom_dest);
+            $("#memoDeptoDest").val(data.datos.mem_depto_dest_id);
+            $("#memoCcosto").val(data.datos.mem_cc_codigo);
+            $("#memoCodCcosto").val(data.datos.memoCodCcosto);
+            $("#listaHistorial").html(""); 
+
+            for(var i=0; i<data.datos.mem_estados.length;i++){
+                console.log('id: ' + data.datos.mem_estados[i].estado_id + ' Estado Tipo: ' + data.datos.mem_estados[i].estado_tipo);
+                
+                fila = '<tr><td>'+ data.datos.mem_estados[i].estado_tipo + '</td>';
+                fila += '<td>' + data.datos.mem_estados[i].observacion + '</td>';
+                fila += '<td>' + data.datos.mem_estados[i].fecha + '</td>';
+                fila += '</tr>';
+                $("#listaHistorial").append(fila);
+            }
+
+
+            /*$("#Accion").val(action);
+            $('#myModal').on('shown.bs.modal', function () {
+                var modal = $(this);
+                if (action === 'actualizar'){
+                    modal.find('.modal-title-form').text('Actualizar Centro de Costo');
+                    $('#guardar-cecosto').hide();                    
+                    $('#actualizar-cecosto').show();   
+                }else if (action === 'ver'){
+                    modal.find('.modal-title-form').text('Datos Centro de Costo');
+                    deshabilitabotones();
+                    $('#editar-cecosto').show();   
+                }
+
+            });*/
+        })
+        .fail(function( jqXHR, textStatus, errorThrown ) {
+            if ( console && console.log ) {
+                console.log( " La solicitud ha fallado,  textStatus : " +  textStatus 
+                    + " \n errorThrown : "+ errorThrown
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+        });
+    }
     $(document).ready(function(){
         function inicio(){
             $(".help-block").hide();
         }
+
         $("#memoFecha").focusout(function(){
             validafechaonline($(this));
         });
@@ -333,7 +403,12 @@
         getlistaDepto();
         getlistaCcostos();
         //getlistaEstadosMemo();
-        $('#grabar-memo').show();
+        if (typeof memId !== 'undefined'){
+            verMemo(memId);
+        }else{
+            $('#grabar-memo').show();
+        }
+        
         //$('#agregar-det-memo').show();
         //$('#agregar-det-memo-compra').show();
         $('[data-toggle="tooltip"]').tooltip();
@@ -599,4 +674,5 @@
             console.log("valor graba : "+ graba);
             return graba
         } */       
-    });
+
+    });  // Fin del Document ready

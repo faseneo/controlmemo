@@ -20,6 +20,11 @@ if($_SESSION["autentica"] != "SIP"){
         }
     </style>
     <script>
+    <?php 
+        if(isset($_REQUEST['memId'])){
+            echo "var memId=".$_REQUEST['memId'].";";
+        }
+    ?>
         $(document).ready(function(){
             $('[data-toggle="popover"]').popover();   
         });
@@ -31,7 +36,7 @@ if($_SESSION["autentica"] != "SIP"){
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
                 <h2 class="text-center">Ingreso memo </h2>
-                <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" accept-charset="utf-8" role="form" data-toggle="validator" >
+                <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" accept-charset="utf-8" role="form" data-toggle="validator">
                     <input type="hidden" name="memoId" id="memoId" value="" />
                     <input type="hidden" name="Accionmem" id="Accionmem" value="registrar" />
                     <div class="row">
@@ -222,6 +227,39 @@ if($_SESSION["autentica"] != "SIP"){
                 </form>    
             </div><!-- /.10 -->
         </div> <!-- /.row-->
+        <br><br>
+        <div class="row" id="#historial">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapse2">Historial Cambios Estados</a>
+                            </h4>
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th width="30%">Estado</th>
+                                                    <th width="40%">Observación</th>
+                                                    <th width="20%">Fecha</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="listaHistorial">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
     </div> <!-- /.container-->
 
     <!-- Modal mensajes cortos-->

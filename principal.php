@@ -10,6 +10,7 @@ if($_SESSION["autentica"] != "SIP"){
 <head>
     <?php include "header.php"; ?>    
     <title>Buscador</title>
+    <script src="js/fn_buscador.js"></script>
 </head>
 <body>
     <?php include "barranav.php"; ?>
@@ -64,6 +65,35 @@ if($_SESSION["autentica"] != "SIP"){
                 </form>
             </div><!-- /.8 -->
         </div> <!-- /.row-->
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 id="titulolistado">Listado memos de : <span id="nombreusu"></span> <!-- - Estado <span id="estadousu"></span> --></h4>
+                </div>
+            </div>                    
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table" id="resultadomemo">
+                        <thead>
+                            <tr>
+                                <th width="8%" class="orden">Año / Número</th>
+                                <th width="8%" class="orden">Fecha Memo</th>
+                                <th width="34%" class="orden">Materia o Asunto</th>
+                                <th width="25%" class="orden">Departamento Solicitante</th>
+                                <th width="12%" class="orden">Estado</th>
+                                <th width="13%">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listamemos">
+                        </tbody>
+                    </table>
+                    <div class="alert alert-warning " id="resultadofiltro">
+                        <!-- <button type="button" class="close" data-dismiss="alert">&times;</button> -->
+                        <span id="resultadofiltromsg"></span>
+                    </div>
+                    <ul id="paginador" class="pagination pagination-sm">
+                    </ul>
+                </div>
+            </div>
     </div> <!-- /.container-->
 </body>
 </html>
