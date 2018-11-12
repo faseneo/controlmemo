@@ -66,16 +66,35 @@ if($_SESSION["autentica"] != "SIP"){
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="memoMateria">Asunto o Materia</label>
-                                <textarea name="memoMateria" id="memoMateria" class="form-control"></textarea>
+                                <textarea name="memoMateria" id="memoMateria" class="form-control" rows="4"></textarea>
                                 <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="memoCcosto">Centro de Costo</label>
+                                        <select name="memoCcosto" id="memoCcosto" class="form-control" required>
+                                        </select>
+                                        <span class="help-block"></span>
+                                    </div>    
+                                </div>                            
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="memoCodCcosto">Codigo Centro de Costo</label>
+                                        <input name="memoCodCcosto" id="memoCodCcosto" type="text" class="form-control" required>
+                                        <span class="help-block"></span>
+                                    </div>    
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label for="memoNombreSol">Nombre Solicitante</label>
                                 <input name="memoNombreSol" id="memoNombreSol" type="text"  class="form-control">
@@ -83,7 +102,7 @@ if($_SESSION["autentica"] != "SIP"){
                             </div>
                         </div>                        
 
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <div class="form-group">
                                 <label for="memoDeptoSol">Departamento o Unidad Solicitante</label>
                                 <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" required>
@@ -93,14 +112,14 @@ if($_SESSION["autentica"] != "SIP"){
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label for="memoNombreDest">Nombre Destinatario</label>
                                 <input name="memoNombreDest" id="memoNombreDest" type="text"  class="form-control" value="Leonel Durán" >
                                 <span class="help-block"></span>
                             </div>
                         </div>                        
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <div class="form-group">
                                 <label for="memoDeptoDest">Departamento o Unidad Destinatario</label>
                                 <select name="memoDeptoDest" id="memoDeptoDest" class="form-control" required>
@@ -176,7 +195,7 @@ if($_SESSION["autentica"] != "SIP"){
                          </div>
                      </div>                    
                      <div class="row">
-                        <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                             <div class="form-group">
                                 <label for="memoEstado">Estado</label>
                                 <select name="memoEstado" id="memoEstado" class="form-control">
@@ -190,8 +209,8 @@ if($_SESSION["autentica"] != "SIP"){
                                 <textarea name="memoObservacion" id="memoObservacion" class="form-control"></textarea>
                                 <span class="help-block"></span>
                             </div>                            
-                        </div>
-                        <div class="col-md-4">
+                        </div> -->
+                        <div class="col-md-4 col-md-offset-8">
                             <button id="editar-memo" name="editar-memo" type="button" class="btn btn-warning">Editar</button>
                             <button id="actualizar-memo" name="actualizar-memo" type="button" class="btn btn-primary">Actualizar</button>
                             <button id="grabar-memo" name="grabar-memo" type="button" class="btn btn-primary">Grabar</button>

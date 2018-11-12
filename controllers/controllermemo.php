@@ -52,8 +52,9 @@ if(isset($_REQUEST['Accionmem'])){
             $memo->__SET('mem_depto_sol_id',    $_REQUEST['memoDeptoSol']);
             $memo->__SET('mem_nom_dest',        $_REQUEST['memoNombreDest']);
             $memo->__SET('mem_depto_dest_id',   $_REQUEST['memoDeptoDest']);
-            $memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']);
-            $memo->__SET('mem_estado_obs',      $_REQUEST['memoObservacion']);
+            $memo->__SET('mem_cc_codigo',       $_REQUEST['memoCcosto']);
+            //$memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']);
+            //$memo->__SET('mem_estado_obs',      $_REQUEST['memoObservacion']);
 
             $jsondata = $modelMemo->Registrar($memo,$_FILES);
             header('Content-type: application/json; charset=utf-8');

@@ -48,7 +48,7 @@
         var selMemDptoSol = document.getElementById('memoDeptoSol').selectedIndex;
         var txtMemNomDest = document.getElementById('memoNombreDest').value;
         var selMemDptoDest = document.getElementById('memoDeptoDest').selectedIndex;
-        var selMemEst = document.getElementById('memoEstado').selectedIndex;
+        //var selMemEst = document.getElementById('memoEstado').selectedIndex;
 
             //Test campo obligatorio
             //valida FECHA INGRESO MEMO
@@ -171,7 +171,7 @@
                 $('#memoDeptoDest').parent().children('span').text('').hide();
             }
             //valida ESTADO
-            if( selMemEst == null || isNaN(selMemEst) || selMemEst == -1 ) {
+            /*if( selMemEst == null || isNaN(selMemEst) || selMemEst == -1 ) {
                 $('#memoEstado').parent().attr('class','form-group has-error');
                 $('#memoEstado').parent().children('span').text('El campo Estado no debe ir vacío o con espacios en blanco').show();
                 document.getElementById('memoEstado').focus();
@@ -179,7 +179,7 @@
             }else{
                 $('#memoEstado').parent().attr('class','form-group has-success');
                 $('#memoEstado').parent().children('span').text('').hide();
-            }
+            }*/
             return true;
     }
     //Funcion que lista los deptos
@@ -224,6 +224,42 @@
             }
         });
     }
+    //Funcion que lista los Centros de Costos
+    function getlistaCcostos (){
+        var datax = {
+            "Accion":"listarmin"
+        }
+        $.ajax({
+            data: datax, 
+            type: "GET",
+            dataType: "json", 
+            url: "controllers/controllercentrocostos.php", 
+        })
+        .done(function( data, textStatus, jqXHR ) {
+            $("#memoCcosto").html("");
+            /*if ( console && console.log ) {
+                console.log( " data success : "+ data.success 
+                    + " \n data msg deptos : "+ data.message 
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }*/
+            $("#memoCcosto").append('<option value="">Seleccionar...</option>');
+            for(var i=0; i<data.datos.length;i++){
+                // console.log('id: ' + data.datos[i].depto_id + ' nombre Depto: ' + data.datos[i].depto_nombre);
+                opcion = '<option value=' + data.datos[i].ccosto_codigo + '>' + data.datos[i].ccosto_nombre + '</option>';
+                $("#memoCcosto").append(opcion);
+            }
+
+        })
+        .fail(function( jqXHR, textStatus, errorThrown ) {
+            if ( console && console.log ) {
+                console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
+                    + " \n errorThrown : "+ errorThrown
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+        });
+    }    
     //Funcion que lista los estado del memo
     function getlistaEstadosMemo (){
         var datax = {
@@ -295,7 +331,8 @@
         inicio();
         deshabilitabotones();
         getlistaDepto();
-        getlistaEstadosMemo();
+        getlistaCcostos();
+        //getlistaEstadosMemo();
         $('#grabar-memo').show();
         //$('#agregar-det-memo').show();
         //$('#agregar-det-memo-compra').show();

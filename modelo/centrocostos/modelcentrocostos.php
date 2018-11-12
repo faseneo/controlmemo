@@ -177,8 +177,6 @@ class ModelCentroCostos {
                 $busq = new CentroCostos();
                     $busq->__SET('ccosto_codigo',       $r->cc_codigo);
                     $busq->__SET('ccosto_nombre',       $r->cc_nombre);
-                    $busq->__SET('ccosto_dep_codigo',   $r->cc_dependencia_codigo);
-                    $busq->__SET('ccosto_dep_nombre',   $r->dependencia_nombre);
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;

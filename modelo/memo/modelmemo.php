@@ -301,6 +301,7 @@ ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
         $this->pdo=null;
         return $jsonresponse;
     }
+
     public function ObtenerCambiosEstadosMemo($idmemo){
          try{
           $consulta = "SELECT COUNT(*) FROM cambio_estados where cambio_estados_memo_id = ".$idmemo;
@@ -376,9 +377,10 @@ ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
                                       memo_nombre_solicitante,
                                       memo_depto_solicitante_id,
                                       memo_nombre_destinatario,
-                                      memo_depto_destinatario_id
+                                      memo_depto_destinatario_id,
+                                      memo_cc_codigo
                                       ) 
-                    VALUES (?,?,?,?,?,?,?,?,?)";
+                    VALUES (?,?,?,?,?,?,?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('mem_numero'),
                                                      $data->__GET('mem_anio'),
@@ -388,16 +390,25 @@ ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
                                                      $data->__GET('mem_nom_sol'),
                                                      $data->__GET('mem_depto_sol_id'),
                                                      $data->__GET('mem_nom_dest'),
-                                                     $data->__GET('mem_depto_dest_id')
-                                              ));
+                                                     $data->__GET('mem_depto_dest_id'),
+                                                     $data->__GET('mem_cc_codigo')
+                                                    ));
+            $logsq = new ModeloLogsQuerys();
+                $logsq->GrabarLogsQuerys($sql,'0','Registrar');
+                $logsq = null;
+
             $idmemo = $this->pdo->lastInsertId(); 
-            $idestado = $data->__GET('mem_estado_id');
-            $obsestado = $data->__GET('mem_estado_obs');
+            $idestado = 1; //$data->__GET('mem_estado_id');
+            $obsestado = ""; //$data->__GET('mem_estado_obs')
 
             $sqlinsertaestados="INSERT INTO cambio_estados (cambio_estados_memo_id,
                                                             cambio_estados_memo_estado_id,
                                                             cambio_estados_observacion)
                                 VALUES ($idmemo, $idestado, '$obsestado')";
+            $logsq2 = new ModeloLogsQuerys();
+                $logsq2->GrabarLogsQuerys($sqlinsertaestados,'0','RegistrarEstado');
+                $logsq2 = null;
+
             $stm = $this->pdo->prepare($sqlinsertaestados);
             $stm->execute();
             //var_dump($sqlinsertaestados); exit(1);
