@@ -3,7 +3,32 @@
         document.getElementById('actualizar-memo').style.display = 'none';
         document.getElementById('grabar-memo').style.display = 'none';        
     }
-
+    function deshabilitaform(){
+        $("#memoFecha").prop( "disabled", true );
+        $("#memoNum").prop( "disabled", true );
+        $("#memoAnio").prop( "disabled", true );
+        $("#memoFechaRecep").prop( "disabled", true );
+        $("#memoMateria").prop( "disabled", true );
+        $("#memoNombreSol").prop( "disabled", true );
+        $("#memoDeptoSol").prop( "disabled", true );
+        $("#memoNombreDest").prop( "disabled", true );
+        $("#memoDeptoDest").prop( "disabled", true );
+        $("#memoCcosto").prop( "disabled", true );
+        $("#memoCodCcosto").prop( "disabled", true );      
+    }
+    function habilitaform(){
+        $("#memoFecha").prop( "disabled", false );
+        $("#memoNum").prop( "disabled", false );
+        $("#memoAnio").prop( "disabled", false );
+        $("#memoFechaRecep").prop( "disabled", false );
+        $("#memoMateria").prop( "disabled", false );
+        $("#memoNombreSol").prop( "disabled", false );
+        $("#memoDeptoSol").prop( "disabled", false );
+        $("#memoNombreDest").prop( "disabled", false );
+        $("#memoDeptoDest").prop( "disabled", false );
+        $("#memoCcosto").prop( "disabled", false );
+        $("#memoCodCcosto").prop( "disabled", false );      
+    }    
     function limpiaFormMemo(){
         $('#formIngresoMemo')[0].reset();
         $("#listaArchivosMemo").html("");
@@ -328,8 +353,8 @@
             $("#memoDeptoDest").val(data.datos.mem_depto_dest_id);
             $("#memoCcosto").val(data.datos.mem_cc_codigo);
             $("#memoCodCcosto").val(data.datos.memoCodCcosto);
-            $("#listaHistorial").html(""); 
 
+            $("#listaHistorial").html(""); 
             for(var i=0; i<data.datos.mem_estados.length;i++){
                 console.log('id: ' + data.datos.mem_estados[i].estado_id + ' Estado Tipo: ' + data.datos.mem_estados[i].estado_tipo);
                 
@@ -339,7 +364,23 @@
                 fila += '</tr>';
                 $("#listaHistorial").append(fila);
             }
+            console.log('largo archivos ' + data.datos.mem_estados.length);
+            $("#archivoMemo").html("");             
+            for(var i=0; i<data.datos.mem_archivos.length;i++){
+                console.log('id archivo : ' + data.datos.mem_archivos[i].memoarch_id + ' NOmbre archvo: ' + data.datos.mem_archivos[i].memoarch_name);
+                
+                if(data.datos.mem_archivos[i].memoarch_flag == 1){
+                    fila2 = '<tr><td>'+ data.datos.mem_archivos[i].memoarch_name + '</td>';
+                    fila2 += '<td>' + data.datos.mem_archivos[i].memoarch_size + '</td>';
+                    fila2 += '</tr>';
+                    $("#archivoMemo").append(fila2);
+                }
 
+            }
+            deshabilitabotones();
+            $('#editar-memo').show();
+            $('#limpiar-memo').hide();
+            
 
             /*$("#Accion").val(action);
             $('#myModal').on('shown.bs.modal', function () {
@@ -405,6 +446,7 @@
         //getlistaEstadosMemo();
         if (typeof memId !== 'undefined'){
             verMemo(memId);
+            deshabilitaform();
         }else{
             $('#grabar-memo').show();
         }
