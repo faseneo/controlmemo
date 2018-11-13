@@ -1,6 +1,7 @@
 <?php
 session_start();
-if($_SESSION["autentica"] != "SIP"){
+
+if(!isset($_SESSION["autentica"])){
     header("Location: index.php");
     exit();
 }

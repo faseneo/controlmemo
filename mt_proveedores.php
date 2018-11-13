@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+if(!isset($_SESSION["autentica"])){
+    header("Location: index.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">

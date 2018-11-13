@@ -46,7 +46,7 @@
 						<li><a href="mt_procedimientos.php">Procedimiento Compra</a></li>
 						<li><a href="mt_proveedores.php">Proveedores</a></li>
 						<li><a href="mt_usuarios.php">Usuarios</a></li>
-						<li><a href="mantenedorusurol.php">Usuario Rol</a></li>
+						<li><a href="mt_usuariorol.php">Usuario Rol</a></li>
 						<li><a href="mt_seccion.php">Sección</a></li>
 						<li><a href="mt_estadodetmemo.php">Estado Detalle Memo</a></li>
 						<li><a href="mt_memoestado.php">Estado Memos</a></li>

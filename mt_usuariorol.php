@@ -1,15 +1,22 @@
-<html>
-    <head>
+<?php
+session_start();
+
+if(!isset($_SESSION["autentica"])){
+    header("Location: index.php");
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
 	<?php include "header.php"; ?>
-	<script src="js/funcionesusuariorol.js"></script>  
-    </head>
-    <body>
-
- <?php include "barranav.php"; ?>
-
+	<script src="js/fn_mt_usuariorol.js"></script>  
+</head>
+<body>
+	<?php include "barranav.php"; ?>
         <div class="container" style="margin-top:50px">
             <div class="row">
-				<div class="col-md-9">
+				<div class="col-md-8 col-md-offset-2">
 					<h2 class="sub-header">Usuario Rol</h2>
 					<div class="table-responsive">
 						<!-- Añadimos un botón para el diálogo modal onclick="newServicio()"-->
@@ -18,8 +25,8 @@
 						<table class="table table-striped">
 							<thead>
 								<tr>
-									<th width="50%">Nombre</th>
-									<th width="50%">Acciones</th>
+									<th width="70%">Nombre</th>
+									<th width="30%">Acciones</th>
 								</tr>
 							</thead>
 							<tbody id="listausurol">
@@ -29,8 +36,7 @@
 				</div>
 			</div>
 		</div>
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">

@@ -1,6 +1,7 @@
 <?php
 session_start();
-if($_SESSION["autentica"] != "SIP"){
+
+if(!isset($_SESSION["autentica"])){
     header("Location: index.php");
     exit();
 }
@@ -10,33 +11,29 @@ if($_SESSION["autentica"] != "SIP"){
 <head>
 	<?php include "header.php"; ?>
 	<script src="js/fn_mt_seccion.js"></script>
-    </head>
-    <body>
- 
-<?php include "barranav.php"; ?>
-
-        <div class="container" style="margin-top:50px">
-            <div class="row">
-				<div class="col-md-8 col-md-offset-2">
-					<h2 class="sub-header">Secciones</h2>
-					<div class="table-responsive">
-						<button type="button" id="crea-seccion" class="btn btn-sm btn-primary"
-								data-toggle="modal" data-target="#myModal" >NUEVO</button> 
-						<table class="table table-striped">
-							<thead>
-								<tr>
-									<th width="70%">Nombre sección</th>
-									<th width="30%">Acciones</th>
-								</tr>
-							</thead>
-							<tbody id="listadoseccion"> 
-							</tbody>
-		 				</table>
-					</div>
+</head>
+<body>
+	<?php include "barranav.php"; ?>
+    <div class="container" style="margin-top:50px">
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<h2 class="sub-header">Secciones</h2>
+				<div class="table-responsive">
+					<button type="button" id="crea-seccion" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal" >NUEVO</button> 
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th width="70%">Nombre sección</th>
+								<th width="30%">Acciones</th>
+							</tr>
+						</thead>
+						<tbody id="listadoseccion"> 
+						</tbody>
+		 			</table>
 				</div>
 			</div>
 		</div>
-
+	</div>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">

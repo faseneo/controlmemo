@@ -1,11 +1,12 @@
 <?php
 session_start();
-if($_SESSION["autentica"] != "SIP"){
+
+if(!isset($_SESSION["autentica"])){
     header("Location: index.php");
     exit();
 }
 ?>
-<html>
+<!DOCTYPE html>
     <head>
 	<?php include "header.php"; ?>
 	<script src="js/fn_mt_memoestado.js"></script>

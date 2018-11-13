@@ -1,55 +1,16 @@
-
-fecha:09-11-2018(00:58:34) 
-metodo: 
-msg:SQLSTATE[42000]: Syntax error or access violation: 1066 Not unique table/alias: 'mes' 
-trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(139): PDOStatement->execute()
-#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(77): ModelMemo->Listar('1', '0', '0', '2')
-#2 {main} 
----------------------------------------------------------------------
-
-fecha:09-11-2018(01:00:32) 
-metodo: 
-msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ces.cambio_estados_memo_id' in 'where clause' 
-trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(139): PDOStatement->execute()
-#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(77): ModelMemo->Listar('1', '0', '0', '0')
-#2 {main} 
----------------------------------------------------------------------
-
-fecha:09-11-2018(01:00:46) 
-metodo: 
-msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ces.cambio_estados_memo_id' in 'where clause' 
-trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(139): PDOStatement->execute()
-#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(77): ModelMemo->Listar('1', '0', '0', '0')
-#2 {main} 
----------------------------------------------------------------------
-
-fecha:09-11-2018(01:03:49) 
-metodo: 
-msg:SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ces.memo_estado_id' in 'where clause' 
-trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(139): PDOStatement->execute()
-#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(77): ModelMemo->Listar('1', '1', '0', '2')
-#2 {main} 
----------------------------------------------------------------------
-
-fecha:12-11-2018(01:13:46) 
+fecha:12-11-2018(01:14:42) 
 metodo: 
 msg:SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`controlmemo`.`memo`, CONSTRAINT `fk_memo_centro_costos1` FOREIGN KEY (`memo_cc_codigo`) REFERENCES `centro_costos` (`cc_codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION) 
 trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(392): PDOStatement->execute(Array)
 #1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(58): ModelMemo->Registrar(Object(Memos), Array)
 #2 {main} 
 ---------------------------------------------------------------------
-fecha:12-11-2018(01:14:42) 
-metodo: 
-msg:SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`controlmemo`.`memo`, CONSTRAINT `fk_memo_centro_costos1` FOREIGN KEY (`memo_cc_codigo`) REFERENCES `centro_costos` (`cc_codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION) 
-trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(392): PDOStatement->execute(Array)
-#1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(58): ModelMemo->Registrar(Object(Memos), Array)
-#2 {main} 
----------------------------------------------------------------------
-fecha:12-11-2018(02:28:03) 
+
+fecha:12-11-2018(02:28:03) 
 metodo: 
 msg:SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'memo_cc_codigo' cannot be null 
 trace:#0 C:\xampp\htdocs\controlmemo\modelo\memo\modelmemo.php(394): PDOStatement->execute(Array)
 #1 C:\xampp\htdocs\controlmemo\controllers\controllermemo.php(59): ModelMemo->Registrar(Object(Memos), Array)
 #2 {main} 
 ---------------------------------------------------------------------
-
+
