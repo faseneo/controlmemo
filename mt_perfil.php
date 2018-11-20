@@ -1,11 +1,19 @@
-<html>
-    <head>
+<?php
+session_start();
+
+if(!isset($_SESSION["autentica"])){
+    header("Location: index.php");
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
 	<?php include "header.php"; ?>
-	<script src="js/funcionesperf.js"></script>
-    </head>
-    <body>
- 
-<?php include "barranav.php"; ?>
+	<script src="js/fn_mt_perfil.js"></script>
+</head>
+<body>
+	<?php include "barranav.php"; ?>
 
         <div class="container" style="margin-top:50px">
             <div class="row">
@@ -18,8 +26,9 @@
 						<table class="table table-striped">
 							<thead>
 								<tr>
-									<th width="50%">Nombre</th>
-									<th width="50%">Acciones</th>
+									<th width="25%">Nombre</th>
+									<th width="55%">Descripcion</th>
+									<th width="20%">Acciones</th>
 								</tr>
 							</thead>
 							<tbody id="listaperfil">
@@ -30,7 +39,7 @@
 			</div>
 		</div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -42,9 +51,13 @@
 					<input type="hidden" name="Accion" id="Accion" value="" />
 					<div class="modal-body">
 						<div class="form-group">
-							<label for="perfilNombre">Nombre</label>
+							<label for="perfilNombre">Nombre Perfil</label>
 							<input id="perfilNombre" class="form-control" type="text" name="perfilNombre" value="" title="Ingrese un nombre" required />
 						</div>
+						<div class="form-group">
+							<label for="perfilDesc">Descripción Perfil</label>
+							<input id="perfilDesc" class="form-control" type="text" name="perfilDesc" value="" title="Ingrese un nombre" required />
+						</div>						
 					</div>
 					<div class="modal-footer">
 						<button id="editar-perfil" name="editar-perfil" type="button" class="btn btn-warning">Editar</button>

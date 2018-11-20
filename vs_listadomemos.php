@@ -75,7 +75,7 @@ if($_SESSION["autentica"] != "SIP"){
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>                        
-<!--                         <div class="col-md-1">
+                        <!--<div class="col-md-1">
                             <div class="form-group"> <label for="memoEstado">algo.</label>  
                                <button id="ver-memo" type="button" class="btn btn-xs btn-success" >Buscar</button>
                            </div>
@@ -89,7 +89,7 @@ if($_SESSION["autentica"] != "SIP"){
                     </div>                    
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table">
+                            <table class="table table-condensed  table-hover">
                                 <thead>
                                     <tr>
                                         <th width="8%" class="orden">Año / Número</th>

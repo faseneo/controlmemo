@@ -6,24 +6,33 @@
         function limpiaform(){
             $("#perfilId").val("");
             $("#perfilNombre").val("");
+            $("#perfilDesc").val("");
         }        
         function habilitaform(){
             $("#perfilId").prop( "disabled", false );
             $("#perfilNombre").prop( "disabled", false );
+            $("#perfilDesc").prop( "disabled", false );
         }
         function deshabilitaform(){
             $("#perfilId").prop( "disabled", true );
             $("#perfilNombre").prop( "disabled", true );
+            $("#perfilDesc").prop( "disabled", false );
         }
    $(document).ready(function(){
         function validarFormulario(){
             var txtNombre = document.getElementById('perfilNombre').value;
+            var txtDesc = document.getElementById('perfilDesc').value;
                 //Test campo obligatorio
                 if(txtNombre == null || txtNombre.length == 0 || /^\s+$/.test(txtNombre)){
                     alert('ERROR: El campo nombre no debe ir vacío o con espacios en blanco');
                     document.getElementById('perfilNombre').focus();
                     return false;
-                }             
+                }
+                if(txtDesc == null || txtDesc.length == 0 || /^\s+$/.test(txtDesc)){
+                    alert('ERROR: El campo nombre no debe ir vacío o con espacios en blanco');
+                    document.getElementById('perfilDesc').focus();
+                    return false;
+                }
             return true;
         }         
         deshabilitabotones();
@@ -36,7 +45,7 @@
                 data: datax, 
                 type: "GET",
                 dataType: "json", 
-                url: "controllers/controllerusuarioperfil.php", 
+                url: "controllers/controllerperfil.php", 
             })
             .done(function( data, textStatus, jqXHR ) {
                 $("#listaperfil").html("");
@@ -48,19 +57,18 @@
                 }
                 for(var i=0; i<data.datos.length;i++){
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
-                                console.log('id: '+data.datos[i].usu_perfil_id + ' nombre: '+data.datos[i].usu_perfil_nombre);
+                                console.log('id: '+data.datos[i].perf_id + ' nombre: '+data.datos[i].perf_nombre);
 
-                                fila = '<tr><td>'+ data.datos[i].usu_perfil_nombre +'</td>';
-                                //fila += '<td>'+ data.datos[i].ccosto_codigo +'</td>';
-
+                                fila = '<tr><td>'+ data.datos[i].perf_nombre +'</td>';
+                                fila += '<td>'+ data.datos[i].perf_desc +'</td>';
                                 fila += '<td><button id="ver-perfil" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
-                                fila += ' onclick="verPerfil(\'ver\',\'' + data.datos[i].usu_perfil_id + '\')">';
+                                fila += ' onclick="verPerfil(\'ver\',\'' + data.datos[i].perf_id + '\')">';
                                 fila += 'Ver / Editar</button>';
                                 fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
                                 fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                                fila += 'onclick="deletePerfil(\''+ data.datos[i].usu_perfil_id +'\',\''
-                                + data.datos[i].usu_perfil_nombre +'\')">';
+                                fila += 'onclick="deletePerfil(\''+ data.datos[i].perf_id +'\',\''
+                                + data.datos[i].perf_nombre +'\')">';
                                 fila += 'Eliminar</button></td>';
                                 fila += '</tr>';
                                 $("#listaperfil").append(fila);
@@ -103,7 +111,7 @@
                     data: datax, 
                     type: "POST",
                     dataType: "json", 
-                    url: "controllers/controllerusuarioperfil.php", 
+                    url: "controllers/controllerperfil.php", 
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     if ( console && console.log ) {
@@ -156,7 +164,7 @@
                             data: datax,    // En data se puede utilizar un objeto JSON, un array o un query string
                             type: "POST",   //Cambiar a type: POST si necesario
                             dataType: "json",  // Formato de datos que se espera en la respuesta
-                            url: "controllers/controllerusuarioperfil.php",  // URL a la que se enviará la solicitud Ajax
+                            url: "controllers/controllerperfil.php",  // URL a la que se enviará la solicitud Ajax
                         })
                         .done(function( data, textStatus, jqXHR ) {
                             if ( console && console.log ) {
@@ -202,7 +210,7 @@
                         data: datax, 
                         type: "POST",
                         dataType: "json", 
-                        url: "controllers/controllerusuarioperfil.php",
+                        url: "controllers/controllerperfil.php",
                     })
                     .done(function(data,textStatus,jqXHR ) {
                         if ( console && console.log ) {
@@ -244,7 +252,7 @@
             data: datay, 
             type: "POST",
             dataType: "json", 
-            url: "controllers/controllerusuarioperfil.php",
+            url: "controllers/controllerperfil.php",
         })
         .done(function(data,textStatus,jqXHR ) {
             if ( console && console.log ) {
@@ -253,8 +261,8 @@
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
             }
-            $("#perfilId").val(data.datos.usu_perfil_id);
-            $("#perfilNombre").val(data.datos.usu_perfil_nombre);
+            $("#perfilId").val(data.datos.perf_id);
+            $("#perfilNombre").val(data.datos.perf_nombre);
 
             deshabilitaform();
             $("#Accion").val(action);

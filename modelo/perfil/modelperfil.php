@@ -20,14 +20,16 @@ class ModelUsuPerfil {
         $jsonresponse = array();
         try{
             $result = array();
-            $stm = $this->pdo->prepare("SELECT  up.usuario_perfil_id,
-                                                up.usuario_perfil_nombre
-                                        FROM usuario_perfil as up");
+            $stm = $this->pdo->prepare("SELECT  per.perfiles_id,
+                                                per.perfiles_nombre,
+                                                per.perfiles_descripcion
+                                        FROM perfiles as per");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new UsuPerfil();
-                    $busq->__SET('usu_perfil_id', $r->usuario_perfil_id);
-                    $busq->__SET('usu_perfil_nombre', $r->usuario_perfil_nombre);                    
+                    $busq->__SET('perf_id',     $r->perfiles_id);
+                    $busq->__SET('perf_nombre', $r->perfiles_nombre);
+                    $busq->__SET('perf_desc', $r->perfiles_descripcion);
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;
@@ -38,7 +40,7 @@ class ModelUsuPerfil {
         catch(Exception $e){
             //die($e->getMessage());
             $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al listar usuario perfil';
+            $jsonresponse['message'] = 'Error al listar usuario perfiles';
         }
     }
 
@@ -47,24 +49,26 @@ class ModelUsuPerfil {
         $jsonresponse = array();
         try{
             $stm = $this->pdo
-                       ->prepare("SELECT up.usuario_perfil_id,
-                                         up.usuario_perfil_nombre
-                                FROM usuario_perfil as up
-                                WHERE up.usuario_perfil_id = ?");
+                       ->prepare("SELECT per.perfiles_id,
+                                         per.perfiles_nombre,
+                                         per.perfiles_descripcion
+                                FROM perfiles as per
+                                WHERE per.perfiles_id = ?");
             $stm->execute(array($id));
             $r = $stm->fetch(PDO::FETCH_OBJ);
             $busq = new UsuPerfil();
-                    $busq->__SET('usu_perfil_id', $r->usuario_perfil_id);
-                    $busq->__SET('usu_perfil_nombre', $r->usuario_perfil_nombre);
+                    $busq->__SET('perf_id',     $r->perfiles_id);
+                    $busq->__SET('perf_nombre', $r->perfiles_nombre);
+                    $busq->__SET('perf_desc',   $r->perfiles_descripcion);
 
             $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Se obtuvo los usuario perfil correctamente';
+            $jsonresponse['message'] = 'Se obtuvo los usuario perfiles correctamente';
             $jsonresponse['datos'] = $busq->returnArray();
 
         } catch (Exception $e){
             //die($e->getMessage());
             $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al obtener usuario perfil';             
+            $jsonresponse['message'] = 'Error al obtener usuario perfiles';             
         }
         return $jsonresponse;
     }
@@ -73,33 +77,35 @@ class ModelUsuPerfil {
         $jsonresponse = array();
         try{
             $stm = $this->pdo
-                      ->prepare("DELETE FROM usuario_perfil WHERE usuario_perfil_id = ? ");
+                      ->prepare("DELETE FROM perfiles WHERE perfiles_id = ? ");
             $stm->execute(array($id));
 
             $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Usuario perfil eliminado correctamente';              
+            $jsonresponse['message'] = 'Usuario perfiles eliminado correctamente';              
         } catch (Exception $e){
             //die($e->getMessage());
             $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al eliminar usuario perfil';            
+            $jsonresponse['message'] = 'Error al eliminar usuario perfiles';            
         }
         return $jsonresponse;
     }
 
     public function Registrar(UsuPerfil $data){
+        //var_dump($data);
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO usuario_perfil (usuario_perfil_nombre) 
-                    VALUES (?)";
+            $sql = "INSERT INTO perfiles (perfiles_nombre,perfiles_descripcion) 
+                    VALUES (?,?)";
 
-            $this->pdo->prepare($sql)->execute(array($data->__GET('usu_perfil_nombre'))
+            $this->pdo->prepare($sql)->execute(array($data->__GET('perf_nombre'),
+                                                     $data->__GET('perf_desc'))
                                               );
             $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Usuario perfil ingresado correctamente'; 
+            $jsonresponse['message'] = 'Usuario perfiles ingresado correctamente'; 
         } catch (PDOException $pdoException){
         //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
             $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al ingresar usuario perfil';
+            $jsonresponse['message'] = 'Error al ingresar usuario perfiles';
             $jsonresponse['errorQuery'] = $pdoException->getMessage();
             var_dump($jsonresponse);
         }
@@ -110,20 +116,22 @@ class ModelUsuPerfil {
         $jsonresponse = array();
         //print_r($data);
         try{
-            $sql = "UPDATE usuario_perfil SET 
-                           usuario_perfil_nombre = ?
-                    WHERE  usuario_perfil_id = ?";
+            $sql = "UPDATE perfiles SET 
+                           perfiles_nombre = ?,
+                           perfiles_descripcion= ?
+                    WHERE  perfiles_id = ?";
 
             $this->pdo->prepare($sql)
-                 ->execute(array($data->__GET('usu_perfil_nombre'),
-                                 $data->__GET('usu_perfil_id'))
+                 ->execute(array($data->__GET('perf_nombre'),
+                                 $data->__GET('perf_desc'),
+                                 $data->__GET('perf_id'))
                           );
             $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Usuario perfil actualizado correctamente';                 
+            $jsonresponse['message'] = 'Usuario perfiles actualizado correctamente';                 
         } catch (Exception $e){
             //die($e->getMessage());
             $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al actualizar usuario perfil';             
+            $jsonresponse['message'] = 'Error al actualizar usuario perfiles';             
         }
         return $jsonresponse;
     }
@@ -132,14 +140,16 @@ class ModelUsuPerfil {
         $jsonresponse = array();
         try{
             $result = array();
-             $stm = $this->pdo->prepare("SELECT  up.usuario_perfil_id,
-                                                 up.usuario_perfil_nombre
-                                        FROM usuario_perfil as up");
+             $stm = $this->pdo->prepare("SELECT  per.perfiles_id,
+                                                 per.perfiles_nombre,
+                                                 per.perfiles_descripcion
+                                        FROM perfiles as per");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new UsuPerfil();
-                    $busq->__SET('usu_perfil_id', $r->usuario_perfil_id);
-                    $busq->__SET('usu_perfil_nombre', $r->usuario_perfil_nombre); 
+                    $busq->__SET('perf_id',     $r->perfiles_id);
+                    $busq->__SET('perf_nombre', $r->perfiles_nombre);
+                    $busq->__SET('perf_desc',   $r->perfiles_descripcion); 
                 $result[] = $busq;
             }
             return $result;

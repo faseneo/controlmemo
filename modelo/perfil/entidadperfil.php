@@ -1,8 +1,9 @@
 <?php
 //usuario_perfil
 class UsuPerfil{
-    private $usu_perfil_id;
-    private $usu_perfil_nombre;
+    private $perf_id;
+    private $perf_nombre;
+    private $perf_desc;
 
     public function __GET($k){
         return $this->$k;
