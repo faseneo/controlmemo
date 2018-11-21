@@ -136,6 +136,31 @@ class ModelUsuPerfil {
         return $jsonresponse;
     }
 
+    public function ListarMin(){
+        $jsonresponse = array();
+        try{
+            $result = array();
+            $stm = $this->pdo->prepare("SELECT  per.perfiles_id,
+                                                per.perfiles_nombre
+                                        FROM perfiles as per");
+            $stm->execute();
+            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                $fila = array('perf_id'=>$r->perfiles_id,
+                              'perf_nombre'=>$r->perfiles_nombre);
+                $result[]=$fila;
+            }            
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'listado correctamente';
+            $jsonresponse['datos'] = $result;
+            return $jsonresponse;
+        }
+        catch(Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al listar los perfiles';
+        }
+    }
+
     public function Listar2(){
         $jsonresponse = array();
         try{

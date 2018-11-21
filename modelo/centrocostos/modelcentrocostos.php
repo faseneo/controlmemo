@@ -174,11 +174,10 @@ class ModelCentroCostos {
                                         FROM centro_costos as cc");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $busq = new CentroCostos();
-                    $busq->__SET('ccosto_codigo',       $r->cc_codigo);
-                    $busq->__SET('ccosto_nombre',       $r->cc_nombre);
-                $result[] = $busq->returnArray();
-            }
+                $fila = array('ccosto_codigo'=>$r->cc_codigo,
+                              'ccosto_nombre'=>$r->cc_nombre);
+                $result[]=$fila;
+            }            
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'listado correctamente';
             $jsonresponse['datos'] = $result;

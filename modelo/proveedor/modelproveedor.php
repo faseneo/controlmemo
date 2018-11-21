@@ -242,13 +242,12 @@ class ModelProveedores{
                                                 pp.proveedor_rut
                                         FROM proveedor as pp");
             $stm->execute();
-            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $busq = new Proveedores();
-                    $busq->__SET('prov_id',                 $r->proveedor_id);
-                    $busq->__SET('prov_nombre',             $r->proveedor_nombre);
-                    $busq->__SET('prov_rut',                $r->proveedor_rut);
-                $result[] = $busq->returnArray();
-            }
+           foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                $fila = array('prov_id'=>$r->proveedor_id,
+                              'prov_nombre'=>$r->proveedor_nombre,
+                              'prov_rut'=>$r->proveedor_rut);
+                $result[]=$fila;
+            }    
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'listado correctamente';
             $jsonresponse['datos'] = $result;

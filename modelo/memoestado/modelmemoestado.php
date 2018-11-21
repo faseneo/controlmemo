@@ -197,15 +197,6 @@ class ModelMemoEst{
                               'memo_est_seccion_nombre'=>$r->seccion_nombre);
                 $result[]=$fila;
             }
-            /*foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $busq = new MemoEst();
-                    $busq->__SET('memo_est_id', $r->memo_estado_id);
-                    $busq->__SET('memo_est_tipo', $r->memo_estado_tipo);
-                    $busq->__SET('memo_est_orden', $r->memo_estado_orden);
-                    $busq->__SET('memo_est_activo', $r->memo_estado_activo);
-                    $busq->__SET('memo_est_seccion_nombre', $r->seccion_nombre);                    
-                $result[] = $busq->returnArray();
-            }*/
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'listado correctamente';
             $jsonresponse['datos'] = $result;
