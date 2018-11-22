@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-11-2018 a las 19:57:16
+-- Tiempo de generación: 07-11-2018 a las 00:05:56
 -- Versión del servidor: 10.1.30-MariaDB
 -- Versión de PHP: 5.6.33
 
@@ -21,19 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `controlmemo`
 --
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `acciones`
---
-
-CREATE TABLE `acciones` (
-  `acciones_id` int(11) NOT NULL,
-  `acciones_nombre` varchar(60) NOT NULL,
-  `acciones_estado` tinyint(4) DEFAULT '1',
-  `acciones_menuitem_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -66,17 +53,6 @@ CREATE TABLE `asigna_prioridad` (
   `asigna_prioridad_texto` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Volcado de datos para la tabla `asigna_prioridad`
---
-
-INSERT INTO `asigna_prioridad` (`asigna_prioridad_id`, `asigna_prioridad_texto`) VALUES
-(1, 'Inmediata'),
-(2, 'Urgente'),
-(3, 'Alta'),
-(4, 'Normal'),
-(5, 'Baja');
-
 -- --------------------------------------------------------
 
 --
@@ -93,13 +69,6 @@ CREATE TABLE `asigna_usuario` (
   `asigna_usuario_asigna_prioridad_id` int(11) NOT NULL,
   `asigna_usuario_asigna_dificultad_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `asigna_usuario`
---
-
-INSERT INTO `asigna_usuario` (`asigna_usuario_id`, `asigna_usuario_memo_id`, `asigna_usuario_usuario_id`, `asigna_usuario_comentario`, `asigna_usuario_estado_asignacion_id`, `asigna_usuario_fecha`, `asigna_usuario_asigna_prioridad_id`, `asigna_usuario_asigna_dificultad_id`) VALUES
-(1, 3, 2, 'Ver el lunes por favor', 1, '2018-11-09 15:09:27', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -126,7 +95,6 @@ CREATE TABLE `cambio_estados` (
   `cambio_estados_memo_id` int(11) NOT NULL,
   `cambio_estados_memo_estado_id` int(11) NOT NULL,
   `cambio_estados_observacion` varchar(255) DEFAULT NULL,
-  `cambio_estados_usuario_id` int(11) NOT NULL,
   `cambio_estados_fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -134,14 +102,10 @@ CREATE TABLE `cambio_estados` (
 -- Volcado de datos para la tabla `cambio_estados`
 --
 
-INSERT INTO `cambio_estados` (`cambio_estados_id`, `cambio_estados_memo_id`, `cambio_estados_memo_estado_id`, `cambio_estados_observacion`, `cambio_estados_usuario_id`, `cambio_estados_fecha`) VALUES
-(1, 1, 1, 'Ingresado por Jani', 4, '2018-10-05 17:26:31'),
-(2, 2, 1, 'algo nuevo', 4, '2018-10-05 17:58:05'),
-(3, 4, 1, 'algo nuevo', 4, '2018-10-05 18:12:54'),
-(4, 2, 5, 'Aprobado', 4, '2018-11-07 23:28:20'),
-(5, 3, 1, 'Ingreso manual', 4, '2018-11-08 21:34:42'),
-(6, 4, 5, 'LLego CDP de PPTO', 4, '2018-11-08 21:34:42'),
-(7, 4, 10, 'traspaso automatico a Adquisiciones', 0, '2018-11-08 21:36:42');
+INSERT INTO `cambio_estados` (`cambio_estados_id`, `cambio_estados_memo_id`, `cambio_estados_memo_estado_id`, `cambio_estados_observacion`, `cambio_estados_fecha`) VALUES
+(1, 1, 1, 'Ingresado por Jani', '2018-10-05 17:26:31'),
+(2, 2, 1, 'algo nuevo', '2018-10-05 17:58:05'),
+(3, 4, 1, 'algo nuevo', '2018-10-05 18:12:54');
 
 -- --------------------------------------------------------
 
@@ -674,9 +638,8 @@ CREATE TABLE `estado_asignacion` (
 INSERT INTO `estado_asignacion` (`estado_asignacion_id`, `estado_asignacion_texto`) VALUES
 (1, 'No leido'),
 (2, 'Leido'),
-(3, 'Confirmada'),
-(4, 'Se Necesitan Mas Datos'),
-(5, 'Re-Asignado');
+(3, 'Se necesitan mas datos'),
+(4, 'Confirmada');
 
 -- --------------------------------------------------------
 
@@ -697,12 +660,9 @@ CREATE TABLE `estado_detalle_memo` (
 --
 
 INSERT INTO `estado_detalle_memo` (`estado_detmemo_id`, `estado_detmemo_tipo`, `estado_detmemo_orden`, `estado_detmemo_descripcion`, `estado_detmemo_activo`) VALUES
-(1, 'En Proceso', 1, NULL, 1),
-(2, 'En Espera de Antecedentes', 2, NULL, 1),
-(3, 'Compra Parcial', 3, NULL, 1),
-(4, 'Compra Realizada', 4, NULL, 1),
-(5, 'Orden de Compra Nula', 5, NULL, 1),
-(6, 'Orden de Compra Cancelada', 6, NULL, 1);
+(1, 'En Gestión', 1, NULL, 1),
+(2, 'Compra parcial', 2, NULL, 1),
+(3, 'Compra Realizada', 3, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -812,20 +772,21 @@ CREATE TABLE `memo_estado` (
 INSERT INTO `memo_estado` (`memo_estado_id`, `memo_estado_tipo`, `memo_estado_orden`, `memo_estado_descripcion`, `memo_estado_seccion_id`, `memo_estado_activo`) VALUES
 (1, 'Ingresado', 1, '', 2, 1),
 (2, 'Archivado', 2, '', 2, 1),
-(3, 'Derivado Otro Depto', 3, '', 2, 1),
-(4, 'Derivado PPTO', 4, '', 2, 1),
-(5, 'Con CDP de PPTO', 5, '', 2, 1),
-(6, 'Con CDP de Planificación', 6, '', 2, 1),
-(7, 'Rechazado por PPTO', 7, '', 2, 1),
-(8, 'Respondido', 8, '', 2, 1),
-(9, 'Anulado', 9, '', 2, 1),
-(10, 'Sin Asignar', 1, '', 3, 1),
-(11, 'Asignado', 2, '', 3, 1),
-(12, 'En Gestión', 3, '', 3, 1),
-(13, 'Rechazado Por Disponibilidad', 4, '', 3, 1),
-(14, 'Terminado', 5, '', 3, 1),
-(15, 'Recibido', 1, '', 4, 1),
-(16, 'Aprobado', 2, '', 4, 1);
+(3, 'Derivado', 3, '', 2, 1),
+(4, 'Con CDP PPTO', 4, '', 2, 1),
+(5, 'Con CDP de PlanificaciÃ³n', 5, '', 2, 1),
+(6, 'Anulado', 6, '', 2, 1),
+(7, 'Rechazado', 7, '', 2, 1),
+(9, 'En Proceso', 3, '', 3, 1),
+(10, 'Sin Efecto', 5, '', 3, 0),
+(11, 'En GestiÃ³n', 2, '', 3, 1),
+(12, 'OC Nula', 4, '', 3, 1),
+(13, 'Terminado', 5, '', 3, 1),
+(14, 'Recibido', 1, '', 4, 1),
+(15, 'Aprobado', 2, '', 4, 1),
+(16, 'Sin Asignar', 1, '', 3, 1),
+(17, 'Asignado', 1, '', 3, 1),
+(18, 'En espera de Factura', 4, '', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -842,66 +803,12 @@ CREATE TABLE `memo_resoluciones` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `menu`
+-- Estructura de tabla para la tabla `perfil_permisos`
 --
 
-CREATE TABLE `menu` (
-  `menu_id` int(11) NOT NULL,
-  `menu_nombre` varchar(60) NOT NULL,
-  `menu_url` varchar(255) DEFAULT NULL,
-  `menu_descripcion` varchar(255) DEFAULT NULL,
-  `menu_estado` tinyint(4) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `menuitem`
---
-
-CREATE TABLE `menuitem` (
-  `menuitem_id` int(11) NOT NULL,
-  `menuitem_nombre` varchar(50) NOT NULL,
-  `menuitem_url` varchar(255) DEFAULT NULL,
-  `submenu_estado` tinyint(4) DEFAULT NULL,
-  `menuitem_menu_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `perfiles`
---
-
-CREATE TABLE `perfiles` (
-  `perfiles_id` int(11) NOT NULL,
-  `perfiles_nombre` varchar(25) NOT NULL,
-  `perfiles_descripcion` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `perfiles`
---
-
-INSERT INTO `perfiles` (`perfiles_id`, `perfiles_nombre`, `perfiles_descripcion`) VALUES
-(1, 'Administrador', 'Tiene todos los permisos para la administración del portal'),
-(2, 'Supervidor', 'Solo algunos permisos de Administrador'),
-(3, 'Analista', 'Permisos para gestión de los memos de adquisiciones'),
-(4, 'Secretaria', 'Permisos de ingreso de Memos y listados'),
-(5, 'Gestión Pago', 'Permisos para listar memos y gestionar los pagos de facturas'),
-(6, 'Observador', 'Permisos solo de lecturas a listados e informes');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `permisos`
---
-
-CREATE TABLE `permisos` (
-  `permisos_perfiles_id` int(11) NOT NULL,
-  `permisos_acciones_id` int(11) NOT NULL,
-  `permisos_fecha_ingreso` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `permisos_fecha_modificacion` datetime DEFAULT NULL
+CREATE TABLE `perfil_permisos` (
+  `perfil_permiso_id` int(11) NOT NULL,
+  `perfil_permiso_ingreso` tinyint(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -979,7 +886,7 @@ INSERT INTO `seccion` (`seccion_id`, `seccion_nombre`, `seccion_descripcion`) VA
 (1, 'No definido', NULL),
 (2, 'Secretaria DAF', NULL),
 (3, 'Adquisiciones', NULL),
-(4, 'Planificación', NULL);
+(4, 'PlanificaciÃ³n', NULL);
 
 -- --------------------------------------------------------
 
@@ -992,25 +899,31 @@ CREATE TABLE `usuario` (
   `usuario_rut` varchar(10) NOT NULL,
   `usuario_nombre` varchar(60) NOT NULL,
   `usuario_password` varchar(10) NOT NULL,
+  `usuario_usu_rol_id` int(11) NOT NULL,
   `usuario_estado` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:creado,1:activo, 2:inactivo (se podria agregar bloqueado y eliminado)',
-  `usuario_fecha_ingreso` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `usuario_email` varchar(130) DEFAULT NULL,
-  `usuario_urlimg` varchar(254) DEFAULT NULL,
-  `usuario_usu_rol_id` int(11) NOT NULL
+  `usuario_fecha_ingreso` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`usuario_id`, `usuario_rut`, `usuario_nombre`, `usuario_password`, `usuario_estado`, `usuario_fecha_ingreso`, `usuario_email`, `usuario_urlimg`, `usuario_usu_rol_id`) VALUES
-(1, '2-8', 'María José Garcés', '123456', 1, '2018-08-31 14:15:15', NULL, NULL, 1),
-(2, '1-9', 'Jorge Moreno', '123456', 1, '2018-08-31 14:15:48', NULL, NULL, 3),
-(3, '3-5', 'José García', '123456', 1, '2018-08-31 14:40:34', NULL, NULL, 3),
-(4, '4-3', 'Lorena', '123456', 1, '2018-08-31 14:57:51', NULL, NULL, 3),
-(5, '5-1', 'Jany', '123456', 1, '2018-11-09 14:12:22', NULL, NULL, 4),
-(6, '7-8', 'Sofia', '123456', 0, '2018-11-20 19:47:46', NULL, NULL, 5),
-(7, '11-6', 'Carlos Peña', '123456', 1, '2018-11-22 22:34:11', NULL, NULL, 6);
+INSERT INTO `usuario` (`usuario_id`, `usuario_rut`, `usuario_nombre`, `usuario_password`, `usuario_usu_rol_id`, `usuario_estado`, `usuario_fecha_ingreso`) VALUES
+(1, '1-9', 'Juan Pérez', '123456', 3, 1, '2018-08-31 14:15:15'),
+(2, '3-7', 'José García', '123456', 3, 1, '2018-08-31 14:15:48'),
+(3, '2-8', 'Marí­a José Garcés', '123456', 1, 1, '2018-08-31 14:40:34'),
+(4, '4-6', 'Carolina', '123456', 4, 1, '2018-08-31 14:57:51');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario_perfil`
+--
+
+CREATE TABLE `usuario_perfil` (
+  `usu_perfil_id` int(11) NOT NULL,
+  `usu_perfil_nombre` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1020,59 +933,23 @@ INSERT INTO `usuario` (`usuario_id`, `usuario_rut`, `usuario_nombre`, `usuario_p
 
 CREATE TABLE `usuario_rol` (
   `usu_rol_id` int(11) NOT NULL,
-  `usu_rol_nombre` varchar(64) NOT NULL,
-  `usu_rol_descripcion` varchar(254) DEFAULT NULL
+  `usu_rol_nombre` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `usuario_rol`
 --
 
-INSERT INTO `usuario_rol` (`usu_rol_id`, `usu_rol_nombre`, `usu_rol_descripcion`) VALUES
-(1, 'Administrador', NULL),
-(2, 'Jefa Adquisiciones', NULL),
-(3, 'Analista', NULL),
-(4, 'Secretaria', NULL),
-(5, 'Administrativo Adquisiciones', NULL),
-(6, 'Director', NULL),
-(7, 'Jefe Departamento', NULL);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usu_perfiles`
---
-
-CREATE TABLE `usu_perfiles` (
-  `usu_perfiles_usuario_id` int(11) NOT NULL,
-  `usu_perfiles_perfiles_id` int(11) NOT NULL,
-  `usu_perfiles_fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `usu_perfiles`
---
-
-INSERT INTO `usu_perfiles` (`usu_perfiles_usuario_id`, `usu_perfiles_perfiles_id`, `usu_perfiles_fecha`) VALUES
-(1, 1, '2018-11-22 22:37:25'),
-(2, 2, '2018-11-22 22:35:46'),
-(2, 3, '2018-11-22 22:35:46'),
-(3, 3, '2018-11-22 22:36:48'),
-(4, 3, '2018-11-22 22:36:54'),
-(5, 4, '2018-11-22 22:36:59'),
-(6, 5, '2018-11-22 22:37:05'),
-(7, 6, '2018-11-22 22:34:26');
+INSERT INTO `usuario_rol` (`usu_rol_id`, `usu_rol_nombre`) VALUES
+(1, 'Administrador'),
+(2, 'Supevisor'),
+(3, 'Analista'),
+(4, 'Secretaria'),
+(5, 'Gestión Pago');
 
 --
 -- Índices para tablas volcadas
 --
-
---
--- Indices de la tabla `acciones`
---
-ALTER TABLE `acciones`
-  ADD PRIMARY KEY (`acciones_id`),
-  ADD KEY `fk_acciones_menuitem1_idx` (`acciones_menuitem_id`);
 
 --
 -- Indices de la tabla `asigna_dificultad`
@@ -1240,31 +1117,10 @@ ALTER TABLE `memo_resoluciones`
   ADD PRIMARY KEY (`memo_res_id`);
 
 --
--- Indices de la tabla `menu`
+-- Indices de la tabla `perfil_permisos`
 --
-ALTER TABLE `menu`
-  ADD PRIMARY KEY (`menu_id`);
-
---
--- Indices de la tabla `menuitem`
---
-ALTER TABLE `menuitem`
-  ADD PRIMARY KEY (`menuitem_id`),
-  ADD KEY `fk_menuitem_menu1_idx` (`menuitem_menu_id`);
-
---
--- Indices de la tabla `perfiles`
---
-ALTER TABLE `perfiles`
-  ADD PRIMARY KEY (`perfiles_id`);
-
---
--- Indices de la tabla `permisos`
---
-ALTER TABLE `permisos`
-  ADD PRIMARY KEY (`permisos_perfiles_id`,`permisos_acciones_id`),
-  ADD KEY `fk_perfiles_has_acciones_acciones1_idx` (`permisos_acciones_id`),
-  ADD KEY `fk_perfiles_has_acciones_perfiles1_idx` (`permisos_perfiles_id`);
+ALTER TABLE `perfil_permisos`
+  ADD PRIMARY KEY (`perfil_permiso_id`);
 
 --
 -- Indices de la tabla `procedimiento_compra`
@@ -1292,46 +1148,38 @@ ALTER TABLE `usuario`
   ADD KEY `fk_usuario_usuario_rol1_idx` (`usuario_usu_rol_id`);
 
 --
+-- Indices de la tabla `usuario_perfil`
+--
+ALTER TABLE `usuario_perfil`
+  ADD PRIMARY KEY (`usu_perfil_id`);
+
+--
 -- Indices de la tabla `usuario_rol`
 --
 ALTER TABLE `usuario_rol`
   ADD PRIMARY KEY (`usu_rol_id`);
 
 --
--- Indices de la tabla `usu_perfiles`
---
-ALTER TABLE `usu_perfiles`
-  ADD PRIMARY KEY (`usu_perfiles_usuario_id`,`usu_perfiles_perfiles_id`),
-  ADD KEY `fk_usuario_has_perfiles_perfiles1_idx` (`usu_perfiles_perfiles_id`),
-  ADD KEY `fk_usuario_has_perfiles_usuario1_idx` (`usu_perfiles_usuario_id`);
-
---
 -- AUTO_INCREMENT de las tablas volcadas
 --
-
---
--- AUTO_INCREMENT de la tabla `acciones`
---
-ALTER TABLE `acciones`
-  MODIFY `acciones_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `asigna_dificultad`
 --
 ALTER TABLE `asigna_dificultad`
-  MODIFY `asigna_dificultad_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `asigna_dificultad_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `asigna_prioridad`
 --
 ALTER TABLE `asigna_prioridad`
-  MODIFY `asigna_prioridad_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `asigna_prioridad_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `asigna_usuario`
 --
 ALTER TABLE `asigna_usuario`
-  MODIFY `asigna_usuario_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `asigna_usuario_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `asocia_resolucion`
@@ -1343,7 +1191,7 @@ ALTER TABLE `asocia_resolucion`
 -- AUTO_INCREMENT de la tabla `cambio_estados`
 --
 ALTER TABLE `cambio_estados`
-  MODIFY `cambio_estados_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `cambio_estados_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `cambio_estados_detmemo`
@@ -1409,7 +1257,7 @@ ALTER TABLE `estado_asignacion`
 -- AUTO_INCREMENT de la tabla `estado_detalle_memo`
 --
 ALTER TABLE `estado_detalle_memo`
-  MODIFY `estado_detmemo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `estado_detmemo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `historial_cambios`
@@ -1439,7 +1287,7 @@ ALTER TABLE `memo_archivo`
 -- AUTO_INCREMENT de la tabla `memo_estado`
 --
 ALTER TABLE `memo_estado`
-  MODIFY `memo_estado_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `memo_estado_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `memo_resoluciones`
@@ -1448,28 +1296,16 @@ ALTER TABLE `memo_resoluciones`
   MODIFY `memo_res_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `menu`
+-- AUTO_INCREMENT de la tabla `perfil_permisos`
 --
-ALTER TABLE `menu`
-  MODIFY `menu_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `menuitem`
---
-ALTER TABLE `menuitem`
-  MODIFY `menuitem_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `perfiles`
---
-ALTER TABLE `perfiles`
-  MODIFY `perfiles_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+ALTER TABLE `perfil_permisos`
+  MODIFY `perfil_permiso_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `procedimiento_compra`
 --
 ALTER TABLE `procedimiento_compra`
-  MODIFY `proc_compra_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `proc_compra_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
@@ -1487,23 +1323,17 @@ ALTER TABLE `seccion`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `usuario_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `usuario_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario_rol`
 --
 ALTER TABLE `usuario_rol`
-  MODIFY `usu_rol_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `usu_rol_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
 --
-
---
--- Filtros para la tabla `acciones`
---
-ALTER TABLE `acciones`
-  ADD CONSTRAINT `fk_acciones_menuitem1` FOREIGN KEY (`acciones_menuitem_id`) REFERENCES `menuitem` (`menuitem_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `asigna_usuario`
@@ -1601,30 +1431,10 @@ ALTER TABLE `memo_estado`
   ADD CONSTRAINT `fk_memo_estado_seccion1` FOREIGN KEY (`memo_estado_seccion_id`) REFERENCES `seccion` (`seccion_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Filtros para la tabla `menuitem`
---
-ALTER TABLE `menuitem`
-  ADD CONSTRAINT `fk_menuitem_menu1` FOREIGN KEY (`menuitem_menu_id`) REFERENCES `menu` (`menu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `permisos`
---
-ALTER TABLE `permisos`
-  ADD CONSTRAINT `fk_perfiles_has_acciones_acciones1` FOREIGN KEY (`permisos_acciones_id`) REFERENCES `acciones` (`acciones_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_perfiles_has_acciones_perfiles1` FOREIGN KEY (`permisos_perfiles_id`) REFERENCES `perfiles` (`perfiles_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
 -- Filtros para la tabla `usuario`
 --
 ALTER TABLE `usuario`
   ADD CONSTRAINT `fk_usuario_usuario_rol1` FOREIGN KEY (`usuario_usu_rol_id`) REFERENCES `usuario_rol` (`usu_rol_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `usu_perfiles`
---
-ALTER TABLE `usu_perfiles`
-  ADD CONSTRAINT `fk_usuario_has_perfiles_perfiles1` FOREIGN KEY (`usu_perfiles_perfiles_id`) REFERENCES `perfiles` (`perfiles_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_usuario_has_perfiles_usuario1` FOREIGN KEY (`usu_perfiles_usuario_id`) REFERENCES `usuario` (`usuario_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

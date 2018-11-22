@@ -228,13 +228,13 @@ if($_SESSION["autentica"] != "SIP"){
             </div><!-- /.10 -->
         </div> <!-- /.row-->
         <br><br>
-        <div class="row" id="#historial">
+        <div class="row" id="historial">
             <div class="col-lg-10 col-lg-offset-1">
                 <div class="panel-group" id="accordion">
-                    <div class="panel panel-default">
+                    <div class="panel panel-info">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" href="#collapse2">Historial Cambios Estados</a>
+                                <a data-toggle="collapse" href="#collapse2">Historial Cambios Estados  <span class="badge" id="totalHist"></span></a>
                             </h4>
                         </div>
                         <div id="collapse2" class="panel-collapse collapse">

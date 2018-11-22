@@ -36,6 +36,7 @@
         //$("#linkres").text("");
         //$("#linkres").attr("href","");
         $('#memoNum').focus();
+        $('#historial').hide();
     }
 
     function limpiaFormDetalle(){
@@ -354,7 +355,12 @@
             $("#memoCcosto").val(data.datos.mem_cc_codigo);
             $("#memoCodCcosto").val(data.datos.memoCodCcosto);
 
+            $('#historial').show();
             $("#listaHistorial").html(""); 
+            var totalHistorial = data.datos.mem_estados.length;
+            $("#totalHist").html("");
+            $("#totalHist").html(totalHistorial);
+            
             for(var i=0; i<data.datos.mem_estados.length;i++){
                 console.log('id: ' + data.datos.mem_estados[i].estado_id + ' Estado Tipo: ' + data.datos.mem_estados[i].estado_tipo);
                 
@@ -409,6 +415,7 @@
     $(document).ready(function(){
         function inicio(){
             $(".help-block").hide();
+            $('#historial').hide();
         }
 
         $("#memoFecha").focusout(function(){

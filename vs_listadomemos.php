@@ -38,7 +38,7 @@ if($_SESSION["autentica"] != "SIP"){
     <div class="container" style="margin-top:50px"> 
         <div class="row"> 
             <div class="col-md-12 ">
-                <center><h2>Listado Memos <span class="badge" id="totalmemos"></span></h2><span class="badge" id="totalmemos"></span></center><br><br>
+                <center><h2>Listado Memos <span class="badge" id="totalmemos"></span></h2></center><br><br>
                 <form id="contact-form" method="post" action="#" role="form">
                     <div class="row">
                         <div class="col-md-4">
