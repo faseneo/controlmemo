@@ -76,20 +76,23 @@ if(isset($_REQUEST['Accion'])){
 
         case 'valida':
             //var_dump($_SESSION);
-                $rut=$_REQUEST['formRut'];
-                $pass=$_REQUEST['formPass'];
+            $rut=$_REQUEST['formRut'];
+            $pass=$_REQUEST['formPass'];
             $jsondata = $modelUsu->Valida($_REQUEST['formRut'],$_REQUEST['formPass']);
-
-            
             header ("Location: ../principal.php");
-
             //var_dump($jsondata);
             /*if($jsondata){
-
             }*/
             //header('Content-type: application/json; charset=utf-8');
             //echo json_encode($jsondata);
             break;           
+
+        case 'addperfil':
+         ///var_dump($_REQUEST);
+            $jsondata = $modelUsu->RegistrarPerfiles($_REQUEST['idUsu'],$_REQUEST['usuPerfiles']);
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);            
+            break;
     }
 }
 

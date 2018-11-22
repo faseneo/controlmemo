@@ -5,6 +5,7 @@ ini_set('display_errors', '1');
 require_once("../config/config.php");
 require_once("../modelo/logs/modelologs.php");
 require_once("../modelo/logs/modelologsquerys.php");
+
 class ModelUsuarios{
     private $pdo;
 
@@ -95,8 +96,7 @@ class ModelUsuarios{
     public function Obtener($id){
         $jsonresponse = array();
         try{
-            $stm = $this->pdo
-                       ->prepare("SELECT  us.usuario_id,
+            $stm = $this->pdo->prepare("SELECT  us.usuario_id,
                                                 us.usuario_rut,
                                                 us.usuario_nombre,
                                                 us.usuario_password,
@@ -118,6 +118,10 @@ class ModelUsuarios{
                     $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                     $busq->__SET('usu_estado_id',   $r->usuario_estado);
                     $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
+
+                    $arrayperfiles = $this->ObtenerPerfilesUsuaro($id);
+                            $busq->__SET('usu_perfiles', $arrayperfiles['datos']);
+
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Se obtuvo los usuarios correctamente';
             $jsonresponse['datos'] = $busq->returnArray();
@@ -126,6 +130,50 @@ class ModelUsuarios{
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al obtener usuarios';             
         }
+        return $jsonresponse;
+    }
+
+    public function ObtenerPerfilesUsuaro($idusu){
+        try{
+            $consulta = "SELECT COUNT(*) FROM usu_perfiles where usu_perfiles_usuario_id = ".$idusu;
+            $res = $this->pdo->query($consulta);
+            if ($res->fetchColumn() == 0) {
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Usuario No tiene asignado perfiles';
+                $jsonresponse['datos'] = [];
+            }else{
+              $stm = $this->pdo->prepare("SELECT  pe.perfiles_id,
+                                                  pe.perfiles_nombre,
+                                                  up.usu_perfiles_fecha
+                                          FROM usu_perfiles as up, 
+                                               perfiles as pe
+                                          WHERE pe.perfiles_id = up.usu_perfiles_perfiles_id
+                                          AND usu_perfiles_usuario_id = ?");
+
+              $stm->execute(array($idusu));
+                foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                    $fila = array('perf_id'=>$r->perfiles_id,
+                                  'perf_nombre'=>$r->perfiles_nombre,
+                                  'usuperfil_fecha'=>$r->usu_perfiles_fecha);
+                    $result[]=$fila;
+                }
+
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Listado perfiles por usuario';
+                $jsonresponse['datos'] = $result;
+
+              $stm=null;
+            }
+            $res=null;
+        }catch (Exception $Exception){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al obtener perfiles';
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;
+        }
+        $this->pdo=null;
         return $jsonresponse;
     }
 
@@ -167,6 +215,37 @@ class ModelUsuarios{
             $jsonresponse['errorQuery'] = $pdoException->getMessage();
             var_dump($jsonresponse);
         }
+        return $jsonresponse;
+    }
+
+    public function RegistrarPerfiles($idusu , $perfiles){
+        $jsonresponse = array();
+        try{
+            $consulta = "SELECT COUNT(*) FROM usu_perfiles where usu_perfiles_usuario_id = ".$idusu;
+            $res = $this->pdo->query($consulta);
+
+            if ($res->fetchColumn() <> 0) {
+                $sql0 = "DELETE FROM usu_perfiles WHERE usu_perfiles_usuario_id = ?";
+                $this->pdo->prepare($sql0)->execute(array($idusu));
+            }
+               foreach ($perfiles as $perfilid) {
+                    $sql = "INSERT INTO usu_perfiles (usu_perfiles_usuario_id, usu_perfiles_perfiles_id) VALUES (?,?)";
+                    $this->pdo->prepare($sql)->execute(array($idusu,$perfilid));
+                }
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Ingresado correctamente';
+                $jsonresponse['datos'] = [];
+            $res=null;
+
+        }catch (Exception $Exception){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al ingresar perfil(es)';
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;
+        }
+        $this->pdo=null;
         return $jsonresponse;
     }
 

@@ -9,6 +9,7 @@ class Usuarios{
 	private $usu_rol_nombre;
     private $usu_estado_id;
     private $usu_fecha_ing;
+    private $usu_perfiles=array();
 
     public function __GET($k){
         return $this->$k;

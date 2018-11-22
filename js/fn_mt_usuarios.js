@@ -3,9 +3,21 @@
             document.getElementById('guardar-usuario').style.display = 'none';
             document.getElementById('actualizar-usuario').style.display = 'none';
         }
+        function deshabilitabotonesPerfil(){
+            document.getElementById('editar-perfil').style.display = 'none';
+            document.getElementById('guardar-perfil').style.display = 'none';
+            document.getElementById('actualizar-perfil').style.display = 'none';
+        }
+
         function limpiaform(){
             $('#formUsuario')[0].reset();
-        }        
+            $('#msgPerfil').hide();
+        }
+
+        function limpiaformperfil(){
+            $('#formPerfil')[0].reset();
+        }
+
         function habilitaform(){
             $("#usuId").prop( "disabled", false );
             $("#usuRut").prop( "disabled", false );
@@ -14,6 +26,7 @@
 			$("#usuRolId").prop( "disabled", false );
 			$("#usuEstadoId").prop( "disabled", false);
         }
+
         function deshabilitaform(){
             $("#usuId").prop( "disabled", true );
             $("#usuRut").prop( "disabled", true );
@@ -22,6 +35,15 @@
             $("#usuRolId").prop( "disabled", true );
             $("#usuEstadoId").prop( "disabled", true);
         }
+
+        function habilitaformPerfil(){
+            $("#usuPerfiles").prop( "disabled", false);
+        }
+
+        function deshabilitaformPerfil(){
+            $("#usuPerfiles").prop( "disabled", true);
+        }  
+
 		function getlistaroles(){
             var datax = {
                 "Accion":"listar"
@@ -35,14 +57,14 @@
             .done(function( data, textStatus, jqXHR ) {
                 $("#usuRolId").html("");
                 if ( console && console.log ) {
-                    console.log( " data success : "+ data.success 
+                    console.log( " data success Roles : "+ data.success 
                         + " \n data msg : "+ data.message 
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
                 //$("#usuRolId").append('<option value="0">Seleccionar...</option>');
                 for(var i=0; i<data.datos.length;i++){
-                    console.log('id: '+data.datos[i].usuario_rol_id + ' nombre: '+data.datos[i].usuario_rol_nombre);
+                    //console.log('id: '+data.datos[i].usuario_rol_id + ' nombre: '+data.datos[i].usuario_rol_nombre);
                     opcion = '<option value='+ data.datos[i].usuario_rol_id +'>'+data.datos[i].usuario_rol_nombre+'</option>';
                     $("#usuRolId").append(opcion);
                 }
@@ -56,12 +78,51 @@
                 }
             });
         }
+
+        function getlistaPrefiles(){
+            var datax = {
+                "Accion":"listar"
+            }
+            $.ajax({
+                data: datax, 
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerperfil.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                $("#usuPerfiles").html("");
+                if ( console && console.log ) {
+                    console.log( " data success Perfil: "+ data.success 
+                        + " \n data msg : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+                for(var i=0; i<data.datos.length;i++){
+                    //console.log('id: '+data.datos[i].perf_id + ' nombre: '+data.datos[i].perf_nombre);
+                    opcion = '<option value='+ data.datos[i].perf_id +'>'+data.datos[i].perf_nombre+'</option>';
+                    $("#usuPerfiles").append(opcion);
+                }                
+
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+        }
+
     getlistaroles();
+    getlistaPrefiles();
+
     $(document).ready(function(){
-        function validarFormulario(){   
+        function validarFormulario(){
             var txtRut = document.getElementById('usuRut').value;
             var txtNombre = document.getElementById('usuNombre').value;
 			var txtPass = document.getElementById('usuPass').value;
+            var selRol = document.getElementById('usuRolId').selectedIndex;
                 //Test campo obligatorio
                 if(txtRut == null || txtRut.length == 0 || /^\s+$/.test(txtRut)){
                     alert('ERROR: El campo rut no debe ir vacío o con espacios en blanco');
@@ -79,9 +140,24 @@
                     return false;
                 }                 
             return true;
-        }         
+        }
+        function validarFormularioPerfil(){
+            var selPer = document.getElementById('usuPerfiles').selectedIndex;
+            //valida seleccion un perfil
+            if( selPer == null || isNaN(selPer) || selPer == -1 ) {
+                $('#usuPerfiles').parent().attr('class','form-group has-error');
+                $('#usuPerfiles').parent().children('span').text('Debe seleccionar Perfil para el usuario').show();
+                document.getElementById('usuPerfiles').focus();
+                return false;                
+            }else{
+                $('#usuPerfiles').parent().attr('class','form-group has-success');
+                $('#usuPerfiles').parent().children('span').text('').hide();
+            }                 
+            return true;
+        }
 		 
-        deshabilitabotones();
+        /*deshabilitabotones();
+        deshabilitabotonesPerfil();*/
         //funcion para listar los cecostos
         var getlista = function (){
             var datax = {
@@ -96,7 +172,7 @@
             .done(function( data, textStatus, jqXHR ) {
                 $("#listausuario").html("");
                 if ( console && console.log ) {
-                    console.log( " data success : "+ data.success 
+                    console.log( " data success Usuarios : "+ data.success 
                         + " \n data msg : "+ data.message 
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
@@ -118,7 +194,7 @@
                             break;
                     }
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
-                                console.log('id: '+data.datos[i].usu_id + ' rut: '+data.datos[i].usu_rut + ' nombre: '+data.datos[i].usu_nombre + ' rol: '+data.datos[i].usu_rol_nombre + ' password: '+data.datos[i].usu_password);
+                                //console.log('id: '+data.datos[i].usu_id + ' rut: '+data.datos[i].usu_rut + ' nombre: '+data.datos[i].usu_nombre + ' rol: '+data.datos[i].usu_rol_nombre);
 
                                 fila = '<tr><td>'+ data.datos[i].usu_rut +'</td>';
                                 fila += '<td>'+ data.datos[i].usu_nombre +'</td>';
@@ -128,10 +204,16 @@
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
                                 fila += ' onclick="verUsuario(\'ver\',\'' + data.datos[i].usu_id + '\')">';
                                 fila += 'Ver / Editar</button>';
-                                fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
-                                fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                                fila += 'onclick="deleteUsuario(\''+ data.datos[i].usu_id +'\',\'' + data.datos[i].usu_rut +'\',\''
-                                + data.datos[i].usu_nombre +'\')">';
+                                // Solo admin deberia ver este boton
+                                    fila += ' <button id="ver-usuario" type="button" '
+                                    fila += 'class="btn btn-xs btn-info" data-toggle="modal" data-target="#myModalPerfil"'
+                                    fila += ' onclick="verUsuario(\'perf\',\'' + data.datos[i].usu_id + '\')">';
+                                    fila += 'Perfil</button>';
+                                // Solo admin deberia ver este boton
+                                    fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
+                                    fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
+                                    fila += 'onclick="deleteUsuario(\''+ data.datos[i].usu_id +'\',\'' + data.datos[i].usu_rut +'\',\''
+                                    + data.datos[i].usu_nombre +'\')">';
                                 fila += 'Eliminar</button></td>';
                                 fila += '</tr>';
                                 $("#listausuario").append(fila);
@@ -213,7 +295,6 @@
             $('#actualizar-usuario').show();
             $("#Accion").val("actualizar");               
         });
-
         //  envia los nuevos datos para actualizar
         $("#actualizar-usuario").click(function(e){
                     // Detenemos el comportamiento normal del evento click sobre el elemento clicado
@@ -256,19 +337,18 @@
                             }
                         });                        
                     }
-                });
+        });
         // Envia los datos para eliminar
         $("#eliminar-usuario").click(function(e){
             e.preventDefault();
-            console.log("paso");
-            var datax = $("#formDeleteUsuario").serializeArray();
-
-            console.log("paso2");
-
-                    $.each(datax, function(i, field){
+            var usuId = document.getElementById('id').value;
+                var datax = {
+                    "Accion":"eliminar",
+                    "usuId":usuId
+                }
+                    /*$.each(datax, function(i, field){
                         console.log("contenido del form = "+ field.name + ":" + field.value + " ");
-                    });
-                console.log("paso3");
+                    });*/
                     $.ajax({
                         data: datax, 
                         type: "POST",
@@ -301,7 +381,108 @@
                         }
                     });
                 });
+
+        $("#guardar-perfil").click(function(e){
+            e.preventDefault();
+            if(validarFormularioPerfil()==true){
+                var datax = $("#formPerfil").serializeArray();
+                var accion={name:"Accion",value:"addperfil"};
+                datax.push(accion);
+
+                $.each(datax, function(i, field){
+                    console.log("contenido del form = "+ field.name + ":" + field.value + " ");
+                });
+
+                $.ajax({
+                    data: datax, 
+                    type: "POST",
+                    dataType: "json", 
+                    url: "controllers/controllerusuario.php", 
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    if ( console && console.log ) {
+                        console.log( " data success : "+ data.success 
+                            + " \n data msg : "+ data.message 
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                    $('#myModalPerfil').modal('hide');
+                    $('#myModalLittle').modal('show');
+                    $('#myModalLittle').on('shown.bs.modal', function () {
+                        var modal2 = $(this);
+                        modal2.find('.modal-title').text('Mensaje del Servidor');
+                        modal2.find('.msg').text(data.message);  
+                        $('#cerrarModalLittle').focus();
+                    });
+                    getlista();  
+                    deshabilitabotones();
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    if ( console && console.log ) {
+                        console.log( " La solicitud ha fallado,  textStatus : " +  textStatus 
+                            + " \n errorThrown : "+ errorThrown
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                });
+            }
+        });
+
+        $("#editar-perfil").click(function(e){
+            e.preventDefault();
+            $('.modal-title-form').text('Editar Perfil');
+            habilitaformPerfil();
+            deshabilitabotonesPerfil();
+            $('#actualizar-perfil').show();
+            $("#Accion").val("actualizar");               
+        });        
+        $("#actualizar-perfil").click(function(e){
+                    // Detenemos el comportamiento normal del evento click sobre el elemento clicado
+                    e.preventDefault();
+                    if(validarFormulario()==true){
+                        var datax = $("#formPerfil").serializeArray();
+                        var accion={name:"Accion",value:"addperfil"};
+                        datax.push(accion);
+
+                        $.each(datax, function(i, field){
+                            console.log("contenido del form = "+ field.name + ":" + field.value + " ");
+                        });
+                        $.ajax({
+                            data: datax,    // En data se puede utilizar un objeto JSON, un array o un query string
+                            type: "POST",   //Cambiar a type: POST si necesario
+                            dataType: "json",  // Formato de datos que se espera en la respuesta
+                            url: "controllers/controllerusuario.php",  // URL a la que se enviará la solicitud Ajax
+                        })
+                        .done(function( data, textStatus, jqXHR ) {
+                            if ( console && console.log ) {
+                                console.log( " data success : "+ data.success 
+                                    + " \n data msg : "+ data.message 
+                                    + " \n textStatus : " + textStatus
+                                    + " \n jqXHR.status : " + jqXHR.status );
+                            }
+                            $('#myModalPerfil').modal('hide');
+                            $('#myModalLittle').modal('show');
+                            $('#myModalLittle').on('shown.bs.modal', function () {
+                                var modal2 = $(this);
+                                modal2.find('.modal-title').text('Mensaje');
+                                modal2.find('.msg').text(data.message);
+                                $('#cerrarModalLittle').focus();                                
+                            });
+                            getlista();
+                            deshabilitabotones();
+                        })
+                        .fail(function( jqXHR, textStatus, errorThrown ) {
+                            if ( console && console.log ) {
+                                console.log( " La solicitud ha fallado,  textStatus : " +  textStatus 
+                                    + " \n errorThrown : "+ errorThrown
+                                    + " \n textStatus : " + textStatus
+                                    + " \n jqXHR.status : " + jqXHR.status );
+                            }
+                        });                        
+                    }
+        });
         deshabilitabotones();
+        deshabilitabotonesPerfil();
         getlista();
     });
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
@@ -310,6 +491,7 @@
 		//deshabilitaform();
         //deshabilitabotones();
 		//getlistaroles();
+        limpiaformperfil(); 
         var datay = {"usuId": usuid,
                      "Accion":"obtener"
                     };
@@ -334,22 +516,55 @@
 			$("#usuRolId").val(data.datos.usu_rol_id).prop('selected',true);
             $("#usuEstadoId").val(data.datos.usu_estado_id).prop('selected',true);
 
-            deshabilitaform();
-            $("#Accion").val(action);
-
-            $('#myModal').on('shown.bs.modal', function () {
-                var modal = $(this);
-                if (action === 'actualizar'){
-                    modal.find('.modal-title-form').text('Actualizar Usuario');
-                    $('#guardar-usuario').hide();                    
-                    $('#actualizar-usuario').show();   
-                }else if (action === 'ver'){
-                    modal.find('.modal-title-form').text('Datos Usuario');
-                    deshabilitabotones();
-                    $('#editar-usuario').show();   
+            if(data.datos.usu_perfiles.length==0){
+                $("#msgPerfil").removeClass("alert-success");
+                $("#msgPerfil").addClass("alert-danger");
+                $('#msgPerfil').show();
+                $("#msgPerfil").text('Este usuario aun no tiene perfil asignado');
+            }else{
+                $('#msgPerfil').show();
+                $("#msgPerfil").removeClass("alert-danger");
+                $("#msgPerfil").addClass("alert-success");
+                var selPer = document.getElementById('usuPerfiles');
+                perfiles="";
+                for(var i=0; i<data.datos.usu_perfiles.length; i++){
+                    perfiles += data.datos.usu_perfiles[i].perf_nombre + ', ';
+                    selPer[(data.datos.usu_perfiles[i].perf_id-1)].selected = true;
                 }
+                    perfiles = perfiles.trim();
+                    perfiles = perfiles.slice(0, -1);
+                    $("#msgPerfil").text(perfiles);
+            }
+                $("#idUsu").val(data.datos.usu_id);
+                $("#rutUsu").val(data.datos.usu_rut);
+                $("#nomUsu").val(data.datos.usu_nombre);
+                $("#rolUsu").val(data.datos.usu_rol_nombre);
 
-            });
+
+            if(action=='ver'){
+                $("#Accion").val(action);
+                $('#myModal').on('shown.bs.modal', function () {
+                    var modal = $(this);
+                        modal.find('.modal-title-form').text('Datos Usuario');
+                        deshabilitaform();
+                        deshabilitabotones();
+                        $('#editar-usuario').show();   
+                });
+            }else if(action=='perf'){
+                $('#myModalPerfil').on('shown.bs.modal', function () {
+                    var modal = $(this);
+                        modal.find('.modal-title-form').text('Datos Perfil Usuario');
+                        deshabilitabotonesPerfil();
+                        if(data.datos.usu_perfiles.length==0){
+                            habilitaformPerfil();
+                            $('#guardar-perfil').show();   
+                        }else{
+                            deshabilitaformPerfil();
+                            $('#guardar-perfil').hide();
+                            $('#editar-perfil').show();                            
+                        }
+                });
+            }
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -361,10 +576,10 @@
         });
     }
     // Funcion que levanta modal para eliminar centro de costo 
-    function deleteUsuario(idusu, nameUsu){     
-        document.formDeleteUsuario.usuId.value = idusu;
+    function deleteUsuario(idusu, rut, nameUsu){     
+        document.formDeleteUsuario.id.value = idusu;
         document.formDeleteUsuario.nameUsu.value = nameUsu;
-        document.formDeleteUsuario.Accion.value = "eliminar";
+        //document.formDeleteUsuario.Accion.value = "eliminar";
         $('#myModalDelete').on('shown.bs.modal', function () {
             $('#myInput').focus()
         });
