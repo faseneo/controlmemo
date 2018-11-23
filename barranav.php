@@ -22,8 +22,31 @@
 					if($rol==1 || $rol==2 || $rol==3 || $rol==4){
 				?>
 					<li><a href="principal.php">Buscador</a></li>
-					<li><a href="vs_ingresomemo.php">Ingreso Memo</a></li>
-					<li><a href="vs_listadomemos.php">Listado</a></li>
+					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Memo<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="vs_ingresomemo.php">Ingreso Memo</a></li>
+								<?php 
+									if($rol<>4){
+								?>
+									<li><a href="vs_detallememo.php">Ingreso Detalle Memo</a></li>
+									<?php 
+										}
+									?>
+						</ul>
+					</li>
+					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Listados<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="vs_listadomemos.php">Listado</a></li>
+								<?php 
+									if($rol<>3 && $rol<>4){
+								?>
+									<li><a href="vs_listadomemoasigna.php">Listado Asignaciones</a></li>
+									<?php 
+										}
+									?>
+						</ul>
+					</li>
+					
 				<?php 
 					}
 				?>
@@ -61,7 +84,7 @@
 				?>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#">Bienvend@ <?php echo $nombre; ?></a></li>
+				<li><a href="#">Bienvend@ <?php echo $nombre.' - '.$rol; ?></a></li>
 				<li><a href="vistacambiocontr.php">Cambiar contraseña</a></li>
 				<li><a href="salir.php">Logout</a></li>
 				<!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span>Registrarse</a></li> -->

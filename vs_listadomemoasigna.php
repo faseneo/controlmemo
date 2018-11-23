@@ -11,7 +11,7 @@ if($_SESSION["autentica"] != "SIP"){
     <?php include "header.php"; ?>
     <title>Listado Memos</title>
     <script src="js/globalfn.js"></script>    
-    <script src="js/fn_listadomemos.js"></script>
+    <script src="js/fn_listadomemoasigna.js"></script>
     <style type="text/css">
         .orden{
             cursor: pointer;
@@ -41,32 +41,32 @@ if($_SESSION["autentica"] != "SIP"){
                 <center><h2>Listado Memos <span class="badge" id="totalmemos"></span></h2></center><br><br>
                 <form id="contact-form" method="post" action="#" role="form">
                     <div class="row">
-<!--                         <div class="col-md-4">
-    <div class="form-group">  
-       <label for="usuario">Usuario</label>
-        <select name="usuario" id="usuario" class="form-control" >
-        </select>
-        <div class="help-block with-errors"></div>
-    </div>
-</div>
+                        <div class="col-md-4">
+                            <div class="form-group">  
+                               <label for="usuario">Usuario</label>
+                                <select name="usuario" id="usuario" class="form-control" >
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
 
-<div class="col-md-2">
-    <div class="form-group">  
-       <label for="rolUsuario">Rol</label>
-        <input type="text" name="rolUsuario" id="rolUsuario" class="form-control" readonly />
-        
-        <div class="help-block with-errors"></div>
-    </div>
-</div>
+                        <div class="col-md-2">
+                            <div class="form-group">  
+                               <label for="rolUsuario">Rol</label>
+                                <input type="text" name="rolUsuario" id="rolUsuario" class="form-control" readonly />
+                                
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
 
-<div class="col-md-3">
-     <div class="form-group">
-        <label for="memoSeccion">Sección</label>  
-        <select name="memoSeccion" id="memoSeccion" class="form-control">
-        </select>
-        <div class="help-block with-errors"></div>
-    </div>
-</div> -->
+                        <div class="col-md-3">
+                             <div class="form-group">
+                                <label for="memoSeccion">Sección</label>  
+                                <select name="memoSeccion" id="memoSeccion" class="form-control">
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
                         <div class="col-md-3">
                              <div class="form-group">
                                 <label for="memoEstado">Estado</label>  

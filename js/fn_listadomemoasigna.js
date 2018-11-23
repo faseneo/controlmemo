@@ -384,19 +384,18 @@
                         fila += '<td><button id="ver-memo" type="button" ';
                         fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"';
                         fila += ' onclick="verMemo(\'ver\',\'' + data.datos[i].mem_id + '\')">';
-                        fila += 'Ver / Editar</button>';
                         /*fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
                         fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
                         fila += 'onclick="deleteAnular(\''+ data.datos[i].mem_id +'\',\'' + data.datos[i].mem_anio +'\',\''
                                 + data.datos[i].mem_materia +'\')">';
                         fila += 'Anular</button>';*/
-                       /* if(data.datos[i].mem_estado_id!=5){*/
-                          /*  
+                        //if(data.datos[i].mem_estado_id!=5){
+                            fila += 'Ver / Editar</button>';
                             fila += ' <button id="Asignar" type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#myModalAsiganUsu"';
-                            fila += ' onclick="datosMemoAsigna(' + data.datos[i].mem_id + ')" >Asignar</button></td>';*/
+                            fila += ' onclick="datosMemoAsigna(' + data.datos[i].mem_id + ')" >Asignar</button></td>';
                         //}else{
-                            //fila += '&nbsp;&nbsp;Ver&nbsp;&nbsp;</button></td>';
-                        //}
+                        //    fila += '&nbsp;&nbsp;Ver&nbsp;&nbsp;</button></td>';
+                       // }
 
                         fila += '</tr>';
                         $("#listamemos").append(fila);

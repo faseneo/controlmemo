@@ -35,7 +35,7 @@ if($_SESSION["autentica"] != "SIP"){
     <div class="container" style="margin-top:50px">
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
-                <h2 class="text-center">Ingreso memo </h2>
+                <h2 class="text-center">Ingreso memo </h2><br>
                 <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" accept-charset="utf-8" role="form" data-toggle="validator">
                     <input type="hidden" name="memoId" id="memoId" value="" />
                     <input type="hidden" name="Accionmem" id="Accionmem" value="registrar" />
@@ -215,7 +215,7 @@ if($_SESSION["autentica"] != "SIP"){
                                 <span class="help-block"></span>
                             </div>                            
                         </div> -->
-                        <div class="col-md-4 col-md-offset-8">
+                        <div class="col-md-4 col-md-offset-8" style="text-align: right;">
                             <button id="editar-memo" name="editar-memo" type="button" class="btn btn-warning">Editar</button>
                             <button id="actualizar-memo" name="actualizar-memo" type="button" class="btn btn-primary">Actualizar</button>
                             <button id="grabar-memo" name="grabar-memo" type="button" class="btn btn-primary">Grabar</button>
