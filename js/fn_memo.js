@@ -2,7 +2,9 @@
         document.getElementById('editar-memo').style.display = 'none';
         document.getElementById('actualizar-memo').style.display = 'none';
         document.getElementById('grabar-memo').style.display = 'none';        
+        document.getElementById('agregar-det-memo').style.display = 'none';        
     }
+
     function deshabilitaform(){
         $("#memoFecha").prop( "disabled", true );
         $("#memoNum").prop( "disabled", true );
@@ -16,6 +18,7 @@
         $("#memoCcosto").prop( "disabled", true );
         $("#memoCodCcosto").prop( "disabled", true );      
     }
+
     function habilitaform(){
         $("#memoFecha").prop( "disabled", false );
         $("#memoNum").prop( "disabled", false );
@@ -28,7 +31,8 @@
         $("#memoDeptoDest").prop( "disabled", false );
         $("#memoCcosto").prop( "disabled", false );
         $("#memoCodCcosto").prop( "disabled", false );      
-    }    
+    }
+
     function limpiaFormMemo(){
         $('#formIngresoMemo')[0].reset();
         $("#listaArchivosMemo").html("");
@@ -361,6 +365,7 @@
             $("#totalHist").html("");
             $("#totalHist").html(totalHistorial);
             
+
             for(var i=0; i<data.datos.mem_estados.length;i++){
                 console.log('id: ' + data.datos.mem_estados[i].estado_id + ' Estado Tipo: ' + data.datos.mem_estados[i].estado_tipo);
                 
@@ -386,7 +391,9 @@
             deshabilitabotones();
             $('#editar-memo').show();
             $('#limpiar-memo').hide();
-            
+            $("#agregar-det-memo").show();
+            document.getElementById('agregar-det-memo').setAttribute('href','vs_detallememo.php?memId='+data.datos.mem_id);
+
 
             /*$("#Accion").val(action);
             $('#myModal').on('shown.bs.modal', function () {
@@ -466,11 +473,13 @@
             e.preventDefault();
             limpiaFormMemo();
         });
+
         $("#limpiar-archivo-memo").click(function(e){
             e.preventDefault();
             $('#memoFile').val(null);
             $("#archivoMemo").html("");
         });
+
         $("#limpiar-archivo").click(function(e){
             e.preventDefault();
             $('#memoFileList').val(null);
@@ -582,6 +591,8 @@
             }
         });
 
+
+        
         // Funcion que busca numero de resolucion y devuelve url ubicacion
         /*var buscaRes = function (){
             var datax = $("#formBusquedaRes").serializeArray();

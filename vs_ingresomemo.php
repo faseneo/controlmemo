@@ -71,30 +71,11 @@ if($_SESSION["autentica"] != "SIP"){
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="memoMateria">Asunto o Materia</label>
-                                <textarea name="memoMateria" id="memoMateria" class="form-control" rows="4"></textarea>
+                                <textarea name="memoMateria" id="memoMateria" class="form-control" rows="3"></textarea>
                                 <span class="help-block"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="memoCcosto">Centro de Costo</label>
-                                        <select name="memoCcosto" id="memoCcosto" class="form-control" required>
-                                        </select>
-                                        <span class="help-block"></span>
-                                    </div>    
-                                </div>                            
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="memoCodCcosto">Codigo Centro de Costo</label>
-                                        <input name="memoCodCcosto" id="memoCodCcosto" type="text" class="form-control" required>
-                                        <span class="help-block"></span>
-                                    </div>    
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -140,11 +121,14 @@ if($_SESSION["autentica"] != "SIP"){
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
                                             <a id="accord" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-                                                Agregar Archivos</a>
-                                                <a href="#" data-toggle="tooltip" title="Archivos que puede subir: pdf, jpg, png, doc, docx, xls, xlsx" data-content="pdf, jpg, png, doc, docx, xls, xlsx"><span class="glyphicon glyphicon-info-sign"></span></a>
-                                            </h4>
-                                        </div>
-                                        <div id="collapse1" class="panel-collapse collapse">
+                                                Agregar Archivos
+                                            </a>
+                                            <a href="#" data-toggle="tooltip" title="Archivos que puede subir: pdf, jpg, png, doc, docx, xls, xlsx" data-content="pdf, jpg, png, doc, docx, xls, xlsx">
+                                                <span class="glyphicon glyphicon-info-sign"></span>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse1" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <div class="row">
                                                     <div class="col-lg-6">
@@ -164,58 +148,45 @@ if($_SESSION["autentica"] != "SIP"){
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-lg-6">
-                                                     <div class="table-responsive">
-                                                         <table class="table table-striped">
-                                                             <thead>
-                                                                 <tr>
-                                                                     <th width="80%">Nombre Archivo</th>
-                                                                     <th width="10%">Tamaño</th>
-                                                                 </tr>
-                                                             </thead>
-                                                             <tbody id="archivoMemo">
-                                                             </tbody>
-                                                         </table>
-                                                     </div>
-                                                 </div>
-
-                                                 <div class="col-lg-6">
-                                                     <div class="table-responsive">
-                                                         <table class="table table-striped">
-                                                             <thead>
-                                                                 <tr>
-                                                                     <th width="80%">Nombre Archivo</th>
-                                                                     <th width="10%">Tamaño</th>
-                                                                 </tr>
-                                                             </thead>
-                                                             <tbody id="listaArchivosMemo">
-                                                             </tbody>
-                                                         </table>
-                                                     </div>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>                    
-                     <div class="row">
-                        <!-- <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="memoEstado">Estado</label>
-                                <select name="memoEstado" id="memoEstado" class="form-control">
-                                </select>
-                                <span class="help-block"></span>
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th width="80%">Nombre Archivo</th>
+                                                                        <th width="10%">Tamaño</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="archivoMemo">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th width="80%">Nombre Archivo</th>
+                                                                        <th width="10%">Tamaño</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="listaArchivosMemo">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-5">                            
-                            <div class="form-group">
-                                <label for="memoObservacion">Observación</label>
-                                <textarea name="memoObservacion" id="memoObservacion" class="form-control"></textarea>
-                                <span class="help-block"></span>
-                            </div>                            
-                        </div> -->
-                        <div class="col-md-4 col-md-offset-8" style="text-align: right;">
+                     </div>                    
+                     <div class="row">
+                        <div class="col-md-4">
+                            <a href="#" class="btn btn-primary" role="button" id="agregar-det-memo" >Agregar Detalle Memo</a>
+                        </div>
+                        <div class="col-md-4 col-md-offset-4" style="text-align: right;">
                             <button id="editar-memo" name="editar-memo" type="button" class="btn btn-warning">Editar</button>
                             <button id="actualizar-memo" name="actualizar-memo" type="button" class="btn btn-primary">Actualizar</button>
                             <button id="grabar-memo" name="grabar-memo" type="button" class="btn btn-primary">Grabar</button>
@@ -230,11 +201,14 @@ if($_SESSION["autentica"] != "SIP"){
         <br><br>
         <div class="row" id="historial">
             <div class="col-lg-10 col-lg-offset-1">
-                <div class="panel-group" id="accordion">
+                <div class="panel-group" id="accordion2">
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             <h4 class="panel-title">
-                                <a data-toggle="collapse" href="#collapse2">Historial Cambios Estados  <span class="badge" id="totalHist"></span></a>
+                                <a id="accord2" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">
+                                    Historial Cambios Estados 
+                                    <span class="badge" id="totalHist"></span>
+                                </a>
                             </h4>
                         </div>
                         <div id="collapse2" class="panel-collapse collapse">
@@ -260,9 +234,30 @@ if($_SESSION["autentica"] != "SIP"){
                 </div>
             </div>            
         </div>
-    </div> <!-- /.container-->
 
-    <!-- Modal mensajes cortos-->
+    </div> <!-- /.container-->
+<!-- 
+<div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="memoCcosto">Centro de Costo</label>
+                                        <select name="memoCcosto" id="memoCcosto" class="form-control" required>
+                                        </select>
+                                        <span class="help-block"></span>
+                                    </div>    
+                                </div>                            
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="memoCodCcosto">Codigo Centro de Costo</label>
+                                        <input name="memoCodCcosto" id="memoCodCcosto" type="text" class="form-control" required>
+                                        <span class="help-block"></span>
+                                    </div>    
+                                </div>
+                            </div>
+                        </div>
+-->
+    <!-- Modal mensajes cortos por Ej: Mensaje Memo guardado -->
     <div class="modal fade" id="myModalLittle" tabindex="-1" role="dialog" aria-labelledby="myModalLittleLabel">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -278,7 +273,8 @@ if($_SESSION["autentica"] != "SIP"){
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
-    </div><!-- /.modal --> 
+    </div><!-- /.modal -->
+    <!-- Modal Animacin cargando en epsera por Ej. para  Mensaje Memo guardado -->
     <div class="modal fade" id="ModalCargando" tabindex="-1" role="dialog" aria-labelledby="ModalCargandoLabel">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
