@@ -74,6 +74,11 @@
 						<li><a href="mt_seccion.php">Sección</a></li>
 						<li><a href="mt_estadodetmemo.php">Estado Detalle Memo</a></li>
 						<li><a href="mt_memoestado.php">Estado Memos</a></li>
+
+						<li><a href="mt_menu.php">Menú</a></li>
+
+						<li><a href="mt_menuitem.php">Menú Item</a></li>
+
 						<li><a href="mt_estadoasignacion.php">Estado Asignacion Memos</a></li>
 						<li><a href="mt_asignadificultad.php">Dificultad Asignacion</a></li>
 						<li><a href="mt_asignaprioridad.php">Prioridad Asignacion</a></li>

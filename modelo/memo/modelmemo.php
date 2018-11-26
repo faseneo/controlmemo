@@ -12,7 +12,7 @@ require_once("../modelo/logs/modelologsquerys.php");
 
 class ModelMemo  {
     private $pdo;
-    public $jsonresponse = array();
+    //public $jsonresponse = array();
 
     public function __CONSTRUCT(){
         try{
@@ -98,9 +98,9 @@ ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
             $respuesta = $this->contarTotal($estadoid,$usuid);
             $tot_reg = (int)$respuesta['total'];
             if ($tot_reg == 0) {
-                $jsonresponse['success'] = true;
-                $jsonresponse['message'] = 'La búsqueda No arrojó elementos';                
-                $jsonresponse['datos'] = [];
+                $jsonresponsel['success'] = true;
+                $jsonresponsel['message'] = 'La búsqueda No arrojó elementos';                
+                $jsonresponsel['datos'] = [];
             }else{
               $result = array();
               $reginicio = ($compag-1) * $CantidadMostrar;
@@ -157,16 +157,16 @@ ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
               }
 
 
-              $jsonresponse['success'] = true;
-              $jsonresponse['message'] = 'listado correctamente los memos';
-              $jsonresponse['total'] = $totquery;
-              $jsonresponse['datos'] = $result;
+              $jsonresponsel['success'] = true;
+              $jsonresponsel['message'] = 'listado correctamente los memos';
+              $jsonresponsel['total'] = $totquery;
+              $jsonresponsel['datos'] = $result;
               $stm=null;
             }
             $res=null;
         } catch (PDOException $Exception){
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al listar Memos';
+            $jsonresponsel['success'] = false;
+            $jsonresponsel['message'] = 'Error al listar Memos';
             $logs = new modelologs();
             $trace = $Exception->getTraceAsString();
               $logs->GrabarLogs($Exception->getMessage(),$trace);
@@ -175,7 +175,7 @@ ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC
           $this->pdo=null;  
         }
         
-        return $jsonresponse;
+        return $jsonresponsel;
     }
     //cuenta total de memos en el sistema
     public function contarTotal($estadoid = 0, $usuid = 0){
