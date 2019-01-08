@@ -9,6 +9,10 @@ class Usuarios{
 	private $usu_rol_nombre;
     private $usu_estado_id;
     private $usu_fecha_ing;
+    private $usu_email;
+    private $usu_urlimg;
+    private $usu_sec_id;
+    private $usu_sec_nombre;
     private $usu_perfiles=array();
 
     public function __GET($k){
@@ -21,6 +25,6 @@ class Usuarios{
 
     public function returnArray(){
     	return get_object_vars($this);
-    }    
+    }
 }
 ?>

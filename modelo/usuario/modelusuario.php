@@ -29,9 +29,12 @@ class ModelUsuarios{
                                                 us.usuario_usu_rol_id,
 												us.usuario_estado,
                                                 us.usuario_fecha_ingreso,
-                                                ur.usu_rol_nombre
-                                        FROM usuario as us ,usuario_rol as ur
-										WHERE us.usuario_usu_rol_id= ur.usu_rol_id ");
+                                                ur.usu_rol_nombre,
+                                                us.usuario_seccion_id,
+                                                sec.seccion_nombre
+                                        FROM usuario as us ,usuario_rol as ur, seccion as sec
+										WHERE us.usuario_usu_rol_id= ur.usu_rol_id AND sec.seccion_id = us.usuario_seccion_id 
+                                        ORDER BY us.usuario_usu_rol_id ASC");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new Usuarios(); 
@@ -41,6 +44,8 @@ class ModelUsuarios{
                     $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                     $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
 					$busq->__SET('usu_estado_id',   $r->usuario_estado);
+                    $busq->__SET('usu_sec_id',      $r->usuario_seccion_id);
+                    $busq->__SET('usu_sec_nombre',  $r->seccion_nombre);                         
                     $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
                 $result[] = $busq->returnArray();
             }
@@ -66,9 +71,12 @@ class ModelUsuarios{
                                                 us.usuario_usu_rol_id,
                                                 us.usuario_estado,
                                                 us.usuario_fecha_ingreso,
-                                                ur.usu_rol_nombre
-                                        FROM usuario as us ,usuario_rol as ur
-                                        WHERE us.usuario_usu_rol_id= ur.usu_rol_id AND  ur.usu_rol_id = ?");
+                                                ur.usu_rol_nombre,
+                                                us.usuario_seccion_id,
+                                                sec.seccion_nombre
+                                        FROM usuario as us ,usuario_rol as ur, seccion as sec
+                                        WHERE us.usuario_usu_rol_id= ur.usu_rol_id AND sec.seccion_id = us.usuario_seccion_id
+                                        AND  ur.usu_rol_id = ?");
             
             $stm->execute(array($rolid));
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
@@ -79,6 +87,8 @@ class ModelUsuarios{
                     $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                     $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                     $busq->__SET('usu_estado_id',   $r->usuario_estado);
+                    $busq->__SET('usu_sec_id',      $r->usuario_seccion_id);
+                    $busq->__SET('usu_sec_nombre',  $r->seccion_nombre);
                     $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
                 $result[] = $busq->returnArray();
             }
@@ -149,7 +159,6 @@ class ModelUsuarios{
                                                perfiles as pe
                                           WHERE pe.perfiles_id = up.usu_perfiles_perfiles_id
                                           AND usu_perfiles_usuario_id = ?");
-
               $stm->execute(array($idusu));
                 foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                     $fila = array('perf_id'=>$r->perfiles_id,
@@ -332,9 +341,11 @@ class ModelUsuarios{
                                                     us.usuario_usu_rol_id,
                                                     us.usuario_estado,
                                                     us.usuario_fecha_ingreso,
-                                                    ur.usu_rol_nombre
-                                            FROM usuario as us ,usuario_rol as ur
-                                            WHERE us.usuario_usu_rol_id= ur.usu_rol_id
+                                                    ur.usu_rol_nombre,
+                                                    us.usuario_seccion_id,
+                                                    sec.seccion_nombre
+                                            FROM usuario as us ,usuario_rol as ur, seccion as sec
+                                            WHERE us.usuario_usu_rol_id= ur.usu_rol_id AND sec.seccion_id = us.usuario_seccion_id
                                             AND us.usuario_rut = ? AND us.usuario_password = ?");
                 $stm->execute(array($rut,$pass));
                 $r = $stm->fetch(PDO::FETCH_OBJ);
@@ -347,7 +358,11 @@ class ModelUsuarios{
                         $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                         $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                         $busq->__SET('usu_estado_id',   $r->usuario_estado);
+                        $busq->__SET('usu_sec_id',      $r->usuario_seccion_id);
+                        $busq->__SET('usu_sec_nombre',  $r->seccion_nombre);
                         $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
+                        $arrayperfiles = $this->ObtenerPerfilesUsuaro($r->usuario_id);
+                            $busq->__SET('usu_perfiles', $arrayperfiles['datos']);
                 
                 $result = $busq->returnArray();
                 
@@ -356,6 +371,7 @@ class ModelUsuarios{
                    $_SESSION["rut"] = $r->usuario_rut;
                    $_SESSION["nombre"] = $r->usuario_nombre;
                    $_SESSION["rol"] = $r->usuario_usu_rol_id;
+                   $_SESSION["sec"] = $r->usuario_seccion_id;
                    $_SESSION["datos"] = $result;
 
                 $jsonresponse['success'] = true;

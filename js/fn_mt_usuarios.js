@@ -199,6 +199,7 @@
                                 fila = '<tr><td>'+ data.datos[i].usu_rut +'</td>';
                                 fila += '<td>'+ data.datos[i].usu_nombre +'</td>';
 								fila += '<td>'+ data.datos[i].usu_rol_nombre +'</td>';
+                                fila += '<td>'+ data.datos[i].usu_sec_nombre +'</td>';
                                 fila += '<td>'+ estadonombre +'</td>';
                                 fila += '<td><button id="ver-usuario" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'

@@ -3,6 +3,7 @@
  $rut = $_SESSION["rut"];
  $rol = $_SESSION["rol"];
  $nombre = $_SESSION["nombre"];
+ $rolnom = $_SESSION["datos"]["usu_rol_nombre"];
  // 1_admin, 2_super, 3_analisa, 4_secre, 5_gestion
 ?>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -26,7 +27,7 @@
 						<ul class="dropdown-menu">
 							<li><a href="vs_ingresomemo.php">Ingreso Memo</a></li>
 								<?php 
-									if($rol<>4){
+									if($rol<>4 && $rol<>6 && $rol<>7){
 								?>
 									<li><a href="vs_detallememo.php">Ingreso Detalle Memo</a></li>
 									<?php 
@@ -38,7 +39,7 @@
 						<ul class="dropdown-menu">
 							<li><a href="vs_listadomemos.php">Listado</a></li>
 								<?php 
-									if($rol<>3 && $rol<>4){
+									if($rol==1 && $rol==2){
 								?>
 									<li><a href="vs_listadomemoasigna.php">Listado Asignaciones</a></li>
 									<?php 
@@ -89,7 +90,7 @@
 				?>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#">Bienvend@ <?php echo $nombre.' - '.$rol; ?></a></li>
+				<li><a href="#">Bienvend@ <?php echo $nombre.' - '.$rolnom; ?></a></li>
 				<li><a href="vistacambiocontr.php">Cambiar contraseña</a></li>
 				<li><a href="salir.php">Logout</a></li>
 				<!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span>Registrarse</a></li> -->

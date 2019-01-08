@@ -51,7 +51,7 @@ if(isset($_REQUEST['Accion'])){
             echo json_encode($jsondata);
             break;
         case 'listarmin':
-            $jsondata = $modelMEst->ListarMin();
+            $jsondata = $modelMEst->ListarMin($_REQUEST['seccion']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            
