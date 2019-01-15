@@ -21,6 +21,9 @@ if($_SESSION["autentica"] != "SIP"){
     </style>
     <script>
     <?php 
+        $sec = $_SESSION["sec"];
+                echo "sec=".$sec.";";
+
         if(isset($_REQUEST['memId'])){
             echo "var memId=".$_REQUEST['memId'].";";
         }
@@ -185,6 +188,9 @@ if($_SESSION["autentica"] != "SIP"){
                      <div class="row">
                         <div class="col-md-4">
                             <a href="#" class="btn btn-primary" role="button" id="agregar-det-memo" >Agregar Detalle Memo</a>
+                            <button type="button" id="cambiaestado" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                                Cambiar Estado
+                            </button>
                         </div>
                         <div class="col-md-4 col-md-offset-4" style="text-align: right;">
                             <button id="editar-memo" name="editar-memo" type="button" class="btn btn-warning">Editar</button>
@@ -257,6 +263,41 @@ if($_SESSION["autentica"] != "SIP"){
                             </div>
                         </div>
 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title-form" id="myModalLabel">Cambio Estado</h4>
+                </div>
+                <form role="form" name="formcambioestado" id="formcambioestado" method="post" action="">
+                    <input type="hidden" name="Accion" id="Accion" value="cambiaestado" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="memoEstado">Estado</label>
+                            <select name="memoEstado" id="memoEstado" class="form-control"></select>
+                        </div>                    
+                        <div class="form-group">
+                            <label for="ccCodigo">Código</label>
+                            <input id="ccCodigo" name="ccCodigo" class="form-control" rows="3"  title="Ingrese una Codigo" />
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="ccNombre">Nombre Centro de Costos</label>
+                            <input id="ccNombre" class="form-control" type="text" name="ccNombre" value="" title="Ingrese un nombre" required />
+                        </div> -->
+                        <div class="form-group">
+                            <label for="observaciones">Observacion</label>
+                            <textarea class="form-control" rows="5" id="observaciones" name="observaciones"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="guardar-estado" name="guardar-estado" type="button" class="btn btn-primary">Guardar</button>
+                        <button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <!-- Modal mensajes cortos por Ej: Mensaje Memo guardado -->
     <div class="modal fade" id="myModalLittle" tabindex="-1" role="dialog" aria-labelledby="myModalLittleLabel">
         <div class="modal-dialog">

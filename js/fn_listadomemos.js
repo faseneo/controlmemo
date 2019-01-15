@@ -143,15 +143,15 @@
                         incrementotest++;
                         fila = '<tr><td>'+ data.datos[i].mem_anio + '-' + data.datos[i].mem_numero + '</td>';
                         fila += '<td>'+ data.datos[i].mem_fecha +'</td>';
-                        fila += '<td><a href="vs_ingresomemo.php?memId=' + data.datos[i].mem_id + '" data-toggle="tooltip" title="' + data.datos[i].mem_materia + '">'+ materia +'</a></td>';
+                        fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_materia + '">'+ materia +'</a></td>';
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_depto_dest_nom + '">' + depto  + '</a></td>'
                         
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_estado_fechamod + '">' + data.datos[i].mem_estado_nombre + '</a></td>'
 
-                        fila += '<td><button id="ver-memo" type="button" ';
-                        fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"';
-                        fila += ' onclick="verMemo(\'ver\',\'' + data.datos[i].mem_id + '\')">';
-                        fila += 'Ver / Editar</button>';
+                        fila += '<td><a  href="vs_ingresomemo.php?memId=' + data.datos[i].mem_id + '"';
+                        fila += ' class="btn btn-xs btn-success" ';
+                        fila += ' role="button id="ver-memo">';
+                        fila += 'Ver / Editar</a>';
                         /*fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
                         fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
                         fila += 'onclick="deleteAnular(\''+ data.datos[i].mem_id +'\',\'' + data.datos[i].mem_anio +'\',\''
