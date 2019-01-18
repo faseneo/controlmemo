@@ -37,9 +37,6 @@ if(isset($_REQUEST['Accionmem'])){
             $memo->__SET('mem_depto_sol_id',    $_REQUEST['memoDeptoSol']);
             $memo->__SET('mem_nom_dest',        $_REQUEST['memoNombreDest']);
             $memo->__SET('mem_depto_dest_id',   $_REQUEST['memoDeptoDest']);
-            $memo->__SET('mem_cc_codigo',       $_REQUEST['memoCcosto']);
-            //$memo->__SET('mem_estado_id',       $_REQUEST['memoEstado']);
-            //$memo->__SET('mem_estado_obs',      $_REQUEST['memoObservacion']);
 
             $jsondata = $modelMemo->Registrar($memo,$_FILES);
             header('Content-type: application/json; charset=utf-8');
@@ -47,7 +44,7 @@ if(isset($_REQUEST['Accionmem'])){
             break;
 
         case 'obtener':
-            $jsondata = $modelMemo->Obtener($_REQUEST['memoId']);
+            $jsondata = $modelMemo->Obtener($_REQUEST['memoId'],$_REQUEST['seccion']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);            
             break;    	
@@ -62,7 +59,13 @@ if(isset($_REQUEST['Accionmem'])){
             $jsondata = $modelMemo->contarTotal($_REQUEST['idest'], $_REQUEST['idusu']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
-            break;             
+            break;     
+        case 'listarestmemo':
+            $jsondata = $modelMemo->ObtenerCambiosEstadosMemo($_REQUEST['memoId'],$_REQUEST['seccion']);
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);            
+            break;
+            
     }
 }
 ?>

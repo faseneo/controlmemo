@@ -369,6 +369,7 @@ class ModelUsuarios{
                 session_start();
                    $_SESSION["autentica"] = "SIP";
                    $_SESSION["rut"] = $r->usuario_rut;
+                   $_SESSION["uid"] = $r->usuario_id;
                    $_SESSION["nombre"] = $r->usuario_nombre;
                    $_SESSION["rol"] = $r->usuario_usu_rol_id;
                    $_SESSION["sec"] = $r->usuario_seccion_id;

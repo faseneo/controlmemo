@@ -17,13 +17,14 @@ class ModelMemoEst{
     }
 
     public function Listar($seccion = 1){
+        $seccion = (int) $seccion;
         $jsonresponse = array();
         try{
             $result = array();
-            if($seccion != 1){
-                $filtro = " AND me.memo_estado_seccion_id = ".$seccion;
-            }else{
+            if($seccion == 1 || $seccion == null || $seccion=='null'){
                 $filtro = "";
+            }else{
+                $filtro = " AND me.memo_estado_seccion_id = ".$seccion;
             }
             $consulta = "SELECT  me.memo_estado_id,
                                                 me.memo_estado_tipo,
@@ -157,6 +158,66 @@ class ModelMemoEst{
         }
         return $jsonresponse;
     }
+    //graba el cambio de estado del memo(se va agregando)
+    public function CambiaEstado(MemoCambioEst $data){
+        $jsonresponse = array();
+        try{
+            $sql = "INSERT INTO cambio_estados (cambio_estados_memo_id, cambio_estados_memo_estado_id, cambio_estados_observacion, cambio_estados_usuario_id) 
+                    VALUES (?,?,?,?)";
+
+            $this->pdo->prepare($sql)->execute(array(   $data->__GET('memo_camest_memid'),
+                                                        $data->__GET('memo_camest_estid'),
+                                                        $data->__GET('memo_camest_obs'),
+                                                        $data->__GET('memo_camest_usuid')
+                                                    )
+                                              );
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Estado cambiado correctamente'; 
+        } catch (PDOException $pdoException){
+        //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al ingresar cambiar estado';
+            $jsonresponse['errorQuery'] = $pdoException->getMessage();
+            var_dump($jsonresponse);
+        }
+        return $jsonresponse;
+    }
+    public function ListarMin($seccion = 1){
+        $seccion = (int) $seccion;
+        $jsonresponse = array();
+        try{
+            $result = array();
+            if($seccion == 1 || $seccion == null || $seccion=='null'){
+                $filtro = "";
+            }else{
+                $filtro = " AND me.memo_estado_seccion_id = ".$seccion;
+            }
+            $stm = $this->pdo->prepare("SELECT  me.memo_estado_id,
+                                                me.memo_estado_tipo,
+                                                sec.seccion_nombre
+                                        FROM memo_estado as me, seccion as sec
+                                        WHERE sec.seccion_id = me.memo_estado_seccion_id
+                                        AND me.memo_estado_activo = 1 "
+                                        .$filtro
+                                        ." ORDER BY me.memo_estado_id ASC, me.memo_estado_orden ASC ");
+            $stm->execute();
+            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                $fila = array('memo_est_id'=>$r->memo_estado_id,
+                              'memo_est_tipo'=>$r->memo_estado_tipo,
+                              'memo_est_seccion_nombre'=>$r->seccion_nombre);
+                $result[]=$fila;
+            }
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'listado correctamente';
+            $jsonresponse['datos'] = $result;
+            return $jsonresponse;
+        }
+        catch(Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al listar memo estado';
+        }
+    }
 
     public function Listar2(){
         $jsonresponse = array();
@@ -178,43 +239,7 @@ class ModelMemoEst{
         }catch(Exception $e){
             die($e->getMessage());
         }
-    }
-    public function ListarMin($seccion = 1){
-        $jsonresponse = array();
-        try{
-            $result = array();
-            if($seccion != 1){
-                $filtro = " AND me.memo_estado_seccion_id = ".$seccion;
-            }else{
-                $filtro = "";
-            }
-            $stm = $this->pdo->prepare("SELECT  me.memo_estado_id,
-                                                me.memo_estado_tipo,
-                                                sec.seccion_nombre
-                                        FROM memo_estado as me, seccion as sec
-                                        WHERE sec.seccion_id = me.memo_estado_seccion_id
-                                        AND me.memo_estado_activo = 1 "
-                                        .$filtro
-                                        ." ORDER BY me.memo_estado_seccion_id ASC, me.memo_estado_orden ASC, me.memo_estado_tipo ASC ");
-            $stm->execute();
-            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $fila = array('memo_est_id'=>$r->memo_estado_id,
-                              'memo_est_tipo'=>$r->memo_estado_tipo,
-                              'memo_est_seccion_nombre'=>$r->seccion_nombre);
-                $result[]=$fila;
-            }
-            $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'listado correctamente';
-            $jsonresponse['datos'] = $result;
-            return $jsonresponse;
-        }
-        catch(Exception $e){
-            //die($e->getMessage());
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al listar memo estado';
-        }
-    }
-
+    }    
 }
 
 ?>

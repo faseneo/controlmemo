@@ -3,7 +3,7 @@
 <head>
     <?php include "header.php"; ?>
     <title>Listado Memos</title>
-    <script src="js/fn_valida.js"></script>
+    <!-- <script src="js/fn_valida.js"></script> -->
 </head>
 <body>
   <div class="container">

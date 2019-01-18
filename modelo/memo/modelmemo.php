@@ -117,7 +117,7 @@ class ModelMemo  {
       return $jsonresponse;        
     }
     //Obtiene datos del memo  por su id
-    public function Obtener($id){
+    public function Obtener($id,$sec){
         try{
           $consulta = "SELECT COUNT(*) FROM memo";
             $res = $this->pdo->query($consulta);
@@ -163,7 +163,7 @@ class ModelMemo  {
                           
                           $arrayfile = $modelMemoArch->listar($r->memo_id);
                             $busq->__SET('mem_archivos', $arrayfile['datos']);
-                          $arrayestados = $this->ObtenerCambiosEstadosMemo($r->memo_id);
+                          $arrayestados = $this->ObtenerCambiosEstadosMemo($r->memo_id,$sec);
                             $busq->__SET('mem_estados', $arrayestados['datos']);
 
                 $jsonresponse['success'] = true;
@@ -189,28 +189,34 @@ class ModelMemo  {
         return $jsonresponse;
     }
 
-    public function ObtenerCambiosEstadosMemo($idmemo){
+    public function ObtenerCambiosEstadosMemo($idmemo,$sec=1){
+        $seccion = (int) $sec;
          try{
-          $consulta = "SELECT COUNT(*) FROM cambio_estados where cambio_estados_memo_id = ".$idmemo;
+          if($seccion == 1 || $seccion == null || $seccion=='null'){
+                $filtro = "";
+            }else{
+                $seccionfiltro="AND  me.memo_estado_seccion_id = ".$seccion;
+            }
+            $consulta = "SELECT COUNT(*) FROM cambio_estados where cambio_estados_memo_id = ".$idmemo;
+
             $res = $this->pdo->query($consulta);
             if ($res->fetchColumn() == 0) {
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Cambios Estados  sin elementos';
                 $jsonresponse['datos'] = [];
             }else{
-              $stm = $this->pdo->prepare("SELECT  cambio_estados_memo_estado_id,
-                                                  memo_estado_tipo,
-                                                  cambio_estados_observacion,
-                                                  cambio_estados_fecha,
-                                                  memo_estado_seccion_id
-                                          FROM cambio_estados as ce, 
-                                               memo_estado as me 
-                                          WHERE memo_estado_id = cambio_estados_memo_estado_id 
-                                          AND cambio_estados_memo_id = ?");
-
-              $stm->execute(array($idmemo));
+              $query = "SELECT  ce.cambio_estados_memo_estado_id,
+                                                  me.memo_estado_tipo,
+                                                  ce.cambio_estados_observacion,
+                                                  ce.cambio_estados_fecha,
+                                                  me.memo_estado_seccion_id
+                                          FROM cambio_estados as ce, memo_estado as me 
+                                          WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
+                                          AND ce.cambio_estados_memo_id = $idmemo ".$seccionfiltro;
+              $stm = $this->pdo->prepare($query);
+              $stm->execute();
+              //$stm->execute(array($idmemo));
               //$r = $stm->fetch(PDO::FETCH_OBJ);
-
 
                 foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                     $fila = array('estado_id'=>$r->cambio_estados_memo_estado_id,
@@ -224,7 +230,6 @@ class ModelMemo  {
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Se Cambios Estados correctamente';
                 $jsonresponse['datos'] = $result;
-
               $stm=null;
             }
             $res=null;
@@ -314,6 +319,55 @@ class ModelMemo  {
             $trace=$Exception->getTraceAsString();
               $logs->GrabarLogs($Exception->getMessage(),$trace);
               $logs = null;            
+        }
+        return $jsonresponse;
+    }
+
+    public function ActualizarMemoCDP($memoId,$ccCodigo,$fechaCDP){
+        $jsonresponse = array();
+        try{
+            $sql = "UPDATE memo SET 
+                           memo_cc_codigo = ?,
+                           memo_fecha_cdp = ?
+                    WHERE  memo_id = ?";
+            $this->pdo->prepare($sql)->execute(array($ccCodigo,
+                                                     $fechaCDP,
+                                                     $memoId
+                                                    )
+                                              );
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Memo estado actualizado correctamente';                 
+        } catch (Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al actualizar memo estado';             
+        }
+        return $jsonresponse;
+    }
+
+    public function Actualizar(MemoEst $data){
+        $jsonresponse = array();
+        //print_r($data);
+        try{
+            $sql = "UPDATE memo_estado SET 
+                           memo_estado_tipo = ?,
+                     memo_estado_orden = ?,
+                           memo_estado_activo = ?,
+                           memo_estado_seccion_id = ?
+                    WHERE  memo_estado_id = ?";
+            $this->pdo->prepare($sql)->execute(array($data->__GET('memo_est_tipo'),
+                                                     $data->__GET('memo_est_orden'),
+                                                     $data->__GET('memo_est_activo'),
+                                                     $data->__GET('memo_est_seccion_id'),
+                                                     $data->__GET('memo_est_id')
+                                                    )
+                                              );
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Memo estado actualizado correctamente';                 
+        } catch (Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al actualizar memo estado';             
         }
         return $jsonresponse;
     }

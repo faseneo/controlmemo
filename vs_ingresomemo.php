@@ -22,10 +22,11 @@ if($_SESSION["autentica"] != "SIP"){
     <script>
     <?php 
         $sec = $_SESSION["sec"];
-                echo "sec=".$sec.";";
-
+        echo "sec=".$sec.";";
+        $uid = $_SESSION["uid"];
+        echo "uid=".$uid.";\n";
         if(isset($_REQUEST['memId'])){
-            echo "var memId=".$_REQUEST['memId'].";";
+            echo "memId=".$_REQUEST['memId'].";\n";
         }
     ?>
         $(document).ready(function(){
@@ -188,7 +189,7 @@ if($_SESSION["autentica"] != "SIP"){
                      <div class="row">
                         <div class="col-md-4">
                             <a href="#" class="btn btn-primary" role="button" id="agregar-det-memo" >Agregar Detalle Memo</a>
-                            <button type="button" id="cambiaestado" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                            <button type="button" id="cambiaestado" class="btn btn-primary" data-toggle="modal" data-target="#myModalEstado">
                                 Cambiar Estado
                             </button>
                         </div>
@@ -240,58 +241,66 @@ if($_SESSION["autentica"] != "SIP"){
                 </div>
             </div>            
         </div>
-
     </div> <!-- /.container-->
-<!-- 
-<div class="col-md-6">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="memoCcosto">Centro de Costo</label>
-                                        <select name="memoCcosto" id="memoCcosto" class="form-control" required>
-                                        </select>
-                                        <span class="help-block"></span>
-                                    </div>    
-                                </div>                            
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="memoCodCcosto">Codigo Centro de Costo</label>
-                                        <input name="memoCodCcosto" id="memoCodCcosto" type="text" class="form-control" required>
-                                        <span class="help-block"></span>
-                                    </div>    
-                                </div>
-                            </div>
-                        </div>
--->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+    <!-- Modal cambio estado del memo-->
+    <div class="modal fade" id="myModalEstado" tabindex="-1" role="dialog" aria-labelledby="myModalEstadoLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title-form" id="myModalLabel">Cambio Estado</h4>
+                    <h4 class="modal-title-form" id="myModalEstadoLabel">Cambio Estado del Memo</h4>
                 </div>
                 <form role="form" name="formcambioestado" id="formcambioestado" method="post" action="">
                     <input type="hidden" name="Accion" id="Accion" value="cambiaestado" />
+                    <input type="hidden" name="meId" id="meId" value="" />
+                    <input type="hidden" name="uId" id="uId" value="" />
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="memoEstado">Estado</label>
-                            <select name="memoEstado" id="memoEstado" class="form-control"></select>
-                        </div>                    
-                        <div class="form-group">
-                            <label for="ccCodigo">Código</label>
-                            <input id="ccCodigo" name="ccCodigo" class="form-control" rows="3"  title="Ingrese una Codigo" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="memoEstado">Estado</label>
+                                    <select name="memoEstado" id="memoEstado" class="form-control"></select>
+                                    <span class="help-block"></span>
+                                </div> 
+                            </div>
                         </div>
-                        <!-- <div class="form-group">
-                            <label for="ccNombre">Nombre Centro de Costos</label>
-                            <input id="ccNombre" class="form-control" type="text" name="ccNombre" value="" title="Ingrese un nombre" required />
-                        </div> -->
-                        <div class="form-group">
-                            <label for="observaciones">Observacion</label>
-                            <textarea class="form-control" rows="5" id="observaciones" name="observaciones"></textarea>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group" id="memoCodigoCCDiv">
+                                    <label for="memoCodigoCC">Código Centro de Costo</label>
+                                    <input id="memoCodigoCC" name="memoCodigoCC" class="form-control" title="Ingrese una Codigo" />
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>                        
+                            <div class="col-md-6">
+                                <div class="form-group" id="memoFechaCDPDiv">
+                                    <label for="memoFechaCDP">Fecha CDP</label>
+                                    <input name="memoFechaCDP" id="memoFechaCDP" type="date" class="form-control">
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group" id="memoNombreCCDiv">
+                                    <label for="memoNombreCC">Nombre Centro de Costo</label>
+                                    <input id="memoNombreCC" name="memoNombreCC" class="form-control"  disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="memoObs">Observacion</label>
+                                    <textarea class="form-control" rows="5" id="memoObs" name="memoObs"></textarea>
+                                    <span class="help-block"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="guardar-estado" name="guardar-estado" type="button" class="btn btn-primary">Guardar</button>
+                        <button id="grabar-estado" name="guardar-estado" type="button" class="btn btn-primary">Guardar</button>
                         <button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     </div>
                 </form>
