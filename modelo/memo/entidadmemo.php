@@ -14,10 +14,12 @@ class Memos{
 
     private $mem_depto_dest_id;
     private $mem_nom_dest;
+    private $mem_depto_dest_nom;
 
     private $mem_fecha_ingr;
     private $mem_cc_codigo;
     private $mem_fecha_cdp;
+    private $mem_nom_cc;
 
     private $mem_archivos=array();
     

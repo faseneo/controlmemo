@@ -45,27 +45,29 @@ class ModelMemo  {
               $consulta = "CALL estado_max_por_seccion($secid,$estadoid,$reginicio,$CantidadMostrar,$usuid)";
 
               $logsq = new ModeloLogsQuerys();
-                $logsq->GrabarLogsQuerys($consulta,'0','Listar');
+                $logsq->GrabarLogsQuerys($consulta,$tot_reg,'Listar');
                 $logsq = null;
 
               $stm = $this->pdo->prepare($consulta);
               $stm->execute();
               $totquery = 0;
               foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                 $busq = new Memos();
+                 $busq = new MemosListado();
                       $busq->__SET('mem_id', $r->memo_id);
                       $busq->__SET('mem_numero', $r->memo_num_memo);
                       $busq->__SET('mem_anio', $r->memo_anio);
-                      $busq->__SET('mem_fecha', $r->memo_fecha_memo);
-                      $busq->__SET('mem_fecha_recep', $r->memo_fecha_recepcion);
+                      $busq->__SET('mem_fecha', date_format(date_create($r->memo_fecha_memo),'d-m-Y' ));
+                      $busq->__SET('mem_fecha_recep', date_format(date_create($r->memo_fecha_recepcion),'d-m-Y' ));
                       $busq->__SET('mem_materia', $r->memo_materia);
                       $busq->__SET('mem_depto_dest_nom', $r->dpto_nombre);
-                      $busq->__SET('mem_estado_nombre', $r->memo_estado_tipo);
-                      //$busq->__SET('mem_estado_fechamod', $r->memo_estado_fecha_modif);
+                      $busq->__SET('mem_estado_id_max', $r->estado_max_id);
+                      $busq->__SET('mem_estado_nom_max', $r->memo_estado_tipo);
+                      $busq->__SET('mem_estado_obs_max', $r->cambio_estados_observacion);
+                      $busq->__SET('mem_estado_fecha_max', date_format(date_create($r->cambio_estados_fecha),'d-m-Y' ));
+                      $busq->__SET('mem_estado_dias', $r->cambio_estados_dias);
                   $result[] = $busq->returnArray();
                   $totquery++;
               }
-
 
               $jsonresponsel['success'] = true;
               $jsonresponsel['message'] = 'listado correctamente los memos';
@@ -127,15 +129,11 @@ class ModelMemo  {
                 $jsonresponse['datos'] = [];
             }else{
               $stm = $this->pdo->prepare("SELECT  *
-                                          FROM memo as mm, departamento as dep
+                                          FROM memo as mm, departamento as dep, centro_costos as cc
                                           WHERE dep.dpto_id = mm.memo_depto_solicitante_id 
+                                          AND cc.cc_codigo=mm.memo_cc_codigo
                                           AND mm.memo_id = ?");
-                                          /*              SELECT  *
-                                          FROM memo as mm, departamento as dep, cambio_estados as ce, memo_estado as me
-                                          WHERE ce.cambio_estados_memo_id = mm.memo_id
-                                          AND ce.cambio_estados_memo_estado_id = me.memo_estado_id
-                                          AND dep.dpto_id = mm.memo_depto_solicitante_id 
-                                          AND mm.memo_id = ?*/
+
               $stm->execute(array($id));
               $r = $stm->fetch(PDO::FETCH_OBJ);
               if($r){
@@ -149,7 +147,6 @@ class ModelMemo  {
 
                           $busq->__SET('mem_depto_sol_id', $r->memo_depto_solicitante_id);
                           $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
-
                           $busq->__SET('mem_depto_sol_nom', $r->dpto_nombre);
                           
                           $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
@@ -157,7 +154,8 @@ class ModelMemo  {
 
                           $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
                           $busq->__SET('mem_cc_codigo', $r->memo_cc_codigo);
-                          $busq->__SET('mem_fecha_cdp', $r->memo_fecha_cdp);
+                          $busq->__SET('mem_fecha_cdp', date_format(date_create($r->memo_fecha_cdp),'d-m-Y' ));
+                          $busq->__SET('mem_nom_cc', $r->cc_nombre);
 
                           $modelMemoArch = new ModelMemoArchivo();
                           
@@ -193,7 +191,7 @@ class ModelMemo  {
         $seccion = (int) $sec;
          try{
           if($seccion == 1 || $seccion == null || $seccion=='null'){
-                $filtro = "";
+                $seccionfiltro = "";
             }else{
                 $seccionfiltro="AND  me.memo_estado_seccion_id = ".$seccion;
             }
@@ -222,7 +220,7 @@ class ModelMemo  {
                     $fila = array('estado_id'=>$r->cambio_estados_memo_estado_id,
                                   'estado_tipo'=>$r->memo_estado_tipo,
                                   'observacion'=>$r->cambio_estados_observacion,
-                                  'fecha'=>$r->cambio_estados_fecha,
+                                  'fecha'=>date_format(date_create($r->cambio_estados_fecha),'d-m-Y H:i:s' ),
                                   'seccion_id'=>$r->memo_estado_seccion_id);
                     $result[]=$fila;
                 }
@@ -244,22 +242,8 @@ class ModelMemo  {
         $this->pdo=null;
         return $jsonresponse;
     }
-    /* public function Eliminar($id){
-        try{
-            $stm = $this->pdo->prepare("DELETE FROM memo WHERE memo_id = ? ");
-            $stm->execute(array($id));
-
-            $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Memo eliminado correctamente';              
-        } catch (Exception $e){
-            //die($e->getMessage());
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al eliminar Memo';            
-        }
-        return $jsonresponse;
-    }
-    */
-    public function Registrar(Memos $data, $files){
+    //Registra un nuevo Memo
+    public function Registrar(Memos $data, $files,$uid){
       try{
             $sql = "INSERT INTO memo (memo_num_memo,
                                       memo_anio,
@@ -295,8 +279,9 @@ class ModelMemo  {
 
             $sqlinsertaestados="INSERT INTO cambio_estados (cambio_estados_memo_id,
                                                             cambio_estados_memo_estado_id,
-                                                            cambio_estados_observacion)
-                                VALUES ($idmemo, $idestado, '$obsestado')";
+                                                            cambio_estados_observacion,
+                                                            cambio_estados_usuario_id)
+                                VALUES ($idmemo, $idestado, '$obsestado',$uid)";
             $logsq2 = new ModeloLogsQuerys();
                 $logsq2->GrabarLogsQuerys($sqlinsertaestados,'0','RegistrarEstado');
                 $logsq2 = null;
@@ -323,121 +308,79 @@ class ModelMemo  {
         return $jsonresponse;
     }
 
+    public function Actualizar(Memos $data){
+      //var_dump($data);
+      try{
+            $sql = "UPDATE memo SET 
+                           memo_materia = ?,
+                           memo_nombre_solicitante = ?,
+                           memo_depto_solicitante_id = ?,
+                           memo_nombre_destinatario = ?,
+                           memo_depto_destinatario_id = ? 
+                    WHERE  memo_id = ?";
+
+            $this->pdo->prepare($sql)->execute(array($data->__GET('mem_materia'),
+                                                     $data->__GET('mem_nom_sol'),
+                                                     $data->__GET('mem_depto_sol_id'),
+                                                     $data->__GET('mem_nom_dest'),
+                                                     $data->__GET('mem_depto_dest_id'),
+                                                     $data->__GET('mem_id')
+                                                    ));
+            $logsq = new ModeloLogsQuerys();
+                $logsq->GrabarLogsQuerys($sql,'0','Actualizar');
+                $logsq = null;
+
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Memo Actualizado correctamente'; 
+        } catch (Exception $Exception){
+        //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al actualizad Memo';
+            $jsonresponse['errorQuery'] = $Exception->getMessage();
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;            
+        }
+        return $jsonresponse;
+    }
+
+    public function ActualizarArchivos($files,$mid){
+      try{
+            
+            $modelMemoArch = new ModelMemoArchivo();
+            $arrayfile = $modelMemoArch->Registrar($files,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
+
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Memo ingresado correctamente'; 
+            $jsonresponse['messagefile'] = $arrayfile;
+        } catch (Exception $Exception){
+        //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al ingresar Memo';
+            $jsonresponse['errorQuery'] = $Exception->getMessage();
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;            
+        }
+        return $jsonresponse;
+    }
+
     public function ActualizarMemoCDP($memoId,$ccCodigo,$fechaCDP){
         $jsonresponse = array();
         try{
-            $sql = "UPDATE memo SET 
-                           memo_cc_codigo = ?,
-                           memo_fecha_cdp = ?
-                    WHERE  memo_id = ?";
-            $this->pdo->prepare($sql)->execute(array($ccCodigo,
-                                                     $fechaCDP,
-                                                     $memoId
-                                                    )
-                                              );
+            $sql = "UPDATE memo SET memo_cc_codigo = $ccCodigo,memo_fecha_cdp = '$fechaCDP' WHERE  memo_id = $memoId";                      
+            $this->pdo->prepare($sql)->execute();
             $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Memo estado actualizado correctamente';                 
+            $jsonresponse['message'] = 'Datos Memo actualizados correctamente';                 
         } catch (Exception $e){
-            //die($e->getMessage());
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al actualizar memo estado';             
-        }
-        return $jsonresponse;
-    }
-
-    public function Actualizar(MemoEst $data){
-        $jsonresponse = array();
-        //print_r($data);
-        try{
-            $sql = "UPDATE memo_estado SET 
-                           memo_estado_tipo = ?,
-                     memo_estado_orden = ?,
-                           memo_estado_activo = ?,
-                           memo_estado_seccion_id = ?
-                    WHERE  memo_estado_id = ?";
-            $this->pdo->prepare($sql)->execute(array($data->__GET('memo_est_tipo'),
-                                                     $data->__GET('memo_est_orden'),
-                                                     $data->__GET('memo_est_activo'),
-                                                     $data->__GET('memo_est_seccion_id'),
-                                                     $data->__GET('memo_est_id')
-                                                    )
-                                              );
-            $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Memo estado actualizado correctamente';                 
-        } catch (Exception $e){
-            //die($e->getMessage());
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al actualizar memo estado';             
-        }
-        return $jsonresponse;
-    }
-    /*
-    public function Actualizar(Memos $data){
-        //print_r($data);
-        try{
-            $sql = "UPDATE memo SET 
-                           memo_num_memo = ?,
-                           memo_fecha_recepcion = ?,
-                           memo_fecha_memo = ?,
-                           memo_fecha_entrega_analista = ?,
-                           memo_depto_id = ?, 
-                           memo_cc_id = ?,
-                           memo_memo_estado_id = ?
-                    WHERE  memo_id = ?";
-
-            $this->pdo->prepare($sql)
-                 ->execute(array($data->__GET('mem_numero'),
-                                 $data->__GET('mem_fecha_recep'),
-                                 $data->__GET('mem_fecha'),
-                                 $data->__GET('mem_fecha_analista'),
-                                 $data->__GET('mem_depto_id'),
-                                 $data->__GET('mem_ccosto_id'),
-                                 $data->__GET('mem_estado_id'),
-                                 $data->__GET('mem_id'))
-                          );
-            $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Memo actualizado correctamente';                 
-        } catch (Exception $e){
-            //die($e->getMessage());
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al actualizar memo';             
-        }
-        return $jsonresponse;
-    }*/
-
-  /* public function Listar2(){
-        try{
-            $result = array();
-             $stm = $this->pdo->prepare("SELECT   mm.memo_id,
-                                                  mm.memo_num_memo,
-                                                  mm.memo_fecha_recepcion,
-                                                  mm.memo_fecha_memo,
-                                                  mm.memo_fecha_entrega_analista,
-                                                  mm.memo_depto_id,
-                                                  mm.memo_cc_id,
-                                                  mm.memo_memo_estado_id,
-                                                  mm.memo_fecha_ingreso
-                                        FROM memo as mm");
-            $stm->execute();
-            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $busq = new Memos();
-                    $busq->__SET('mem_id', $r->memo_id);
-                    $busq->__SET('mem_numero', $r->memo_num_memo);
-                    $busq->__SET('mem_fecha_recep', $r->memo_fecha_recepcion);
-                    $busq->__SET('mem_fecha', $r->memo_fecha_memo);
-                    $busq->__SET('mem_fecha_analista', $r->memo_fecha_entrega_analista);  
-                    $busq->__SET('mem_depto_id', $r->memo_depto_id);
-                    $busq->__SET('mem_ccosto_id', $r->memo_cc_id);
-                    $busq->__SET('mem_estado_id', $r->memo_memo_estado_id);
-                    $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
-                $result[] = $busq;
-            }
-            return $result;
-        }
-        catch(Exception $e){
             die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al actualizar datos del memo';             
         }
-    }*/
+        return $jsonresponse;
+    }
 }
 ?>
 

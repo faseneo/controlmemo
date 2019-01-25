@@ -1,9 +1,11 @@
 <?php 
+
  $val = $_SESSION["autentica"];
  $rut = $_SESSION["rut"];
  $rol = $_SESSION["rol"];
  $nombre = $_SESSION["nombre"];
  $rolnom = $_SESSION["datos"]["usu_rol_nombre"];
+ $fecha = $_SESSION["fecactual"];
  // 1_admin, 2_super, 3_analisa, 4_secre, 5_gestion
 ?>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -93,6 +95,7 @@
 				<li><a href="#">Bienvend@ <?php echo $nombre.' - '.$rolnom; ?></a></li>
 				<li><a href="vistacambiocontr.php">Cambiar contraseña</a></li>
 				<li><a href="salir.php">Logout</a></li>
+				<li><p ><?php echo ' Fecha Actual : '.$fecha; ?></p></li>
 				<!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span>Registrarse</a></li> -->
 				<!-- <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>Login</a></li> -->
 			</ul>

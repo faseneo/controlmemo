@@ -1,4 +1,4 @@
-    var usuarios;
+    var uid;
     var sec;
 
     function inicio(){
@@ -61,36 +61,38 @@
                         $("#paginador").html("");
                         $("#paginador").append(pagina);
                     }
-                /*$.ajax({
+                /*
+                    $.ajax({
                         data: datax, 
                         type: "GET",
                         dataType: "json", 
                         url: "controllers/controllermemo.php",
-                })
-                .done(function( data, textStatus, jqXHR ) {
+                    })
+                    .done(function( data, textStatus, jqXHR ) {
+                            if ( console && console.log ) {
+                                console.log( " data success gettotal : "+ data.success 
+                                            + " \n data totalmemos msg : "+ data.message 
+                                            + " \n textStatus : " + textStatus
+                                            + " \n jqXHR.status : " + jqXHR.status );
+                            }
+                        $("#paginador").html("");                        
+                        $("#totalmemos").html(data.total);
+                        if(data.total > registroPorPagina){
+                            fnlista = "getListadoMemos";
+                            pagina = drawpaginador(pag,data.total,registroPorPagina,cantidadMostrar,fnlista);
+                            $("#paginador").html("");
+                            $("#paginador").append(pagina);
+                        }
+                    })
+                    .fail(function( jqXHR, textStatus, errorThrown ) {
                         if ( console && console.log ) {
-                            console.log( " data success gettotal : "+ data.success 
-                                        + " \n data totalmemos msg : "+ data.message 
+                            console.log( " La solicitud getcuenta ha fallado,  textStatus : " +  textStatus 
+                                        + " \n errorThrown : "+ errorThrown
                                         + " \n textStatus : " + textStatus
                                         + " \n jqXHR.status : " + jqXHR.status );
                         }
-                    $("#paginador").html("");                        
-                    $("#totalmemos").html(data.total);
-                    if(data.total > registroPorPagina){
-                        fnlista = "getListadoMemos";
-                        pagina = drawpaginador(pag,data.total,registroPorPagina,cantidadMostrar,fnlista);
-                        $("#paginador").html("");
-                        $("#paginador").append(pagina);
-                    }
-                })
-                .fail(function( jqXHR, textStatus, errorThrown ) {
-                    if ( console && console.log ) {
-                        console.log( " La solicitud getcuenta ha fallado,  textStatus : " +  textStatus 
-                                    + " \n errorThrown : "+ errorThrown
-                                    + " \n textStatus : " + textStatus
-                                    + " \n jqXHR.status : " + jqXHR.status );
-                    }
-                });*/
+                    });
+                    */
     }
 
     // Funcion principal para listar los memos
@@ -146,25 +148,13 @@
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_materia + '">'+ materia +'</a></td>';
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_depto_dest_nom + '">' + depto  + '</a></td>'
                         
-                        fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_estado_fechamod + '">' + data.datos[i].mem_estado_nombre + '</a></td>'
+                        fila += '<td><a href="#" data-toggle="tooltip" title="Modificado el ' + data.datos[i].mem_estado_fecha_max + '">' + data.datos[i].mem_estado_nom_max + '</a></td>'
+                        fila += '<td class="text-right">'+data.datos[i].mem_estado_dias + '</td>';
 
-                        fila += '<td><a  href="vs_ingresomemo.php?memId=' + data.datos[i].mem_id + '"';
+                        fila += '<td class="text-right"><a  href="vs_ingresomemo.php?memId=' + data.datos[i].mem_id + '"';
                         fila += ' class="btn btn-xs btn-success" ';
                         fila += ' role="button id="ver-memo">';
                         fila += 'Ver / Editar</a>';
-                        /*fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
-                        fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                        fila += 'onclick="deleteAnular(\''+ data.datos[i].mem_id +'\',\'' + data.datos[i].mem_anio +'\',\''
-                                + data.datos[i].mem_materia +'\')">';
-                        fila += 'Anular</button>';*/
-                       /* if(data.datos[i].mem_estado_id!=5){*/
-                          /*  
-                            fila += ' <button id="Asignar" type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#myModalAsiganUsu"';
-                            fila += ' onclick="datosMemoAsigna(' + data.datos[i].mem_id + ')" >Asignar</button></td>';*/
-                        //}else{
-                            //fila += '&nbsp;&nbsp;Ver&nbsp;&nbsp;</button></td>';
-                        //}
-
                         fila += '</tr>';
                         $("#listamemos").append(fila);
                     }                    
@@ -192,7 +182,7 @@
         $("#titulolistado").hide();
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
         getListadoEstadoMemos(sec);
-        getListadoMemos(sec,0,1,0);
+        getListadoMemos(sec,0,1,uid);
 
         //ordena solo datos de tabla en pagina actual
         $('.orden').click(function(e) {
@@ -215,6 +205,6 @@
             console.log('estado: '+$('#memoEstado').val());
             console.log('usuid :'+$('#usuario').val());
             //console.log('estado id : ' + idestado);
-            getListadoMemos(sec,$('#memoEstado').val(),1,0);
+            getListadoMemos(sec,$('#memoEstado').val(),1,uid);
         });
     });

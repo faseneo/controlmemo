@@ -354,18 +354,20 @@ class ModelUsuarios{
                         $busq->__SET('usu_id',          $r->usuario_id);
                         $busq->__SET('usu_rut',         $r->usuario_rut);
                         $busq->__SET('usu_nombre',      $r->usuario_nombre); 
-                        $busq->__SET('usu_password',    $r->usuario_password);
+                        //$busq->__SET('usu_password',    $r->usuario_password);
                         $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                         $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                         $busq->__SET('usu_estado_id',   $r->usuario_estado);
                         $busq->__SET('usu_sec_id',      $r->usuario_seccion_id);
                         $busq->__SET('usu_sec_nombre',  $r->seccion_nombre);
-                        $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
+                        //$busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
                         $arrayperfiles = $this->ObtenerPerfilesUsuaro($r->usuario_id);
                             $busq->__SET('usu_perfiles', $arrayperfiles['datos']);
                 
                 $result = $busq->returnArray();
                 
+                //$fechaactual = date("d-m-Y H:i:s");
+                $fechaactual = date("d-m-Y");
                 session_start();
                    $_SESSION["autentica"] = "SIP";
                    $_SESSION["rut"] = $r->usuario_rut;
@@ -373,6 +375,7 @@ class ModelUsuarios{
                    $_SESSION["nombre"] = $r->usuario_nombre;
                    $_SESSION["rol"] = $r->usuario_usu_rol_id;
                    $_SESSION["sec"] = $r->usuario_seccion_id;
+                   $_SESSION["fecactual"] = $fechaactual;
                    $_SESSION["datos"] = $result;
 
                 $jsonresponse['success'] = true;

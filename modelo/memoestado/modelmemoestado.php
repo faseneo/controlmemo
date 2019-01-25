@@ -171,17 +171,48 @@ class ModelMemoEst{
                                                         $data->__GET('memo_camest_usuid')
                                                     )
                                               );
+            if($data->__GET('memo_camest_estid')==8 || $data->__GET('memo_camest_estid')==9){
+                $observacion='Memo aprobado con CDP, Derivado a Depto. Adquisiciones';
+                $usuid=0;
+                $ejecutatrigger = $this->CambiaEstadoTriggers($data->__GET('memo_camest_memid'),13,$observacion,$usuid);
+                /*if($ejecutatrigger['success']==true){
+
+                }*/
+            }
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Estado cambiado correctamente'; 
         } catch (PDOException $pdoException){
-        //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
+            //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al ingresar cambiar estado';
             $jsonresponse['errorQuery'] = $pdoException->getMessage();
-            var_dump($jsonresponse);
         }
         return $jsonresponse;
     }
+    // funcion cambia estado para el Estado = 8 o Estado = 9, para que pase a depto. adquisiciones
+    public function CambiaEstadoTriggers($memid, $estid, $obs, $usuid){
+        $jsonresponse = array();
+        try{
+            $sql = "INSERT INTO cambio_estados (cambio_estados_memo_id, cambio_estados_memo_estado_id, cambio_estados_observacion, cambio_estados_usuario_id) 
+                    VALUES (?,?,?,?)";
+
+            $this->pdo->prepare($sql)->execute(array($memid,
+                                                     $estid,
+                                                     $obs,
+                                                     $usuid
+                                                    )
+                                              );
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Trigger ejecutado correctamente'; 
+        } catch (PDOException $pdoException){
+            //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al ingresar cambiar estado';
+            $jsonresponse['errorQuery'] = $pdoException->getMessage();
+        }
+        return $jsonresponse;
+    }
+
     public function ListarMin($seccion = 1){
         $seccion = (int) $seccion;
         $jsonresponse = array();

@@ -92,8 +92,7 @@ class ModelMemoArchivo {
     public function Eliminar($id){
         $jsonresponse = array();
         try{
-            $stm = $this->pdo
-                      ->prepare("DELETE FROM memo_archivo WHERE memo_archivo_id = ? ");
+            $stm = $this->pdo->prepare("DELETE FROM memo_archivo WHERE memo_archivo_id = ? ");
             $stm->execute(array($id));
             $cuenta = $stm->rowCount();
             $msg = $cuenta > 0 ? "$cuenta filas afectas, eliminado correctamente" : "$cuenta filas afectas, no existe el archivo";
@@ -114,9 +113,7 @@ class ModelMemoArchivo {
             //graba archivo escaneado del memo
             if(!empty($files['memoFile']['name'])){
                 $nombrearch = explode(".",$files['memoFile']['name']);
-                
                // $arrayresponsesube = $this->subearchivo($nombrearch,$idmemo,$nummemmo,$aniomemo);
-
                 $largo = count($nombrearch)-1;
                 $urlarchivodestino = RAIZ.memoarch_directorio.memoarch_prefijo.$aniomemo.'_'.$nummemmo.'.'.$nombrearch[$largo];
                 $urlarchivo = memoarch_directorio.memoarch_prefijo.$aniomemo.'_'.$nummemmo.'.'.$nombrearch[$largo];
@@ -247,6 +244,9 @@ class ModelMemoArchivo {
         return $jsonresponse;
     }
 
+    public function ActualizarArchivos(){
+
+    }
 
     /*
     public function Actualizar(MemoArchivos $data){

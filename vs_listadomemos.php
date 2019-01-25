@@ -14,8 +14,10 @@ if($_SESSION["autentica"] != "SIP"){
     <script src="js/fn_listadomemos.js"></script>
     <script>
         <?php 
-            $sec = $_SESSION["sec"];
-                echo "sec=".$sec.";";
+        $sec = $_SESSION["sec"];
+        echo "sec=".$sec.";";
+        $uid = $_SESSION["uid"];
+        echo "uid=".$uid.";\n";
         ?>
     </script>    
     <style type="text/css">
@@ -40,7 +42,7 @@ if($_SESSION["autentica"] != "SIP"){
     </style>
 </head>
 <body>
-    <?php include "barranav.php"; ?>
+    <?php include "barranav.php";?>
     <div class="container" style="margin-top:50px"> 
         <div class="row"> 
             <div class="col-md-12 ">
@@ -59,7 +61,7 @@ if($_SESSION["autentica"] != "SIP"){
                 </form>    
                     <div class="row">
                         <div class="col-md-12">
-                            <h4 id="titulolistado">Listado memos de : <span id="nombreusu"></span> <!-- - Estado <span id="estadousu"></span> --></h4>
+                            <h4 id="titulolistado">Listado memos de : <span id="nombreusu"></span></h4>
                         </div>
                     </div>                    
                     <div class="row">
@@ -70,9 +72,10 @@ if($_SESSION["autentica"] != "SIP"){
                                         <th width="8%" class="orden">Año / Número</th>
                                         <th width="8%" class="orden">Fecha Memo</th>
                                         <th width="34%" class="orden">Materia o Asunto</th>
-                                        <th width="25%" class="orden">Departamento Solicitante</th>
+                                        <th width="24%" class="orden">Departamento Solicitante</th>
                                         <th width="12%" class="orden">Estado</th>
-                                        <th width="13%">Acciones</th>
+                                        <th width="7%" class="orden">Dias sin Movimiento</th>
+                                        <th width="7%">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="listamemos">
