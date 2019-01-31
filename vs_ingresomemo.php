@@ -243,6 +243,7 @@ if($_SESSION["autentica"] != "SIP"){
                             <h4 class="panel-title">
                                 <a id="accord1" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
                                     Listado Archivos
+                                    <span class="badge" id="totalArch"></span>
                                 </a>
                                 <a href="#" data-toggle="tooltip" title="Tipos de Archivos aceptados : pdf, jpg, png, doc, docx, xls, xlsx" data-content="pdf, jpg, png, doc, docx, xls, xlsx">
                                     <span class="glyphicon glyphicon-info-sign"></span>
@@ -453,7 +454,7 @@ if($_SESSION["autentica"] != "SIP"){
                         </div>
                         <div id="msgarchivomemo" class="alert alert-warning" role="alert">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="sr-only">Error:</span>
+                            <span class="sr-only" >Error:</span>
                             ¡Ya Existe archivo del memo!. Si sube uno nuevo eliminará el archivo anterior
                         </div> 
                     <div class="modal-footer">

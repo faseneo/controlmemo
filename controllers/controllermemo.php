@@ -33,7 +33,6 @@ if(isset($_REQUEST['Accionmem'])){
             $memo->__SET('mem_nom_dest',        $_REQUEST['memoNombreDest']);
             $memo->__SET('mem_depto_dest_id',   $_REQUEST['memoDeptoDest']);
             $uid=$_REQUEST['uid'];
-
             $jsondata = $modelMemo->Registrar($memo,$_FILES,$uid);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);

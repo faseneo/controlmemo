@@ -455,8 +455,6 @@
                 ultimoestado = data.datos[i].estado_id;
                 console.log('ultimoestado historial cambio : ' + ultimoestado);
             }
-            //getlistaEstadosMemo(ultimoestado);
-
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -467,6 +465,70 @@
             }
         });
     }
+
+   //Funcion que lista Los archivos adjuntos del Memo
+    function getlistaArchivos (memId){
+        var datax = {"Accion":"listar",
+                     "memoid": memId
+                    };
+        $.ajax({
+            data: datax, 
+            type: "GET",
+            dataType: "json", 
+            url: "controllers/controllermemoarchivo.php", 
+        })
+        .done(function( data, textStatus, jqXHR ) {
+            if ( console && console.log ) {
+                console.log( " data success getlistaArchivos : "+ data.success 
+                    + " \n data msg deptos : "+ data.message 
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+            var totalanexos=data.datos.length;
+            $("#totalArch").html(totalanexos);
+            
+            for(var i=0; i<data.datos.length;i++){
+                console.log('id: ' + data.datos[i].estado_id + ' Estado Tipo: ' + data.datos[i].estado_tipo);
+                
+                fila = '<tr><td>'+ data.datos[i].estado_tipo + '</td>';
+                fila += '<td>' + data.datos[i].observacion + '</td>';
+                fila += '<td>' + data.datos[i].fecha + '</td>';
+                fila += '</tr>';
+                $("#listaHistorial").append(fila);
+                ultimoestado = data.datos[i].estado_id;
+                console.log('ultimoestado historial cambio : ' + ultimoestado);
+            }
+            //Lista archivos del memo
+            console.log('largo archivos ' + data.datos.length);
+            $("#verarchivoMemo").html("");
+            $("#verlistaArchivosMemo").html("");
+
+            for(var i=0; i<data.datos.length;i++){
+                console.log('id archivo : ' + data.datos[i].memoarch_id + ' Nombre archvo: ' + data.datos[i].memoarch_name);
+                if(data.datos[i].memoarch_flag == 1){
+                    $("#msgarchivomemo").show();
+                    fila2 = '<tr><td><a href="'+data.datos[i].memoarch_url+'" target="_blank">'+ data.datos[i].memoarch_name + '</a></td>';
+                    fila2 += '<td>' + returnFileSize(data.datos[i].memoarch_size)+'</td>';
+                    fila2 += '</tr>';
+                    $("#verarchivoMemo").append(fila2);
+                }else{
+                    fila3 = '<tr><td><a href="'+data.datos[i].memoarch_url+'" target="_blank">'+ data.datos[i].memoarch_name + '</a></td>';
+                    fila3 += '<td>' + returnFileSize(data.datos[i].memoarch_size) + '</td>';
+                    fila3 += '</tr>';
+                    $("#verlistaArchivosMemo").append(fila3);
+                }
+            }
+
+        })
+        .fail(function( jqXHR, textStatus, errorThrown ) {
+            if ( console && console.log ) {
+                console.log( " La solicitud getlistaarchivos ha fallado,  textStatus : " +  textStatus 
+                    + " \n errorThrown : "+ errorThrown
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+        });
+    }    
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
     function verMemo(memId,seccion){
         deshabilitabotones();
@@ -529,9 +591,11 @@
 
             //Lista archivos del memo
             console.log('largo archivos ' + data.datos.mem_archivos.length);
+            var totalanexos=data.datos.mem_archivos.length;
+            $("#totalArch").html(totalanexos);
+
             $("#verarchivoMemo").html("");
             $("#verlistaArchivosMemo").html("");
-
             for(var i=0; i<data.datos.mem_archivos.length;i++){
                 console.log('id archivo : ' + data.datos.mem_archivos[i].memoarch_id + ' Nombre archvo: ' + data.datos.mem_archivos[i].memoarch_name);
                 if(data.datos.mem_archivos[i].memoarch_flag == 1){
@@ -542,7 +606,7 @@
                     $("#verarchivoMemo").append(fila2);
                 }else{
                     fila3 = '<tr><td><a href="'+data.datos.mem_archivos[i].memoarch_url+'" target="_blank">'+ data.datos.mem_archivos[i].memoarch_name + '</a></td>';
-                    fila3 += '<td>' + data.datos.mem_archivos[i].memoarch_size + '</td>';
+                    fila3 += '<td>' + returnFileSize(data.datos.mem_archivos[i].memoarch_size) + '</td>';
                     fila3 += '</tr>';
                     $("#verlistaArchivosMemo").append(fila3);
                 }
@@ -637,6 +701,7 @@
             verMemo(memId, sec);
             getlistaCcostos();
             deshabilitaform();
+            $("#msgarchivomemo").hide();
         }else{
             $('#grabar-memo').show();
         }
@@ -805,6 +870,7 @@
                         });
                     });
                     limpiaFormMemo();
+
                 })
                 .fail(function( jqXHR, textStatus, errorThrown ) {
                     if ( console && console.log ) {
@@ -925,17 +991,18 @@
                             modal2.find('.modal-title').text('Mensaje');
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();
+                            limpiaformcambioestado();
+                            getlistaHistorialEstado(memId,sec);
+                            if(sec==2){
+                                if(ultimoestado==2 || ultimoestado==4 || ultimoestado==6 || ultimoestado==8 || ultimoestado==9 || ultimoestado==11){
+                                    $("#cambiaestado").hide();
+                                }else{
+                                    getlistaEstadosMemo(ultimoestado);
+                                }
+                            }
                         });
                     });
-                    getlistaHistorialEstado(memId,sec);
-                    limpiaformcambioestado();
-                    if(sec==2){
-                        if(ultimoestado==2 || ultimoestado==4 || ultimoestado==6 || ultimoestado==8 || ultimoestado==9 || ultimoestado==11){
-                            $("#cambiaestado").hide();
-                        }else{
-                            getlistaEstadosMemo(ultimoestado);
-                        }
-                    }
+                    
                 })
                 .fail(function( jqXHR, textStatus, errorThrown ) {
                     if ( console && console.log ) {
@@ -971,9 +1038,9 @@
             console.log('seleccion estado :'+idestado);*/
             
                 var datax = $("#formarchivomemo").serializeArray();
-                $.each(datax, function(i, field){
+                /*$.each(datax, function(i, field){
                     console.log("contenido del form FILES = "+ field.name + ":" + field.value + " ");
-                });
+                });*/
                 var $loader = $('.loader');
                 var formData = new FormData(document.getElementById("formarchivomemo"));
                 console.log(formData);
@@ -1010,11 +1077,7 @@
                             $('#cerrarModalLittle').focus();
                         });
                     });
-
-                    //getlistaHistorialEstado(memId,sec);
-                    //limpiaformcambioestado();
-                    //lista los archivos del memo
-                    
+                    getlistaArchivos(memId);
                 })
                 .fail(function( jqXHR, textStatus, errorThrown ) {
                     if ( console && console.log ) {

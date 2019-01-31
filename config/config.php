@@ -27,7 +27,9 @@
 	define('RAIZ',$_SERVER['DOCUMENT_ROOT'].'/controlmemo/');
 
 	define('memoarch_prefijo','archivo_memo_');
-    define('memoarch_prefijo_otro','archivo_memo_');
+    define('memoarch_prefijo_otro','archivo_memo_anexo_');
+    define('memoarch_prefijo_det','archivo_detmemo_');
+    
     define('memoarch_directorio','archivos/');
     
     define('logdirectorio','logs/');

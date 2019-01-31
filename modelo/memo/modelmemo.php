@@ -253,10 +253,9 @@ class ModelMemo  {
                                       memo_nombre_solicitante,
                                       memo_depto_solicitante_id,
                                       memo_nombre_destinatario,
-                                      memo_depto_destinatario_id,
-                                      memo_cc_codigo
+                                      memo_depto_destinatario_id
                                       ) 
-                    VALUES (?,?,?,?,?,?,?,?,?,?)";
+                    VALUES (?,?,?,?,?,?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('mem_numero'),
                                                      $data->__GET('mem_anio'),
@@ -266,8 +265,7 @@ class ModelMemo  {
                                                      $data->__GET('mem_nom_sol'),
                                                      $data->__GET('mem_depto_sol_id'),
                                                      $data->__GET('mem_nom_dest'),
-                                                     $data->__GET('mem_depto_dest_id'),
-                                                     $data->__GET('mem_cc_codigo')
+                                                     $data->__GET('mem_depto_dest_id')
                                                     ));
             $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($sql,'0','Registrar');
@@ -290,7 +288,13 @@ class ModelMemo  {
             $stm->execute();
             //var_dump($sqlinsertaestados); exit(1);
             $modelMemoArch = new ModelMemoArchivo();
-            $arrayfile = $modelMemoArch->Registrar($files,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
+            //$files['memoFile'];
+            //$idmemo=7;
+            $tipoarch='memo';
+            $tipoarch2='anexomemo';
+            $arrayfile = $modelMemoArch->RegistrarArchivoGenerico($files['memoFile'],$tipoarch,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
+            $arrayfile = $modelMemoArch->RegistrarArchivoGenerico($files['memoFileList'],$tipoarch2,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
+            //$arrayfile = $modelMemoArch->Registrar($files,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo ingresado correctamente'; 
@@ -336,28 +340,6 @@ class ModelMemo  {
         //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al actualizad Memo';
-            $jsonresponse['errorQuery'] = $Exception->getMessage();
-            $logs = new modelologs();
-            $trace=$Exception->getTraceAsString();
-              $logs->GrabarLogs($Exception->getMessage(),$trace);
-              $logs = null;            
-        }
-        return $jsonresponse;
-    }
-
-    public function ActualizarArchivos($files,$mid){
-      try{
-            
-            $modelMemoArch = new ModelMemoArchivo();
-            $arrayfile = $modelMemoArch->Registrar($files,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
-
-            $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Memo ingresado correctamente'; 
-            $jsonresponse['messagefile'] = $arrayfile;
-        } catch (Exception $Exception){
-        //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al ingresar Memo';
             $jsonresponse['errorQuery'] = $Exception->getMessage();
             $logs = new modelologs();
             $trace=$Exception->getTraceAsString();
