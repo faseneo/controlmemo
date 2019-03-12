@@ -6,9 +6,9 @@
             if(number < 1024) {
                 return number + 'bytes';
             } else if(number > 1024 && number < 1048576) {
-                return (number/1024).toFixed(1) + 'KB';
+                return (number/1024).toFixed(1) + ' KB';
             } else if(number > 1048576) {
-                return (number/1048576).toFixed(1) + 'MB';
+                return (number/1048576).toFixed(1) + ' MB';
             }
     }
 
@@ -18,8 +18,8 @@
         document.getElementById('grabar-memo').style.display = 'none';        
         document.getElementById('agregar-det-memo').style.display = 'none';
         document.getElementById('cancelar-memo').style.display = 'none';
-        document.getElementById('editar-archivos').style.display = 'none';
-        document.getElementById('cancelar-archivos').style.display = 'none';
+        //document.getElementById('editar-archivos').style.display = 'none';
+        //document.getElementById('cancelar-archivos').style.display = 'none';
     }
 
     function deshabilitaform(){
@@ -54,23 +54,24 @@
         $("#archivoMemo").html("");
         //$("#linkres").text("");
         //$("#linkres").attr("href","");
-        $('#memoNum').focus();
+        //memoNum
+        $('#memoFecha').focus();
         $('#paneles').hide();
         $("#listaHistorial").html("");
         $("#verarchivoMemo").html("");
         $("#verlistaArchivosMemo").html("");
     }
-
+    
     function limpiaformcambioestado(){
         $('#formcambioestado')[0].reset();
         $('#memoEstado').focus();
     }
-
+    
     function limpiaFormDetalle(){
         $('#formDetalleMemo')[0].reset();
         $('#memoDetDescripcion').focus();
     }
-
+    
     function aniomemo(){
         var fecha = document.getElementById("memoFecha").value;
         var date = new Date(fecha.replace(/-+/g, '/')); 
@@ -419,7 +420,7 @@
             }
         });
     }
-   //Funcion que lista el historial de Estados del memo
+    //Funcion que lista el historial de Estados del memo
     function getlistaHistorialEstado (memId,seccion){
         var datax = {"Accionmem":"listarestmemo",
                      "memoId": memId,
@@ -465,8 +466,7 @@
             }
         });
     }
-
-   //Funcion que lista Los archivos adjuntos del Memo
+    //Funcion que lista Los archivos adjuntos del Memo
     function getlistaArchivos (memId){
         var datax = {"Accion":"listar",
                      "memoid": memId
@@ -486,18 +486,6 @@
             }
             var totalanexos=data.datos.length;
             $("#totalArch").html(totalanexos);
-            
-            for(var i=0; i<data.datos.length;i++){
-                console.log('id: ' + data.datos[i].estado_id + ' Estado Tipo: ' + data.datos[i].estado_tipo);
-                
-                fila = '<tr><td>'+ data.datos[i].estado_tipo + '</td>';
-                fila += '<td>' + data.datos[i].observacion + '</td>';
-                fila += '<td>' + data.datos[i].fecha + '</td>';
-                fila += '</tr>';
-                $("#listaHistorial").append(fila);
-                ultimoestado = data.datos[i].estado_id;
-                console.log('ultimoestado historial cambio : ' + ultimoestado);
-            }
             //Lista archivos del memo
             console.log('largo archivos ' + data.datos.length);
             $("#verarchivoMemo").html("");
@@ -518,7 +506,6 @@
                     $("#verlistaArchivosMemo").append(fila3);
                 }
             }
-
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -725,12 +712,21 @@
             e.preventDefault();
             $('#memoFileList').val(null);
             $("#listaArchivosMemo").html("");
-        });        
+        });
+
         $("#agrega-archivo").click(function(e){
             $('#addmemoFile').val(null);
             $("#addarchivoMemo").html("");
             $("#addmemoFileInfo").hide();
             $("#grabar-archivomemo").hide();
+            //$("#msgarchivomemo").hide();
+        });
+
+        $("#agrega-archivo-otros").click(function(e){
+            $('#addmemoFileList').val(null);
+            $("#addarchivoMemoList").html("");
+            $("#addmemoFileListInfo").hide();
+            $("#grabar-otrosarchivomemo").hide();
             //$("#msgarchivomemo").hide();
         });
 
@@ -801,6 +797,27 @@
                 }
             }
         });
+        $("#addmemoFileList").change(function() {
+            $("#addarchivoMemoList").html("");
+            var archivos = document.getElementById("addmemoFileList");//Creamos un objeto con el elemento que contiene los archivos: el campo input file, que tiene el id = 'archivos'
+            var archivo = archivos.files; //Obtenemos los archivos seleccionados en el imput
+            if(archivo.length===0){
+                $("#addmemoFileListInfo").show();
+                $("#addmemoFileListInfo").append("No ha seleccionado archivos para subir");
+                $("#grabar-otrosarchivomemo").hide();
+            }else{
+                $("#grabar-otrosarchivomemo").show();
+                $("#addmemoFileListInfo").hide();
+                for(i=0; i<archivo.length; i++){
+                    var lista="<tr>";
+                    lista += "<td>"+archivo[i].name+"</td>";
+                    lista += "<td>"+returnFileSize(archivo[i].size)+"</td>";
+                    /*lista += "<td><button type='button' id='quitarfile' class='close' onclick='quitafile(\'"+i+"\')'>&times;</button></td>";*/
+                    lista += "</tr>";
+                    $("#addarchivoMemoList").append(lista);                    
+                }
+            }
+        });        
         //funcion cuando cambia el select de estado del memo
         $("#memoEstado").change(function(e){
             e.preventDefault();
@@ -853,6 +870,7 @@
                     }                    
                 })
                 .done(function( data, textStatus, jqXHR ) {
+                    limpiaFormMemo();
                     if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
@@ -869,8 +887,6 @@
                             $('#cerrarModalLittle').focus();
                         });
                     });
-                    limpiaFormMemo();
-
                 })
                 .fail(function( jqXHR, textStatus, errorThrown ) {
                     if ( console && console.log ) {
@@ -899,13 +915,13 @@
                     url: "controllers/controllermemo.php",
                     cache:false,
                     contentType:false,
-                    processData:false,
-                    beforeSend: function(){
+                    processData:false
+                    /*beforeSend: function(){
                         $('#ModalCargando').modal('show');
                         $('#ModalCargando').on('shown.bs.modal', function () {
                             $loader.show();
                         });
-                    }                    
+                    }*/                    
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     if ( console && console.log ) {
@@ -914,16 +930,20 @@
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
                     }
-                    $('#ModalCargando').modal('hide');
-                    $('#ModalCargando').on('hidden.bs.modal', function () {
+                    console.log('recibe respuesta');
+                    /*$('#ModalCargando').modal('hide');
+                    $('#ModalCargando').on('hidden.bs.modal', function () {*/
                         $('#myModalLittle').modal('show');
                         $('#myModalLittle').on('shown.bs.modal', function () {
+                            console.log('entra a abrir modal msg');
+                            //deshabilitaform();
+                            $(this).restauraverdatos();
                             var modal2 = $(this);
                             modal2.find('.modal-title').text('Mensaje');
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();
                         });
-                    });
+                    //});
                 })
                 .fail(function( jqXHR, textStatus, errorThrown ) {
                     if ( console && console.log ) {
@@ -994,6 +1014,9 @@
                             limpiaformcambioestado();
                             getlistaHistorialEstado(memId,sec);
                             if(sec==2){
+                                if(ultimoestado==1){
+                                    $("#editar-memo").hide();
+                                }
                                 if(ultimoestado==2 || ultimoestado==4 || ultimoestado==6 || ultimoestado==8 || ultimoestado==9 || ultimoestado==11){
                                     $("#cambiaestado").hide();
                                 }else{
@@ -1014,8 +1037,7 @@
                 });
             }
         });
-
-
+        //funcion que graba el archivo del memo tiempo posterior a su ingreso 
         $("#grabar-archivomemo").click(function(e){
             e.preventDefault();
             var inptuid = document.createElement('input');
@@ -1034,7 +1056,7 @@
             inptmemid.type="hidden";inptmemid.name="meNum";inptmemid.value=$("#memoNum").val();;
             document.formarchivomemo.appendChild(inptmemid);
 
-/*            var idestado = $('#memoEstado').val();
+            /* var idestado = $('#memoEstado').val();
             console.log('seleccion estado :'+idestado);*/
             
                 var datax = $("#formarchivomemo").serializeArray();
@@ -1053,7 +1075,77 @@
                     contentType:false,
                     processData:false,
                     beforeSend: function(){
-                        $('#myModalEstado').modal('hide');
+                        $('#myModalArchivoMemo').modal('hide');
+                        $('#ModalCargando').modal('show');
+                        $('#ModalCargando').on('shown.bs.modal', function () {
+                            $loader.show();
+                        });
+                    }                    
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    if ( console && console.log ) {
+                        console.log( " data success : "+ data.success 
+                            + " \n data msg buscares : "+ data.message 
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                    $('#ModalCargando').modal('hide');
+                    $('#ModalCargando').on('hidden.bs.modal', function () {
+                        $('#myModalLittle').modal('show');
+                        $('#myModalLittle').on('shown.bs.modal', function () {
+                            var modal2 = $(this);
+                            modal2.find('.modal-title').text('Mensaje');
+                            modal2.find('.msg').text(data.message);
+                            $('#cerrarModalLittle').focus();
+                        });
+                    });
+                    getlistaArchivos(memId);
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    if ( console && console.log ) {
+                        console.log( " La solicitud GRABA ESTADO ha fallado,  textStatus : " +  textStatus 
+                            + " \n errorThrown : "+ errorThrown
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                });
+        });
+        //funcion que graba el archivo del memo tiempo posterior a su ingreso 
+        $("#grabar-otrosarchivomemo").click(function(e){
+            e.preventDefault();
+            var inptuid = document.createElement('input');
+            inptuid.type="hidden";inptuid.name="uId";inptuid.value=uid;
+            document.formarchivomemootros.appendChild(inptuid);
+
+            var inptmemid = document.createElement('input');
+            inptmemid.type="hidden";inptmemid.name="meId";inptmemid.value=memId;
+            document.formarchivomemootros.appendChild(inptmemid);
+
+            var inptmemid = document.createElement('input');
+            inptmemid.type="hidden";inptmemid.name="meAnio";inptmemid.value=$("#memoAnio").val();;
+            document.formarchivomemootros.appendChild(inptmemid);
+
+            var inptmemid = document.createElement('input');
+            inptmemid.type="hidden";inptmemid.name="meNum";inptmemid.value=$("#memoNum").val();;
+            document.formarchivomemootros.appendChild(inptmemid);
+
+                var datax = $("#formarchivomemootros").serializeArray();
+                /*$.each(datax, function(i, field){
+                    console.log("contenido del form FILES = "+ field.name + ":" + field.value + " ");
+                });*/
+                var $loader = $('.loader');
+                var formData = new FormData(document.getElementById("formarchivomemootros"));
+                console.log(formData);
+                $.ajax({
+                    data: formData, 
+                    type: "POST",
+                    dataType: "json", 
+                    url: "controllers/controllermemoarchivo.php",
+                    cache:false,
+                    contentType:false,
+                    processData:false,
+                    beforeSend: function(){
+                        $('#myModalArchivoMemo').modal('hide');
                         $('#ModalCargando').modal('show');
                         $('#ModalCargando').on('shown.bs.modal', function () {
                             $loader.show();
@@ -1100,21 +1192,26 @@
             $('#cancelar-memo').show();
             $("#Accionmem").val("actualizar");
         });
-
+        //funcion global restaura ver datos del memo
+        $(function(){
+            $.fn.restauraverdatos = function(){
+                $('#titulo').text('Datos del Memo');
+                deshabilitaform();
+                deshabilitabotones();
+                $("#cambiaestado").show();
+                $("#editar-memo").show();
+                $('#actualizar-memo').hide();
+                $("#Accionmem").val("");
+            }
+         })
         //Boton para cancelar la edicion del memo
         $("#cancelar-memo").click(function(e){
             e.preventDefault();//titulo
-            $('#titulo').text('Datos del Memo');
-            deshabilitaform();
-            deshabilitabotones();
-            $("#cambiaestado").show();
-            $("#editar-memo").show();
-            $('#actualizar-memo').hide();
-            $("#Accionmem").val("");
+            $(this).restauraverdatos();
         });
 
-        //Boton para 
-        $("#editar-archivos").click(function(e){
+        //Boton para editar
+        /*$("#editar-archivos").click(function(e){
             e.preventDefault();
             $('#accord').text('Editar Archivos');
             $("#addfile").show();
@@ -1129,7 +1226,7 @@
             $("#cancelar-archivos").hide();
             //$('#actualizar-memo').hide();
             //$("#Accionmem").val("");
-        });
+        });*/
                 
                 //
                 //

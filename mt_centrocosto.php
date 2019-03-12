@@ -17,22 +17,39 @@ if(!isset($_SESSION["autentica"])){
 	<div class="container" style="margin-top:50px">
 		<div class="row">
 			<div class="col-md-12">  
-				<h2 class="sub-header">Centro de Costos</h2>
-				<div class="table-responsive">
-					<button type="button" id="crea-cecosto" class="btn btn-sm btn-primary"
-					data-toggle="modal" data-target="#myModal" >NUEVO</button> 
-					<table class="table table-striped">
-						<thead>
-							<tr>
-								<th width="10%">Código</th>
-								<th width="45%">Nombre Centro de Costos</th>
-								<th width="30%">Unidad de dependencia</th>
-								<th width="15%">Acciones</th>
-							</tr>
-						</thead>
-						<tbody id="listacecostos">
-						</tbody>
-					</table>
+			<div class="box">
+	            <div class="box-header">
+					<h3 class="box-title-mt">Centro de Costos</h3>
+					<!-- <h3 class="sub-header">Centro de Costos</h3> -->
+					<div class="box-tools">
+						<ul class="pagination pagination-sm no-margin pull-right">
+							<li><a href="#">&laquo;</a></li>
+							<li><a href="#">1</a></li>
+							<li><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">&raquo;</a></li>
+						</ul>
+					</div>
+	            </div>
+				<div class="box-body no-padding">
+					<div class="table-responsive">
+						<button type="button" id="crea-cecosto" class="btn btn-sm btn-primary"
+						data-toggle="modal" data-target="#myModal" >NUEVO</button> 
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th width="8%">Código</th>
+									<th width="45%">Nombre Centro de Costos</th>
+									<th width="10%">Tipo</th>
+									<th width="23%">Unidad de dependencia</th>
+									<th width="8%">Acción</th>
+									<th width="6%">Estado</th>
+								</tr>
+							</thead>
+							<tbody id="listacecostos">
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -57,9 +74,23 @@ if(!isset($_SESSION["autentica"])){
 							<input id="ccNombre" class="form-control" type="text" name="ccNombre" value="" title="Ingrese un nombre" required />
 						</div>
 						<div class="form-group">
+							<label for="ccTipo">Tipo Centro de Costos</label>
+							<select id="ccTipo" name="ccTipo" class="form-control">
+								<option value="PROPIO">Propio</option>
+								<option value="PROYECTO">Proyecto</option>
+							</select>
+						</div>
+						<div class="form-group">
 							<label for="ccDependencia">Unidad de dependencia</label>
                             <select name="ccDependencia" id="ccDependencia" class="form-control"></select>
 						</div>
+						<div class="form-group">
+							<label for="ccEstado">Estado Centro de Costos</label>
+							<select id="ccEstado" name="ccEstado" class="form-control">
+								<option value="1">Activo</option>
+								<option value="0">Inactivo</option>
+							</select>
+						</div>						
 					</div>
 					<div class="modal-footer">
 						<button id="editar-cecosto" name="editar-cecosto" type="button" class="btn btn-warning">Editar</button>

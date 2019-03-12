@@ -3,77 +3,86 @@
 <head>
     <?php include "header.php"; ?>
     <title>Listado Memos</title>
-    <!-- <script src="js/fn_valida.js"></script> -->
+    <script src="js/fn_valida.js"></script>
+    <script type="text/javascript">
+    	$(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 </head>
 <body>
-  <div class="container">
-    <!-- <div class="row">
-      <div class="col-sm-12">
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>                        
-              </button>
-              <a class="navbar-brand" href="http://www.umce.cl">UMCE</a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-              <ul class="nav navbar-nav navbar-right">
-                <li><a href="http://www.umce.cl">Universidad Metropolitana de Ciencias de la Educación</a></li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </div>
-    </div> -->
-    <br><br><br><br>
-    <div class="row">
-      <div class="col-sm-4 col-sm-offset-4">
-        <div >
-          <h3>Sistema Control Adquisiciones</h3>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-3 col-sm-offset-4">
-        <br><h3 class="form-signin-heading">Ingrese sus datos</h3><br><br>
-      </div>
-    </div>
-    <form class="form-signin" method="post" action="controllers/controllerusuario.php">
-      <input type="hidden" id="Accion" name="Accion" value="valida">
-      <div class="row">
-        <div class="col-sm-3 col-sm-offset-4" >
-            <div class="form-group">
-              <label for="formRut">Rut</label>
-              <input type="text" class="form-control" name="formRut" id="formRut" placeholder="">
-            </div>
-            <div class="form-group">
-              <label for="formPass">Contraseña</label>
-              <input type="password" class="form-control" id="formPass" name="formPass"  placeholder="">
-            </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-3 col-sm-offset-4" style="text-align:center">
-          <button class="btn btn-small btn-primary" type="submit">Entrar al sistema</button>
-        </div>
-      </div>      
-    </form>
-    <br>
-     <div class="row">
-        <div class="col-sm-3 col-sm-offset-4" style="text-align:center">
-          <h6>
-            <p>Escriba los datos como en el siguiente ejemplo:</p>
-            <p>Rut: 12345678-9 / Fecha nac.: 1-1-1901</p>
-          </h6>
-        </div>
-      </div> 
-      <hr>
-  </div>    
-  <footer>
-       <p><center><h5>Si tiene alg&uacute;n problema para ingresar debe acercarse a su asistente social</h5></center></p>
-  </footer>
- </body>
- </html>
+	<br>
+	<header>
+		<center>
+			<img src="img/logo_umce_2018_290.jpg" class="img-rounded">
+			<h2 class="form-signin-heading">Sistema Control Adquisiciones</h2>
+		</center>
+	</header>
+	<main>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-4 col-sm-offset-4">
+				<br>
+				<div class="well">
+					<form id="formLogin" name="formLogin" class="form-signin" method="post" action="controllers/controllerusuario.php">
+						<input type="hidden" id="Accion" name="Accion" value="valida">
+						<div class="row">
+							<div class="col-sm-10 col-sm-offset-1">
+								<h3 class="form-signin-heading">Iniciar sesión</h3>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-10 col-sm-offset-1">
+								<div class="input-group">
+									<span class="input-group-addon"  data-toggle="tooltip" data-placement="top" title="Correo Institucional"><i class="glyphicon glyphicon-user"></i></span>
+									<input name="formUser" id="formUser" type="email" class="form-control" placeholder="E-mail">
+								</div>
+								<span class="help-block" id="spanuser"></span>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-10 col-sm-offset-1">
+								<div class="input-group">
+									<span class="input-group-addon" data-toggle="tooltip" data-placement="top" title="Contraseña Sistema"><i class="glyphicon glyphicon-lock"></i></span>
+									<input name="formPass" id="formPass" type="password" class="form-control" placeholder="Contraseña">
+								</div>
+								<span class="help-block" id="spanpass"></span>
+								<!-- <div class="col-md-12 text-right hidden-xs">
+									<a id="linkRecupera" data-toggle="tooltip" data-placement="top" title="Recupera tu contraseña Aqui" href="#">
+									¿Olvidaste tu contraseña?
+									</a>
+								</div> -->
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-10 col-sm-offset-1">
+								<button id="validar" class="btn btn-small btn-primary" type="button">
+									<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+									Entrar al sistema
+								</button>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-sm-10 col-sm-offset-1">
+								
+								<p class="text-danger" id="noexiste"></p>
+							</div>
+						</div>
+						<br>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>	
+	</main>
+	<footer>
+		<hr>
+		<center>
+			<p>Departamento de informática UMCE 2018-2019</p>
+		</center>	
+	</footer>
+</body>
+</html>

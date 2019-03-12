@@ -22,7 +22,8 @@ class ModelDependencia {
             $result = array();
             $stm = $this->pdo->prepare("SELECT  dep.dependencia_codigo,
                                                 dep.dependencia_nombre
-                                        FROM dependencia as dep");
+                                        FROM dependencia as dep
+                                        WHERE dep.dependencia_estado=1");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new Dependencia();

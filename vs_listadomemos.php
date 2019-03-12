@@ -56,7 +56,12 @@ if($_SESSION["autentica"] != "SIP"){
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
-                        </div>                        
+                        </div>
+                        <div class="col-md-3">
+                            <div id="boxloader">
+                                <div class="loader"></div><!-- <p id="msg" class="msg">Cargando ...</p> -->
+                            </div>
+                        </div>
                     </div>
                 </form>    
                     <div class="row">

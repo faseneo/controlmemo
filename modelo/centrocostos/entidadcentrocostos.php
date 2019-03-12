@@ -3,6 +3,8 @@
 class CentroCostos{
     private $ccosto_codigo;
     private $ccosto_nombre;
+    private $ccosto_tipo;
+    private $ccosto_estado;
     private $ccosto_dep_codigo;
     private $ccosto_dep_nombre;
     

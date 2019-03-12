@@ -118,11 +118,8 @@
                 dataType: "json", 
                 url: "controllers/controllermemo.php", 
                 beforeSend: function(){
-                        $('#ModalCargando').modal('show');
-                        $('#ModalCargando').on('shown.bs.modal', function () {
-                            $loader.show();
-                        });
-                    }
+                    $('#boxloader').show();
+                }
             })
             .done(function( data, textStatus, jqXHR ) {
                 $("#listamemos").html(""); 
@@ -132,7 +129,9 @@
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );*/
                 }
-                $('#ModalCargando').modal('hide');
+                //$('#ModalCargando').modal('hide');
+                setTimeout($('#boxloader').hide(), 1000000);
+                //$('#boxloader').hide();
                 incrementotest=0;
                 if(data.datos.length>0){
                     //console.log('tiene elementos');

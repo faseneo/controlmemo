@@ -25,11 +25,12 @@ if(!isset($_SESSION["autentica"])){
 						<table class="table table-striped">
 							<thead>
 								<tr>
-									<th width="10%">Rut</th>
-									<th width="25%">Nombre</th>
-									<th width="22%">Rol Ususario</th>
-									<th width="15%">Seccion/Unidad</th>
-									<th width="10%">Estado</th>
+									<th width="8%">Rut</th>
+									<th width="14%">Email</th>
+									<th width="20%">Nombre</th>
+									<th width="20%">Rol Ususario</th>
+									<th width="12%">Seccion/Unidad</th>
+									<th width="8%">Estado</th>
 									<th width="18%">Acciones</th>
 								</tr>
 							</thead>
@@ -66,6 +67,14 @@ if(!isset($_SESSION["autentica"])){
 							</div>
 						</div>
 						<div class="row">
+	                        <div class="col-md-12">
+								<div class="form-group">
+									<label for="usuEmail">E-mail</label>
+									<input id="usuEmail" name="usuEmail" type="text" class="form-control" rows="3"  title="Ingrese Email" />
+								</div>	                        
+	                        </div>
+	                    </div>
+						<div class="row">
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label for="usuPass">Contraseña</label>
@@ -81,6 +90,13 @@ if(!isset($_SESSION["autentica"])){
 							</div>
 						</div>
 						<div class="row">
+	                        <div class="col-md-6">
+								<div class="form-group">
+									<label for="usuSeccionId">Sección</label>
+										<select name="usuSeccionId" id="usuSeccionId" class="form-control">
+		                                </select>
+								</div>
+	                        </div>						
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label for="usuEstadoId">Estado</label>

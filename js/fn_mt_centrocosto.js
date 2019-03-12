@@ -11,12 +11,16 @@
     function habilitaform(){
         $("#ccCodigo").prop( "disabled", false );
         $("#ccNombre").prop( "disabled", false );
+        $("#ccTipo").prop( "disabled", false );
         $("#ccDependencia").prop( "disabled", false );
+        $("#ccEstado").prop( "disabled", false );
     }
     function deshabilitaform(){
         $("#ccCodigo").prop( "disabled", true );
         $("#ccNombre").prop( "disabled", true );
+        $("#ccTipo").prop( "disabled", true );
         $("#ccDependencia").prop( "disabled", true );
+        $("#ccEstado").prop( "disabled", true );
     }
            //funcion para listar los cecostos
     var getlistaDep = function (){
@@ -97,16 +101,25 @@
                                 fila = '<tr>';
                                 fila += '<td>'+ data.datos[i].ccosto_codigo +'</td>';
                                 fila += '<td>'+ data.datos[i].ccosto_nombre +'</td>';
+                                fila += '<td>'+ data.datos[i].ccosto_tipo +'</td>';
                                 fila += '<td>'+ data.datos[i].ccosto_dep_nombre +'</td>';
                                 fila += '<td><button id="ver-cecosto" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
                                 fila += ' onclick="verCecosto(\'ver\',\'' + data.datos[i].ccosto_codigo + '\')">';
-                                fila += 'Ver / Editar</button>';
-                                fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
+                                fila += 'Ver / Editar</button> ';
+                                /*fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
                                 fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
                                 fila += 'onclick="deleteCecosto(\''+ data.datos[i].ccosto_codigo +'\',\''
                                 + data.datos[i].ccosto_nombre +'\')">';
-                                fila += 'Eliminar</button></td>';
+                                fila += 'Eliminar</button>';*/
+                                fila += '</td>';
+                                fila += '<td class="text-center">';
+                                if(data.datos[i].ccosto_estado==1){
+                                    fila += '<span class="glyphicon glyphicon-ok text-success"></span>';
+                                }else{
+                                    fila += '<span class="glyphicon glyphicon-remove text-danger"></span>';
+                                }
+                                fila += '</td>';
                                 fila += '</tr>';
                                 $("#listacecostos").append(fila);
                             }
@@ -136,7 +149,9 @@
                 $('#ccNombre').focus();
             });
         });
-
+        $("#active-cecosto").click(function(e) {
+            console.log($("#active-cecosto").text);
+        });
         // implementacion boton para guardar el centro de costo
         $("#guardar-cecosto").click(function(e){
             e.preventDefault();
@@ -302,7 +317,9 @@
             }
             $("#ccCodigo").val(data.datos.ccosto_codigo);
             $("#ccNombre").val(data.datos.ccosto_nombre);
+            $("#ccTipo").val(data.datos.ccosto_tipo);
             $("#ccDependencia").val(data.datos.ccosto_dep_codigo);
+            $("#ccEstado").val(data.datos.ccosto_estado);
 
             console.log('dependencia : '+data.datos.ccosto_dep_codigo);
             $("#Accion").val(action);

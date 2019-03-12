@@ -202,12 +202,12 @@ if($_SESSION["autentica"] != "SIP"){
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <!-- <div class="row">
                                                     <div class="col-lg-2 col-lg-offset-10 text-right">
                                                         <button id="editar-archivos" type="button" name="editar-memo" class="btn btn-sm btn-warning">Editar Archivos</button>
                                                         <button id="cancelar-archivos" type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancelar</button>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                     </div>
                                 </div>
@@ -310,9 +310,9 @@ if($_SESSION["autentica"] != "SIP"){
                                         </div>
                                     </div>
                                 </div>
-                        </div>
-                    </div> <!-- Fin panel body-->
-                </div> <!-- Fin panel-->
+                            </div>
+                        </div> <!-- Fin panel body-->
+                    </div> <!-- Fin panel-->
 
                     <!--Panel historial de los estados -->
                     <div class="panel panel-info">
@@ -425,12 +425,11 @@ if($_SESSION["autentica"] != "SIP"){
                 <form role="form" name="formarchivomemo" id="formarchivomemo" method="post" action="">
                     <input type="hidden" name="Accion" id="Accion" value="actualizarfiles" />
                     <div class="modal-body">
-
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="btn btn-success btn-sm" for="addmemoFile">
-                                        <input id="addmemoFile" name="addmemoFile" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx" multiple style="display:none">Agregar archivo
+                                        <input id="addmemoFile" name="addmemoFile" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx" style="display:none">Examinar...
                                     </label>
                                     <span class='label label-info' id="addmemoFileInfo"></span>
                                 </div> 
@@ -443,7 +442,7 @@ if($_SESSION["autentica"] != "SIP"){
                                         <thead>
                                             <tr>
                                                 <th width="80%">Nombre Archivo</th>
-                                                <th width="10%">Tamaño</th>
+                                                <th width="20%">Tamaño</th>
                                             </tr>
                                         </thead>
                                         <tbody id="addarchivoMemo">
@@ -456,7 +455,8 @@ if($_SESSION["autentica"] != "SIP"){
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                             <span class="sr-only" >Error:</span>
                             ¡Ya Existe archivo del memo!. Si sube uno nuevo eliminará el archivo anterior
-                        </div> 
+                        </div>
+                    </div>    
                     <div class="modal-footer">
                         <button id="grabar-archivomemo" name="guardar-estado" type="button" class="btn btn-primary">Guardar Archivo</button>
                         <button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -466,6 +466,56 @@ if($_SESSION["autentica"] != "SIP"){
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <div class="modal fade" id="myModalArchivoOtros" tabindex="-1" role="dialog" aria-labelledby="myModalArchivoOtrosLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title-form" id="myModalArchivoOtrosLabel">Agrega Otros Archivos Anexos</h4>
+                </div>
+                <form role="form" name="formarchivomemootros" id="formarchivomemootros" method="post" action="">
+                    <input type="hidden" name="Accion" id="Accion" value="actualizarfiles" />
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="btn btn-success btn-sm" for="addmemoFileList">
+                                        <input id="addmemoFileList" name="addmemoFileList[]" type="file" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx" multiple  style="display:none">Examinar...
+                                    </label>
+                                    <span class='label label-info' id="addmemoFileListInfo"></span>
+                                </div> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th width="80%">Nombre Archivo</th>
+                                                <th width="20%">Tamaño</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="addarchivoMemoList">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div id="msgarchivomemo" class="alert alert-warning" role="alert">
+                                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                 <span class="sr-only" >Error:</span>
+                                 ¡Ya Existe archivo del memo!. Si sube uno nuevo eliminará el archivo anterior
+                        </div> --> 
+                    </div>
+                    <div class="modal-footer">
+                        <button id="grabar-otrosarchivomemo" name="guardar-estado" type="button" class="btn btn-primary">Guardar Archivo</button>
+                        <button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->    
     <!-- Modal mensajes cortos por Ej: Mensaje Memo guardado -->
     <div class="modal fade" id="myModalLittle" tabindex="-1" role="dialog" aria-labelledby="myModalLittleLabel">
         <div class="modal-dialog">
@@ -483,7 +533,6 @@ if($_SESSION["autentica"] != "SIP"){
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
     <!-- Modal Animacin cargando en epsera por Ej. para  Mensaje Memo guardado -->
     <div class="modal fade" id="ModalCargando" tabindex="-1" role="dialog" aria-labelledby="ModalCargandoLabel">
         <div class="modal-dialog modal-sm">
@@ -501,6 +550,6 @@ if($_SESSION["autentica"] != "SIP"){
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 </body>
 </html> 

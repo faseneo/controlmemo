@@ -133,7 +133,6 @@ class ModelMemo  {
                                           WHERE dep.dpto_id = mm.memo_depto_solicitante_id 
                                           AND cc.cc_codigo=mm.memo_cc_codigo
                                           AND mm.memo_id = ?");
-
               $stm->execute(array($id));
               $r = $stm->fetch(PDO::FETCH_OBJ);
               if($r){
@@ -148,7 +147,7 @@ class ModelMemo  {
                           $busq->__SET('mem_depto_sol_id', $r->memo_depto_solicitante_id);
                           $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
                           $busq->__SET('mem_depto_sol_nom', $r->dpto_nombre);
-                          
+
                           $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
                           $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
 
@@ -158,7 +157,7 @@ class ModelMemo  {
                           $busq->__SET('mem_nom_cc', $r->cc_nombre);
 
                           $modelMemoArch = new ModelMemoArchivo();
-                          
+
                           $arrayfile = $modelMemoArch->listar($r->memo_id);
                             $busq->__SET('mem_archivos', $arrayfile['datos']);
                           $arrayestados = $this->ObtenerCambiosEstadosMemo($r->memo_id,$sec);
@@ -253,9 +252,10 @@ class ModelMemo  {
                                       memo_nombre_solicitante,
                                       memo_depto_solicitante_id,
                                       memo_nombre_destinatario,
-                                      memo_depto_destinatario_id
+                                      memo_depto_destinatario_id,
+                                      memo_cc_codigo
                                       ) 
-                    VALUES (?,?,?,?,?,?,?,?,?)";
+                    VALUES (?,?,?,?,?,?,?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('mem_numero'),
                                                      $data->__GET('mem_anio'),
@@ -265,7 +265,8 @@ class ModelMemo  {
                                                      $data->__GET('mem_nom_sol'),
                                                      $data->__GET('mem_depto_sol_id'),
                                                      $data->__GET('mem_nom_dest'),
-                                                     $data->__GET('mem_depto_dest_id')
+                                                     $data->__GET('mem_depto_dest_id'),
+                                                     0
                                                     ));
             $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($sql,'0','Registrar');

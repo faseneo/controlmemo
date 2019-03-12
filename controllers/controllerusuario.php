@@ -18,9 +18,11 @@ if(isset($_REQUEST['Accion'])){
             $usu->__SET('usu_id',           $_REQUEST['usuId']);
             $usu->__SET('usu_rut',          $_REQUEST['usuRut']);
             $usu->__SET('usu_nombre',       $_REQUEST['usuNombre']);
+            $usu->__SET('usu_email',       $_REQUEST['usuEmail']);
             $usu->__SET('usu_password',     $_REQUEST['usuPass']);
             $usu->__SET('usu_rol_id',       $_REQUEST['usuRolId']);
             $usu->__SET('usu_estado_id',    $_REQUEST['usuEstadoId']);
+            $usu->__SET('usu_sec_id',       $_REQUEST['usuSeccionId']);
             /*$usu->__SET('usu_perfil_nombre', $_REQUEST['usuarioperfilnom']);*/
             $jsondata = $modelUsu->Actualizar($usu);
             header('Content-type: application/json; charset=utf-8');
@@ -30,9 +32,11 @@ if(isset($_REQUEST['Accion'])){
         case 'registrar':
             $usu->__SET('usu_rut',          $_REQUEST['usuRut']);
             $usu->__SET('usu_nombre',       $_REQUEST['usuNombre']);
+            $usu->__SET('usu_email',        $_REQUEST['usuEmail']);
             $usu->__SET('usu_password',     $_REQUEST['usuPass']);
             $usu->__SET('usu_rol_id',       $_REQUEST['usuRolId']);
             $usu->__SET('usu_estado_id',    $_REQUEST['usuEstadoId']);
+            $usu->__SET('usu_sec_id',       $_REQUEST['usuSeccionId']);
             /*$usu->__SET('usu_perfil_nombre', $_REQUEST['usuarioperfilnom']);*/
             $jsondata = $modelUsu->Registrar($usu);
             header('Content-type: application/json; charset=utf-8');
@@ -75,17 +79,24 @@ if(isset($_REQUEST['Accion'])){
             break;
 
         case 'valida':
+            $user=strtolower($_REQUEST['formUser']);
+            $pass=$_REQUEST['formPass'];
+            $jsondata = $modelUsu->Valida($user,$pass);
+            echo json_encode($jsondata);
+            break;           
+
+        case 'valida2':
             //var_dump($_SESSION);
-            $rut=$_REQUEST['formRut'];
+            /*$user=$_REQUEST['formRut'];
             $pass=$_REQUEST['formPass'];
             $jsondata = $modelUsu->Valida($_REQUEST['formRut'],$_REQUEST['formPass']);
-            header ("Location: ../principal.php");
+            header ("Location: ../principal.php");*/
             //var_dump($jsondata);
             /*if($jsondata){
             }*/
             //header('Content-type: application/json; charset=utf-8');
             //echo json_encode($jsondata);
-            break;           
+            break; 
 
         case 'addperfil':
          ///var_dump($_REQUEST);

@@ -29,9 +29,12 @@ if(isset($_REQUEST['Accion'])){
             //colocar aqui el codigo para agregar archivos al memo
 
         case 'actualizarfiles':
-            $jsondata = $modelMemoArch->ActualizarArchivoMemo($_FILES,$_REQUEST['meId'],$_REQUEST['meNum'],$_REQUEST['meAnio']);
+            var_dump($_FILES['addmemoFileList']);
+            var_dump($_REQUEST);
+            /*$jsondata = $modelMemoArch->ActualizarArchivoMemo($_FILES,$_REQUEST['meId'],$_REQUEST['meNum'],$_REQUEST['meAnio']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
+            */
             break;
 
         case 'eliminar':

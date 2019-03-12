@@ -49,18 +49,18 @@
                 }
                 for(var i=0; i<data.datos.length;i++){
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
-                                console.log('id: '+data.datos[i].memo_arch_id + ' URL: '+data.datos[i].memo_arch_url);
+                                console.log('id: '+data.datos[i].memoarch_id + ' URL: '+data.datos[i].memoarch_url);
 
-                                fila = '<tr><td>'+ data.datos[i].memo_arch_url +'</td>';
+                                fila = '<tr><td>'+ data.datos[i].memoarch_url +'</td>';
                                 //fila += '<td>'+ data.datos[i].ccosto_codigo +'</td>';
                                 fila += '<td><button id="ver-memoarch" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
-                                fila += ' onclick="verMemoArch(\'ver\',\'' + data.datos[i].memo_arch_id + '\')">';
+                                fila += ' onclick="verMemoArch(\'ver\',\'' + data.datos[i].memoarch_id + '\')">';
                                 fila += 'Ver / Editar</button>';
                                 fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
                                 fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                                fila += 'onclick="deleteMemoArch(\''+ data.datos[i].memo_arch_id +'\',\''
-                                + data.datos[i].memo_arch_url +'\')">';
+                                fila += 'onclick="deleteMemoArch(\''+ data.datos[i].memoarch_id +'\',\''
+                                + data.datos[i].memoarch_url +'\')">';
                                 fila += 'Eliminar</button></td>';
                                 fila += '</tr>';
                                 $("#listamemoarch").append(fila);

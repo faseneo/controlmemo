@@ -26,6 +26,7 @@ class ModelUsuarios{
             $stm = $this->pdo->prepare("SELECT  us.usuario_id,
                                                 us.usuario_rut,
                                                 us.usuario_nombre,
+                                                us.usuario_email,
                                                 us.usuario_usu_rol_id,
 												us.usuario_estado,
                                                 us.usuario_fecha_ingreso,
@@ -41,6 +42,7 @@ class ModelUsuarios{
                     $busq->__SET('usu_id',          $r->usuario_id);
                     $busq->__SET('usu_rut',         $r->usuario_rut);
                     $busq->__SET('usu_nombre',      $r->usuario_nombre); 
+                    $busq->__SET('usu_email',       $r->usuario_email);
                     $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                     $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
 					$busq->__SET('usu_estado_id',   $r->usuario_estado);
@@ -68,6 +70,7 @@ class ModelUsuarios{
             $stm = $this->pdo->prepare("SELECT  us.usuario_id,
                                                 us.usuario_rut,
                                                 us.usuario_nombre,
+                                                us.usuario_email,
                                                 us.usuario_usu_rol_id,
                                                 us.usuario_estado,
                                                 us.usuario_fecha_ingreso,
@@ -84,6 +87,7 @@ class ModelUsuarios{
                     $busq->__SET('usu_id',          $r->usuario_id);
                     $busq->__SET('usu_rut',         $r->usuario_rut);
                     $busq->__SET('usu_nombre',      $r->usuario_nombre); 
+                    $busq->__SET('usu_email',       $r->usuario_email);
                     $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                     $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                     $busq->__SET('usu_estado_id',   $r->usuario_estado);
@@ -109,9 +113,11 @@ class ModelUsuarios{
             $stm = $this->pdo->prepare("SELECT  us.usuario_id,
                                                 us.usuario_rut,
                                                 us.usuario_nombre,
+                                                us.usuario_email,
                                                 us.usuario_password,
                                                 us.usuario_usu_rol_id,
                                                 us.usuario_estado,
+                                                us.usuario_seccion_id,
                                                 us.usuario_fecha_ingreso,
                                                 ur.usu_rol_nombre
                                         FROM usuario as us ,usuario_rol as ur
@@ -123,10 +129,12 @@ class ModelUsuarios{
                     $busq->__SET('usu_id',          $r->usuario_id);
                     $busq->__SET('usu_rut',         $r->usuario_rut);
                     $busq->__SET('usu_nombre',      $r->usuario_nombre); 
+                    $busq->__SET('usu_email',       $r->usuario_email);
                     $busq->__SET('usu_password',    $r->usuario_password);
                     $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                     $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                     $busq->__SET('usu_estado_id',   $r->usuario_estado);
+                    $busq->__SET('usu_sec_id',      $r->usuario_seccion_id);
                     $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
 
                     $arrayperfiles = $this->ObtenerPerfilesUsuaro($id);
@@ -206,23 +214,31 @@ class ModelUsuarios{
     public function Registrar(Usuarios $data){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO usuario (usuario_rut, usuario_nombre, usuario_password, usuario_usu_rol_id,usuario_estado) 
-                    VALUES (?,?,?,?,?)";
+            $sql = "INSERT INTO usuario (usuario_rut, usuario_nombre, usuario_email, usuario_password, usuario_usu_rol_id, usuario_seccion_id, usuario_estado) 
+                    VALUES (?,?,?,?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('usu_rut'),
                                                      $data->__GET('usu_nombre'),
+                                                     $data->__GET('usu_email'),
                                                      $data->__GET('usu_password'),
 													 $data->__GET('usu_rol_id'),
+                                                     $data->__GET('usu_sec_id'),
                                                      $data->__GET('usu_estado_id')
                                               ));
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Usuario ingresado correctamente'; 
         } catch (PDOException $pdoException){
         //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
+            //var_dump($jsonresponse);
             $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al ingresar usuario';
+            $jsonresponse['message'] = 'Error al obtener perfiles';
             $jsonresponse['errorQuery'] = $pdoException->getMessage();
-            var_dump($jsonresponse);
+
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;
+
         }
         return $jsonresponse;
     }
@@ -265,16 +281,20 @@ class ModelUsuarios{
             $sql = "UPDATE usuario SET 
                            usuario_rut = ?, 
                            usuario_nombre = ?,
+                           usuario_email = ?,
                            usuario_password = ?,
 						   usuario_usu_rol_id = ?,
+                           usuario_seccion_id = ?,
                            usuario_estado = ?
                     WHERE  usuario_id = ?";
 
             $this->pdo->prepare($sql)
                  ->execute(array($data->__GET('usu_rut'),
                                  $data->__GET('usu_nombre'), 
+                                 $data->__GET('usu_email'), 
                                  $data->__GET('usu_password'),
                                  $data->__GET('usu_rol_id'),
+                                 $data->__GET('usu_sec_id'),
                                  $data->__GET('usu_estado_id'),
                                  $data->__GET('usu_id'))
                           );
@@ -323,44 +343,43 @@ class ModelUsuarios{
         return $jsonresponse;        
     }
 
-    public function valida($rut,$pass){
+    public function valida($user,$pass){
+
         $jsonresponse = array();
         try{
-            $consulta = "SELECT COUNT(*) FROM usuario where usuario_rut = '".$rut."' AND usuario_password = '".$pass."'";
+            $consulta = "SELECT COUNT(*) FROM usuario where usuario_email = '".$user."' AND usuario_password = '".$pass."'";
             
             $res = $this->pdo->query($consulta);
             if ($res->fetchColumn() == 0) {
-                $jsonresponse['success'] = true;
+                $jsonresponse['success'] = false;
                 $jsonresponse['message'] = 'Usuario o contraseña incorreto';
                 $jsonresponse['datos'] = [];
             }else{
                 $stm = $this->pdo->prepare("SELECT  us.usuario_id,
                                                     us.usuario_rut,
+                                                    us.usuario_email,
                                                     us.usuario_nombre,
-                                                    us.usuario_password,
                                                     us.usuario_usu_rol_id,
                                                     us.usuario_estado,
-                                                    us.usuario_fecha_ingreso,
                                                     ur.usu_rol_nombre,
                                                     us.usuario_seccion_id,
                                                     sec.seccion_nombre
                                             FROM usuario as us ,usuario_rol as ur, seccion as sec
                                             WHERE us.usuario_usu_rol_id= ur.usu_rol_id AND sec.seccion_id = us.usuario_seccion_id
-                                            AND us.usuario_rut = ? AND us.usuario_password = ?");
-                $stm->execute(array($rut,$pass));
+                                            AND us.usuario_email = ? AND us.usuario_password = ?");
+                $stm->execute(array($user,$pass));
                 $r = $stm->fetch(PDO::FETCH_OBJ);
 
                 $busq = new Usuarios();
                         $busq->__SET('usu_id',          $r->usuario_id);
                         $busq->__SET('usu_rut',         $r->usuario_rut);
+                        $busq->__SET('usu_email',       $r->usuario_email);
                         $busq->__SET('usu_nombre',      $r->usuario_nombre); 
-                        //$busq->__SET('usu_password',    $r->usuario_password);
                         $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                         $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                         $busq->__SET('usu_estado_id',   $r->usuario_estado);
                         $busq->__SET('usu_sec_id',      $r->usuario_seccion_id);
                         $busq->__SET('usu_sec_nombre',  $r->seccion_nombre);
-                        //$busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
                         $arrayperfiles = $this->ObtenerPerfilesUsuaro($r->usuario_id);
                             $busq->__SET('usu_perfiles', $arrayperfiles['datos']);
                 
@@ -368,9 +387,10 @@ class ModelUsuarios{
                 
                 //$fechaactual = date("d-m-Y H:i:s");
                 $fechaactual = date("d-m-Y");
-                session_start();
+                //session_start();
                    $_SESSION["autentica"] = "SIP";
                    $_SESSION["rut"] = $r->usuario_rut;
+                   $_SESSION["email"] = $r->usuario_email;
                    $_SESSION["uid"] = $r->usuario_id;
                    $_SESSION["nombre"] = $r->usuario_nombre;
                    $_SESSION["rol"] = $r->usuario_usu_rol_id;

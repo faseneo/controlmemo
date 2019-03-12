@@ -22,8 +22,10 @@
             $("#usuId").prop( "disabled", false );
             $("#usuRut").prop( "disabled", false );
             $("#usuNombre").prop( "disabled", false );
+            $("#usuEmail").prop( "disabled", false );
             $("#usuPass").prop( "disabled", false);
 			$("#usuRolId").prop( "disabled", false );
+            $("#usuSeccionId").prop( "disabled", false );
 			$("#usuEstadoId").prop( "disabled", false);
         }
 
@@ -31,8 +33,10 @@
             $("#usuId").prop( "disabled", true );
             $("#usuRut").prop( "disabled", true );
             $("#usuNombre").prop( "disabled", true );
+            $("#usuEmail").prop( "disabled", true );
             $("#usuPass").prop( "disabled", true);
             $("#usuRolId").prop( "disabled", true );
+            $("#usuSeccionId").prop( "disabled", true );
             $("#usuEstadoId").prop( "disabled", true);
         }
 
@@ -79,7 +83,7 @@
             });
         }
 
-        function getlistaPrefiles(){
+        function getlistaPerfiles(){
             var datax = {
                 "Accion":"listar"
             }
@@ -114,13 +118,49 @@
             });
         }
 
+        function getlistaSecciones(){
+            var datax = {
+                "Accion":"listar"
+            }
+            $.ajax({
+                data: datax, 
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerseccion.php",          
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                $("#usuSeccionId").html("");
+                if ( console && console.log ) {
+                    console.log( " data success Secciones : "+ data.success 
+                        + " \n data msg : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+                for(var i=0; i<data.datos.length;i++){
+                    //console.log('id: '+data.datos[i].sec_id + ' nombre: '+data.datos[i].sec_nombre);
+                    opcion = '<option value='+ data.datos[i].sec_id +'>'+data.datos[i].sec_nombre+'</option>';
+                    $("#usuSeccionId").append(opcion);
+                }
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlista seccion ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+        }        
+
     getlistaroles();
-    getlistaPrefiles();
+    getlistaPerfiles();
+    getlistaSecciones();
 
     $(document).ready(function(){
         function validarFormulario(){
             var txtRut = document.getElementById('usuRut').value;
             var txtNombre = document.getElementById('usuNombre').value;
+            var txtEmail = document.getElementById('usuEmail').value;
 			var txtPass = document.getElementById('usuPass').value;
             var selRol = document.getElementById('usuRolId').selectedIndex;
                 //Test campo obligatorio
@@ -134,6 +174,11 @@
                     document.getElementById('usuNombre').focus();
                     return false;
                 }
+                if(txtEmail == null || txtEmail.length == 0 || /^\s+$/.test(txtEmail)){
+                    alert('ERROR: El campo nombre no debe ir vacío o con espacios en blanco');
+                    document.getElementById('usuEmail').focus();
+                    return false;
+                }                
                 if(txtPass == null || txtPass.length == 0 || /^\s+$/.test(txtPass)){
                     alert('ERROR: El campo contraseña no debe ir vacío o con espacios en blanco');
                     document.getElementById('usuPass').focus();
@@ -158,7 +203,7 @@
 		 
         /*deshabilitabotones();
         deshabilitabotonesPerfil();*/
-        //funcion para listar los cecostos
+        //funcion para listar los Usuarios
         var getlista = function (){
             var datax = {
                 "Accion":"listar"
@@ -197,6 +242,7 @@
                                 //console.log('id: '+data.datos[i].usu_id + ' rut: '+data.datos[i].usu_rut + ' nombre: '+data.datos[i].usu_nombre + ' rol: '+data.datos[i].usu_rol_nombre);
 
                                 fila = '<tr><td>'+ data.datos[i].usu_rut +'</td>';
+                                fila += '<td>'+ data.datos[i].usu_email +'</td>';
                                 fila += '<td>'+ data.datos[i].usu_nombre +'</td>';
 								fila += '<td>'+ data.datos[i].usu_rol_nombre +'</td>';
                                 fila += '<td>'+ data.datos[i].usu_sec_nombre +'</td>';
@@ -233,13 +279,13 @@
         $("#crea-usuario").click(function(e){
             e.preventDefault();
             limpiaform();
-            habilitaform();
             getlistaroles();
             $("#Accion").val("registrar");
             $('#myModal').on('shown.bs.modal', function () {
                 var modal = $(this);
                 modal.find('.modal-title-form').text('Creación Usuario');  
                 deshabilitabotones();
+                habilitaform();
                 $('#guardar-usuario').show();
                 $('#usuRut').focus();
                 //$('#usuNombre');
@@ -489,9 +535,6 @@
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
     function verUsuario(action, usuid){
         limpiaform();
-		//deshabilitaform();
-        //deshabilitabotones();
-		//getlistaroles();
         limpiaformperfil(); 
         var datay = {"usuId": usuid,
                      "Accion":"obtener"
@@ -513,8 +556,10 @@
             $("#usuId").val(data.datos.usu_id);   
             $("#usuRut").val(data.datos.usu_rut);
             $("#usuNombre").val(data.datos.usu_nombre);
+            $("#usuEmail").val(data.datos.usu_email);
             $("#usuPass").val(data.datos.usu_password);
 			$("#usuRolId").val(data.datos.usu_rol_id).prop('selected',true);
+            $("#usuSeccionId").val(data.datos.usu_sec_id).prop('selected',true);
             $("#usuEstadoId").val(data.datos.usu_estado_id).prop('selected',true);
 
             if(data.datos.usu_perfiles.length==0){
@@ -534,7 +579,7 @@
                 }
                     perfiles = perfiles.trim();
                     perfiles = perfiles.slice(0, -1);
-                    $("#msgPerfil").text(perfiles);
+                    $("#msgPerfil").text('Perfil(es) : '+perfiles);
             }
                 $("#idUsu").val(data.datos.usu_id);
                 $("#rutUsu").val(data.datos.usu_rut);

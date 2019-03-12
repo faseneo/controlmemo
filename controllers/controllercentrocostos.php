@@ -14,7 +14,9 @@ if(isset($_REQUEST['Accion'])){
         case 'actualizar':
             $centroc->__SET('ccosto_codigo',        $_REQUEST['ccCodigo']);
             $centroc->__SET('ccosto_nombre',        $_REQUEST['ccNombre']);
+            $centroc->__SET('ccosto_tipo',          $_REQUEST['ccTipo']);
             $centroc->__SET('ccosto_dep_codigo',    $_REQUEST['ccDependencia']);
+            $centroc->__SET('ccosto_estado',          $_REQUEST['ccEstado']);
             $jsondata = $modelCentroc->Actualizar($centroc);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);

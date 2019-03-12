@@ -350,7 +350,7 @@
             $("#memoMateria").val(data.datos.mem_materia);
             $("#memoNombreSol").val(data.datos.mem_nom_sol);
             $("#memoDeptoSol").val(data.datos.mem_depto_sol_id);
-            $("#memoNombreDest").val(data.datos.mem_nom_dest);
+            $("#memoNombreDest").val(data.datos.mem_depto_dest_nom);
             $("#memoDeptoDest").val(data.datos.mem_depto_dest_id);
             $("#memoCcosto").val(data.datos.mem_cc_codigo);
             $("#memoCodCcosto").val(data.datos.memoCodCcosto);

@@ -31,9 +31,9 @@ class ModelMemoArchivo {
                 /*var_dump($idmemo);
                 echo "<br>";*/
                 //$filtro="";
-                $filtro = $idmemo != NULL ? "WHERE ma.memo_archivo_memo_id = $idmemo":"";
+                $filtro = $idmemo != NULL ? "AND ma.memo_archivo_memo_id = $idmemo":"";
                 $result = array();
-                $stm = $this->pdo->prepare("SELECT * FROM memo_archivo as ma ".$filtro);
+                $stm = $this->pdo->prepare("SELECT * FROM memo_archivo as ma WHERE 1=1 ".$filtro." AND ma.memo_archivo_estado = 1");
                 //var_dump($stm);
                 $stm->execute();
                 foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
@@ -64,10 +64,9 @@ class ModelMemoArchivo {
     public function Obtener($id){
         $jsonresponse = array();
         try{
-            $stm = $this->pdo
-                       ->prepare("SELECT *
-                                FROM memo_archivo as ma
-                                WHERE ma.memo_archivo_id = ?");
+            $stm = $this->pdo->prepare("SELECT *
+                                        FROM memo_archivo as ma
+                                        WHERE ma.memo_archivo_id = ?");
             $stm->execute(array($id));
             $r = $stm->fetch(PDO::FETCH_OBJ);
                 $busq = new MemoArchivos();
@@ -108,12 +107,14 @@ class ModelMemoArchivo {
         return $jsonresponse;
     }
     public function RegistrarArchivoGenerico($files,$tipoarch,$idmemo,$nummemmo,$aniomemo){
+        $flagprincipal=0;
         try{
             if(!empty($files['name'])){
                 $totalArchivo = sizeof($files['name']);
                 if($tipoarch=='memo'){
                     $urlarchivodestino0 = RAIZ.memoarch_directorio.memoarch_prefijo;
                     $urlarchivo0 = memoarch_directorio.memoarch_prefijo;
+                    $flagprincipal=1;
                 }elseif($tipoarch=='memodet'){
                     $urlarchivodestino0 = RAIZ.memoarch_directorio.memoarch_prefijo_det;
                     $urlarchivo0 = memoarch_directorio.memoarch_prefijo_det;
@@ -122,7 +123,8 @@ class ModelMemoArchivo {
                     $urlarchivo0 = memoarch_directorio.memoarch_prefijo_otro;
                 }
 
-                if($totalArchivo==1){
+                //if($totalArchivo==1){
+                if(!is_array($files['name'])){
                     $urlarchivodestino=$urlarchivodestino0;
                     $urlarchivo=$urlarchivo0;
                     $extarch = explode(".",$files['name']);
@@ -137,7 +139,7 @@ class ModelMemoArchivo {
                             $data->__SET('memoarch_name',$files['name']);
                             $data->__SET('memoarch_type', $files['type']);
                             $data->__SET('memoarch_size', $files['size']);
-                            $data->__SET('memoarch_flag', 1);
+                            $data->__SET('memoarch_flag', $flagprincipal);
                             $data->__SET('memoarch_memo_id', $idmemo);
                     $dir=opendir(RAIZ.memoarch_directorio);
                     $origen = $files["tmp_name"];
@@ -169,7 +171,7 @@ class ModelMemoArchivo {
                                     $data->__SET('memoarch_name',$files['name'][$i]);
                                     $data->__SET('memoarch_type', $files['type'][$i]);
                                     $data->__SET('memoarch_size', $files['size'][$i]);
-                                    $data->__SET('memoarch_flag', 0);
+                                    $data->__SET('memoarch_flag', $flagprincipal);
                                     $data->__SET('memoarch_memo_id', $idmemo);
                             $dir=opendir(RAIZ.memoarch_directorio);
                             $origen = $files["tmp_name"][$i];
@@ -379,6 +381,7 @@ class ModelMemoArchivo {
                         //cambia campo principal del registro para una nueva insercion del archivo del memo
                         $sql = "UPDATE memo_archivo SET  
                                        memo_archivo_principal_flag = 0,
+                                       memo_archivo_estado = 0,
                                        memo_archivo_url = ?
                                 WHERE  memo_archivo_principal_flag = 1 AND memo_archivo_memo_id = ?";
                         $this->pdo->prepare($sql)->execute(array($urlarchivo,$mid));
@@ -397,7 +400,7 @@ class ModelMemoArchivo {
             $arrayfile = $this->RegistrarArchivoGenerico($files['addmemoFile'],$tipoarch,$mid,$nummem,$aniomem);
 
             $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Memo ingresado correctamente'; 
+            $jsonresponse['message'] = 'Archivo Memo ingresado correctamente'; 
             $jsonresponse['messagefile'] = $arrayfile;
         } catch (Exception $Exception){
         //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();

@@ -33,6 +33,20 @@ if(isset($_REQUEST['Accionmem'])){
             $memo->__SET('mem_nom_dest',        $_REQUEST['memoNombreDest']);
             $memo->__SET('mem_depto_dest_id',   $_REQUEST['memoDeptoDest']);
             $uid=$_REQUEST['uid'];
+            /*var_dump($_FILES);
+            $files=$_FILES['memoFile'];
+            $files2=$_FILES['memoFileList'];
+
+            $totalArchivo = sizeof($files['name']);
+            $totalArchivo2 = sizeof($files2['name']);
+
+            var_dump(is_array($files['name']));
+            var_dump(is_array($files2['name']));
+
+            var_dump($files['name']);
+            var_dump($files2['name']);
+            var_dump($totalArchivo);
+            var_dump($totalArchivo2);*/
             $jsondata = $modelMemo->Registrar($memo,$_FILES,$uid);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);

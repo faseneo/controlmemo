@@ -22,6 +22,8 @@ class ModelCentroCostos {
             $result = array();
             $stm = $this->pdo->prepare("SELECT  cc.cc_codigo,
                                                 cc.cc_nombre,
+                                                cc.cc_tipo,
+                                                cc.cc_estado,
                                                 cc.cc_dependencia_codigo,
                                                 dep.dependencia_nombre
                                         FROM centro_costos as cc, dependencia as dep
@@ -31,6 +33,8 @@ class ModelCentroCostos {
                 $busq = new CentroCostos();
                     $busq->__SET('ccosto_codigo',       $r->cc_codigo);
                     $busq->__SET('ccosto_nombre',       $r->cc_nombre);
+                    $busq->__SET('ccosto_tipo',         $r->cc_tipo);
+                    $busq->__SET('ccosto_estado',       $r->cc_estado);
                     $busq->__SET('ccosto_dep_codigo',   $r->cc_dependencia_codigo);
                     $busq->__SET('ccosto_dep_nombre',   $r->dependencia_nombre);
                 $result[] = $busq->returnArray();
@@ -52,6 +56,8 @@ class ModelCentroCostos {
         try{
             $stm = $this->pdo->prepare("SELECT  cc.cc_codigo,
                                                 cc.cc_nombre,
+                                                cc.cc_tipo,
+                                                cc.cc_estado,
                                                 cc.cc_dependencia_codigo,
                                                 dep.dependencia_nombre
                                         FROM centro_costos as cc, dependencia as dep
@@ -60,9 +66,11 @@ class ModelCentroCostos {
             $stm->execute(array($id));
             $r = $stm->fetch(PDO::FETCH_OBJ);
             $busq = new CentroCostos();
-                    $busq->__SET('ccosto_codigo', $r->cc_codigo);
-                    $busq->__SET('ccosto_nombre', $r->cc_nombre);
-                    $busq->__SET('ccosto_dep_codigo', $r->cc_dependencia_codigo);
+                    $busq->__SET('ccosto_codigo',       $r->cc_codigo);
+                    $busq->__SET('ccosto_nombre',       $r->cc_nombre);
+                    $busq->__SET('ccosto_tipo',         $r->cc_tipo);
+                    $busq->__SET('ccosto_estado',       $r->cc_estado);
+                    $busq->__SET('ccosto_dep_codigo',   $r->cc_dependencia_codigo);
                     $busq->__SET('ccosto_dep_nombre',   $r->dependencia_nombre);
 
             $jsonresponse['success'] = true;
@@ -79,7 +87,7 @@ class ModelCentroCostos {
     public function Eliminar($id){
         $jsonresponse = array();
         try{    
-                                        //"DELETE FROM centro_costos WHERE cc_codigo = ? AND cc_dependencia_codigo = ?"
+            //"DELETE FROM centro_costos WHERE cc_codigo = ? AND cc_dependencia_codigo = ?"
             $stm = $this->pdo->prepare("DELETE FROM centro_costos WHERE cc_codigo = ? ");
             $stm->execute(array($id));
 
@@ -96,12 +104,15 @@ class ModelCentroCostos {
     public function Registrar(CentroCostos $data){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO centro_costos (cc_codigo, cc_nombre, cc_dependencia_codigo) 
-                    VALUES (?,?,?)";
+            $sql = "INSERT INTO centro_costos (cc_codigo, cc_nombre, cc_tipo, cc_dependencia_codigo, cc_estado) 
+                    VALUES (?,?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('ccosto_codigo'),
                                                      $data->__GET('ccosto_nombre'),
-                                                     $data->__GET('ccosto_dep_codigo'))
+                                                     $data->__GET('ccosto_tipo'),
+                                                     $data->__GET('ccosto_dep_codigo'),
+                                                     $data->__GET('ccosto_estado')
+                                                     )
                                               );
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Centro de Costos ingresado correctamente'; 
@@ -122,11 +133,15 @@ class ModelCentroCostos {
             $sql = "UPDATE centro_costos SET 
                            cc_codigo = ?,
                            cc_nombre = ?,
+                           cc_tipo = ?,
+                           cc_estado = ?,
                            cc_dependencia_codigo = ?
                     WHERE  cc_codigo = ? AND  cc_dependencia_codigo=? ";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('ccosto_codigo'),
                                                      $data->__GET('ccosto_nombre'), 
+                                                     $data->__GET('ccosto_tipo'),
+                                                     $data->__GET('ccosto_estado'),
                                                      $data->__GET('ccosto_dep_codigo'),
                                                      $data->__GET('ccosto_codigo'),
                                                      $data->__GET('ccosto_dep_codigo')
@@ -147,15 +162,22 @@ class ModelCentroCostos {
         try{
             $result = array();
              $stm = $this->pdo->prepare("SELECT  cc.cc_codigo,
-                                                 cc.cc_nombre,
-                                                 cc.cc_dependencia_codigo
-                                        FROM centro_costos as cc");
+                                                cc.cc_nombre,
+                                                cc.cc_tipo,
+                                                cc.cc_estado,
+                                                cc.cc_dependencia_codigo,
+                                                dep.dependencia_nombre
+                                        FROM centro_costos as cc, dependencia as dep
+                                        WHERE cc.cc_dependencia_codigo = dep.dependencia_codigo");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new CentroCostos();
-                    $busq->__SET('ccosto_codigo', $r->cc_codigo);
-                    $busq->__SET('ccosto_nombre', $r->cc_nombre);
-                    $busq->__SET('ccosto_dep_codigo', $r->cc_dependencia_codigo); 
+                    $busq->__SET('ccosto_codigo',       $r->cc_codigo);
+                    $busq->__SET('ccosto_nombre',       $r->cc_nombre);
+                    $busq->__SET('ccosto_tipo',         $r->cc_tipo);
+                    $busq->__SET('ccosto_estado',       $r->cc_estado);
+                    $busq->__SET('ccosto_dep_codigo',   $r->cc_dependencia_codigo);
+                    $busq->__SET('ccosto_dep_nombre',   $r->dependencia_nombre);                    
                 $result[] = $busq;
             }
             return $result;
@@ -171,7 +193,8 @@ class ModelCentroCostos {
             $result = array();
             $stm = $this->pdo->prepare("SELECT  cc.cc_codigo,
                                                 cc.cc_nombre
-                                        FROM centro_costos as cc");
+                                        FROM centro_costos as cc 
+                                        WHERE cc.cc_estado=1");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $fila = array('ccosto_codigo'=>$r->cc_codigo,
