@@ -1145,7 +1145,7 @@
                     contentType:false,
                     processData:false,
                     beforeSend: function(){
-                        $('#myModalArchivoMemo').modal('hide');
+                        $('#myModalArchivoOtros').modal('hide');
                         $('#ModalCargando').modal('show');
                         $('#ModalCargando').on('shown.bs.modal', function () {
                             $loader.show();

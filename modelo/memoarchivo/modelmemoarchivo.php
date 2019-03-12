@@ -1,7 +1,6 @@
 <?php
 /*error_reporting(E_ALL);
 ini_set('display_errors', '1');*/
-
 require_once("../config/config.php");
 require_once("../modelo/logs/modelologs.php");
 require_once("../modelo/logs/modelologsquerys.php");
@@ -34,7 +33,7 @@ class ModelMemoArchivo {
                 $filtro = $idmemo != NULL ? "AND ma.memo_archivo_memo_id = $idmemo":"";
                 $result = array();
                 $stm = $this->pdo->prepare("SELECT * FROM memo_archivo as ma WHERE 1=1 ".$filtro." AND ma.memo_archivo_estado = 1");
-                //var_dump($stm);
+
                 $stm->execute();
                 foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                     $busq = new MemoArchivos();
@@ -213,116 +212,8 @@ class ModelMemoArchivo {
         }
         return $jsonresponse;
     }
-    // ingreso del archio viene desde el modelmemo
-    public function Registrar($files,$idmemo,$nummemmo,$aniomemo){
-       /* $archivos = array();
-        $jsonresponse = array();
-        try{
-            //graba archivo escaneado del memo
-            if(!empty($files['memoFile']['name'])){
-                $nombrearch = explode(".",$files['memoFile']['name']);
-               // $arrayresponsesube = $this->subearchivo($nombrearch,$idmemo,$nummemmo,$aniomemo);
-                $largo = count($nombrearch)-1;
-                $urlarchivodestino = RAIZ.memoarch_directorio.memoarch_prefijo.$aniomemo.'_'.$nummemmo.'.'.$nombrearch[$largo];
-                $urlarchivo = memoarch_directorio.memoarch_prefijo.$aniomemo.'_'.$nummemmo.'.'.$nombrearch[$largo];
 
-                $data = new MemoArchivos();
-                    $data->__SET('memoarch_url', $urlarchivo);
-                    $data->__SET('memoarch_name',$files['memoFile']['name']);
-                    $data->__SET('memoarch_type', $files['memoFile']['type']);
-                    $data->__SET('memoarch_size', $files['memoFile']['size']);
-                    $data->__SET('memoarch_flag', 1);
-                    $data->__SET('memoarch_memo_id', $idmemo);
-
-                $dir=opendir(RAIZ.memoarch_directorio);  //Abre directorio donde se guardaran archivos
-                $origen = $files['memoFile']["tmp_name"];  // origen temporal del archivo
-                //$archivos[]=$files['memoFile']['name'];
-                if(move_uploaded_file($origen, $urlarchivodestino)) {
-                    $arrayresponsegraba  = $this->Grabar($data);
-                    if ($arrayresponsegraba['success']){
-                        $jsonresponse['success'] = true;
-                        $jsonresponse['grabaarchivo'] = true;
-                        $jsonresponse['message'] = 'Archivos grabado correctamente';
-                    }else{
-                        $jsonresponse['success'] = $arrayresponsegraba['success'];
-                        $jsonresponse['grabaarchivo'] = true;
-                        $jsonresponse['message'] = $arrayresponsegraba['message'];
-                    }
-                }else{
-                    $jsonresponse['success'] = false;
-                    $jsonresponse['grabaarchivo'] = false;
-                    $jsonresponse['message'] = 'Error al subir archivo';
-                }
-                closedir($dir);
-            }else{
-                $jsonresponse['success'] = false;
-                $jsonresponse['messageMEM'] = 'ERROR al subir Archivos, campo vacio'; 
-            }
-            // Graba lista de archivos anexos del memo
-
-            if(!empty($files['memoFileList']['name'][0])){
-                $dir=opendir(RAIZ.memoarch_directorio);  //Abre directorio donde se guardaran archivos
-
-                $totalArchivo = sizeof($files['memoFileList']['name']);  //total de archivos
-                for($i=0; $i<$totalArchivo; $i++ ){
-                    //$files['memoFileList']['name'][$i];
-
-                    $nombrearch = explode(".",$files['memoFileList']['name'][$i]);
-                    $largo = count($nombrearch)-1;
-                    $urlarchivodestino = RAIZ.memoarch_directorio.memoarch_prefijo_otro.$aniomemo.'_'.$nummemmo.'_'.$i.'.'.$nombrearch[$largo];
-                    $urlarchivo = memoarch_directorio.memoarch_prefijo_otro.$aniomemo.'_'.$nummemmo.'_'.$i.'.'.$nombrearch[$largo];
-                    $data = new MemoArchivos();
-                        $data->__SET('memoarch_url', $urlarchivo);
-                        $data->__SET('memoarch_name',$files['memoFileList']['name'][$i]);
-                        $data->__SET('memoarch_type', $files['memoFileList']['type'][$i]);
-                        $data->__SET('memoarch_size', $files['memoFileList']['size'][$i]);
-                        $data->__SET('memoarch_flag', 0);
-                        $data->__SET('memoarch_memo_id', $idmemo);
-
-                    $origen = $files['memoFileList']["tmp_name"][$i];  // origen temporal del archivo
-                    //closedir(RAIZ.memoarch_directorio);
-                    //VALIDAR QUE ARCHIVO SUBIO SIN ERRORES
-                    if(move_uploaded_file($origen, $urlarchivodestino)) {
-                        
-                        $arrayresponsegraba  = $this->Grabar($data);
-                        
-                        if ($arrayresponsegraba['success']){
-                            $jsonresponse['success'] = true;
-                            $jsonresponse['grabaarchivo'] = true;
-                            $jsonresponse['message'] = 'Archivos grabado correctamente';
-                        }else{
-                            $jsonresponse['success'] = $arrayresponsegraba['success'];
-                            $jsonresponse['grabaarchivo'] = true;
-                            $jsonresponse['message'] = $arrayresponsegraba['message'];
-                        }
-                    }else{
-                        $jsonresponse['success'] = false;
-                        $jsonresponse['grabaarchivo'] = false;
-                        $jsonresponse['message'] = 'Error al subir archivo';
-                    }                    
-                }
-                closedir($dir);
-            }else{
-                $jsonresponse['success'] = false;
-                $jsonresponse['messageMEMLIST'] = 'ERROR al subir Archivos, campo vacio'; 
-            }
-        }catch(Exception $e){
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'ERROR al subir Archivos, campo vacio';
-            $jsonresponse['messageerror'] = $e->getMessage();
-        }*/
-        return $jsonresponse;
-    }
-    /*public function subearchivo(){
-        $jsonresponse = array();        
-        try{
-
-        }catch(Exception $e){
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'ERROR al subir Archivos, campo vacio';
-            $jsonresponse['messageerror'] = $e->getMessage();
-        }
-    }*/
+    // funcion que graba archivo en la base de datos
     public function Grabar(MemoArchivos $data){
         $jsonresponse = array();
             try{            
@@ -358,105 +249,66 @@ class ModelMemoArchivo {
 
     public function ActualizarArchivoMemo($files,$mid,$nummem,$aniomem){
         $mid=(int)$mid;
-        try{
-            $consulta = "SELECT COUNT(*) FROM memo_archivo WHERE memo_archivo_principal_flag=1 AND memo_archivo_memo_id=".$mid;
-            $res = $this->pdo->query($consulta);
+        if (array_key_exists('addmemoFileList', $files)) {
+            $tipoarch='anexomemo';
+            $jsonresponse = $this->RegistrarArchivoGenerico($files['addmemoFileList'],$tipoarch,$mid,$nummem,$aniomem);
+        }else{
+            try{
+                $consulta = "SELECT COUNT(*) FROM memo_archivo WHERE memo_archivo_principal_flag=1 AND memo_archivo_memo_id=".$mid;
+                $res = $this->pdo->query($consulta);
 
-            if ($res->fetchColumn() != 0) {
-                $consultadatos = "SELECT * FROM memo_archivo WHERE memo_archivo_principal_flag=1 AND memo_archivo_memo_id=".$mid;
-                $stm = $this->pdo->query($consultadatos);
-                $r = $stm->fetch(PDO::FETCH_OBJ);
+                if ($res->fetchColumn() != 0) {
+                    $consultadatos = "SELECT * FROM memo_archivo WHERE memo_archivo_principal_flag=1 AND memo_archivo_memo_id=".$mid;
+                    $stm = $this->pdo->query($consultadatos);
+                    $r = $stm->fetch(PDO::FETCH_OBJ);
 
-                    $urlanterior = RAIZ.$r->memo_archivo_url;
-                    $arraynomarchivo = explode('.', $r->memo_archivo_url);
-                    $fecha = new DateTime();
-                    $fehcatimestamp = $fecha->getTimestamp();
+                        $urlanterior = RAIZ.$r->memo_archivo_url;
+                        $arraynomarchivo = explode('.', $r->memo_archivo_url);
+                        $fecha = new DateTime();
+                        $fehcatimestamp = $fecha->getTimestamp();
 
-                    $urlarchivo = memoarch_directorio.memoarch_prefijo.$aniomem.'_'.$nummem.'_'.$r->memo_archivo_id.'_'.'_F'.$fehcatimestamp.'.'.$arraynomarchivo[1];
-                    $urlarchivonuevo = RAIZ.memoarch_directorio.memoarch_prefijo.$aniomem.'_'.$nummem.'_'.$r->memo_archivo_id.'_'.'_F'.$fehcatimestamp.'.'.$arraynomarchivo[1];
+                        $urlarchivo = memoarch_directorio.memoarch_prefijo.$aniomem.'_'.$nummem.'_'.$r->memo_archivo_id.'_'.'_F'.$fehcatimestamp.'.'.$arraynomarchivo[1];
+                        $urlarchivonuevo = RAIZ.memoarch_directorio.memoarch_prefijo.$aniomem.'_'.$nummem.'_'.$r->memo_archivo_id.'_'.'_F'.$fehcatimestamp.'.'.$arraynomarchivo[1];
 
-                    $dir=opendir(RAIZ.memoarch_directorio);  //Abre directorio donde se guardaran archivos
-                  
-                    if(rename($urlanterior, $urlarchivonuevo)) {
-                        //cambia campo principal del registro para una nueva insercion del archivo del memo
-                        $sql = "UPDATE memo_archivo SET  
-                                       memo_archivo_principal_flag = 0,
-                                       memo_archivo_estado = 0,
-                                       memo_archivo_url = ?
-                                WHERE  memo_archivo_principal_flag = 1 AND memo_archivo_memo_id = ?";
-                        $this->pdo->prepare($sql)->execute(array($urlarchivo,$mid));
-                        $jsonresponse['success'] = true;
-                        $jsonresponse['renopbraarchivo'] = true;
-                        $jsonresponse['message'] = 'Archivo renombrado';
-                        
-                    }else{
-                        $jsonresponse['success'] = false;
-                        $jsonresponse['renopbraarchivo'] = false;
-                        $jsonresponse['message'] = 'Error al subir archivo';
-                    }
-                    closedir($dir);
+                        $dir=opendir(RAIZ.memoarch_directorio);  //Abre directorio donde se guardaran archivos
+                      
+                        if(rename($urlanterior, $urlarchivonuevo)) {
+                            //cambia campo principal del registro para una nueva insercion del archivo del memo
+                            $sql = "UPDATE memo_archivo SET  
+                                           memo_archivo_principal_flag = 0,
+                                           memo_archivo_estado = 0,
+                                           memo_archivo_url = ?
+                                    WHERE  memo_archivo_principal_flag = 1 AND memo_archivo_memo_id = ?";
+                            $this->pdo->prepare($sql)->execute(array($urlarchivo,$mid));
+                            $jsonresponse['success'] = true;
+                            $jsonresponse['renopbraarchivo'] = true;
+                            $jsonresponse['message'] = 'Archivo renombrado';
+                            
+                        }else{
+                            $jsonresponse['success'] = false;
+                            $jsonresponse['renopbraarchivo'] = false;
+                            $jsonresponse['message'] = 'Error al subir archivo';
+                        }
+                        closedir($dir);
+                }
+                $tipoarch='memo';
+                $arrayfile = $this->RegistrarArchivoGenerico($files['addmemoFile'],$tipoarch,$mid,$nummem,$aniomem);
+
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Archivo Memo ingresado correctamente'; 
+                $jsonresponse['messagefile'] = $arrayfile;
+            } catch (Exception $Exception){
+            //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
+                $jsonresponse['success'] = false;
+                $jsonresponse['message'] = 'Error al modificar e registrar el archivo del Memo';
+                $jsonresponse['errorQuery'] = $Exception->getMessage();
+                $logs = new modelologs();
+                $trace=$Exception->getTraceAsString();
+                  $logs->GrabarLogs($Exception->getMessage(),$trace);
+                  $logs = null;            
             }
-            $tipoarch='memo';
-            $arrayfile = $this->RegistrarArchivoGenerico($files['addmemoFile'],$tipoarch,$mid,$nummem,$aniomem);
-
-            $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Archivo Memo ingresado correctamente'; 
-            $jsonresponse['messagefile'] = $arrayfile;
-        } catch (Exception $Exception){
-        //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al modificar e registrar el archivo del Memo';
-            $jsonresponse['errorQuery'] = $Exception->getMessage();
-            $logs = new modelologs();
-            $trace=$Exception->getTraceAsString();
-              $logs->GrabarLogs($Exception->getMessage(),$trace);
-              $logs = null;            
         }
         return $jsonresponse;
     }
-
-    /*
-    public function Actualizar(MemoArchivos $data){
-        $jsonresponse = array();
-        //print_r($data);
-        try{
-            $sql = "UPDATE memo_archivo SET  
-                           memo_archivo_url = ?
-                    WHERE  memo_archivo_id = ?";
-
-            $this->pdo->prepare($sql)
-                 ->execute(array($data->__GET('memo_arch_url'),
-                                 $data->__GET('memo_arch_id')) 
-                          );
-            $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Memo archivo actualizado correctamente';                 
-        } catch (Exception $e){
-            //die($e->getMessage());
-            $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al actualizar memo archivo';             
-        }
-        return $jsonresponse;
-    }
-
-    public function Listar2(){
-        $jsonresponse = array();
-        try{
-            $result = array();
-             $stm = $this->pdo->prepare("SELECT  ma.memo_archivo_id,
-                                                 ma.memo_archivo_url
-                                        FROM memo_archivo as ma");
-            $stm->execute();
-            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $busq = new MemoArchivos();
-                    $busq->__SET('memo_arch_id', $r->memo_archivo_id);
-                    $busq->__SET('memo_arch_url', $r->memo_archivo_url);
-                $result[] = $busq;
-            }
-            return $result;
-        }
-        catch(Exception $e){
-            die($e->getMessage());
-        }
-    }*/
 }
 ?>
