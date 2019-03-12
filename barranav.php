@@ -93,7 +93,7 @@
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="#">Bienvend@ <?php echo $nombre.' - '.$rolnom; ?></a></li>
-				<li><a href="vistacambiocontr.php">Cambiar contraseña</a></li>
+				<li><a href="vs_cambiopass.php">Cambiar contraseña</a></li>
 				<li><a href="salir.php">Salir</a></li>
 				<li><p ><?php echo ' Fecha Actual : '.$fecha; ?></p></li>
 				<!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span>Registrarse</a></li> -->

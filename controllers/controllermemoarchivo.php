@@ -11,30 +11,11 @@ $modelMemoArch = new ModelMemoArchivo();
 
 if(isset($_REQUEST['Accion'])){
     switch($_REQUEST['Accion']){
-        /*case 'actualizar':
-            $memoArch->__SET('memo_arch_id',        $_REQUEST['memoarchId']);
-            $memoArch->__SET('memo_arch_url',    $_REQUEST['memoarchUrl']);
-            $jsondata = $modelMemoArch->Actualizar($memoArch);
-            header('Content-type: application/json; charset=utf-8');
-			echo json_encode($jsondata);
-            break;
-*/
-/*        case 'registrar':
-            $memoArch->__SET('memo_arch_url',    $_REQUEST['memoarchUrl']);            
-            $jsondata = $modelMemoArch->Registrar($memoArch);
-            header('Content-type: application/json; charset=utf-8');
-            echo json_encode($jsondata);
-            break;*/
-
-            //colocar aqui el codigo para agregar archivos al memo
-
+        //colocar aqui el codigo para agregar archivos al memo
         case 'actualizarfiles':
-            var_dump($_FILES['addmemoFileList']);
-            var_dump($_REQUEST);
-            /*$jsondata = $modelMemoArch->ActualizarArchivoMemo($_FILES,$_REQUEST['meId'],$_REQUEST['meNum'],$_REQUEST['meAnio']);
+            $jsondata = $modelMemoArch->ActualizarArchivoMemo($_FILES,$_REQUEST['meId'],$_REQUEST['meNum'],$_REQUEST['meAnio']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
-            */
             break;
 
         case 'eliminar':
