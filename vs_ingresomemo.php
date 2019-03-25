@@ -84,32 +84,38 @@ if($_SESSION["autentica"] != "SIP"){
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="memoNombreSol">Nombre Solicitante</label>
                                 <input name="memoNombreSol" id="memoNombreSol" type="text"  class="form-control">
                                 <span class="help-block"></span>
                             </div>
-                        </div>                        
-
-                        <div class="col-md-7">
+                        </div>
+                        <div class="col-md-6" >
                             <div class="form-group">
-                                <label for="memoDeptoSol">Departamento o Unidad Solicitante</label>
+                                <label  for="memoDeptoSol">Departamento o Unidad Solicitante</label>
                                 <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" required>
                                 </select>
+                                <span class="help-block"></span>
+                            </div>                            
+                        </div>                        
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="memoBuscaDepto">Buscar...</label>
+                                <input name="memoBuscaDepto" id="memoBuscaDepto" type="text"  class="form-control" >
                                 <span class="help-block"></span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="memoNombreDest">Nombre Destinatario</label>
                                 <input name="memoNombreDest" id="memoNombreDest" type="text"  class="form-control" value="Leonel Durán" >
                                 <span class="help-block"></span>
                             </div>
                         </div>                        
-                        <div class="col-md-7">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="memoDeptoDest">Departamento o Unidad Destinatario</label>
                                 <select name="memoDeptoDest" id="memoDeptoDest" class="form-control" required>
@@ -117,6 +123,13 @@ if($_SESSION["autentica"] != "SIP"){
                                 <span class="help-block"></span>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="memoBuscaDeptoD">Buscar...</label>
+                                <input name="memoBuscaDeptoD" id="memoBuscaDeptoD" type="text"  class="form-control" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>                        
                     </div>
                     <div class="row" id="datosCcostos">
                         <div class="col-md-2">
@@ -331,9 +344,10 @@ if($_SESSION["autentica"] != "SIP"){
                                         <table class="table table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th width="30%">Estado</th>
-                                                    <th width="40%">Observación</th>
-                                                    <th width="20%">Fecha | Hora</th>
+                                                    <th width="15%">Estado</th>
+                                                    <th width="50%">Observación</th>
+                                                    <th width="15%">Fecha | Hora</th>
+                                                    <th width="20%">Usuario</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="listaHistorial">
@@ -371,30 +385,42 @@ if($_SESSION["autentica"] != "SIP"){
                                 </div> 
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group" id="memoCodigoCCDiv">
-                                    <label for="memoCodigoCC">Código Centro de Costo</label>
-                                    <input id="memoCodigoCC" name="memoCodigoCC" class="form-control" title="Ingrese una Codigo" />
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group" id="memoFechaCDPDiv">
-                                    <label for="memoFechaCDP">Fecha CDP</label>
-                                    <input name="memoFechaCDP" id="memoFechaCDP" type="date" class="form-control">
-                                    <span class="help-block"></span>
-                                </div>
-                            </div>
-                        </div>
+<!--                         <div class="row">
+    <div class="col-md-6">
+        <div class="form-group" id="memoCodigoCCDiv">
+            <label for="memoCodigoCC">Código Centro de Costo</label>
+            <input id="memoCodigoCC" name="memoCodigoCC" class="form-control" title="Ingrese una Codigo" />
+            <span class="help-block"></span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group" id="memoFechaCDPDiv">
+            <label for="memoFechaCDP">Fecha CDP</label>
+            <input name="memoFechaCDP" id="memoFechaCDP" type="date" class="form-control">
+            <span class="help-block"></span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group" id="memoNombreCCDiv">
+            <label for="memoNombreCC">Nombre Centro de Costo</label>
+            <input id="memoNombreCC" name="memoNombreCC" class="form-control"  disabled />
+        </div>
+    </div>
+</div> -->
+
+
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="form-group" id="memoNombreCCDiv">
-                                    <label for="memoNombreCC">Nombre Centro de Costo</label>
-                                    <input id="memoNombreCC" name="memoNombreCC" class="form-control"  disabled />
+                                <div class="form-group" id="memoOtroDepto">
+                                    <label for="memoOtroDeptoId">Nombre Departamento o Unidad</label>
+                                    <input id="memoOtroDeptoId" name="memoOtroDeptoId" class="form-control"  disabled />
                                 </div>
                             </div>
                         </div>
+
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">

@@ -62,6 +62,8 @@ class ModelMemo  {
                       $busq->__SET('mem_depto_dest_nom', $r->dpto_nombre);
                       $busq->__SET('mem_estado_id_max', $r->estado_max_id);
                       $busq->__SET('mem_estado_nom_max', $r->memo_estado_tipo);
+                      $busq->__SET('mem_estado_colorbg', $r->memo_estado_color_bg);
+                      $busq->__SET('mem_estado_colortxt', $r->memo_estado_color_font);                      
                       $busq->__SET('mem_estado_obs_max', $r->cambio_estados_observacion);
                       $busq->__SET('mem_estado_fecha_max', date_format(date_create($r->cambio_estados_fecha),'d-m-Y' ));
                       $busq->__SET('mem_estado_dias', $r->cambio_estados_dias);
@@ -71,7 +73,7 @@ class ModelMemo  {
 
               $jsonresponsel['success'] = true;
               $jsonresponsel['message'] = 'listado correctamente los memos';
-              $jsonresponsel['total'] = $totquery;
+              $jsonresponsel['total'] = $tot_reg;
               $jsonresponsel['datos'] = $result;
               $stm=null;
             }
@@ -204,11 +206,15 @@ class ModelMemo  {
             }else{
               $query = "SELECT  ce.cambio_estados_memo_estado_id,
                                                   me.memo_estado_tipo,
+                                                  me.memo_estado_orden,
                                                   ce.cambio_estados_observacion,
                                                   ce.cambio_estados_fecha,
-                                                  me.memo_estado_seccion_id
-                                          FROM cambio_estados as ce, memo_estado as me 
+                                                  me.memo_estado_seccion_id,
+                                                  us.usuario_email,
+                                                  us.usuario_nombre
+                                          FROM cambio_estados as ce, memo_estado as me, usuario as us 
                                           WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
+                                          AND us.usuario_id = ce.cambio_estados_usuario_id
                                           AND ce.cambio_estados_memo_id = $idmemo ".$seccionfiltro;
               $stm = $this->pdo->prepare($query);
               $stm->execute();
@@ -218,9 +224,13 @@ class ModelMemo  {
                 foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                     $fila = array('estado_id'=>$r->cambio_estados_memo_estado_id,
                                   'estado_tipo'=>$r->memo_estado_tipo,
+                                  'estado_orden'=>$r->memo_estado_orden,
                                   'observacion'=>$r->cambio_estados_observacion,
                                   'fecha'=>date_format(date_create($r->cambio_estados_fecha),'d-m-Y H:i:s' ),
-                                  'seccion_id'=>$r->memo_estado_seccion_id);
+                                  'seccion_id'=>$r->memo_estado_seccion_id,
+                                  'user'=>$r->usuario_email,
+                                  'user_nom'=>$r->usuario_nombre
+                                  );
                     $result[]=$fila;
                 }
 

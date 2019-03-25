@@ -1,29 +1,42 @@
+        var bgcolor='white-bg';
+        var txtcolor='black-text';
+
         function deshabilitabotones(){
             document.getElementById('editar-memoest').style.display = 'none';
             document.getElementById('guardar-memoest').style.display = 'none';
             document.getElementById('actualizar-memoest').style.display = 'none';
         }
         function limpiaform(){
+            bgcolor='white-bg';
+            txtcolor='black-text';            
+            $('#ejcolor').attr('class','form-control ' + bgcolor + ' ' + txtcolor);
             $("#memoestId").val("");
             $("#memoestTipo").val("");
 			$("#memoestOrden").val("");
-            //$("#memoestActivo").val("");
-            //$("#memoestSeccionId").val("");
-        }        
+        }
+
         function habilitaform(){
             $("#memoestId").prop( "disabled", false );
             $("#memoestTipo").prop( "disabled", false );
             $("#memoestOrden").prop( "disabled", false );
+            $("#memoestDesc").prop( "disabled", false );
+            $("#memoestColorbg").prop( "disabled", false );
+            $("#memoestColortxt").prop( "disabled", false );
             $("#memoestActivo").prop( "disabled", false );
             $("#memoestSeccionId").prop( "disabled", false );
         }
+
         function deshabilitaform(){
             $("#memoestId").prop( "disabled", true );
             $("#memoestTipo").prop( "disabled", true );
+            $("#memoestDesc").prop( "disabled", true );
+            $("#memoestColorbg").prop( "disabled", true );
+            $("#memoestColortxt").prop( "disabled", true );            
             $("#memoestOrden").prop( "disabled", true );
             $("#memoestActivo").prop( "disabled", true );
             $("#memoestSeccionId").prop( "disabled", true );            
         }
+
         var getlistaseccion = function (){
             var datax = {
                 "Accion":"listar"
@@ -119,7 +132,7 @@
                                 var activo = data.datos[i].memo_est_activo == 1 ? 'Activo':'Inactivo';
 
                                 fila = '<tr '+$clasetr+'>';
-                                fila += '<td>'+ data.datos[i].memo_est_tipo +'</td>';
+                                fila += '<td class="'+ data.datos[i].memo_est_colorbg + ' '+ data.datos[i].memo_est_colortxt+'">'+ data.datos[i].memo_est_tipo +'</td>';
                                 fila += '<td>'+ data.datos[i].memo_est_seccion_nombre +'</td>';
                                 fila += '<td>'+ data.datos[i].memo_est_orden +'</td>';
                                 fila += '<td>'+ activo +'</td>';
@@ -303,10 +316,21 @@
                 });
         deshabilitabotones();
         getlista();
+
+        $("#memoestColorbg").change(function(event) {
+            bgcolor = $("#memoestColorbg").val();
+            $('#ejcolor').attr('class','form-control ' + bgcolor + ' ' + txtcolor);
+        });
+        $("#memoestColortxt").change(function(event) {
+            txtcolor = $("#memoestColortxt").val();
+            $('#ejcolor').attr('class','form-control ' + txtcolor + ' ' + bgcolor);
+        });
+        
     });
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
     function verMemoEst(action, memoestid){
         deshabilitabotones();
+        limpiaform();
         var datay = {"memoestId": memoestid,
                      "Accion":"obtener"
                     };
@@ -326,6 +350,9 @@
             $("#memoestId").val(data.datos.memo_est_id);
             $("#memoestTipo").val(data.datos.memo_est_tipo);
             $("#memoestOrden").val(data.datos.memo_est_orden);
+            $("#memoestDesc").val(data.datos.memo_est_desc);
+            $("#memoestColorbg").val(data.datos.memo_est_colorbg);
+            $("#memoestColortxt").val(data.datos.memo_est_colortxt);
             $("#memoestActivo").val(data.datos.memo_est_activo);
             $("#memoestSeccionId").val(data.datos.memo_est_seccion_id);
 

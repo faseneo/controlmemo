@@ -17,6 +17,7 @@
         }
 
     $(document).ready(function(){
+        var titulo='';
         function validarFormulario(){
             var txtNombre = document.getElementById('deptoNombre').value;
                 //Test campo obligatorio
@@ -27,8 +28,7 @@
                 }               
             return true;
         }         
-        deshabilitabotones();
-        //funcion para listar los cecostos
+        //funcion para listar los Deptos.
         var getlista = function (){
             var datax = {
                 "Accion":"listar"
@@ -50,10 +50,8 @@
                 for(var i=0; i<data.datos.length;i++){
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
                                 console.log('id: '+data.datos[i].depto_id + ' nombre: '+data.datos[i].depto_nombre);
-
                                 fila = '<tr><td>'+ data.datos[i].depto_nombre +'</td>';
-                                //fila += '<td>'+ data.datos[i].ccosto_codigo +'</td>';
-
+                                fila += '<td>abrev.</td>';
                                 fila += '<td><button id="ver-depto" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
                                 fila += ' onclick="verDepto(\'ver\',\'' + data.datos[i].depto_id + '\')">';
@@ -65,8 +63,8 @@
                                 fila += 'Eliminar</button></td>';
                                 fila += '</tr>';
                                 $("#listadepto").append(fila);
-                            }
-                        })
+                }
+            })
             .fail(function( jqXHR, textStatus, errorThrown ) {
                 if ( console && console.log ) {
                     console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
@@ -76,7 +74,42 @@
                 }
             });
         }
+        deshabilitabotones();
+        getlista();
 
+        $('.texto-gris').each(function() {            
+            var valorActual = $(this).val();
+         
+            $(this).focus(function(){                
+                if( $(this).val() == valorActual ) {
+                    $(this).val('');
+                    $(this).removeClass('texto-gris');
+                };
+            });
+         
+            $(this).blur(function(){
+                if( $(this).val() == '' ) {
+                    $(this).val(valorActual);
+                    $(this).addClass('texto-gris');
+                };
+            });
+        });
+        $("#busqueda").keyup(function(){
+            if( $(this).val() != ""){
+                $("#listadodepto tbody>tr").hide();
+                $("#listadodepto td:contiene-palabra('" + $(this).val() + "')").parent("tr").show();
+            }
+            else{
+                $("#listadodepto tbody>tr").show();
+            }
+        });
+         
+        $.extend($.expr[":"], 
+            {
+            "contiene-palabra": function(elem, i, match, array) {
+                return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+            }
+        });
         //Levanta modal nuevo centro de costos
         $("#crea-depto").click(function(e){
             e.preventDefault();
@@ -91,7 +124,6 @@
                 $('#deptoNombre').focus();
             });
         });
-
         // implementacion boton para guardar el centro de costo
         $("#guardar-depto").click(function(e){
             e.preventDefault();
@@ -134,7 +166,6 @@
                 });
             }
         });
-
         //Cambia boton y habilita form para actualizar
         $("#editar-depto").click(function(e){
             e.preventDefault();
@@ -144,7 +175,6 @@
             $('#actualizar-depto').show();
             $("#Accion").val("actualizar");               
         });
-
         //  envia los nuevos datos para actualizar
         $("#actualizar-depto").click(function(e){
                     // Detenemos el comportamiento normal del evento click sobre el elemento clicado
@@ -187,7 +217,7 @@
                             }
                         });                        
                     }
-                });
+        });
         // Envia los datos para eliminar
         $("#eliminar-depto").click(function(e){
             e.preventDefault();
@@ -232,13 +262,11 @@
                         }
                     });
                 });
-        deshabilitabotones();
-        getlista();
     });
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
     function verDepto(action, deptoid){
         deshabilitabotones();
-console.log('pase');
+        console.log('pase');
         var datay = {"deptoId": deptoid,
                      "Accion":"obtener"
                     };

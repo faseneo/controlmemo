@@ -19,6 +19,9 @@ if(isset($_REQUEST['Accion'])){
             $MEst->__SET('memo_est_id',         $_REQUEST['memoestId']);
             $MEst->__SET('memo_est_tipo',       $_REQUEST['memoestTipo']);
 			$MEst->__SET('memo_est_orden',      $_REQUEST['memoestOrden']);
+            $MEst->__SET('memo_est_desc',       $_REQUEST['memoestDesc']);
+            $MEst->__SET('memo_est_colorbg',    $_REQUEST['memoestColorbg']);
+            $MEst->__SET('memo_est_colortxt',   $_REQUEST['memoestColortxt']);
             $MEst->__SET('memo_est_activo',     $_REQUEST['memoestActivo']);
             $MEst->__SET('memo_est_seccion_id', $_REQUEST['memoestSeccionId']);
             $jsondata = $modelMEst->Actualizar($MEst);
@@ -43,6 +46,9 @@ if(isset($_REQUEST['Accion'])){
         case 'registrar':
             $MEst->__SET('memo_est_tipo',       $_REQUEST['memoestTipo']);
 			$MEst->__SET('memo_est_orden',      $_REQUEST['memoestOrden']);
+            $MEst->__SET('memo_est_desc',       $_REQUEST['memoestDesc']);
+            $MEst->__SET('memo_est_colorbg',    $_REQUEST['memoestColorbg']);
+            $MEst->__SET('memo_est_colortxt',   $_REQUEST['memoestColortxt']);            
             $MEst->__SET('memo_est_activo',     $_REQUEST['memoestActivo']);
             $MEst->__SET('memo_est_seccion_id', $_REQUEST['memoestSeccionId']);            
             $jsondata = $modelMEst->Registrar($MEst);

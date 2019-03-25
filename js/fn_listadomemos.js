@@ -44,7 +44,12 @@
     }
     
     // Funcion para paginar lista de memos
-    function paginador(pag,estado=0,usuid=0,total=0){
+    function paginador(pag,estado=0,usuid=0,total=0,secid=0){
+            console.log('pag '+ pag );
+            console.log('esta '+ estado);
+            console.log('usuid '+ usuid);
+            console.log('total '+ total);
+            
             var cantidadMostrar = 10;  // total de numeros de paginas  a mostrar 
             var registroPorPagina = 10; //total registro por pagina, debe coincidir con el modelo.listar
             var datax = {
@@ -57,42 +62,10 @@
             $("#totalmemos").html(total);
                     if(total > registroPorPagina){
                         fnlista = "getListadoMemos";
-                        pagina = drawpaginador(pag,data.total,registroPorPagina,cantidadMostrar,fnlista);
+                        pagina = drawpaginador(pag,total,registroPorPagina,cantidadMostrar,fnlista,secid,estado);
                         $("#paginador").html("");
                         $("#paginador").append(pagina);
                     }
-                /*
-                    $.ajax({
-                        data: datax, 
-                        type: "GET",
-                        dataType: "json", 
-                        url: "controllers/controllermemo.php",
-                    })
-                    .done(function( data, textStatus, jqXHR ) {
-                            if ( console && console.log ) {
-                                console.log( " data success gettotal : "+ data.success 
-                                            + " \n data totalmemos msg : "+ data.message 
-                                            + " \n textStatus : " + textStatus
-                                            + " \n jqXHR.status : " + jqXHR.status );
-                            }
-                        $("#paginador").html("");                        
-                        $("#totalmemos").html(data.total);
-                        if(data.total > registroPorPagina){
-                            fnlista = "getListadoMemos";
-                            pagina = drawpaginador(pag,data.total,registroPorPagina,cantidadMostrar,fnlista);
-                            $("#paginador").html("");
-                            $("#paginador").append(pagina);
-                        }
-                    })
-                    .fail(function( jqXHR, textStatus, errorThrown ) {
-                        if ( console && console.log ) {
-                            console.log( " La solicitud getcuenta ha fallado,  textStatus : " +  textStatus 
-                                        + " \n errorThrown : "+ errorThrown
-                                        + " \n textStatus : " + textStatus
-                                        + " \n jqXHR.status : " + jqXHR.status );
-                        }
-                    });
-                    */
     }
 
     // Funcion principal para listar los memos
@@ -133,10 +106,13 @@
                 setTimeout($('#boxloader').hide(), 1000000);
                 //$('#boxloader').hide();
                 incrementotest=0;
+                txtcolor = '';
+                //text-muted, .text-primary, .text-success, .text-info, .text-warning, y .text-danger
                 if(data.datos.length>0){
                     //console.log('tiene elementos');
-                    paginador(pag,estado,usuid,data.total);
+                    paginador(pag,estado,usuid,data.total,secid);
                     for(var i=0; i<data.datos.length;i++){
+                        txtcolor = 'class="'+data.datos[i].mem_estado_colortxt + ' ' + data.datos[i].mem_estado_colorbg + '"';
                         //console.log('id: ' + data.datos[i].mem_id + ' numero memo: ' + data.datos[i].mem_numero);
                         var materia = data.datos[i].mem_materia.length > 50 ? data.datos[i].mem_materia.substr(0, 50)+'...' : data.datos[i].mem_materia;
                         var depto=    data.datos[i].mem_depto_dest_nom.length > 30 ? data.datos[i].mem_depto_dest_nom.substr(0, 30)+'...' : data.datos[i].mem_depto_dest_nom;
@@ -147,7 +123,7 @@
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_materia + '">'+ materia +'</a></td>';
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_depto_dest_nom + '">' + depto  + '</a></td>'
                         
-                        fila += '<td><a href="#" data-toggle="tooltip" title="Modificado el ' + data.datos[i].mem_estado_fecha_max + '">' + data.datos[i].mem_estado_nom_max + '</a></td>'
+                        fila += '<td><p '+ txtcolor +' data-toggle="tooltip" title="Modificado el ' + data.datos[i].mem_estado_fecha_max + '"> &nbsp;&nbsp;' + data.datos[i].mem_estado_nom_max + '</p></td>'
                         fila += '<td class="text-right">'+data.datos[i].mem_estado_dias + '</td>';
 
                         fila += '<td class="text-right"><a  href="vs_ingresomemo.php?memId=' + data.datos[i].mem_id + '"';

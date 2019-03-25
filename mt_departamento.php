@@ -15,26 +15,42 @@ if(!isset($_SESSION["autentica"])){
 <body>
 	<?php include "barranav.php"; ?>
         <div class="container" style="margin-top:50px">
-            <div class="row">
-				<div class="col-md-10">
+        	<div class="row">
+        		<div class="col-md-10">
 					<h2 class="sub-header">Departamentos</h2>
+        		</div>
+        	</div>
+            <div class="row">
+				<div class="col-md-3">
 					<div class="table-responsive">
 						<!-- Añadimos un botón para el diálogo modal onclick="newServicio()"-->
-						<button type="button" id="crea-depto" class="btn btn-sm btn-primary"
-								data-toggle="modal" data-target="#myModal" >NUEVO</button> 
-						<table class="table table-striped">
+						<button type="button" id="crea-depto" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal" >NUEVO</button> 
+						
+					</div>
+				</div>
+				<div class="col-md-4 col-md-offset-5">
+					<div class="input-group search">
+						<input type="text" id="busqueda" class="form-control texto-gris" placeholder="Buscar ..." style="color: #CCC;">
+					 	<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<table class="table table-striped" id="listadodepto">
 							<thead>
 								<tr>
-									<th width="80%">Nombre</th>
-									<th width="20%">Acciones</th>
+									<th width="70%">Nombre</th>
+									<th width="15%">Nombre Corto</th>
+									<th width="15%">Acciones</th>
 								</tr>
 							</thead>
 							<tbody id="listadepto">
 							</tbody>
-		 				</table>
-					</div>
-				</div>
+		 			</table>
+				</div>				
 			</div>
+
 		</div>
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">

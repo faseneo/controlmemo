@@ -69,7 +69,7 @@
 		}
     }
 
-    function drawpaginador(compag,total,filasPorPagina,cantidadMostrar,fnlista){
+    function drawpaginador(compag,total,filasPorPagina,cantidadMostrar,fnlista,secid,estado){
         totalPag = Math.ceil(total/filasPorPagina);
         var pagina="";
             //console.log("total paginas : "+totalPag);
@@ -86,8 +86,9 @@
                 if(compag == 1 ){
                     pagina = "<li class='disabled'><a href='#'><span aria-hidden='true'>&laquo;</span></a></li>";
                 }else{
-                    pagina = "<li><a href='#' onclick='" + fnlista + "(" + DecrementNum + ")'><span aria-hidden='true'>&laquo;</span></a></li>";
+                    pagina = "<li><a href='#' onclick='" + fnlista + "(" + secid + ',' + estado + ','+ DecrementNum + ")'><span aria-hidden='true'>&laquo;</span></a></li>";
                 }
+                // secid=1,estado=0,pag,usuid=0
                     //console.log("calculo ceil : " + (Math.ceil(cantidadMostrar/2)-1));
                     //valida y calcula desde hasta para paginador segun pagina actual
                 desde=compag-(Math.ceil(cantidadMostrar/2)-1); //42 - 4   => ((10/2)-1) 
@@ -112,7 +113,7 @@
                         if(i==compag){
                             pagina+="<li class='active'><a href='#'>"+i+"</a></li>";
                         }else {
-                            pagina += "<li><a href='#' onclick='" + fnlista + "("+i+")'>"+i+"</a></li>";
+                            pagina += "<li><a href='#' onclick='" + fnlista + "("+ secid + ',' + estado + ','+i+")'>"+i+"</a></li>";
                         }
                     }
                 }
@@ -121,7 +122,7 @@
             if(compag == totalPag ){
                 pagina += "<li class='disabled'><a href='#'><span aria-hidden='true'>&raquo;</span></a></li>";
             }else{
-                pagina+= "<li><a href='#' onclick='" + fnlista + "(" + IncrimentNum + ")'><span aria-hidden='true'>&raquo;</span></a></li>";
+                pagina+= "<li><a href='#' onclick='" + fnlista + "(" + secid + ',' + estado + ','+ IncrimentNum + ")'><span aria-hidden='true'>&raquo;</span></a></li>";
             }
         return pagina;
     }

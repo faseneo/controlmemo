@@ -23,7 +23,7 @@ class ModelDepartamento {
             $result = array();
             $stm = $this->pdo->prepare("SELECT  dp.dpto_id,
                                                 dp.dpto_nombre
-                                        FROM departamento as dp");
+                                        FROM departamento as dp ORDER BY dp.dpto_nombre ASC ");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new Departamentos();
