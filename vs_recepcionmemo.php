@@ -10,7 +10,7 @@ if($_SESSION["autentica"] != "SIP"){
 <head>
     <?php include "header.php"; ?>
     <title>Ingreso memo</title>
-    <script src="js/fn_memo.js"></script>
+    <script src="js/fn_memo_recepcion.js"></script>
     <script src="js/globalfn.js"></script>
     <style type="text/css">
         .alert {
@@ -39,124 +39,98 @@ if($_SESSION["autentica"] != "SIP"){
     <div class="container" style="margin-top:50px">
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
-                <h2 class="text-center" id="titulo">Ingreso Nuevo Documento</h2><br>
+                <h2 class="text-center" id="titulo">Recepción Memo </h2><br>
                 <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" accept-charset="utf-8" role="form" data-toggle="validator">
                     <input type="hidden" name="memoId" id="memoId" value="" />
                     <input type="hidden" name="Accionmem" id="Accionmem" value="registrar" />
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="box box-success box-solid">
-                                <div class="box-header"><b>Datos Documento</b></div>
-                                <div class="box-body">
-
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="memoFecha">Fecha documento</label>
-                                                <input name="memoFecha" id="memoFecha" type="date" class="form-control" onchange="aniomemo();" required >
-                                                <!-- <span class="glyphicon form-control-feedback" aria-hidden="true"></span> -->
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label" for="memoNum">Número documento</label>
-                                                <input name="memoNum" id="memoNum" type="text"  class="form-control" maxlength="10" required>
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <div class="form-group">
-                                                <label class="control-label" for="memoAnio">Año</label>
-                                                <input name="memoAnio" id="memoAnio" type="text"  class="form-control textocol1" maxlength="5"  readonly="">
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="memoFechaRecep">Fecha recepción memo</label>
-                                                <input name="memoFechaRecep" id="memoFechaRecep" type="date" class="form-control" required>
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div> -->
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="memoMateria">Asunto o Materia</label>
-                                                <textarea name="memoMateria" id="memoMateria" class="form-control" rows="3"></textarea>
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="memoNombreSol">Nombre Solicitante</label>
-                                                <input name="memoNombreSol" id="memoNombreSol" type="text"  class="form-control">
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3" id="buscarDS">
-                                            <div class="form-group">
-                                                <label for="memoBuscaDepto">Buscar...</label>
-                                                <input name="memoBuscaDepto" id="memoBuscaDepto" type="text"  class="form-control" >
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>                        
-                                        <div class="col-md-6" >
-                                            <div class="form-group">
-                                                <label  for="memoDeptoSol">Departamento o Unidad Solicitante</label>
-                                                <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" required>
-                                                </select>
-                                                <span class="help-block"></span>
-                                            </div>                            
-                                        </div>                        
-                                    </div>
-                    
-                                </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="memoFecha">Fecha memo</label>
+                                <input name="memoFecha" id="memoFecha" type="date" class="form-control" onchange="aniomemo();" required >
+                                <!-- <span class="glyphicon form-control-feedback" aria-hidden="true"></span> -->
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" for="memoNum">Número Memo</label>
+                                <input name="memoNum" id="memoNum" type="text"  class="form-control" maxlength="10" required>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label class="control-label" for="memoAnio">Año</label>
+                                <input name="memoAnio" id="memoAnio" type="text"  class="form-control textocol1" maxlength="5"  readonly="">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="memoFechaRecep">Fecha recepción memo</label>
+                                <input name="memoFechaRecep" id="memoFechaRecep" type="date" class="form-control" required>
+                                <span class="help-block"></span>
                             </div>
                         </div>
                     </div>
-                        
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title" id="tituloPanelDestino">
-                                        <b>Derivar a :</b>
-                                    </h4>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="memoNombreDest">Nombre Destinatario</label>
-                                                <input name="memoNombreDest" id="memoNombreDest" type="text"  class="form-control" value="" >
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3" id="buscarDD">
-                                            <div class="form-group">
-                                                <label for="memoBuscaDeptoD">Buscar...</label>
-                                                <input name="memoBuscaDeptoD" id="memoBuscaDeptoD" type="text"  class="form-control" >
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>                        
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="memoDeptoDest">Departamento o Unidad Destinatario</label>
-                                                <select name="memoDeptoDest" id="memoDeptoDest" class="form-control" required>
-                                                </select>
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="form-group">
+                                <label for="memoMateria">Asunto o Materia</label>
+                                <textarea name="memoMateria" id="memoMateria" class="form-control" rows="3"></textarea>
+                                <span class="help-block"></span>
                             </div>
                         </div>
-                    </div>                    
-                    
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="memoNombreSol">Nombre Solicitante</label>
+                                <input name="memoNombreSol" id="memoNombreSol" type="text"  class="form-control">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6" >
+                            <div class="form-group">
+                                <label  for="memoDeptoSol">Departamento o Unidad Solicitante</label>
+                                <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" required>
+                                </select>
+                                <span class="help-block"></span>
+                            </div>                            
+                        </div>                        
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="memoBuscaDepto">Buscar...</label>
+                                <input name="memoBuscaDepto" id="memoBuscaDepto" type="text"  class="form-control" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="memoNombreDest">Nombre Destinatario</label>
+                                <input name="memoNombreDest" id="memoNombreDest" type="text"  class="form-control" value="Leonel Durán" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="memoDeptoDest">Departamento o Unidad Destinatario</label>
+                                <select name="memoDeptoDest" id="memoDeptoDest" class="form-control" required>
+                                </select>
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="memoBuscaDeptoD">Buscar...</label>
+                                <input name="memoBuscaDeptoD" id="memoBuscaDeptoD" type="text"  class="form-control" >
+                                <span class="help-block"></span>
+                            </div>
+                        </div>                        
+                    </div>
                     <div class="row" id="datosCcostos">
                         <div class="col-md-2">
                             <div class="form-group">
@@ -176,7 +150,7 @@ if($_SESSION["autentica"] != "SIP"){
                                 <input id="verNombreCC" name="verNombreCC" class="form-control"  readonly />
                             </div>
                         </div>
-                    </div>
+                    </div>                         
                     <div class="row">
                         <div class="col-md-12">
                             <div class="panel-group" id="accordion0">
@@ -294,10 +268,10 @@ if($_SESSION["autentica"] != "SIP"){
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="row">
-                                            <div class="col-lg-7">
+                                            <div class="col-lg-8">
                                                 <h4 class="success">Memo Escaneado </h4>
                                             </div>
-                                            <div class="col-lg-5">
+                                            <div class="col-lg-2">
                                                 <button id="agrega-archivo" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModalArchivoMemo">
                                                     Agregar Memo
                                                 </button>
@@ -322,10 +296,10 @@ if($_SESSION["autentica"] != "SIP"){
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="row">
-                                            <div class="col-lg-7">
+                                            <div class="col-lg-8">
                                                 <h4 class="info">Otros archivo Anexos</h4>
                                             </div>
-                                            <div class="col-lg-5">
+                                            <div class="col-lg-2">
                                                 <button id="agrega-archivo-otros" type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModalArchivoOtros">
                                                     Agregar Otros Archivos
                                                 </button>

@@ -30,7 +30,7 @@ if(!isset($_SESSION["autentica"])){
 				</div>
 				<div class="col-md-4 col-md-offset-5">
 					<div class="input-group search">
-						<input type="text" id="busqueda" class="form-control texto-gris" placeholder="Buscar ..." style="color: #CCC;">
+						<input type="text" id="busqueda" class="form-control texto-gris" placeholder="Buscar ..." >
 					 	<span class="input-group-addon"><i class="fa fa-search"></i></span>
 					</div>
 				</div>
@@ -40,9 +40,11 @@ if(!isset($_SESSION["autentica"])){
 					<table class="table table-striped" id="listadodepto">
 							<thead>
 								<tr>
-									<th width="70%">Nombre</th>
+									<th width="62%">Nombre</th>
 									<th width="15%">Nombre Corto</th>
-									<th width="15%">Acciones</th>
+									<th width="9%">Acción</th>
+									<th width="6%">Estado</th>
+									<th width="6%">Habilitado</th>
 								</tr>
 							</thead>
 							<tbody id="listadepto">
@@ -67,6 +69,24 @@ if(!isset($_SESSION["autentica"])){
 							<label for="deptoNombre">Nombre</label>
 							<input id="deptoNombre" class="form-control" type="text" name="deptoNombre" value="" title="Ingrese un nombre" required />
 						</div>
+						<div class="form-group">
+							<label for="deptoNombreCorto">Nombre corto o abreviado</label>
+							<input id="deptoNombreCorto" class="form-control" type="text" name="deptoNombreCorto" value="" title="Ingrese un nombre" required />
+						</div>
+						<div class="form-group">
+							<label for="deptoEstado">Estado</label>
+							<select id="deptoEstado" name="deptoEstado" class="form-control">
+								<option value="1">Activo</option>
+								<option value="0">Inactivo</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="deptoHabilitado">Habilitado como sección</label>
+							<select id="deptoHabilitado" name="deptoHabilitado" class="form-control">
+								<option value="1">Activo</option>
+								<option value="0">Inactivo</option>
+							</select>
+						</div>						
 					</div>
 					<div class="modal-footer">
 						<button id="editar-depto" name="editar-depto" type="button" class="btn btn-warning">Editar</button>

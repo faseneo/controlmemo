@@ -59,7 +59,7 @@ class ModelMemo  {
                       $busq->__SET('mem_fecha', date_format(date_create($r->memo_fecha_memo),'d-m-Y' ));
                       $busq->__SET('mem_fecha_recep', date_format(date_create($r->memo_fecha_recepcion),'d-m-Y' ));
                       $busq->__SET('mem_materia', $r->memo_materia);
-                      $busq->__SET('mem_depto_dest_nom', $r->dpto_nombre);
+                      $busq->__SET('mem_depto_dest_nom', $r->depto_nombre);
                       $busq->__SET('mem_estado_id_max', $r->estado_max_id);
                       $busq->__SET('mem_estado_nom_max', $r->memo_estado_tipo);
                       $busq->__SET('mem_estado_colorbg', $r->memo_estado_color_bg);
@@ -132,7 +132,7 @@ class ModelMemo  {
             }else{
               $stm = $this->pdo->prepare("SELECT  *
                                           FROM memo as mm, departamento as dep, centro_costos as cc
-                                          WHERE dep.dpto_id = mm.memo_depto_solicitante_id 
+                                          WHERE dep.depto_id = mm.memo_depto_solicitante_id 
                                           AND cc.cc_codigo=mm.memo_cc_codigo
                                           AND mm.memo_id = ?");
               $stm->execute(array($id));
@@ -148,7 +148,7 @@ class ModelMemo  {
 
                           $busq->__SET('mem_depto_sol_id', $r->memo_depto_solicitante_id);
                           $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
-                          $busq->__SET('mem_depto_sol_nom', $r->dpto_nombre);
+                          $busq->__SET('mem_depto_sol_nom', $r->depto_nombre);
 
                           $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
                           $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);

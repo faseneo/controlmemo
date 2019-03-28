@@ -116,12 +116,11 @@ $(document).ready(function(){
 		console.log('paso');
 		validauser();
 	});
-	$("#validar").keypress(function(event) {
-		event.preventDefault();
-		console.log('paso presiona tecla');
+	$("#formPass").keypress(function(event) {
+		//event.preventDefault();
 		if (event.which == 13 ) {
+            console.log('paso presiona enter en password');
      		validauser();
   		}
-		
 	});	
 });

@@ -25,7 +25,7 @@
             $("#usuEmail").prop( "disabled", false );
             $("#usuPass").prop( "disabled", false);
 			$("#usuRolId").prop( "disabled", false );
-            $("#usuSeccionId").prop( "disabled", false );
+            $("#usuDeptoId").prop( "disabled", false );
 			$("#usuEstadoId").prop( "disabled", false);
         }
 
@@ -36,7 +36,7 @@
             $("#usuEmail").prop( "disabled", true );
             $("#usuPass").prop( "disabled", true);
             $("#usuRolId").prop( "disabled", true );
-            $("#usuSeccionId").prop( "disabled", true );
+            $("#usuDeptoId").prop( "disabled", true );
             $("#usuEstadoId").prop( "disabled", true);
         }
 
@@ -118,33 +118,33 @@
             });
         }
 
-        function getlistaSecciones(){
+        function getlistaDeptos(){
             var datax = {
-                "Accion":"listar"
+                "Accion":"listarminhabilita"
             }
             $.ajax({
                 data: datax, 
                 type: "GET",
                 dataType: "json", 
-                url: "controllers/controllerseccion.php",          
+                url: "controllers/controllerdepartamento.php",          
             })
             .done(function( data, textStatus, jqXHR ) {
-                $("#usuSeccionId").html("");
+                $("#usuDeptoId").html("");
                 if ( console && console.log ) {
-                    console.log( " data success Secciones : "+ data.success 
+                    console.log( " data success deptos : "+ data.success 
                         + " \n data msg : "+ data.message 
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
                 for(var i=0; i<data.datos.length;i++){
-                    //console.log('id: '+data.datos[i].sec_id + ' nombre: '+data.datos[i].sec_nombre);
-                    opcion = '<option value='+ data.datos[i].sec_id +'>'+data.datos[i].sec_nombre+'</option>';
-                    $("#usuSeccionId").append(opcion);
+                    //console.log('id: '+data.datos[i].depto_id + ' nombre: '+data.datos[i].depto_nombre);
+                    opcion = '<option value='+ data.datos[i].depto_id +'>'+data.datos[i].depto_nombre+'</option>';
+                    $("#usuDeptoId").append(opcion);
                 }
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
                 if ( console && console.log ) {
-                    console.log( " La solicitud getlista seccion ha fallado,  textStatus : " +  textStatus 
+                    console.log( " La solicitud getlista deptos ha fallado,  textStatus : " +  textStatus 
                         + " \n errorThrown : "+ errorThrown
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
@@ -154,7 +154,7 @@
 
     getlistaroles();
     getlistaPerfiles();
-    getlistaSecciones();
+    getlistaDeptos();
 
     $(document).ready(function(){
         function validarFormulario(){
@@ -245,7 +245,7 @@
                                 fila += '<td>'+ data.datos[i].usu_email +'</td>';
                                 fila += '<td>'+ data.datos[i].usu_nombre +'</td>';
 								fila += '<td>'+ data.datos[i].usu_rol_nombre +'</td>';
-                                fila += '<td>'+ data.datos[i].usu_sec_nombre +'</td>';
+                                fila += '<td>'+ data.datos[i].usu_depto_nombre +'</td>';
                                 fila += '<td>'+ estadonombre +'</td>';
                                 fila += '<td><button id="ver-usuario" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
@@ -559,7 +559,7 @@
             $("#usuEmail").val(data.datos.usu_email);
             $("#usuPass").val(data.datos.usu_password);
 			$("#usuRolId").val(data.datos.usu_rol_id).prop('selected',true);
-            $("#usuSeccionId").val(data.datos.usu_sec_id).prop('selected',true);
+            $("#usuDeptoId").val(data.datos.usu_depto_id).prop('selected',true);
             $("#usuEstadoId").val(data.datos.usu_estado_id).prop('selected',true);
 
             if(data.datos.usu_perfiles.length==0){

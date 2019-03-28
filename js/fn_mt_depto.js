@@ -3,29 +3,44 @@
             document.getElementById('guardar-depto').style.display = 'none';
             document.getElementById('actualizar-depto').style.display = 'none';
         }
+
         function limpiaform(){
             $("#deptoId").val("");
             $("#deptoNombre").val("");
+            $("#deptoNombreCorto").val("");
         }        
+
         function habilitaform(){
-            $("#deptoId").prop( "disabled", false );
-            $("#deptoNombre").prop( "disabled", false );
+            $("#deptoId").prop("disabled", false );
+            $("#deptoNombre").prop("disabled", false );
+            $("#deptoNombreCorto").prop("disabled", false );
+            $("#deptoEstado").prop("disabled", false );
+            $("#deptoHabilitado").prop("disabled", false );
         }
         function deshabilitaform(){
             $("#deptoId").prop( "disabled", true );
             $("#deptoNombre").prop( "disabled", true );
+            $("#deptoNombreCorto").prop("disabled", true );
+            $("#deptoEstado").prop("disabled", true );
+            $("#deptoHabilitado").prop("disabled", true );
         }
 
     $(document).ready(function(){
         var titulo='';
         function validarFormulario(){
             var txtNombre = document.getElementById('deptoNombre').value;
+            var txtnomcorto = document.getElementById('deptoNombreCorto').value;
                 //Test campo obligatorio
                 if(txtNombre == null || txtNombre.length == 0 || /^\s+$/.test(txtNombre)){
                     alert('ERROR: El campo nombre no debe ir vacío o con espacios en blanco');
                     document.getElementById('deptoNombre').focus();
                     return false;
-                }               
+                }
+                if(txtnomcorto == null || txtnomcorto.length == 0 || /^\s+$/.test(txtnomcorto)){
+                    alert('ERROR: El campo nombre no debe ir vacío o con espacios en blanco');
+                    document.getElementById('deptoNombreCorto').focus();
+                    return false;
+                }
             return true;
         }         
         //funcion para listar los Deptos.
@@ -51,16 +66,30 @@
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
                                 console.log('id: '+data.datos[i].depto_id + ' nombre: '+data.datos[i].depto_nombre);
                                 fila = '<tr><td>'+ data.datos[i].depto_nombre +'</td>';
-                                fila += '<td>abrev.</td>';
+                                if(data.datos[i].depto_nomcorto==null){
+                                    fila += '<td></td>';
+                                }else{
+                                    fila += '<td>'+ data.datos[i].depto_nomcorto +'</td>';
+                                }
                                 fila += '<td><button id="ver-depto" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
                                 fila += ' onclick="verDepto(\'ver\',\'' + data.datos[i].depto_id + '\')">';
                                 fila += 'Ver / Editar</button>';
-                                fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
-                                fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                                fila += 'onclick="deleteDepto(\''+ data.datos[i].depto_id +'\',\''
-                                + data.datos[i].depto_nombre +'\')">';
-                                fila += 'Eliminar</button></td>';
+                                fila += '</td>';
+                                fila += '<td class="text-center">';
+                                if(data.datos[i].depto_estado==1){
+                                    fila += '<span class="glyphicon glyphicon-ok text-success"></span>';
+                                }else{
+                                    fila += '<span class="glyphicon glyphicon-remove text-danger"></span>';
+                                }
+                                fila += '</td>';
+                                fila += '<td class="text-center">';
+                                if(data.datos[i].depto_habilita==1){
+                                    fila += '<span class="glyphicon glyphicon-ok text-success"></span>';
+                                }else{
+                                    fila += '<span class="glyphicon glyphicon-remove text-danger"></span>';
+                                }
+                                fila += '</td>';
                                 fila += '</tr>';
                                 $("#listadepto").append(fila);
                 }
@@ -77,7 +106,7 @@
         deshabilitabotones();
         getlista();
 
-        $('.texto-gris').each(function() {            
+/*        $('.texto-gris').each(function() {            
             var valorActual = $(this).val();
          
             $(this).focus(function(){                
@@ -93,23 +122,22 @@
                     $(this).addClass('texto-gris');
                 };
             });
-        });
+        });*/
         $("#busqueda").keyup(function(){
             if( $(this).val() != ""){
                 $("#listadodepto tbody>tr").hide();
                 $("#listadodepto td:contiene-palabra('" + $(this).val() + "')").parent("tr").show();
-            }
-            else{
+            }else{
                 $("#listadodepto tbody>tr").show();
             }
         });
-         
         $.extend($.expr[":"], 
             {
             "contiene-palabra": function(elem, i, match, array) {
                 return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
             }
         });
+
         //Levanta modal nuevo centro de costos
         $("#crea-depto").click(function(e){
             e.preventDefault();
@@ -285,6 +313,9 @@
             }
             $("#deptoId").val(data.datos.depto_id);
             $("#deptoNombre").val(data.datos.depto_nombre);
+            $("#deptoNombreCorto").val(data.datos.depto_nomcorto);
+            $("#deptoEstado").val(data.datos.depto_estado);
+            $("#deptoHabilitado").val(data.datos.depto_habilita);
 
             deshabilitaform();
             $("#Accion").val(action);

@@ -92,8 +92,8 @@ if(!isset($_SESSION["autentica"])){
 						<div class="row">
 	                        <div class="col-md-6">
 								<div class="form-group">
-									<label for="usuSeccionId">Sección</label>
-										<select name="usuSeccionId" id="usuSeccionId" class="form-control">
+									<label for="usuDeptoId">Departamento o Unidad</label>
+										<select name="usuDeptoId" id="usuDeptoId" class="form-control">
 		                                </select>
 								</div>
 	                        </div>						

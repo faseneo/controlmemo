@@ -11,6 +11,8 @@ class Usuarios{
     private $usu_fecha_ing;
     private $usu_email;
     private $usu_urlimg;
+    private $usu_depto_id;
+    private $usu_depto_nombre;
     private $usu_sec_id;
     private $usu_sec_nombre;
     private $usu_perfiles=array();

@@ -18,11 +18,11 @@ if(isset($_REQUEST['Accion'])){
             $usu->__SET('usu_id',           $_REQUEST['usuId']);
             $usu->__SET('usu_rut',          $_REQUEST['usuRut']);
             $usu->__SET('usu_nombre',       $_REQUEST['usuNombre']);
-            $usu->__SET('usu_email',       $_REQUEST['usuEmail']);
+            $usu->__SET('usu_email',        $_REQUEST['usuEmail']);
             $usu->__SET('usu_password',     $_REQUEST['usuPass']);
             $usu->__SET('usu_rol_id',       $_REQUEST['usuRolId']);
             $usu->__SET('usu_estado_id',    $_REQUEST['usuEstadoId']);
-            $usu->__SET('usu_sec_id',       $_REQUEST['usuSeccionId']);
+            $usu->__SET('usu_depto_id',     $_REQUEST['usuDeptoId']);
             /*$usu->__SET('usu_perfil_nombre', $_REQUEST['usuarioperfilnom']);*/
             $jsondata = $modelUsu->Actualizar($usu);
             header('Content-type: application/json; charset=utf-8');
@@ -36,7 +36,7 @@ if(isset($_REQUEST['Accion'])){
             $usu->__SET('usu_password',     $_REQUEST['usuPass']);
             $usu->__SET('usu_rol_id',       $_REQUEST['usuRolId']);
             $usu->__SET('usu_estado_id',    $_REQUEST['usuEstadoId']);
-            $usu->__SET('usu_sec_id',       $_REQUEST['usuSeccionId']);
+            $usu->__SET('usu_depto_id',     $_REQUEST['usuDeptoId']);
             /*$usu->__SET('usu_perfil_nombre', $_REQUEST['usuarioperfilnom']);*/
             $jsondata = $modelUsu->Registrar($usu);
             header('Content-type: application/json; charset=utf-8');

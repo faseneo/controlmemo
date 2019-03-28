@@ -27,7 +27,8 @@
 					<li><a href="principal.php">Buscador</a></li>
 					<li><a class="dropdown-toggle" data-toggle="dropdown" href="#">Memo<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="vs_ingresomemo.php">Ingreso Memo</a></li>
+							<li><a href="vs_ingresomemo.php">Ingreso Nuevo Memo</a></li>
+							<li><a href="vs_recepcionmemo.php">Recepción Memo</a></li>
 								<?php 
 									if($rol<>4 && $rol<>6 && $rol<>7){
 								?>

@@ -21,14 +21,20 @@ class ModelDepartamento {
         $jsonresponse = array();
         try{
             $result = array();
-            $stm = $this->pdo->prepare("SELECT  dp.dpto_id,
-                                                dp.dpto_nombre
-                                        FROM departamento as dp ORDER BY dp.dpto_nombre ASC ");
+            $stm = $this->pdo->prepare("SELECT  dp.depto_id,
+                                                dp.depto_nombre,
+                                                dp.depto_nombre_corto,
+                                                dp.depto_estado,
+                                                dp.depto_habilitado
+                                        FROM departamento as dp ORDER BY dp.depto_nombre ASC ");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $busq = new Departamentos();
-                    $busq->__SET('depto_id',        $r->dpto_id);
-                    $busq->__SET('depto_nombre',    $r->dpto_nombre);
+                    $busq->__SET('depto_id',        $r->depto_id);
+                    $busq->__SET('depto_nombre',    $r->depto_nombre);
+                    $busq->__SET('depto_nomcorto',  $r->depto_nombre_corto);
+                    $busq->__SET('depto_estado',    $r->depto_estado);
+                    $busq->__SET('depto_habilita',  $r->depto_habilitado);
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;
@@ -46,16 +52,21 @@ class ModelDepartamento {
     public function Obtener($id){
         $jsonresponse = array();
         try{
-            $stm = $this->pdo
-                       ->prepare("SELECT dp.dpto_id,
-                                         dp.dpto_nombre
-                                FROM departamento as dp
-                                WHERE dp.dpto_id = ?");
+            $stm = $this->pdo->prepare("SELECT  dp.depto_id,
+                                                dp.depto_nombre,
+                                                dp.depto_nombre_corto,
+                                                dp.depto_estado,
+                                                dp.depto_habilitado
+                                        FROM departamento as dp
+                                        WHERE dp.depto_id = ?");
             $stm->execute(array($id));
             $r = $stm->fetch(PDO::FETCH_OBJ);
             $busq = new Departamentos();
-                    $busq->__SET('depto_id',        $r->dpto_id);
-                    $busq->__SET('depto_nombre',    $r->dpto_nombre);
+                    $busq->__SET('depto_id',        $r->depto_id);
+                    $busq->__SET('depto_nombre',    $r->depto_nombre);
+                    $busq->__SET('depto_nomcorto',  $r->depto_nombre_corto);
+                    $busq->__SET('depto_estado',    $r->depto_estado);
+                    $busq->__SET('depto_habilita',  $r->depto_habilitado);
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Se obtuvo los Departamentos correctamente';
@@ -72,7 +83,7 @@ class ModelDepartamento {
         $jsonresponse = array();
         try{
             $stm = $this->pdo
-                      ->prepare("DELETE FROM departamento WHERE dpto_id = ? ");
+                      ->prepare("DELETE FROM departamento WHERE depto_id = ? ");
             $stm->execute(array($id));
 
             $jsonresponse['success'] = true;
@@ -88,10 +99,14 @@ class ModelDepartamento {
     public function Registrar(Departamentos $data){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO departamento (dpto_nombre) 
-                    VALUES (?)";
+            $sql = "INSERT INTO departamento (depto_nombre, depto_nombre_corto, depto_estado, depto_habilitado) 
+                    VALUES (?,?,?,?)";
 
-            $this->pdo->prepare($sql)->execute(array($data->__GET('depto_nombre'))
+            $this->pdo->prepare($sql)->execute(array($data->__GET('depto_nombre'),
+                                                     $data->__GET('depto_nomcorto'),
+                                                     $data->__GET('depto_estado'),
+                                                     $data->__GET('depto_habilita')
+                                                    )
                                               );
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Departamento ingresado correctamente'; 
@@ -110,13 +125,19 @@ class ModelDepartamento {
         //print_r($data);
         try{
             $sql = "UPDATE departamento SET 
-                           dpto_nombre = ?
-                    WHERE  dpto_id = ?";
+                           depto_nombre = ?,
+                           depto_nombre_corto = ?,
+                           depto_estado = ?,
+                           depto_habilitado = ?
+                    WHERE  depto_id = ?";
 
-            $this->pdo->prepare($sql)
-                 ->execute(array($data->__GET('depto_nombre'), 
-                                 $data->__GET('depto_id'))
-                          );
+            $this->pdo->prepare($sql)->execute(array($data->__GET('depto_nombre'),
+                                                     $data->__GET('depto_nomcorto'),
+                                                     $data->__GET('depto_estado'),
+                                                     $data->__GET('depto_habilita'),
+                                                     $data->__GET('depto_id')
+                                                     )
+                                            );
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Departamento actualizado correctamente';                 
         } catch (Exception $e){
@@ -127,50 +148,53 @@ class ModelDepartamento {
         return $jsonresponse;
     }
 
-    public function Listar2(){
+    public function ListarMinHabilitado(){
         $jsonresponse = array();
         try{
             $result = array();
-             $stm = $this->pdo->prepare("SELECT  dp.dpto_id,
-                                                 dp.dpto_nombre
-                                        FROM departamento as dp");
+             $stm = $this->pdo->prepare("SELECT  dp.depto_id,
+                                                 dp.depto_nombre
+                                        FROM departamento as dp
+                                        WHERE dp.depto_habilitado=1 and dp.depto_estado=1");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                $busq = new Departamentos();
-                    $busq->__SET('depto_id',     $r->dpto_id);
-                    $busq->__SET('depto_nombre', $r->dpto_nombre);
-                $result[] = $busq;
+                $fila = array('depto_id'=>$r->depto_id,
+                              'depto_nombre'=>$r->depto_nombre);
+                $result[]=$fila;
             }
-            return $result;
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'listado correctamente';
+            $jsonresponse['datos'] = $result;
+            return $jsonresponse;  
         }
         catch(Exception $e){
             die($e->getMessage());
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public function ListarMin(){
+        $jsonresponse = array();
+        try{
+            $result = array();
+             $stm = $this->pdo->prepare("SELECT  dp.depto_id,
+                                                 dp.depto_nombre
+                                        FROM departamento as dp
+                                        WHERE dp.depto_estado=1");
+            $stm->execute();
+            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                $fila = array('depto_id'=>$r->depto_id,
+                              'depto_nombre'=>$r->depto_nombre);
+                $result[]=$fila;
+            }
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'listado correctamente';
+            $jsonresponse['datos'] = $result;
+            return $jsonresponse;            
+        }
+        catch(Exception $e){
+            die($e->getMessage());
+        }
+    }
 }
  
 

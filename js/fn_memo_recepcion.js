@@ -53,8 +53,7 @@
         $('#formIngresoMemo')[0].reset();
         $("#listaArchivosMemo").html("");
         $("#archivoMemo").html("");
-        $('#memoFecha').val(fechaActual());
-        $('#memoAnio').val(anioActual());
+        $('#memoFechaRecep').val(fechaActual());
         //$("#linkres").text("");
         //$("#linkres").attr("href","");
         //memoNum
@@ -86,7 +85,8 @@
 
         $('#memoAnio').val(anio);
         $('#memoFechaRecep').attr('min', fechamin);
-        $('#memoFechaRecep').val(fechamin);
+        //$('#memoFechaRecep').val(fechamin);
+        $('#memoFechaRecep').val(fechaActual());
     }
     // Funcion valida los datos del formulario del memo
     function validarFormulario(){
@@ -550,7 +550,6 @@
             $("#memoDeptoSol").val(data.datos.mem_depto_sol_id);
             $("#memoNombreDest").val(data.datos.mem_nom_dest);
             $("#memoDeptoDest").val(data.datos.mem_depto_dest_id);
-
             if(data.datos.mem_cc_codigo!=0){
                 $("#datosCcostos").show();
                 $("#verCodigoCC").val(data.datos.mem_cc_codigo);
@@ -562,13 +561,6 @@
                 
                 $('#paneles').show();
                 $('#accordion0').hide();
-                $('#panel-heading').hide();
-                $('#buscarDS').hide();
-                $('#buscarDD').hide();
-                $('#tituloPanelDestino').html('<b>Derivado a :</b>');
-                
-                
-                
                 //Lista historial de los estados del memo, ver luego(21012019) si implemento esta funcion getlistaHistorialEstado
                 var totalHistorial = data.datos.mem_estados.length;
                 $("#totalHist").html("");
@@ -639,9 +631,7 @@
         });
     }
     $(document).ready(function(){
-        $('#memoFecha').val(fechaActual());
-        $('#memoAnio').val(anioActual());
-
+        $('#memoFechaRecep').val(fechaActual());
         $('#memoBuscaDepto').keypress(function () {
             var valthis = $(this).val().toLowerCase();
             var num = 0;
