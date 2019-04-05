@@ -257,11 +257,13 @@
                                     fila += ' onclick="verUsuario(\'perf\',\'' + data.datos[i].usu_id + '\')">';
                                     fila += 'Perfil</button>';
                                 // Solo admin deberia ver este boton
-                                    fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
+                                    /*fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
                                     fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
                                     fila += 'onclick="deleteUsuario(\''+ data.datos[i].usu_id +'\',\'' + data.datos[i].usu_rut +'\',\''
                                     + data.datos[i].usu_nombre +'\')">';
-                                fila += 'Eliminar</button></td>';
+                                    fila += 'Eliminar</button>';*/
+
+                                fila += '</td>';
                                 fila += '</tr>';
                                 $("#listausuario").append(fila);
                             }

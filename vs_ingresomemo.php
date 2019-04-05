@@ -39,7 +39,7 @@ if($_SESSION["autentica"] != "SIP"){
     <div class="container" style="margin-top:50px">
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
-                <h2 class="text-center" id="titulo">Ingreso Nuevo Documento</h2><br>
+                <h2 class="text-center" id="titulo">Ingreso Documento a Enviar</h2><br>
                 <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" accept-charset="utf-8" role="form" data-toggle="validator">
                     <input type="hidden" name="memoId" id="memoId" value="" />
                     <input type="hidden" name="Accionmem" id="Accionmem" value="registrar" />
@@ -99,7 +99,7 @@ if($_SESSION["autentica"] != "SIP"){
                                         </div>
                                         <div class="col-md-3" id="buscarDS">
                                             <div class="form-group">
-                                                <label for="memoBuscaDepto">Buscar...</label>
+                                                <label for="memoBuscaDepto">Buscar Unidad...</label>
                                                 <input name="memoBuscaDepto" id="memoBuscaDepto" type="text"  class="form-control" >
                                                 <span class="help-block"></span>
                                             </div>
@@ -124,7 +124,7 @@ if($_SESSION["autentica"] != "SIP"){
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <h4 class="panel-title" id="tituloPanelDestino">
-                                        <b>Derivar a :</b>
+                                        <b>Enviar a :</b>
                                     </h4>
                                 </div>
                                 <div class="panel-body">
@@ -138,7 +138,7 @@ if($_SESSION["autentica"] != "SIP"){
                                         </div>
                                         <div class="col-md-3" id="buscarDD">
                                             <div class="form-group">
-                                                <label for="memoBuscaDeptoD">Buscar...</label>
+                                                <label for="memoBuscaDeptoD">Buscar Unidad...</label>
                                                 <input name="memoBuscaDeptoD" id="memoBuscaDeptoD" type="text"  class="form-control" >
                                                 <span class="help-block"></span>
                                             </div>

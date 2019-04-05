@@ -23,7 +23,7 @@
             $("#memoestColorbg").prop( "disabled", false );
             $("#memoestColortxt").prop( "disabled", false );
             $("#memoestActivo").prop( "disabled", false );
-            $("#memoestSeccionId").prop( "disabled", false );
+            $("#memoestDeptoId").prop( "disabled", false );
         }
 
         function deshabilitaform(){
@@ -34,21 +34,21 @@
             $("#memoestColortxt").prop( "disabled", true );            
             $("#memoestOrden").prop( "disabled", true );
             $("#memoestActivo").prop( "disabled", true );
-            $("#memoestSeccionId").prop( "disabled", true );            
+            $("#memoestDeptoId").prop( "disabled", true );            
         }
 
-        var getlistaseccion = function (){
+        var getlistadepto = function (){
             var datax = {
-                "Accion":"listar"
+                "Accion":"listarminhabilita"
             }
             $.ajax({
                 data: datax, 
                 type: "GET",
                 dataType: "json", 
-                url: "controllers/controllerseccion.php", 
+                url: "controllers/controllerdepartamento.php", 
             })
             .done(function( data, textStatus, jqXHR ) {
-                $("#memoestSeccionId").html("");
+                $("#memoestDeptoId").html("");
                 if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
                         + " \n data msg : "+ data.message 
@@ -56,9 +56,9 @@
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
                 for(var i=0; i<data.datos.length;i++){
-                    console.log('id: '+data.datos[i].sec_id + ' tipo: '+data.datos[i].sec_nombre);
-                    opcion = '<option value='+ data.datos[i].sec_id +'>'+data.datos[i].sec_nombre+'</option>';
-                    $("#memoestSeccionId").append(opcion);
+                    console.log('id: '+data.datos[i].depto_id + ' tipo: '+data.datos[i].depto_nombre);
+                    opcion = '<option value='+ data.datos[i].depto_id +'>'+data.datos[i].depto_nombre+'</option>';
+                    $("#memoestDeptoId").append(opcion);
                 }
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -70,13 +70,13 @@
                 }
             });
         }
-    getlistaseccion();
+    getlistadepto();
     $(document).ready(function(){
         function validarFormulario(){
             var txtTipo = document.getElementById('memoestTipo').value;
             var txtPriori = document.getElementById('memoestOrden').value;
             var selEstActivo = document.getElementById('memoestActivo').selectedIndex;
-            var selEstSeccion = document.getElementById('memoestSeccionId').selectedIndex;
+            var selEstdepto = document.getElementById('memoestDeptoId').selectedIndex;
                 //Test campo obligatorio
                 if(txtTipo == null || txtTipo.length == 0 || /^\s+$/.test(txtTipo)){
                     alert('ERROR: El campo Nombre Estado no debe ir vacío o con espacios en blanco');
@@ -95,11 +95,11 @@
                     document.getElementById('memoestActivo').focus();
                     return false;
                 }
-                if( selEstSeccion == null || isNaN(selEstSeccion) || selEstSeccion == -1 ) {
+                if( selEstdepto == null || isNaN(selEstdepto) || selEstdepto == -1 ) {
                     /*$('#memoestActivo').parent().attr('class','form-group has-error');
                     $('#memoestActivo').parent().children('span').text('Debe seleccionar un Departamento o Unidad Solicitante').show();*/
                     alert('ERROR: Debe selecciona una opcion');
-                    document.getElementById('memoestSeccionId').focus();
+                    document.getElementById('memoestDeptoId').focus();
                     return false;                    
                 }
             return true;
@@ -109,7 +109,7 @@
         var getlista = function (){
             var datax = {
                 "Accion":"listar",
-                'seccion':'null'
+                'depto':'null'
             }
             $.ajax({
                 data: datax, 
@@ -128,12 +128,12 @@
                 for(var i=0; i<data.datos.length;i++){
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
                                 console.log('id: '+data.datos[i].memo_est_id + ' tipo: '+data.datos[i].memo_est_tipo);
-                                $clasetr = (data.datos[i].memo_est_seccion_id % 2) ? 'class="fila1"':'class="fila2"';
+                                $clasetr = (data.datos[i].memo_est_depto_id % 9) ? 'class="fila1"':'class="fila2"';
                                 var activo = data.datos[i].memo_est_activo == 1 ? 'Activo':'Inactivo';
 
                                 fila = '<tr '+$clasetr+'>';
                                 fila += '<td class="'+ data.datos[i].memo_est_colorbg + ' '+ data.datos[i].memo_est_colortxt+'">'+ data.datos[i].memo_est_tipo +'</td>';
-                                fila += '<td>'+ data.datos[i].memo_est_seccion_nombre +'</td>';
+                                fila += '<td>'+ data.datos[i].memo_est_depto_nombre +'</td>';
                                 fila += '<td>'+ data.datos[i].memo_est_orden +'</td>';
                                 fila += '<td>'+ activo +'</td>';
                                 fila += '<td><button id="ver-memoest" type="button" '
@@ -354,7 +354,7 @@
             $("#memoestColorbg").val(data.datos.memo_est_colorbg);
             $("#memoestColortxt").val(data.datos.memo_est_colortxt);
             $("#memoestActivo").val(data.datos.memo_est_activo);
-            $("#memoestSeccionId").val(data.datos.memo_est_seccion_id);
+            $("#memoestDeptoId").val(data.datos.memo_est_depto_id);
 
             deshabilitaform();
             $("#Accion").val(action);

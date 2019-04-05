@@ -16,15 +16,15 @@ class ModelMemoEst{
         }
     }
 
-    public function Listar($seccion = 1){
-        $seccion = (int) $seccion;
+    public function Listar($depto = 1){
+        $depto = (int) $depto;
         $jsonresponse = array();
         try{
             $result = array();
-            if($seccion == 1 || $seccion == null || $seccion=='null'){
+            if($depto == 1 || $depto == null || $depto=='null'){
                 $filtro = "";
             }else{
-                $filtro = " AND me.memo_estado_seccion_id = ".$seccion;
+                $filtro = " AND me.memo_estado_depto_id = ".$depto;
             }
             $consulta = "SELECT  me.memo_estado_id,
                                     me.memo_estado_tipo,
@@ -33,12 +33,12 @@ class ModelMemoEst{
                                     me.memo_estado_color_bg,
                                     me.memo_estado_color_font,
                                     me.memo_estado_activo,
-                                    sec.seccion_id,
-                                    sec.seccion_nombre
-                        FROM memo_estado as me, seccion as sec
-                        WHERE sec.seccion_id = me.memo_estado_seccion_id "
+                                    dep.depto_id,
+                                    dep.depto_nombre
+                        FROM memo_estado as me, departamento as dep
+                        WHERE dep.depto_id = me.memo_estado_depto_id "
                         .$filtro
-                        ." ORDER BY me.memo_estado_seccion_id ASC, me.memo_estado_orden ASC, memo_estado_tipo ASC";
+                        ." ORDER BY me.memo_estado_depto_id ASC, me.memo_estado_orden ASC, memo_estado_tipo ASC";
             $stm = $this->pdo->prepare($consulta);
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
@@ -50,8 +50,8 @@ class ModelMemoEst{
                     $busq->__SET('memo_est_colorbg',        $r->memo_estado_color_bg);
                     $busq->__SET('memo_est_colortxt',       $r->memo_estado_color_font);
                     $busq->__SET('memo_est_activo',         $r->memo_estado_activo);
-                    $busq->__SET('memo_est_seccion_id',     $r->seccion_id);
-                    $busq->__SET('memo_est_seccion_nombre', $r->seccion_nombre);
+                    $busq->__SET('memo_est_depto_id',     $r->depto_id);
+                    $busq->__SET('memo_est_depto_nombre', $r->depto_nombre);
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;
@@ -76,10 +76,10 @@ class ModelMemoEst{
                                                 me.memo_estado_color_bg,
                                                 me.memo_estado_color_font,
                                                 me.memo_estado_activo,
-                                                sec.seccion_id,
-                                                sec.seccion_nombre
-                                        FROM memo_estado as me, seccion as sec
-                                        WHERE sec.seccion_id = me.memo_estado_seccion_id AND me.memo_estado_id = ?");
+                                                dep.depto_id,
+                                                dep.depto_nombre
+                                        FROM memo_estado as me, departamento as dep
+                                        WHERE dep.depto_id = me.memo_estado_depto_id AND me.memo_estado_id = ?");
             $stm->execute(array($id));
             $r = $stm->fetch(PDO::FETCH_OBJ);
             $busq = new MemoEst();
@@ -90,8 +90,8 @@ class ModelMemoEst{
                     $busq->__SET('memo_est_colorbg',        $r->memo_estado_color_bg);
                     $busq->__SET('memo_est_colortxt',       $r->memo_estado_color_font);
                     $busq->__SET('memo_est_activo',         $r->memo_estado_activo);
-                    $busq->__SET('memo_est_seccion_id',     $r->seccion_id);
-                    $busq->__SET('memo_est_seccion_nombre', $r->seccion_nombre);
+                    $busq->__SET('memo_est_depto_id',     $r->depto_id);
+                    $busq->__SET('memo_est_depto_nombre', $r->depto_nombre);
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Se obtuvo memo estado correctamente';
@@ -123,7 +123,7 @@ class ModelMemoEst{
     public function Registrar(MemoEst $data){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO memo_estado (memo_estado_tipo, memo_estado_orden, memo_estado_descripcion, memo_estado_color_bg, memo_estado_color_font, memo_estado_activo, memo_estado_seccion_id) 
+            $sql = "INSERT INTO memo_estado (memo_estado_tipo, memo_estado_orden, memo_estado_descripcion, memo_estado_color_bg, memo_estado_color_font, memo_estado_activo, memo_estado_depto_id) 
                     VALUES (?,?,?,?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array(   $data->__GET('memo_est_tipo'),
@@ -132,7 +132,7 @@ class ModelMemoEst{
                                                         $data->__GET('memo_est_colorbg'),
                                                         $data->__GET('memo_est_colortxt'),
                                                         $data->__GET('memo_est_activo'),
-                                                        $data->__GET('memo_est_seccion_id')
+                                                        $data->__GET('memo_est_depto_id')
                                                     ));
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo estado ingresado correctamente'; 
@@ -156,7 +156,7 @@ class ModelMemoEst{
                            memo_estado_color_bg = ?,
                            memo_estado_color_font = ?,
                            memo_estado_activo = ?,
-                           memo_estado_seccion_id = ?
+                           memo_estado_depto_id = ?
                     WHERE  memo_estado_id = ?";
             $this->pdo->prepare($sql)->execute(array($data->__GET('memo_est_tipo'),
                                                      $data->__GET('memo_est_orden'),
@@ -164,7 +164,7 @@ class ModelMemoEst{
                                                      $data->__GET('memo_est_colorbg'),
                                                      $data->__GET('memo_est_colortxt'),
                                                      $data->__GET('memo_est_activo'),
-                                                     $data->__GET('memo_est_seccion_id'),
+                                                     $data->__GET('memo_est_depto_id'),
                                                      $data->__GET('memo_est_id')
                                                     ));
             $jsonresponse['success'] = true;
@@ -228,23 +228,23 @@ class ModelMemoEst{
         return $jsonresponse;
     }
 
-    public function ListarMin($seccion = 1){
-        $seccion = (int) $seccion;
+    public function ListarMin($depto = 1){
+        $depto = (int) $depto;
         $jsonresponse = array();
         try{
             $result = array();
-            if($seccion == 1 || $seccion == null || $seccion=='null'){
+            if($depto == 1 || $depto == null || $depto=='null'){
                 $filtro = "";
             }else{
-                $filtro = " AND me.memo_estado_seccion_id = ".$seccion;
+                $filtro = " AND me.memo_estado_depto_id = ".$depto;
             }
             $stm = $this->pdo->prepare("SELECT  me.memo_estado_id,
                                                 me.memo_estado_tipo,
                                                 me.memo_estado_color_bg,
                                                 me.memo_estado_color_font,                                                
-                                                sec.seccion_nombre
-                                        FROM memo_estado as me, seccion as sec
-                                        WHERE sec.seccion_id = me.memo_estado_seccion_id
+                                                dep.depto_nombre
+                                        FROM memo_estado as me, departamento as dep
+                                        WHERE dep.depto_id = me.memo_estado_depto_id
                                         AND me.memo_estado_activo = 1 "
                                         .$filtro
                                         ." ORDER BY me.memo_estado_id ASC, me.memo_estado_orden ASC ");
@@ -252,7 +252,7 @@ class ModelMemoEst{
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $fila = array('memo_est_id'=>$r->memo_estado_id,
                               'memo_est_tipo'=>$r->memo_estado_tipo,
-                              'memo_est_seccion_nombre'=>$r->seccion_nombre);
+                              'memo_est_depto_nombre'=>$r->depto_nombre);
                 $result[]=$fila;
             }
             $jsonresponse['success'] = true;

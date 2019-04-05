@@ -293,7 +293,7 @@
     //Funcion que lista los deptos
     function getlistaDepto (){
         var datax = {
-            "Accion":"listar"
+            "Accion":"listarmin"
         }
         $.ajax({
             data: datax, 
@@ -369,8 +369,8 @@
     }    
     //Funcion que lista los estado del memo
     function getlistaEstadosMemo (ultestado){
-        console.log('estado funcion : '+ultestado);
-        console.log('estado global : '+ultimoestado);
+        console.log('estado funcion : ' + ultestado);
+        console.log('estado global : ' + ultimoestado);
         var datax = {
             'Accion':'listarmin',
             'seccion':'2'

@@ -39,7 +39,7 @@ if($_SESSION["autentica"] != "SIP"){
     <div class="container" style="margin-top:50px">
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
-                <h2 class="text-center" id="titulo">Recepción Memo </h2><br>
+                <h2 class="text-center" id="titulo">Recepción Documento</h2><br>
                 <form id="formIngresoMemo" name="formIngresoMemo" method="POST"  enctype="multipart/form-data" accept-charset="utf-8" role="form" data-toggle="validator">
                     <input type="hidden" name="memoId" id="memoId" value="" />
                     <input type="hidden" name="Accionmem" id="Accionmem" value="registrar" />

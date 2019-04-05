@@ -14,8 +14,8 @@ if($_SESSION["autentica"] != "SIP"){
     <script src="js/fn_listadomemos.js"></script>
     <script>
         <?php 
-        $sec = $_SESSION["sec"];
-        echo "sec=".$sec.";";
+        $depto = $_SESSION["depto"];
+        echo "depto=".$depto.";";
         $uid = $_SESSION["uid"];
         echo "uid=".$uid.";\n";
         ?>

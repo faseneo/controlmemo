@@ -29,9 +29,9 @@ if(!isset($_SESSION["autentica"])){
 									<th width="14%">Email</th>
 									<th width="20%">Nombre</th>
 									<th width="20%">Rol Ususario</th>
-									<th width="12%">Seccion/Unidad</th>
+									<th width="18%">Depto/Unidad</th>
 									<th width="8%">Estado</th>
-									<th width="18%">Acciones</th>
+									<th width="12%">Acciones</th>
 								</tr>
 							</thead>
 							<tbody id="listausuario">

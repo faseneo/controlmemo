@@ -23,11 +23,11 @@ if(!isset($_SESSION["autentica"])){
 						<table class="table table-striped" id="listadoestados">
 							<thead>
 								<tr>
-									<th width="30%">Nombre estado</th>
-									<th width="20%">Seccion</th>
-									<th width="15%">Prioridad</th>
-									<th width="15%">Activo</th>
-									<th width="20%">Acciones</th>
+									<th width="20%">Nombre estado</th>
+									<th width="41%">Depto / Unidad</th>
+									<th width="12%">Prioridad</th>
+									<th width="12%">Activo</th>
+									<th width="15%">Acciones</th>
 								</tr>
 							</thead>
 							<tbody id="listamemoestado"> 
@@ -135,8 +135,8 @@ if(!isset($_SESSION["autentica"])){
                             </div>
                             <div class="col-md-8">
 								<div class="form-group">
-									<label for="memoestSeccionId">Seccion</label>
-									<select name="memoestSeccionId" id="memoestSeccionId" class="form-control">
+									<label for="memoestDeptoId">Depto/Unidad</label>
+									<select name="memoestDeptoId" id="memoestDeptoId" class="form-control">
 									</select>
 								</div>
                             </div>

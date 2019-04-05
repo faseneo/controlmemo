@@ -94,10 +94,8 @@ class ModelUsuarios{
                                                 us.usuario_estado,
                                                 us.usuario_fecha_ingreso,
                                                 ur.usu_rol_nombre,
-                                                us.usuario_seccion_id,
-                                                sec.seccion_nombre
-                                        FROM usuario as us ,usuario_rol as ur, seccion as sec
-                                        WHERE us.usuario_usu_rol_id= ur.usu_rol_id AND sec.seccion_id = us.usuario_seccion_id
+                                        FROM usuario as us ,usuario_rol as ur
+                                        WHERE us.usuario_usu_rol_id= ur.usu_rol_id
                                         AND  ur.usu_rol_id = ?");
             
             $stm->execute(array($rolid));
@@ -110,8 +108,6 @@ class ModelUsuarios{
                     $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                     $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                     $busq->__SET('usu_estado_id',   $r->usuario_estado);
-                    $busq->__SET('usu_sec_id',      $r->usuario_seccion_id);
-                    $busq->__SET('usu_sec_nombre',  $r->seccion_nombre);
                     $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
                 $result[] = $busq->returnArray();
             }
@@ -271,9 +267,9 @@ class ModelUsuarios{
             $idestado = 1;
             $deptoid=$data->__GET('usu_depto_id');
             $sqlinsertausuDepto = "INSERT INTO dpto_tiene_usu (dpto_tiene_usu_depto_id,
-                                                            dpto_tiene_usu_usuario_id,
-                                                            dpto_tiene_usu_estado)
-                                VALUES ($deptoid,$idUsu,$idestado)";
+                                                              dpto_tiene_usu_usuario_id,
+                                                              dpto_tiene_usu_estado)
+                                    VALUES ($deptoid,$idUsu,$idestado)";
             $logsq2 = new ModeloLogsQuerys();
                 $logsq2->GrabarLogsQuerys($sqlinsertausuDepto,'0','RegistrarusuDepto');
                 $logsq2 = null;
@@ -344,13 +340,15 @@ class ModelUsuarios{
                     WHERE  usuario_id = ?";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('usu_rut'),
-                                                    $data->__GET('usu_nombre'), 
-                                                    $data->__GET('usu_email'), 
-                                                    $data->__GET('usu_password'),
-                                                    $data->__GET('usu_rol_id'),
-                                                    $data->__GET('usu_estado_id'),
-                                                    $data->__GET('usu_id'))
+                                                     $data->__GET('usu_nombre'), 
+                                                     $data->__GET('usu_email'), 
+                                                     $data->__GET('usu_password'),
+                                                     $data->__GET('usu_rol_id'),
+                                                     $data->__GET('usu_estado_id'),
+                                                     $data->__GET('usu_id'))
                                                 );
+            $this->RegistrarUsuDeptos($data->__GET('usu_id'),$data->__GET('usu_depto_id'));
+            
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Usuario actualizado correctamente';                 
         } catch (Exception $e){
@@ -362,6 +360,10 @@ class ModelUsuarios{
     }
     //registra los perfiles asignados al usuario
     public function RegistrarUsuDeptos($idusu , $deptosid){
+        /*
+        INSERT INTO `dpto_tiene_usu` (`dpto_tiene_usu_depto_id`, `dpto_tiene_usu_usuario_id`, `dpto_tiene_usu_estado`) 
+        VALUES ('87', '1', CURRENT_TIMESTAMP, '1'), ('87', '2', CURRENT_TIMESTAMP, '1');
+         */
         $jsonresponse = array();
         try{
             $consulta = "SELECT COUNT(*) FROM dpto_tiene_usu where dpto_tiene_usu_usuario_id = ".$idusu;
@@ -371,10 +373,10 @@ class ModelUsuarios{
                 $sql0 = "DELETE FROM dpto_tiene_usu WHERE dpto_tiene_usu_usuario_id = ?";
                 $this->pdo->prepare($sql0)->execute(array($idusu));
             }
-               foreach ($perfiles as $perfilid) {
-                    $sql = "INSERT INTO dpto_tiene_usu (dpto_tiene_usu_usuario_id, dpto_tiene_usu_depto_id) VALUES (?,?)";
-                    $this->pdo->prepare($sql)->execute(array($idusu,$deptosid));
-                }
+               //foreach ($perfiles as $perfilid) {
+                    $sql = "INSERT INTO dpto_tiene_usu (dpto_tiene_usu_usuario_id, dpto_tiene_usu_depto_id,dpto_tiene_usu_estado) VALUES (?,?,?)";
+                    $this->pdo->prepare($sql)->execute(array($idusu,$deptosid,1));
+                //}
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Ingresado correctamente';
                 $jsonresponse['datos'] = [];
@@ -427,8 +429,21 @@ class ModelUsuarios{
         return $jsonresponse;        
     }
     // valida usuario al loguearse
+    /* SELECT  us.usuario_id,
+                                                us.usuario_rut,
+                                                us.usuario_nombre,
+                                                us.usuario_email,
+                                                us.usuario_password,
+                                                us.usuario_usu_rol_id,
+                                                us.usuario_estado,
+                                                us.usuario_fecha_ingreso,
+                                                ur.usu_rol_nombre,
+                                                dtu.dpto_tiene_usu_depto_id
+                            FROM usuario as us 
+                            INNER JOIN usuario_rol as ur ON us.usuario_usu_rol_id= ur.usu_rol_id
+                            LEFT JOIN dpto_tiene_usu as dtu ON us.usuario_id = dtu.dpto_tiene_usu_usuario_id
+                            WHERE us.usuario_id = ?*/
     public function valida($user,$pass){
-
         $jsonresponse = array();
         try{
             $consulta = "SELECT COUNT(*) FROM usuario where usuario_email = '".$user."' AND usuario_password = '".$pass."'";
@@ -440,17 +455,19 @@ class ModelUsuarios{
                 $jsonresponse['datos'] = [];
             }else{
                 $stm = $this->pdo->prepare("SELECT  us.usuario_id,
-                                                    us.usuario_rut,
-                                                    us.usuario_email,
-                                                    us.usuario_nombre,
-                                                    us.usuario_usu_rol_id,
-                                                    us.usuario_estado,
-                                                    ur.usu_rol_nombre,
-                                                    us.usuario_seccion_id,
-                                                    sec.seccion_nombre
-                                            FROM usuario as us ,usuario_rol as ur, seccion as sec
-                                            WHERE us.usuario_usu_rol_id= ur.usu_rol_id AND sec.seccion_id = us.usuario_seccion_id
-                                            AND us.usuario_email = ? AND us.usuario_password = ?");
+                                                us.usuario_rut,
+                                                us.usuario_nombre,
+                                                us.usuario_email,
+                                                us.usuario_password,
+                                                us.usuario_usu_rol_id,
+                                                us.usuario_estado,
+                                                us.usuario_fecha_ingreso,
+                                                ur.usu_rol_nombre,
+                                                dtu.dpto_tiene_usu_depto_id
+                                            FROM usuario as us 
+                                            INNER JOIN usuario_rol as ur ON us.usuario_usu_rol_id= ur.usu_rol_id
+                                            LEFT JOIN dpto_tiene_usu as dtu ON us.usuario_id = dtu.dpto_tiene_usu_usuario_id
+                                            WHERE us.usuario_email = ? AND us.usuario_password = ?");
                 $stm->execute(array($user,$pass));
                 $r = $stm->fetch(PDO::FETCH_OBJ);
 
@@ -462,8 +479,8 @@ class ModelUsuarios{
                         $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                         $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                         $busq->__SET('usu_estado_id',   $r->usuario_estado);
-                        $busq->__SET('usu_sec_id',      $r->usuario_seccion_id);
-                        $busq->__SET('usu_sec_nombre',  $r->seccion_nombre);
+                        $busq->__SET('usu_depto_id',    $r->dpto_tiene_usu_depto_id);
+
                         $arrayperfiles = $this->ObtenerPerfilesUsuaro($r->usuario_id);
                             $busq->__SET('usu_perfiles', $arrayperfiles['datos']);
                 
@@ -478,7 +495,7 @@ class ModelUsuarios{
                    $_SESSION["uid"] = $r->usuario_id;
                    $_SESSION["nombre"] = $r->usuario_nombre;
                    $_SESSION["rol"] = $r->usuario_usu_rol_id;
-                   $_SESSION["sec"] = $r->usuario_seccion_id;
+                   $_SESSION["depto"] = $r->dpto_tiene_usu_depto_id;
                    $_SESSION["fecactual"] = $fechaactual;
                    $_SESSION["datos"] = $result;
 

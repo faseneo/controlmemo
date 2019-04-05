@@ -13,8 +13,6 @@ class Usuarios{
     private $usu_urlimg;
     private $usu_depto_id;
     private $usu_depto_nombre;
-    private $usu_sec_id;
-    private $usu_sec_nombre;
     private $usu_perfiles=array();
 
     public function __GET($k){

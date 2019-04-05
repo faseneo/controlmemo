@@ -7,8 +7,8 @@ class MemoEst{
     private $memo_est_desc;
     private $memo_est_colorbg;
     private $memo_est_colortxt;
-    private $memo_est_seccion_id;
-    private $memo_est_seccion_nombre;
+    private $memo_est_depto_id;
+    private $memo_est_depto_nombre;
     private $memo_est_activo;
 
     public function __GET($k){

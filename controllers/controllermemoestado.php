@@ -23,7 +23,7 @@ if(isset($_REQUEST['Accion'])){
             $MEst->__SET('memo_est_colorbg',    $_REQUEST['memoestColorbg']);
             $MEst->__SET('memo_est_colortxt',   $_REQUEST['memoestColortxt']);
             $MEst->__SET('memo_est_activo',     $_REQUEST['memoestActivo']);
-            $MEst->__SET('memo_est_seccion_id', $_REQUEST['memoestSeccionId']);
+            $MEst->__SET('memo_est_depto_id', $_REQUEST['memoestDeptoId']);
             $jsondata = $modelMEst->Actualizar($MEst);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);
@@ -50,7 +50,7 @@ if(isset($_REQUEST['Accion'])){
             $MEst->__SET('memo_est_colorbg',    $_REQUEST['memoestColorbg']);
             $MEst->__SET('memo_est_colortxt',   $_REQUEST['memoestColortxt']);            
             $MEst->__SET('memo_est_activo',     $_REQUEST['memoestActivo']);
-            $MEst->__SET('memo_est_seccion_id', $_REQUEST['memoestSeccionId']);            
+            $MEst->__SET('memo_est_depto_id', $_REQUEST['memoestDeptoId']);            
             $jsondata = $modelMEst->Registrar($MEst);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
@@ -69,12 +69,12 @@ if(isset($_REQUEST['Accion'])){
             break;
             
         case 'listar':
-            $jsondata = $modelMEst->Listar($_REQUEST['seccion']);
+            $jsondata = $modelMEst->Listar($_REQUEST['depto']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
         case 'listarmin':
-            $jsondata = $modelMEst->ListarMin($_REQUEST['seccion']);
+            $jsondata = $modelMEst->ListarMin($_REQUEST['depto']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            

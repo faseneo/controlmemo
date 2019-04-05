@@ -1,15 +1,15 @@
     var uid;
-    var sec;
+    var depto;
 
     function inicio(){
         $('#resultadofiltromsg').html("");
         $("#resultadofiltro").hide();
     }
-    function getListadoEstadoMemos(sec){
-        console.log('sec : '+sec);
+    function getListadoEstadoMemos(depto){
+        console.log('depto : '+depto);
             var datax = {
                 "Accion":"listarmin",
-                'seccion':sec
+                'depto':depto
             }
             $.ajax({
                 data: datax,  
@@ -28,7 +28,7 @@
                 $("#memoEstado").append('<option value="0">Todos</option>');
                 for(var i=0; i<data.datos.length;i++){
                    //console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
-                    opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_seccion_nombre + ' - ' + data.datos[i].memo_est_tipo + '</option>';
+                    opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_tipo + '</option>';
                     $("#memoEstado").append(opcion);
                 }
 
@@ -156,8 +156,8 @@
         //$('[data-toggle="tooltip"]').tooltip();
         $("#titulolistado").hide();
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-        getListadoEstadoMemos(sec);
-        getListadoMemos(sec,0,1,uid);
+        getListadoEstadoMemos(depto);
+        getListadoMemos(depto,0,1,uid);
 
         //ordena solo datos de tabla en pagina actual
         $('.orden').click(function(e) {
@@ -180,6 +180,6 @@
             console.log('estado: '+$('#memoEstado').val());
             console.log('usuid :'+$('#usuario').val());
             //console.log('estado id : ' + idestado);
-            getListadoMemos(sec,$('#memoEstado').val(),1,uid);
+            getListadoMemos(depto,$('#memoEstado').val(),1,uid);
         });
     });
