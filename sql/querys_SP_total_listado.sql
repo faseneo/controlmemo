@@ -17,7 +17,7 @@ DECLARE agregajoinusuario VARCHAR (100) DEFAULT ' LEFT JOIN asigna_usuario as mt
 		SET maximos = 'SELECT cambio_estados_memo_id, max(ce.cambio_estados_memo_estado_id) as estado_max_id FROM cambio_estados as ce, memo_estado as me WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id AND me.memo_estado_seccion_id = 3 GROUP by ce.cambio_estados_memo_id';
 	END IF;
 
-	SET @consulta = CONCAT('SELECT count(*) AS cantidad FROM (',maximos,') AS TABLA_MEM_MAX LEFT JOIN memo as m ON m.memo_id = cambio_estados_memo_id LEFT JOIN memo_estado as met ON met.memo_estado_id = estado_max_id INNER JOIN departamento as dep ON dep.dpto_id = m.memo_depto_solicitante_id ');
+	SET @consulta = CONCAT('SELECT count(*) AS cantidad FROM (',maximos,') AS TABLA_MEM_MAX LEFT JOIN memo as m ON m.memo_id = cambio_estados_memo_id LEFT JOIN memo_estado as met ON met.memo_estado_id = estado_max_id INNER JOIN departamento as dep ON dep.depto_id = m.memo_depto_solicitante_id ');
 
 	IF usuario<>0 and seccion = 3 THEN
 		SET @consulta = CONCAT(@consulta,agregajoinusuario);
@@ -40,4 +40,5 @@ DECLARE agregajoinusuario VARCHAR (100) DEFAULT ' LEFT JOIN asigna_usuario as mt
 
 	PREPARE smpt FROM @consulta;
 	EXECUTE smpt;
-	DEA
+	DEALLOCATE PREPARE smpt;
+END
