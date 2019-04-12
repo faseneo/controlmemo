@@ -1,36 +1,0 @@
-Fecha:31-01-2019(17:20:05) 
-Metodo:Registrar 
-Consulta:INSERT INTO memo (memo_num_memo,
-                                      memo_anio,
-                                      memo_fecha_memo,
-                                      memo_fecha_recepcion,
-                                      memo_materia,
-                                      memo_nombre_solicitante,
-                                      memo_depto_solicitante_id,
-                                      memo_nombre_destinatario,
-                                      memo_depto_destinatario_id,
-                                      memo_cc_codigo
-                                      ) 
-                    VALUES (?,?,?,?,?,?,?,?,?,?) 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:31-01-2019(17:20:05) 
-Metodo:RegistrarEstado 
-Consulta:INSERT INTO cambio_estados (cambio_estados_memo_id,
-                                                            cambio_estados_memo_estado_id,
-                                                            cambio_estados_observacion,
-                                                            cambio_estados_usuario_id)
-                                VALUES (6, 1, 'Ingresado por usuario',5) 
-Resultado:0 
----------------------------------------------------------------------
-Fecha:31-01-2019(17:37:20) 
-Metodo:contarTotal 
-Consulta:CALL total_listado_memos(2,0,5); 
-Resultado:6 
----------------------------------------------------------------------
-Fecha:31-01-2019(17:37:20) 
-Metodo:Listar 
-Consulta:CALL estado_max_por_seccion(2,0,0,10,5) 
-Resultado:6 
----------------------------------------------------------------------
-
