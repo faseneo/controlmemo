@@ -178,6 +178,9 @@ class ModelMemoEst{
     }
     //graba el cambio de estado del memo(se va agregando)
     public function CambiaEstado(MemoCambioEst $data){
+        /*
+        INSERT INTO `memo_derivado` (`memo_derivado_id`, `memo_derivado_memo_id`, `memo_derivado_dpto_id`, `memo_derivado_nombre_destinatario`, `memo_derivado_fecha`, `memo_derivado_depto_actual`, `memo_derivado_estado_id`) VALUES (NULL, '12', '9', 'Leonel Duran', CURRENT_TIMESTAMP, '1', '1');
+         */
         $jsonresponse = array();
         try{
             $sql = "INSERT INTO cambio_estados (cambio_estados_memo_id, cambio_estados_memo_estado_id, cambio_estados_observacion, cambio_estados_usuario_id) 
