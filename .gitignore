@@ -4,4 +4,5 @@ archivos
 listadoarchivos.txt
 listadocarpetas.txt
 logs/
-logs
+lib/
+js/scrollreveal/
