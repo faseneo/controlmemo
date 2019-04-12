@@ -3,7 +3,7 @@
        <!-- <meta charset="utf-8">-->
 		<meta http-equiv="Content-type" content="text/html; charset=UTF-8/">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Los 3 meta tags anteriores *deben* ser lo primeros en el head; caulquier otro contenido en el head debe venir *despues* de estos tags -->
+        <!-- Los 2 meta tags anteriores *deben* ser lo primeros en el head; caulquier otro contenido en el head debe venir *despues* de estos tags -->
         <meta name="description" content="Control Adquisiciones">
         <meta name="author" content="Area Desarrollo">
         <link href="img/templates/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
