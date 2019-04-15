@@ -9,6 +9,8 @@
         <link href="img/templates/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
  
         <title>SICAD Umce</title>
+
+        
         <link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
         
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
