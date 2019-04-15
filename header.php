@@ -1,6 +1,6 @@
 <?php header("Access-Control-Allow-Origin: *");
 ?>
-       <!-- <meta charset="utf-8">-->
+        <!-- <meta charset="utf-8">-->
 		<meta http-equiv="Content-type" content="text/html; charset=UTF-8/">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Los 2 meta tags anteriores *deben* ser lo primeros en el head; caulquier otro contenido en el head debe venir *despues* de estos tags -->
@@ -8,7 +8,7 @@
         <meta name="author" content="Area Desarrollo">
         <link href="img/templates/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
  
-        <title>Control Adquisiciones Umce</title>
+        <title>SICAD Umce</title>
         <link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
         
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
