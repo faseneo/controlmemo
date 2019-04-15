@@ -10,10 +10,7 @@
  
         <title>SICAD Umce</title>
 
-        
         <link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
-        
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
         <!-- Bootstrap core CSS 
              <link rel="stylesheet" href="http://static.umce.cl/bootstrap/3.3.7/css/bootstrap.css" type="text/css"> -->
         <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
@@ -23,6 +20,7 @@
         <!-- <link href="bootstrap-datepicker/css/font-awesome.min.css" rel="stylesheet"> -->
         
         <!--  css app siempre al final de los demas css -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
         <link href="css/estilocontrolmemo.css" rel="stylesheet" type="text/css">
         <!-- Bootstrap core JavaScript
         ================================================== -->
