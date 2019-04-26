@@ -28,12 +28,12 @@ SET pagina = CONCAT(' LIMIT ',inicio,',',fin);
 						GROUP by ce.cambio_estados_memo_id';
 	END IF;
 
-	SET @consulta = CONCAT('SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.dpto_nombre, met.memo_estado_tipo,estado_max_id, cei.cambio_estados_observacion, cei.cambio_estados_fecha, DATEDIFF(CURDATE() ,cei.cambio_estados_fecha) as cambio_estados_dias
+	SET @consulta = CONCAT('SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.depto_nombre, met.memo_estado_tipo, met.memo_estado_color_bg, met.memo_estado_color_font, estado_max_id, cei.cambio_estados_observacion, cei.cambio_estados_fecha, DATEDIFF(CURDATE() ,cei.cambio_estados_fecha) as cambio_estados_dias
 			FROM (',maximos,') AS TABLA_MEM_MAX
 			LEFT JOIN memo as m ON m.memo_id = cambio_estados_memo_id
 			LEFT JOIN memo_estado as met ON met.memo_estado_id = estado_max_id
 			LEFT JOIN cambio_estados AS cei ON estado_max_id = cei.cambio_estados_memo_estado_id and cei.cambio_estados_memo_id = m.memo_id
-			INNER JOIN departamento as dep ON dep.dpto_id = m.memo_depto_solicitante_id ');
+			INNER JOIN departamento as dep ON dep.depto_id = m.memo_depto_solicitante_id ');
 
 	IF usuario<>0 and seccion = 3 THEN
 		SET @consulta = CONCAT(@consulta,agregajoinusuario);

@@ -1,4 +1,4 @@
-    var sec;
+    var depto;
     var ultimoestado=1;
     var ultimoorden=1;
     var uid;
@@ -316,7 +316,7 @@
                    // console.log('id: ' + data.datos[i].depto_id + ' nombre Depto: ' + data.datos[i].depto_nombre);
                    opcion = '<option value=' + data.datos[i].depto_id + '>' + data.datos[i].depto_nombre + '</option>';
                    $("#memoDeptoSol").append(opcion);
-                   if(data.datos[i].depto_id==8){
+                   if(data.datos[i].depto_id==9){
                     opcion = '<option value=' + data.datos[i].depto_id + ' selected>' + data.datos[i].depto_nombre + '</option>';
                 }
                 $("#memoDeptoDest").append(opcion);
@@ -373,7 +373,7 @@
         console.log('estado global : '+ultimoestado);
         var datax = {
             'Accion':'listarmin',
-            'seccion':'2'
+            'depto':depto
         }
         $.ajax({
             data: datax, 
@@ -423,10 +423,10 @@
         });
     }
     //Funcion que lista el historial de Estados del memo
-    function getlistaHistorialEstado (memId,seccion){
+    function getlistaHistorialEstado (memId,depto){
         var datax = {"Accionmem":"listarestmemo",
                      "memoId": memId,
-                     "seccion":seccion
+                     "depto":depto
                     };
         $.ajax({
             data: datax, 
@@ -519,12 +519,13 @@
         });
     }    
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
-    function verMemo(memId,seccion){
+    function verMemo(memId,depto){
         deshabilitabotones();
-        console.log('memId :' + memId + ' sec :'+seccion);
+        //console.log('memId :' + memId + ' sec :'+seccion);
+        console.log('memId :' + memId + ' depto :'+depto);
         var datay = {"memoId": memId,
                      "Accionmem":"obtener",
-                     "seccion":seccion
+                     "depto":depto
                     };
         $.ajax({
             data: datay, 
@@ -605,11 +606,11 @@
             deshabilitabotones();
             
             $('#limpiar-memo').hide();
-            if(sec==3){
+            if(depto==87){
                 $("#agregar-det-memo").show();
                 document.getElementById('agregar-det-memo').setAttribute('href','vs_detallememo.php?memId='+data.datos.mem_id);
-            }else if(sec==2){
-                console.log('paso por seccion 2');
+            }else if(depto==9){
+                console.log('paso por depto 9');
                 if(ultimoestado==1){
                     $('#editar-memo').show();
                 }
@@ -702,7 +703,7 @@
         getlistaDepto();
         
         if (typeof memId !== 'undefined'){
-            verMemo(memId, sec);
+            verMemo(memId, depto);
             getlistaCcostos();
             deshabilitaform();
             $("#msgarchivomemo").hide();
@@ -863,6 +864,13 @@
                 inpt.id="uid";
                 inpt.value=uid;
                 document.formIngresoMemo.appendChild(inpt);
+
+                var inpt2 = document.createElement('INPUT');
+                inpt2.type="hidden";
+                inpt2.name="tiporeg";
+                inpt2.id="tiporeg";
+                inpt2.value="recibe";
+                document.formIngresoMemo.appendChild(inpt2);                
                 //var datax = $("#formIngresoMemo").serializeArray();
                 /*$.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
@@ -1029,8 +1037,8 @@
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();
                             limpiaformcambioestado();
-                            getlistaHistorialEstado(memId,sec);
-                            if(sec==2){
+                            getlistaHistorialEstado(memId,depto);
+                            if(depto==9){
                                 if(ultimoestado==1){
                                     $("#editar-memo").hide();
                                 }

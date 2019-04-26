@@ -88,9 +88,12 @@
 		}
     }
 
-    function drawpaginador(compag,total,filasPorPagina,cantidadMostrar,fnlista,secid,estado){
+    //function drawpaginador(compag,total,filasPorPagina,cantidadMostrar,fnlista,secid,estado){
+    function drawpaginador(total,filasPorPagina,cantidadMostrar,fnlista,compag,deptosolid,deptodesid,estado,usuid,anio){
         totalPag = Math.ceil(total/filasPorPagina);
         var pagina="";
+        var funcioninicio="";
+        var funcionfin="";
             //console.log("total paginas : "+totalPag);
             //calcula incremento para boton siguiente
             IncrimentNum =((compag +1)<=totalPag) ? (compag +1) : 1;
@@ -102,10 +105,12 @@
                     cantidadMostrar=totalPag;
                 }
                 // valida primera pagina y deshabilita anterior
+                concatfuncion = fnlista + '(' + deptosolid + ',' + deptodesid + ',' + estado ;
+                funcionfin = ',' + usuid + ',' + anio + ')';
                 if(compag == 1 ){
                     pagina = "<li class='disabled'><a href='#'><span aria-hidden='true'>&laquo;</span></a></li>";
                 }else{
-                    pagina = "<li><a href='#' onclick='" + fnlista + "(" + secid + ',' + estado + ','+ DecrementNum + ")'><span aria-hidden='true'>&laquo;</span></a></li>";
+                    pagina = "<li><a href='#' onclick='" + concatfuncion + ','+ DecrementNum + funcionfin + "'><span aria-hidden='true'>&laquo;</span></a></li>";
                 }
                 // secid=1,estado=0,pag,usuid=0
                     //console.log("calculo ceil : " + (Math.ceil(cantidadMostrar/2)-1));
@@ -132,7 +137,7 @@
                         if(i==compag){
                             pagina+="<li class='active'><a href='#'>"+i+"</a></li>";
                         }else {
-                            pagina += "<li><a href='#' onclick='" + fnlista + "("+ secid + ',' + estado + ','+i+")'>"+i+"</a></li>";
+                            pagina += "<li><a href='#' onclick='" + concatfuncion + ','+ i + funcionfin + "'>"+i+"</a></li>";
                         }
                     }
                 }
@@ -141,7 +146,7 @@
             if(compag == totalPag ){
                 pagina += "<li class='disabled'><a href='#'><span aria-hidden='true'>&raquo;</span></a></li>";
             }else{
-                pagina+= "<li><a href='#' onclick='" + fnlista + "(" + secid + ',' + estado + ','+ IncrimentNum + ")'><span aria-hidden='true'>&raquo;</span></a></li>";
+                pagina+= "<li><a href='#' onclick='" + concatfuncion + ','+ IncrimentNum + funcionfin + "'><span aria-hidden='true'>&raquo;</span></a></li>";
             }
         return pagina;
     }

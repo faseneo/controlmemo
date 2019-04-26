@@ -23,20 +23,7 @@ class ModelUsuarios{
         $jsonresponse = array();
         try{
             $result = array();
-            /*$stm = $this->pdo->prepare("SELECT  us.usuario_id,
-                                                us.usuario_rut,
-                                                us.usuario_nombre,
-                                                us.usuario_email,
-                                                us.usuario_usu_rol_id,
-												us.usuario_estado,
-                                                us.usuario_fecha_ingreso,
-                                                ur.usu_rol_nombre,
-                                                us.usuario_seccion_id,
-                                                sec.seccion_nombre
-                                        FROM usuario as us ,usuario_rol as ur, seccion as sec
-										WHERE us.usuario_usu_rol_id= ur.usu_rol_id AND sec.seccion_id = us.usuario_seccion_id 
-                                        ORDER BY us.usuario_usu_rol_id ASC");*/
-
+ 
             $consultalistado="SELECT  us.usuario_id,
                                                 us.usuario_rut,
                                                 us.usuario_nombre,
@@ -126,19 +113,6 @@ class ModelUsuarios{
     public function Obtener($id){
         $jsonresponse = array();
         try{
-        /*            $stm = $this->pdo->prepare("SELECT  us.usuario_id,
-                                                us.usuario_rut,
-                                                us.usuario_nombre,
-                                                us.usuario_email,
-                                                us.usuario_password,
-                                                us.usuario_usu_rol_id,
-                                                us.usuario_estado,
-                                                us.usuario_seccion_id,
-                                                us.usuario_fecha_ingreso,
-                                                ur.usu_rol_nombre
-                                        FROM usuario as us ,usuario_rol as ur
-                                        WHERE us.usuario_usu_rol_id= ur.usu_rol_id
-                                		AND us.usuario_id = ?");*/
             $consultaobtiene="SELECT  us.usuario_id,
                                                 us.usuario_rut,
                                                 us.usuario_nombre,
@@ -429,20 +403,7 @@ class ModelUsuarios{
         return $jsonresponse;        
     }
     // valida usuario al loguearse
-    /* SELECT  us.usuario_id,
-                                                us.usuario_rut,
-                                                us.usuario_nombre,
-                                                us.usuario_email,
-                                                us.usuario_password,
-                                                us.usuario_usu_rol_id,
-                                                us.usuario_estado,
-                                                us.usuario_fecha_ingreso,
-                                                ur.usu_rol_nombre,
-                                                dtu.dpto_tiene_usu_depto_id
-                            FROM usuario as us 
-                            INNER JOIN usuario_rol as ur ON us.usuario_usu_rol_id= ur.usu_rol_id
-                            LEFT JOIN dpto_tiene_usu as dtu ON us.usuario_id = dtu.dpto_tiene_usu_usuario_id
-                            WHERE us.usuario_id = ?*/
+
     public function valida($user,$pass){
         $jsonresponse = array();
         try{

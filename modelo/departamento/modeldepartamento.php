@@ -177,13 +177,16 @@ class ModelDepartamento {
         try{
             $result = array();
              $stm = $this->pdo->prepare("SELECT  dp.depto_id,
-                                                 dp.depto_nombre
+                                                 dp.depto_nombre,
+                                                 dp.depto_nombre_corto
                                         FROM departamento as dp
-                                        WHERE dp.depto_estado=1");
+                                        WHERE dp.depto_estado=1 
+                                        ORDER BY dp.depto_nombre");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                 $fila = array('depto_id'=>$r->depto_id,
-                              'depto_nombre'=>$r->depto_nombre);
+                              'depto_nombre'=>$r->depto_nombre,
+                              'depto_nombre_corto'=>$r->depto_nombre_corto);
                 $result[]=$fila;
             }
             $jsonresponse['success'] = true;

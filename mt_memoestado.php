@@ -23,11 +23,12 @@ if(!isset($_SESSION["autentica"])){
 						<table class="table table-striped" id="listadoestados">
 							<thead>
 								<tr>
+									<th width="3%">Id</th>
 									<th width="20%">Nombre estado</th>
-									<th width="41%">Depto / Unidad</th>
+									<th width="40%">Depto / Unidad</th>
 									<th width="12%">Prioridad</th>
 									<th width="12%">Activo</th>
-									<th width="15%">Acciones</th>
+									<th width="13%">Acciones</th>
 								</tr>
 							</thead>
 							<tbody id="listamemoestado"> 

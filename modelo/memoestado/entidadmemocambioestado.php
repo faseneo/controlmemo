@@ -7,6 +7,8 @@ class MemoCambioEst{
     private $memo_camest_obs;
     private $memo_camest_usuid;
     private $memo_camest_fecha;
+    private $memo_camest_deptoid;
+    private $memo_camest_deptonom;
 
     public function __GET($k){
         return $this->$k;

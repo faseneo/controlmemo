@@ -1,4 +1,4 @@
-select#memoEstado {
+select#memoEstado,#memoEstadoce  {
     color: mediumblue;
     background-color: antiquewhite;
 }

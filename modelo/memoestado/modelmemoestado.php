@@ -3,6 +3,11 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 require_once("../config/config.php");
+
+require_once("../modelo/logs/modelologs.php");
+require_once("../modelo/logs/modelologsquerys.php");
+
+
 class ModelMemoEst{
     private $pdo;
 
@@ -178,11 +183,14 @@ class ModelMemoEst{
     }
     //graba el cambio de estado del memo(se va agregando)
     public function CambiaEstado(MemoCambioEst $data){
-        /*
-        INSERT INTO `memo_derivado` (`memo_derivado_id`, `memo_derivado_memo_id`, `memo_derivado_dpto_id`, `memo_derivado_nombre_destinatario`, `memo_derivado_fecha`, `memo_derivado_depto_actual`, `memo_derivado_estado_id`) VALUES (NULL, '12', '9', 'Leonel Duran', CURRENT_TIMESTAMP, '1', '1');
-         */
         $jsonresponse = array();
         try{
+            $consultamemoestado="SELECT memo_estado_memo_estadogenerico_id  FROM memo_estado
+                                 WHERE memo_estado_id = ".$data->__GET('memo_camest_estid');
+
+            $res = $this->pdo->query($consultamemoestado);
+            $estadogenerico = $res->fetchColumn();
+
             $sql = "INSERT INTO cambio_estados (cambio_estados_memo_id, cambio_estados_memo_estado_id, cambio_estados_observacion, cambio_estados_usuario_id) 
                     VALUES (?,?,?,?)";
 
@@ -190,13 +198,40 @@ class ModelMemoEst{
                                                         $data->__GET('memo_camest_estid'),
                                                         $data->__GET('memo_camest_obs'),
                                                         $data->__GET('memo_camest_usuid')
-                                                    )
-                                              );
-            if($data->__GET('memo_camest_estid')==8 || $data->__GET('memo_camest_estid')==9){
-                $observacion='Memo aprobado con CDP, Derivado a Depto. Adquisiciones';
-                $usuid=0;
-                $ejecutatrigger = $this->CambiaEstadoTriggers($data->__GET('memo_camest_memid'),13,$observacion,$usuid);
+                                                    ));
+            $logsq = new ModeloLogsQuerys();
+                $logsq->GrabarLogsQuerys($sql,'0','Registracambioestado');
+
+            $activatrigger=0;
+            if ($estadogenerico != 0 || $estadogenerico != NULL) {
+                $activatrigger=1;
+                if($estadogenerico==1 || $estadogenerico==2 || $estadogenerico==5){
+                    $deptodestino = $data->__GET('memo_camest_deptoid');
+                }else if($estadogenerico==6 || $estadogenerico==10){
+                    $deptodestino = 0;
+                }
+            }else{
+                if($data->__GET('memo_camest_estid')==11){
+                    $deptodestino = 83;
+                    $activatrigger=1;
+                }else if($data->__GET('memo_camest_estid')==14){
+                    $deptodestino = 87;
+                    $activatrigger=1;
+                }
+                //agregar los otros id de estado para adquisiciones
             }
+            if($activatrigger){
+                $ejecutatrigger = $this->agregaDerivadoTriggers($data->__GET('memo_camest_memid'),
+                                                                $deptodestino,
+                                                                $data->__GET('memo_camest_deptonom'),
+                                                                $estadogenerico
+                                                                );
+            }
+                /*           
+                $archivos_incluidos = get_included_files();
+                foreach ($archivos_incluidos as $nombre_archivo) {
+                    echo "$nombre_archivo \r\n";
+                }*/
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Estado cambiado correctamente'; 
         } catch (PDOException $pdoException){
@@ -204,9 +239,83 @@ class ModelMemoEst{
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al ingresar cambiar estado';
             $jsonresponse['errorQuery'] = $pdoException->getMessage();
+            $logs = new modelologs();
+            $trace=$pdoException->getTraceAsString();
+              $logs->GrabarLogs($pdoException->getMessage(),$trace);
+              $logs = null;             
         }
         return $jsonresponse;
     }
+
+    //funcion que agrega nuevo depto en el derivado
+    public function agregaDerivadoTriggers($memid,$deptoid,$deptonom,$estadogenid=0){
+        $jsonresponse = array();
+        try{
+            $logsq = new ModeloLogsQuerys();
+            $consultaexistederivado="SELECT memo_derivado_id
+                                     FROM memo_derivado 
+                                     WHERE memo_derivado_memo_id = ".$memid." and memo_derivado_depto_actual = 1";
+            $res = $this->pdo->query($consultaexistederivado);
+            $derivadoid = $res->fetchColumn();
+
+            if ($derivadoid != 0 || $derivadoid != NULL) {
+                $sqlactualiza = "UPDATE memo_derivado SET  memo_derivado_depto_actual = 0
+                        WHERE memo_derivado_id = ?";
+                $this->pdo->prepare($sqlactualiza)->execute(array($derivadoid));
+                $logsq->GrabarLogsQuerys($sqlactualiza,'0','ActualizaDerivadoAnterior');
+
+            }
+            if($estadogenid!=0 || $estadogenerico != NULL){
+                $deptoanteriorid=0;
+                if($estadogenid==6){
+                    $buscadeptoanterior="SELECT memo_derivado_dpto_id,memo_derivado_nombre_destinatario
+                                        FROM memo_derivado
+                                        WHERE memo_derivado_memo_id=".$memid." ORDER BY memo_derivado_id DESC LIMIT 1, 1";
+                            
+                        $resdeptoanterior = $this->pdo->query($buscadeptoanterior);
+                        $r0 = $resdeptoanterior->fetch(PDO::FETCH_OBJ);
+                    if($r0 != NULL || $r0 != false){
+                        $deptoanteriorid = $r0->memo_derivado_dpto_id;
+                        $deptoid = $deptoanteriorid;
+                        $deptonom = $r0->memo_derivado_nombre_destinatario;
+                    }
+                }
+                if($estadogenid==10 || (($deptoanteriorid==0 || $deptoanteriorid==NULL) && $estadogenid==6)){
+                    $buscadeptoorigen="SELECT memo_depto_solicitante_id, memo_nombre_solicitante
+                                         FROM memo
+                                         WHERE memo_id=".$memid;
+                        $resdeptoorigen = $this->pdo->query($buscadeptoorigen);
+                        $r = $resdeptoorigen->fetch(PDO::FETCH_OBJ);
+                        $deptoid = $r->memo_depto_solicitante_id;
+                        $deptonom = $r->memo_nombre_solicitante;
+                }
+            }
+
+            $sql = "INSERT INTO memo_derivado (memo_derivado_memo_id, memo_derivado_dpto_id,memo_derivado_nombre_destinatario,
+                                memo_derivado_depto_actual,memo_derivado_estado_id) 
+                    VALUES (?,?,?,?,?)";
+
+            $this->pdo->prepare($sql)->execute(array($memid,
+                                                     $deptoid,
+                                                     $deptonom,
+                                                     1,
+                                                     1
+                                                ));
+                $logsq->GrabarLogsQuerys($sql,'0','RegistraDerivado');
+                $logsq = null;
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Trigger Derivado ejecutado correctamente'; 
+        } catch (PDOException $pdoException){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al ingresar Derivado';
+            $jsonresponse['errorQuery'] = $pdoException->getMessage();
+            $logs = new modelologs();
+            $trace=$pdoException->getTraceAsString();
+              $logs->GrabarLogs($pdoException->getMessage(),$trace);
+              $logs = null; 
+        }
+        return $jsonresponse;
+    }    
     // funcion cambia estado para el Estado = 8 o Estado = 9, para que pase a depto. adquisiciones
     public function CambiaEstadoTriggers($memid, $estid, $obs, $usuid){
         $jsonresponse = array();

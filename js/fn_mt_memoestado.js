@@ -132,6 +132,7 @@
                                 var activo = data.datos[i].memo_est_activo == 1 ? 'Activo':'Inactivo';
 
                                 fila = '<tr '+$clasetr+'>';
+                                fila += '<td>'+ data.datos[i].memo_est_id +'</td>';
                                 fila += '<td class="'+ data.datos[i].memo_est_colorbg + ' '+ data.datos[i].memo_est_colortxt+'">'+ data.datos[i].memo_est_tipo +'</td>';
                                 fila += '<td>'+ data.datos[i].memo_est_depto_nombre +'</td>';
                                 fila += '<td>'+ data.datos[i].memo_est_orden +'</td>';
