@@ -10,6 +10,25 @@ if($_SESSION["autentica"] != "SIP"){
 <head>
     <?php include "header.php"; ?>
     <title>Ingreso memo</title>
+    <link rel="stylesheet" href="bootstrap/select/css/bootstrap-select.min.css">
+    <script src="bootstrap/select/js/bootstrap-select.min.js"></script>
+    <script src="bootstrap/select/js/i18n/defaults-es_CL.js"></script>    
+    <script src="js/fn_memo.js"></script>
+    <script src="js/globalfn.js"></script>
+    <script>
+        <?php 
+            $depto = $_SESSION["depto"];
+            echo "depto=".$depto.";";    
+            $uid = $_SESSION["uid"];
+            echo "uid=".$uid.";\n";
+            if(isset($_REQUEST['memId'])){
+                echo "memId=".$_REQUEST['memId'].";\n";
+            }
+        ?>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();   
+        });
+    </script>
     <style type="text/css">
         .alert {
             margin:5px;
@@ -21,27 +40,14 @@ if($_SESSION["autentica"] != "SIP"){
             max-height: 280px;
             overflow-y: scroll;
         }
-    </style>
-    <script>
-    <?php 
-        $depto = $_SESSION["depto"];
-        echo "depto=".$depto.";";    
-        $uid = $_SESSION["uid"];
-        echo "uid=".$uid.";\n";
-        if(isset($_REQUEST['memId'])){
-            echo "memId=".$_REQUEST['memId'].";\n";
+        .panel-body {
+            overflow-x: auto;
         }
-    ?>
-        $(document).ready(function(){
-            $('[data-toggle="popover"]').popover();   
-        });
-    </script>
-    <script src="js/fn_memo.js"></script>
-    <script src="js/globalfn.js"></script>    
+    </style>    
 </head>
 <body> 
     <?php include "barranav.php"; ?>
-    <div class="container" style="margin-top:50px">
+    <div class="container-fluid" style="margin-top:50px">
         <div class="row">
             <div class="col-lg-12">
                 <h2 class="text-center" id="titulo">Ingreso Documento a Enviar</h2>
@@ -480,27 +486,25 @@ if($_SESSION["autentica"] != "SIP"){
                                     <span class="help-block"></span>
                                 </div> 
                             </div>
-                            <div class="col-md-6" id="buscarDerivado">
+                            <!-- <div class="col-md-6" id="buscarDerivado">
                                 <div class="form-group">
                                     <label for="memoBuscaDeptoDer">Buscar Unidad...</label>
                                     <input name="memoBuscaDeptoDer" id="memoBuscaDeptoDer" type="text"  class="form-control" >
                                     <span class="help-block"></span>
                                 </div>
-                            </div>                             
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
+                            </div>                              -->
+                            <div class="col-md-6">
                                 <div class="form-group" id="memoOtroDeptoNombre">
                                     <label for="memoDeptoNombre">Nombre Destinatario</label>
                                     <input name="memoDeptoNombre" id="memoDeptoNombre" type="text"  class="form-control">
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group" id="memoOtroDepto">
                                     <label for="memoOtroDeptoId">Departamento o Unidad Destino</label>
-                                    <select name="memoOtroDeptoId" id="memoOtroDeptoId" class="form-control" required>
+                                    <select name="memoOtroDeptoId" id="memoOtroDeptoId" class="form-control" data-live-search="true" required>
                                     </select>                                    
                                 </div>
                             </div>

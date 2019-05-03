@@ -2,6 +2,7 @@
 //memo_archivo
 class MemoArchivos{
     private $memoarch_id;
+    private $memoarch_nom_doc;
     private $memoarch_url;
     private $memoarch_name;
     private $memoarch_type;
@@ -9,6 +10,8 @@ class MemoArchivos{
     private $memoarch_fecha_registro;
     private $memoarch_flag;
     private $memoarch_memo_id;
+    private $memoarch_estado;
+    private $memoarch_tipoarchivoid;
 
     public function __GET($k){
         return $this->$k;

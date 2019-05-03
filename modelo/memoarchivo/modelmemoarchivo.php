@@ -114,12 +114,15 @@ class ModelMemoArchivo {
                     $urlarchivodestino0 = RAIZ.memoarch_directorio.memoarch_prefijo;
                     $urlarchivo0 = memoarch_directorio.memoarch_prefijo;
                     $flagprincipal=1;
+                    $archivotipo=1;
                 }elseif($tipoarch=='memodet'){
                     $urlarchivodestino0 = RAIZ.memoarch_directorio.memoarch_prefijo_det;
                     $urlarchivo0 = memoarch_directorio.memoarch_prefijo_det;
+                    $archivotipo=3;
                 }elseif($tipoarch=='anexomemo'){
                     $urlarchivodestino0 = RAIZ.memoarch_directorio.memoarch_prefijo_otro;
                     $urlarchivo0 = memoarch_directorio.memoarch_prefijo_otro;
+                    $archivotipo=2;
                 }
 
                 //if($totalArchivo==1){
@@ -140,6 +143,8 @@ class ModelMemoArchivo {
                             $data->__SET('memoarch_size', $files['size']);
                             $data->__SET('memoarch_flag', $flagprincipal);
                             $data->__SET('memoarch_memo_id', $idmemo);
+                            $data->__SET('memoarch_estado',1);
+                            $data->__SET('memoarch_tipoarchivoid',$archivotipo);
                     $dir=opendir(RAIZ.memoarch_directorio);
                     $origen = $files["tmp_name"];
                     if(move_uploaded_file($origen, $urlarchivodestino)) {
@@ -172,6 +177,8 @@ class ModelMemoArchivo {
                                     $data->__SET('memoarch_size', $files['size'][$i]);
                                     $data->__SET('memoarch_flag', $flagprincipal);
                                     $data->__SET('memoarch_memo_id', $idmemo);
+                                    $data->__SET('memoarch_estado',1);
+                                    $data->__SET('memoarch_tipoarchivoid',$archivotipo);
                             $dir=opendir(RAIZ.memoarch_directorio);
                             $origen = $files["tmp_name"][$i];
                             if(move_uploaded_file($origen, $urlarchivodestino)) {
@@ -222,15 +229,19 @@ class ModelMemoArchivo {
                                                 memo_archivo_type,
                                                 memo_archivo_size,
                                                 memo_archivo_principal_flag,
-                                                memo_archivo_memo_id)
-                        VALUES (?,?,?,?,?,?)";
+                                                memo_archivo_memo_id,
+                                                memo_archivo_estado,
+                                                memo_archivo_tipo_archivo_id)
+                        VALUES (?,?,?,?,?,?,?,?)";
 
                 $this->pdo->prepare($sql)->execute(array($data->__GET('memoarch_url'),
                                                         $data->__GET('memoarch_name'),
                                                         $data->__GET('memoarch_type'), 
                                                         $data->__GET('memoarch_size'),
                                                         $data->__GET('memoarch_flag'),
-                                                        $data->__GET('memoarch_memo_id')
+                                                        $data->__GET('memoarch_memo_id'),
+                                                        $data->__GET('memoarch_estado'),
+                                                        $data->__GET('memoarch_tipoarchivoid')
                                                     ));
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Memo archivo ingresado correctamente'; 

@@ -21,6 +21,12 @@ select#detalleestadomemo {
 .panel-heading a#accord.collapsed:after, a#accord1.collapsed:after, a#accord2.collapsed:after {
     content: "\e080";
 }
+#actualDestino {
+    background-color: #efd793;
+}
+#actualEstado {
+    background-color: #8dc5e0;
+}
 /*
  * Component: Box
  * --------------

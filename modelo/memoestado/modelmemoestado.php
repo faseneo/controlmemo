@@ -181,6 +181,42 @@ class ModelMemoEst{
         }
         return $jsonresponse;
     }
+
+    public function CambiaEstadoMasivo(MemoCambioEst $data){
+        $jsonresponse = array();
+        //var_dump($data);
+        try{
+            $result = array();
+            $arraymemosid = explode(',',$data->__GET('memo_camest_memid'));
+            $cambioest = new MemoCambioEst();
+            $cambioest->__SET('memo_camest_estid',      $data->__GET('memo_camest_estid'));
+            $cambioest->__SET('memo_camest_obs',        $data->__GET('memo_camest_obs'));
+            $cambioest->__SET('memo_camest_usuid',      $data->__GET('memo_camest_usuid'));
+            $cambioest->__SET('memo_camest_deptoid',    $data->__GET('memo_camest_deptoid'));
+            $cambioest->__SET('memo_camest_deptonom',   $data->__GET('memo_camest_deptonom'));
+            
+            foreach ($arraymemosid as $memid) {
+                $cambioest->__SET('memo_camest_memid',  $memid);
+                $resultado = $this->CambiaEstado($cambioest);
+                $result[] = $resultado;
+            }
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Cambios de estado realizado correctamente'; 
+            $jsonresponse['datamasivo'] = $result;
+
+        } catch (Exception $e) {
+            //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al ingresar cambiar estado masivo';
+            $jsonresponse['errorQuery'] = $e->getMessage();
+            $logs = new modelologs();
+            $trace=$e->getTraceAsString();
+              $logs->GrabarLogs($e->getMessage(),$trace);
+              $logs = null;             
+        }
+        return $jsonresponse;
+
+    }
     //graba el cambio de estado del memo(se va agregando)
     public function CambiaEstado(MemoCambioEst $data){
         $jsonresponse = array();
@@ -204,10 +240,11 @@ class ModelMemoEst{
 
             $activatrigger=0;
             if ($estadogenerico != 0 || $estadogenerico != NULL) {
-                $activatrigger=1;
                 if($estadogenerico==1 || $estadogenerico==2 || $estadogenerico==5){
+                    $activatrigger=1;
                     $deptodestino = $data->__GET('memo_camest_deptoid');
                 }else if($estadogenerico==6 || $estadogenerico==10){
+                    $activatrigger=1;
                     $deptodestino = 0;
                 }
             }else{
@@ -234,6 +271,7 @@ class ModelMemoEst{
                 }*/
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Estado cambiado correctamente'; 
+            $jsonresponse['mid'] = $data->__GET('memo_camest_memid');
         } catch (PDOException $pdoException){
             //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
             $jsonresponse['success'] = false;
@@ -265,7 +303,7 @@ class ModelMemoEst{
                 $logsq->GrabarLogsQuerys($sqlactualiza,'0','ActualizaDerivadoAnterior');
 
             }
-            if($estadogenid!=0 || $estadogenerico != NULL){
+            if($estadogenid != 0 || $estadogenid != NULL){
                 $deptoanteriorid=0;
                 if($estadogenid==6){
                     $buscadeptoanterior="SELECT memo_derivado_dpto_id,memo_derivado_nombre_destinatario

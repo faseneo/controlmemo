@@ -345,7 +345,6 @@
                         opcion = '<option value=' + data.datos[i].depto_id + ' selected>' + data.datos[i].depto_nombre + '</option>';
                     }
                 $("#memoDeptoDest").append(opcion);
-                
             }
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -409,12 +408,12 @@
         })
         .done(function( data, textStatus, jqXHR ) {
             $("#memoEstado").html("");
-            if ( console && console.log ) {
+            /*if ( console && console.log ) {
                 console.log( " data success : "+ data.success 
                     + " \n data msg memest : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
-            }
+            }*/
             console.log('ultimoestado: ' + ultimoestado);
             var inicio=0;var fin=0;
             // Ingresado ->  Anulado y Devuelto otro Depto
@@ -487,32 +486,57 @@
             url: "controllers/controllermemo.php", 
         })
         .done(function( data, textStatus, jqXHR ) {
-            if ( console && console.log ) {
+            /*if ( console && console.log ) {
                 console.log( " data success getlistaHistorialEstado : "+ data.success 
                     + " \n data msg deptos : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
-            }
-            //$('#historial').show();
+            }*/
             $("#listaHistorial").html(""); 
             var totalHistorial = data.datos.length;
             $("#totalHist").html("");
             $("#totalHist").html(totalHistorial);
-            
-            for(var i=0; i<data.datos.length;i++){
-                console.log('id: ' + data.datos[i].estado_id + ' Estado Tipo: ' + data.datos[i].estado_tipo);
-                
-                fila = '<tr><td>'+ data.datos[i].estado_tipo + '</td>';
+
+            console.log('Total Estados : '+totalHistorial);
+            ultimoestadotipo="";
+            classactual="id='actualEstado'";
+            for(var i=0; i<totalHistorial; i++){
+                //console.log('id: ' + data.datos[i].estado_id + ' Estado Tipo: ' + data.datos[i].estado_tipo);
+                if(i==0){
+                    fila = '<tr ' + classactual+ ' >';
+                }else{
+                    fila = '<tr>';
+                }
+                fila += '<td>'+ data.datos[i].estado_tipo + '</td>';
                 fila += '<td>' + data.datos[i].observacion + '</td>';
                 fila += '<td>' + data.datos[i].fecha + '</td>';
                 fila += '<td data-toggle="tooltip" title="' + data.datos[i].user_nom + '">' + data.datos[i].user + '</td>';
                 fila += '</tr>';
                 $("#listaHistorial").append(fila);
-                ultimoestado = data.datos[i].estado_id;
-                ultimoestadotipo = data.datos[i].estado_tipo;
-                console.log('ultimoestado historial cambio : ' + ultimoestado);
             }
-            $("#estadoactual").html("Ultimo Estado : <b>"+ultimoestadotipo+"</b>");
+
+            ultimoestado = data.datos[0].estado_id;
+            ultimoestadotipo = data.datos[0].estado_tipo;
+            $("#estadoactual").html("Ultimo Estado : <b>" + ultimoestadotipo + "</b>");
+            deshabilitabotones();
+            $('#limpiar-memo').hide();
+            if(depto==87){
+                $("#agregar-det-memo").show();
+                document.getElementById('agregar-det-memo').setAttribute('href','vs_detallememo.php?memId='+data.datos.mem_id);
+            }else if(depto==9){
+                //console.log('paso por depto 9');
+                if(ultimoestado==1 || ultimoestado==2){
+                    $('#editar-memo').show();
+                }
+                //if(ultimoestado == 2 || ultimoestado == 4 || ultimoestado == 5 ||  ultimoestado == 9 || ultimoestado == 11){
+                if(ultimoestado==3 || ultimoestado==7 || ultimoestado==10 || ultimoestado==14){
+                    $("#cambiaestado").hide();
+                }else{
+                    $("#cambiaestado").show();
+                    getlistaEstadosMemo(ultimoorden);
+                }
+            }
+
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -525,9 +549,6 @@
     }
     //Funcion que lista el historial de Estados del memo
     function getlistaHistorialObs(memId){
-        console.log('CONSOLE LOG Historia OBS');
-        console.log('memobsMemid ' + memId);
-        
         var datax = {"Accion":"listar",
                      "memobsMemid": memId
                     };
@@ -538,20 +559,20 @@
             url: "controllers/controllermemoobservacion.php", 
         })
         .done(function( data, textStatus, jqXHR ) {
-            if ( console && console.log ) {
+            /*if ( console && console.log ) {
                 console.log( " data success getlistaHistorialObs : "+ data.success 
                     + " \n data msg deptos : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
-            }
-            //$('#historial').show();
+            }*/
             $("#listaHistorialObs").html(""); 
             var totalHistorialObs = data.datos.length;
             $("#totalObs").html("");
             $("#totalObs").html(totalHistorialObs);
+            console.log('Total Observaciones : '+totalHistorialObs);
             
             for(var i=0; i<data.datos.length;i++){
-                console.log('id: ' + data.datos[i].memoobs_id + ' Estado Tipo: ' + data.datos[i].memoobs_texto);
+                //console.log('id: ' + data.datos[i].memoobs_id + ' Estado Tipo: ' + data.datos[i].memoobs_texto);
                 fila = '<tr><td>'+ data.datos[i].memoobs_texto + '</td>';
                 fila += '<td>' + data.datos[i].memoobs_fecha + '</td>';
                 fila += '<td>' + data.datos[i].memoobs_usu_nom + '</td>';
@@ -570,11 +591,7 @@
         });
     }    
     //Funcion que lista los derivador del memo
-    //getlistaHistorialDeriv
     function getlistaHistorialDeriv(memId){
-        console.log('CONSOLE LOG Historia DERIVDOS');
-        console.log('memobsMemid ' + memId);
-        
         var datax = {"Accionmem":"listarderiv",
                      "memoId": memId
                     };
@@ -585,25 +602,32 @@
             url: "controllers/controllermemo.php", 
         })
         .done(function( data, textStatus, jqXHR ) {
-            if ( console && console.log ) {
+            /*if ( console && console.log ) {
                 console.log( " data success getlistaHistorialDeriv : "+ data.success 
                     + " \n data msg deptos : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
-            }
-            //$('#historial').show();
+            }*/
             $("#listaHistorialDeriv").html(""); 
             var totalHistorialDev = data.datos.length;
             $("#totalDeriva").html("");
             $("#totaltotalDerivaObs").html(totalHistorialDev);
-            
+            console.log('Total Derivados : '+totalHistorialDev);
+
+            j=data.datos.length;
+            classactual="id='actualDestino'";
             for(var i=0; i<data.datos.length;i++){
-                console.log('id: ' + data.datos[i].memder_id + ' DervTipo: ' + data.datos[i].memder_deptonom);
-                fila = '<tr>';
-                fila += '<td>' + (i+1) +' - ' +data.datos[i].memder_deptocorto + '</td>';
+                //console.log('id: ' + data.datos[i].memder_id + ' DervTipo: ' + data.datos[i].memder_deptonom);
+                if(i==0){
+                    fila = '<tr ' + classactual+ ' >';
+                }else{
+                    fila = '<tr>';
+                }
+                fila += '<td>' + (j) +' - ' +data.datos[i].memder_deptocorto + '</td>';
                 fila += '<td>' + data.datos[i].memder_fecha + '</td>';
                 fila += '</tr>';
                 $("#listaHistorialDeriv").append(fila);
+                j--;
             }
             
         })
@@ -628,16 +652,16 @@
             url: "controllers/controllermemoarchivo.php", 
         })
         .done(function( data, textStatus, jqXHR ) {
-            if ( console && console.log ) {
+            /*if ( console && console.log ) {
                 console.log( " data success getlistaArchivos : "+ data.success 
                     + " \n data msg deptos : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
-            }
+            }*/
             var totalanexos=data.datos.length;
             $("#totalArch").html(totalanexos);
             //Lista archivos del memo
-            console.log('largo archivos ' + data.datos.length);
+            console.log('Total Archivos ' + data.datos.length);
             $("#verarchivoMemo").html("");
             $("#verlistaArchivosMemo").html("");
 
@@ -669,8 +693,6 @@
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
     function verMemo(memId,depto){
         deshabilitabotones();
-        //console.log('memId :' + memId + ' sec :'+seccion);
-        console.log('memId :' + memId + ' depto :'+depto);
         var datay = {"memoId": memId,
                      "Accionmem":"obtener",
                      "depto":depto
@@ -683,12 +705,12 @@
         })
         .done(function(data,textStatus,jqXHR ) {
             $('#titulo').text('Datos del Memo');
-            if ( console && console.log ) {
+            /*if ( console && console.log ) {
                 console.log( " data success : "+ data.success 
                     + " \n data msg : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
-            }
+            }*/
             $("#memoId").val(data.datos.mem_id);
             $("#memoFecha").val(data.datos.mem_fecha);
             $("#memoNum").val(data.datos.mem_numero);
@@ -708,76 +730,13 @@
             }
             //$("#meId").val(memId);
             //$("#uId").val(uid);
-                
                 $('#paneles').show();
                 $('#accordion0').hide();
                 $('#panel-heading').hide();
                 $('#buscarDS').hide();
                 $('#buscarDD').hide();
-                //$('#tituloPanelDestino').html('<b>Derivado a :</b>');
-                
-                //Lista historial de los estados del memo, ver luego(21012019) si implemento esta funcion getlistaHistorialEstado
-                var totalHistorial = data.datos.mem_estados.length;
-                $("#totalHist").html("");
-                $("#totalHist").html(totalHistorial);
-                $("#listaHistorial").html("");
-                for(var i=0; i<data.datos.mem_estados.length;i++){
-                    console.log('id: ' + data.datos.mem_estados[i].estado_id + ' Estado Tipo: ' + data.datos.mem_estados[i].estado_tipo);
-                    
-                    fila = '<tr><td>'+ data.datos.mem_estados[i].estado_tipo + '</td>';
-                    fila += '<td>' + data.datos.mem_estados[i].observacion + '</td>';
-                    fila += '<td>' + data.datos.mem_estados[i].fecha + '</td>';
-                    fila += '<td data-toggle="tooltip" title="' + data.datos.mem_estados[i].user_nom + '">' + data.datos.mem_estados[i].user + '</td>';
-                    fila += '</tr>';
-                    $("#listaHistorial").append(fila);
-                    ultimoestado = data.datos.mem_estados[i].estado_id;
-                    ultimoestadotipo = data.datos.mem_estados[i].estado_tipo;
-                    ultimoorden = data.datos.mem_estados[i].estado_orden;
-                    console.log('ultimoestado carga memo : ' + ultimoestado);
-                }
-                $("#estadoactual").html("Ultimo Estado : <b>"+ultimoestadotipo+"</b>");
-
-            //Lista archivos del memo
-            //console.log('largo archivos ' + data.datos.mem_archivos.length);
-            var totalanexos=data.datos.mem_archivos.length;
-            $("#totalArch").html(totalanexos);
-
-            $("#verarchivoMemo").html("");
-            $("#verlistaArchivosMemo").html("");
-            for(var i=0; i<data.datos.mem_archivos.length;i++){
-                //console.log('id archivo : ' + data.datos.mem_archivos[i].memoarch_id + ' Nombre archvo: ' + data.datos.mem_archivos[i].memoarch_name);
-                if(data.datos.mem_archivos[i].memoarch_flag == 1){
-                    $("#msgarchivomemo").show();
-                    fila2 = '<tr><td><a href="'+data.datos.mem_archivos[i].memoarch_url+'" target="_blank">'+ data.datos.mem_archivos[i].memoarch_name + '</a></td>';
-                    fila2 += '<td>' + returnFileSize(data.datos.mem_archivos[i].memoarch_size)+'</td>';
-                    fila2 += '</tr>';
-                    $("#verarchivoMemo").append(fila2);
-                }else{
-                    fila3 = '<tr><td><a href="'+data.datos.mem_archivos[i].memoarch_url+'" target="_blank">'+ data.datos.mem_archivos[i].memoarch_name + '</a></td>';
-                    fila3 += '<td>' + returnFileSize(data.datos.mem_archivos[i].memoarch_size) + '</td>';
-                    fila3 += '</tr>';
-                    $("#verlistaArchivosMemo").append(fila3);
-                }
-            }
-            deshabilitabotones();
-            
-            $('#limpiar-memo').hide();
-            if(depto==87){
-                $("#agregar-det-memo").show();
-                document.getElementById('agregar-det-memo').setAttribute('href','vs_detallememo.php?memId='+data.datos.mem_id);
-            }else if(depto==9){
-                console.log('paso por depto 9');
-                if(ultimoestado==1 || ultimoestado==2){
-                    $('#editar-memo').show();
-                }
-                //if(ultimoestado == 2 || ultimoestado == 4 || ultimoestado == 5 ||  ultimoestado == 9 || ultimoestado == 11){
-                if(ultimoestado==3 || ultimoestado==7 || ultimoestado==10 || ultimoestado==13){
-                    $("#cambiaestado").hide();
-                }else{
-                    $("#cambiaestado").show();
-                    getlistaEstadosMemo(ultimoorden);
-                }
-            }
+            getlistaHistorialEstado(data.datos.mem_id,depto);
+            getlistaArchivos(data.datos.mem_id);
             getlistaHistorialObs(data.datos.mem_id);
             getlistaHistorialDeriv(data.datos.mem_id);
         })
@@ -791,6 +750,7 @@
         });
     }
     $(document).ready(function(){
+        $("#memoOtroDeptoId").selectpicker();
         $('#memoFecha').val(fechaActual());
         $('#memoAnio').val(anioActual());
 
@@ -881,7 +841,7 @@
         
         if (typeof memId !== 'undefined'){
             verMemo(memId, depto);
-            getlistaCcostos();
+            //getlistaCcostos();
             deshabilitaform();
             $("#msgarchivomemo").hide();
         }else{
@@ -1022,14 +982,34 @@
             console.log('estado: ' + idestado);
             if(idestado==5){
                 $("#memoOtroDepto").show();
-                $("#buscarDerivado").show();
+                //$("#buscarDerivado").show();
                 $("#memoOtroDeptoNombre").show();
+            }else if(idestado==11 || idestado==14){
+                $("#memoOtroDeptoNombre").show();
+                $("#memoOtroDepto").hide();
             }else{
                 $("#memoOtroDepto").hide();
-                $("#buscarDerivado").hide();
+                //$("#buscarDerivado").hide();
                 $("#memoOtroDeptoNombre").hide();
             }
         });
+
+        $("#cambiaestado").click(function(e) {
+            e.preventDefault();
+            limpiaformcambioestado();
+            var posidestado = document.getElementById("memoEstado").selectedIndex;
+            var idestado = $('#memoEstado').val();
+            console.log('estado id : ' + idestado);
+
+            if(idestado==11 || idestado==14){
+                $("#memoOtroDeptoNombre").show();
+                $("#memoOtroDepto").hide();
+            }else{
+                $("#memoOtroDeptoNombre").hide();
+                $("#memoOtroDepto").hide();
+            }
+        });
+
         //funcion que graba datos basicos del memo para adquisiciones, recibios por la DAF
         $("#grabar-memo").click(function(e){
             e.preventDefault();
@@ -1219,7 +1199,7 @@
                                     $("#editar-memo").hide();
                                 }
                                 //if(ultimoestado==2 || ultimoestado==5 || ultimoestado==10 || ultimoestado==11){
-                                if(ultimoestado==3 || ultimoestado==7 || ultimoestado==10 || ultimoestado==13){
+                                if(ultimoestado==3 || ultimoestado==7 || ultimoestado==10 || ultimoestado==14){
                                     $("#cambiaestado").hide();
                                 }else{
                                     getlistaEstadosMemo(ultimoestado);
@@ -1481,6 +1461,8 @@
             e.preventDefault();//titulo
             $(this).restauraverdatos();
         });
+
+
 
         // Funcion que busca numero de resolucion y devuelve url ubicacion
         /*var buscaRes = function (){

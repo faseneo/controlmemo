@@ -172,10 +172,10 @@ class ModelMemo  {
 
                           $modelMemoArch = new ModelMemoArchivo();
 
-                          $arrayfile = $modelMemoArch->listar($r->memo_id);
-                            $busq->__SET('mem_archivos', $arrayfile['datos']);
-                          $arrayestados = $this->ObtenerCambiosEstadosMemo($r->memo_id,$dep);
-                            $busq->__SET('mem_estados', $arrayestados['datos']);
+                          //$arrayfile = $modelMemoArch->listar($r->memo_id);
+                          //  $busq->__SET('mem_archivos', $arrayfile['datos']);
+                          //$arrayestados = $this->ObtenerCambiosEstadosMemo($r->memo_id,$dep);
+                          //  $busq->__SET('mem_estados', $arrayestados['datos']);
 
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Se obtuvo el memo correctamente';
@@ -218,6 +218,7 @@ class ModelMemo  {
                 $jsonresponse['message'] = 'Cambios Estados  sin elementos';
                 $jsonresponse['datos'] = [];
             }else{
+              $orderby=" ORDER BY ce.cambio_estados_fecha DESC";
               $query = "SELECT  ce.cambio_estados_memo_estado_id,
                                                   me.memo_estado_tipo,
                                                   me.memo_estado_orden,
@@ -229,7 +230,7 @@ class ModelMemo  {
                                           FROM cambio_estados as ce, memo_estado as me, usuario as us 
                                           WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id 
                                           AND us.usuario_id = ce.cambio_estados_usuario_id
-                                          AND ce.cambio_estados_memo_id = $idmemo ".$deptofiltro;
+                                          AND ce.cambio_estados_memo_id = $idmemo ".$deptofiltro.$orderby;
               $stm = $this->pdo->prepare($query);
               $stm->execute();
               $logsq = new ModeloLogsQuerys();
@@ -286,7 +287,8 @@ class ModelMemo  {
                               md.memo_derivado_depto_actual, d.depto_nombre_corto
                         FROM memo_derivado AS md, departamento AS d
                         WHERE depto_id =  memo_derivado_dpto_id 
-                        AND memo_derivado_memo_id =  $idmemo ";
+                        AND memo_derivado_memo_id =  $idmemo 
+                        ORDER BY  md.memo_derivado_fecha DESC";
               $stm = $this->pdo->prepare($query);
               $stm->execute();
               $logsq = new ModeloLogsQuerys();
@@ -354,13 +356,12 @@ class ModelMemo  {
             $idmemo = $this->pdo->lastInsertId(); 
             if($tiporeg=='ingreso'){
               $idestado = 1; //$data->__GET('mem_estado_id');
+              $obsestado = "Documento nuevo ingresado por usuario"; 
             }else{
               $idestado = 2; 
+              $obsestado = "Documento recibido e ingresado por usuario"; 
             }
-
-            
-
-            $obsestado = "Ingresado por usuario"; //$data->__GET('mem_estado_obs')
+            //$obsestado = "Ingresado por usuario"; //$data->__GET('mem_estado_obs')
             $objcambioest = new MemoCambioEst();
             $modelcambioest = new ModelMemoEst();
               $objcambioest->__SET('memo_camest_memid',$idmemo);

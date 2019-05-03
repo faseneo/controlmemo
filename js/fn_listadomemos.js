@@ -1,3 +1,5 @@
+   
+
     var uid;
     var depto;
     var ultimoestado;
@@ -5,7 +7,6 @@
     function limpiaformcambioestado(){
         $('#formcambioestado')[0].reset();
         $("#memoOtroDepto").hide();
-        $("#buscarDerivado").hide();
         $("#memoOtroDeptoNombre").hide();
         $('#memoEstadoce').focus();
     }
@@ -128,6 +129,7 @@
         .done(function( data, textStatus, jqXHR ) {
             $("#memoDeptoSol").html("");
             $("#memoDeptoDest").html("");
+            $("#memoOtroDeptoId").html("");
             if ( console && console.log ) {
                /* console.log( " data success : "+ data.success 
                     + " \n data msg deptos : "+ data.message 
@@ -136,15 +138,18 @@
             }
             $("#memoDeptoSol").append('<option value="1">Todos...</option>');
             $("#memoDeptoDest").append('<option value="1">Todos...</option>');
+            $("#memoOtroDeptoId").append('<option value="">Seleccionar...</option>');
             for(var i=0; i<data.datos.length;i++){
                    // console.log('id: ' + data.datos[i].depto_id + ' nombre Depto: ' + data.datos[i].depto_nombre);
                    opcion = '<option value=' + data.datos[i].depto_id + '>' + data.datos[i].depto_nombre + '</option>';
                    $("#memoDeptoSol").append(opcion);
+                   $("#memoOtroDeptoId").append(opcion);
                      if(data.datos[i].depto_id==depto){
                          opcion = '<option value=' + data.datos[i].depto_id + ' selected>' + data.datos[i].depto_nombre + '</option>';
                      }
                 $("#memoDeptoDest").append(opcion);
             }
+            $("#memoDeptoDest").selectpicker();
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -320,18 +325,24 @@
 
     $(document).ready(function(){
         //$('[data-toggle="tooltip"]').tooltip();
+        getListadoEstadoMemos(depto);
+        getListadoMemos(1,depto,0,1,uid,0);
+        getlistaDepto();
+
         $("#titulolistado").hide();
         $("#activacest").hide();
         $("#capacest").hide();
         $("#tdce").hide();
             $("#memoOtroDepto").hide();
-            $("#buscarDerivado").hide();
             $("#memoOtroDeptoNombre").hide();
 
+            $("#memoEstado").selectpicker();
+            $("#memoDeptoDest").selectpicker();
+            $("#memoDeptoSol").selectpicker();
+            $("#memoAnio").selectpicker();
+            $("#memoOtroDeptoId").selectpicker();
+
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-        getListadoEstadoMemos(depto);
-        getListadoMemos(1,depto,0,1,uid,0);
-        getlistaDepto();
 
         //ordena solo datos de tabla en pagina actual
         $('.orden').click(function(e) {
@@ -347,6 +358,7 @@
             }
             setIcon($(this), this.asc);
         });
+        // funcion que 
         function validabusca(){
             var txtnumdoc = document.getElementById("numDoc").value;
             console.log('Funcion valida busca -------');
@@ -360,31 +372,24 @@
             }
             getListadoMemos($('#memoDeptoSol').val(),$('#memoDeptoDest').val(),$('#memoEstado').val(),1,uid,$('#memoAnio').val(),numdoc);
         }
+        // funcion buscar y lista doc. memos al cambiar estado
         $("#memoEstado").change(function(e){
             e.preventDefault();
             validabusca();
-
             var idestado = document.getElementById("memoEstado").selectedIndex;
             var texto = $(this).find('option:selected').text();
-
-            console.log('Console memoestado-------');
-            console.log('estado: '+$('#memoEstado').val());
-            console.log('usuid :'+ uid);
-            console.log('texto :'+ texto);
             $("#estadoactual").html("Ultimo Estado : <b>" + texto + "</b>");
             if(idestado != 0){
-                console.log('paso distinto cero');
                 $("#activacest").show();
             }else{
-                console.log('paso igual 0');
                 $("#activacest").hide();
             }
             $("#capacest").hide();
             $("#tdce").hide();
             $(".tdcestmas").hide();
-            
             //getListadoMemos($('#memoDeptoSol').val(),$('#memoDeptoDest').val(),$('#memoEstado').val(),1,uid,$('#memoAnio').val());
         });
+        // funcion activa el cambio estado masivo de documentos o memos
         $("#activacest").click(function(e) {
             e.preventDefault();
             $("#capacest").show();
@@ -392,108 +397,163 @@
             $("#tdce").show();
             $(".tdcestmas").show();
         });
+        // funcion buscar y lista memos al cambiar depto solicitante
         $("#memoDeptoSol").change(function(e){
             e.preventDefault();
-            var idestado = document.getElementById("memoDeptoSol").selectedIndex;
-            console.log('Console depto SOlIC-------');
-            console.log('deptoSol: ' + $('#memoDeptoSol').val());
-            console.log('usuid :'+ uid);
             validabusca();
-            //getListadoMemos($('#memoDeptoSol').val(),$('#memoDeptoDest').val(),$('#memoEstado').val(),1,uid,$('#memoAnio').val());
         });
+        // funcion buscar y lista memos al cambiar depto destinatario
         $("#memoDeptoDest").change(function(e){
             e.preventDefault();
-            var idestado = document.getElementById("memoDeptoDest").selectedIndex;
-            console.log('Console depto DEST-------');
-            console.log('deptoDest: '+$('#memoDeptoDest').val());
-            console.log('usuid :'+ uid);
             validabusca();
-            //getListadoMemos($('#memoDeptoSol').val(),$('#memoDeptoDest').val(),$('#memoEstado').val(),1,uid,$('#memoAnio').val());
         });
+        // funcion buscar y lista memos al cambiar año
         $("#memoAnio").change(function(e){
             e.preventDefault();
-            var idestado = document.getElementById("memoAnio").selectedIndex;
-            console.log('Console AÑO-------');
-            console.log('anio: '+$('#memoAnio').val());
-            console.log('usuid :'+ uid);
             validabusca();
-            //getListadoMemos($('#memoDeptoSol').val(),$('#memoDeptoDest').val(),$('#memoEstado').val(),1,uid,$('#memoAnio').val());
         });
+        // funcion buscar por numero de doc. 
         $("#buscarnumdoc").click(function(e){
             e.preventDefault();
-            var txtnumdoc = document.getElementById("numDoc").value;
-            console.log('Console Num DOC-------');
-            console.log('Num Doc: ' + $('#numDoc').val());
-            console.log('usuid :' + uid);
             validabusca();
-            //getListadoMemos($('#memoDeptoSol').val(),$('#memoDeptoDest').val(),$('#memoEstado').val(),1,uid,$('#memoAnio').val(),$('#numDoc').val());
         });
+        // funcion al hacer click checkea todos los doc. de lista ya filtrados
         $("#chekseltodos").on("click", function() {  
             $(".chknumest").prop("checked", this.checked);  
         });
+        // funcion que marca check de algunos de los doc. listados y filtrados
         $(".chknumest").on("click", function() {  
             if ($(".case").length == $(".chknumest:checked").length) {  
                 $("#chekseltodos").prop("checked", true);  
             } else {  
                 $("#chekseltodos").prop("checked", false);  
-            }  
+            }
         });
+        // Levanta modal para cambiar estados masivos de los doc. listados, valida que este al menos uno marcado
         $("#cestmodal").click(function(e) {
             e.preventDefault();
             $("#debeseleccionar").hide();
             $("#bodyestado").show();
             $("#footerestado").show();
-            console.log();
             var selected = [];
                 $(":checkbox[name=cestado]").each(function() {
-                  if (this.checked) {
-                    // agregas cada elemento.
-                    selected.push($(this).val());
-                  }
+                    if (this.checked) {
+                        // agregas cada elemento.
+                        selected.push($(this).val());
+                    }
                 });
                 if (selected.length) {
-                  /*$.ajax({
-                    cache: false,
-                    type: 'post',
-                    dataType: 'json', // importante para que 
-                    data: selected, // jQuery convierta el array a JSON
-                    url: 'roles/paginas',
-                    success: function(data) {
-                      alert('datos enviados');
+                    getlistaCambioEstadosMemo();
+                    var posidestado = document.getElementById("memoEstado").selectedIndex;
+                    var idestado = $('#memoEstado').val();
+                    if(idestado==11 || idestado==14){
+                        $("#memoOtroDeptoNombre").show();
+                        $("#memoOtroDepto").hide();
                     }
-                  });*/
-                  // esto es solo para demostrar el json,
-                  // con fines didacticos
-                  getlistaCambioEstadosMemo();
-                  //alert(JSON.stringify(selected));
-                  
-                } else{
+                }else{
                     $("#debeseleccionar").show();
                     $("#debeseleccionar").html("<b>Debes seleccionar al menos una opción</b>");
                     $("#bodyestado").hide();
                     $("#footerestado").hide();
-                    
-                  //alert('Debes seleccionar al menos una opción.');
                 }
         });
-
+        // funcion lista estados posibles en modal cambia estado
         $("#memoEstadoce").change(function(e){
             e.preventDefault();
             var posidestado = document.getElementById("memoEstadoce").selectedIndex;
             var idestado = $('#memoEstadoce').val();
             console.log('pos estado: ' + posidestado);
             console.log('estado: ' + idestado);
-            if(idestado==5){
+            if(idestado == 5){
                 $("#memoOtroDepto").show();
-                $("#buscarDerivado").show();
                 $("#memoOtroDeptoNombre").show();
+            }else if(idestado == 11 || idestado == 14){
+                $("#memoOtroDeptoNombre").show();
+                $("#memoOtroDepto").hide();
             }else{
                 $("#memoOtroDepto").hide();
-                $("#buscarDerivado").hide();
                 $("#memoOtroDeptoNombre").hide();
             }
         });
+        //Funcion que graba el cambio de estado en el modal cambia estado
+        $("#grabar-estado").click(function(e){
+            e.preventDefault();
+            var inptuid = document.createElement('input');
+            inptuid.type="hidden";
+            inptuid.name="uId";
+            inptuid.value=uid;
+            document.formcambioestado.appendChild(inptuid);
 
+            var selected = [];
+                $(":checkbox[name=cestado]").each(function() {
+                    if (this.checked) {
+                        // agregas cada elemento.
+                        selected.push($(this).val());
+                    }
+                });
+            var inptmemid = document.createElement('input');
+                inptmemid.type="hidden";
+                inptmemid.name="memosId";
+                inptmemid.value=selected;
+                document.formcambioestado.appendChild(inptmemid);
+
+            var idestado = $('#memoEstado').val();
+            console.log('seleccion estado :'+idestado);
+
+            if(validarFormularioEstado(idestado)==true){
+                var datax = $("#formcambioestado").serializeArray();
+                $.each(datax, function(i, field){
+                    console.log("contenido del form ESTADO = "+ field.name + ":" + field.value + " ");
+                });
+                var $loader = $('.loader');
+                var formData = new FormData(document.getElementById("formcambioestado"));
+                $.ajax({
+                    data: formData, 
+                    type: "POST",
+                    dataType: "json", 
+                    url: "controllers/controllermemoestado.php",
+                    cache:false,
+                    contentType:false,
+                    processData:false,
+                    beforeSend: function(){
+                        $('#myModalEstado').modal('hide');
+                        $('#ModalCargando').modal('show');
+                        $('#ModalCargando').on('shown.bs.modal', function () {
+                            $loader.show();
+                        });
+                    }                    
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    if ( console && console.log ) {
+                        console.log( " data success : "+ data.success 
+                            + " \n data msg buscares : "+ data.message 
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                    $('#ModalCargando').modal('hide');
+                    $('#ModalCargando').on('hidden.bs.modal', function () {
+                        $('#myModalLittle').modal('show');
+                        $('#myModalLittle').on('shown.bs.modal', function () {
+                            var modal2 = $(this);
+                            modal2.find('.modal-title').text('Mensaje');
+                            modal2.find('.msg').text(data.message);
+                            $('#cerrarModalLittle').focus();
+                            limpiaformcambioestado();
+                            getListadoEstadoMemos(depto);
+                        });
+                    });
+                    
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    if ( console && console.log ) {
+                        console.log( " La solicitud GRABA ESTADO ha fallado,  textStatus : " +  textStatus 
+                            + " \n errorThrown : "+ errorThrown
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                });
+            }
+        });
     });
     
     

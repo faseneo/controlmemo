@@ -30,19 +30,25 @@ if(isset($_REQUEST['Accion'])){
             break;
 
         case 'cambiaestado':
-            $CambioMEst->__SET('memo_camest_memid', $_REQUEST['meId']);
             $CambioMEst->__SET('memo_camest_usuid', $_REQUEST['uId']);
-            $CambioMEst->__SET('memo_camest_estid', $_REQUEST['memoEstado']);
             $CambioMEst->__SET('memo_camest_obs',   $_REQUEST['memoObs']);
-            if($_REQUEST['memoEstado']==5){
+            if((isset($_REQUEST['memoEstado']) && $_REQUEST['memoEstado']==5) || ( isset($_REQUEST['memoEstadoce']) && $_REQUEST['memoEstadoce']==5)){
                 $CambioMEst->__SET('memo_camest_deptoid',   $_REQUEST['memoOtroDeptoId']);
                 $CambioMEst->__SET('memo_camest_deptonom',  $_REQUEST['memoDeptoNombre']);
+            }
+            if(isset($_REQUEST['meId'])){
+                $CambioMEst->__SET('memo_camest_memid', $_REQUEST['meId']);
+                $CambioMEst->__SET('memo_camest_estid', $_REQUEST['memoEstado']);
+                $jsondata = $modelMEst->CambiaEstado($CambioMEst);
+            }elseif (isset($_REQUEST['memosId'])){
+                $CambioMEst->__SET('memo_camest_memid', $_REQUEST['memosId']);
+                $CambioMEst->__SET('memo_camest_estid', $_REQUEST['memoEstadoce']);
+                $jsondata = $modelMEst->CambiaEstadoMasivo($CambioMEst);
             }
             //llenar datos en el memo 
             /*if($_REQUEST['memoEstado']==8 || $_REQUEST['memoEstado']==9){
                 $grabaCDP = $modelMemo->ActualizarMemoCDP($_REQUEST['meId'],$_REQUEST['memoCodigoCC'],$_REQUEST['memoFechaCDP']);
             }*/
-            $jsondata = $modelMEst->CambiaEstado($CambioMEst);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            
