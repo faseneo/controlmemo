@@ -13,7 +13,6 @@ if($_SESSION["autentica"] != "SIP"){
     <link rel="stylesheet" href="bootstrap/select/css/bootstrap-select.min.css">
     <script src="bootstrap/select/js/bootstrap-select.min.js"></script>
     <script src="bootstrap/select/js/i18n/defaults-es_CL.js"></script>
-
     <script src="js/globalfn.js"></script>    
     <script src="js/fn_listadomemos.js"></script>
     <script>
@@ -310,6 +309,45 @@ if($_SESSION["autentica"] != "SIP"){
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <!-- Modal Destinos-->
+    <div class="modal fade" id="myModalDestino" tabindex="-1" role="dialog" aria-labelledby="myModalDestinoLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Destinos</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">Historial Destinos<span class="badge" id="totalDeriva"></span>
+                                </h4>
+                            </div>
+                            <div class="panel-body fixed-panel" >
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="50%">Destino</th>
+                                                        <th width="50%">Fecha</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="listaHistorialDeriv">
+                                                </tbody>
+                                            </table>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cerrarModalLittle" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->     
 
     <!-- Modal mensajes cortos-->
     <div class="modal fade" id="myModalLittle" tabindex="-1" role="dialog" aria-labelledby="myModalLittleLabel">

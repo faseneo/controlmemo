@@ -1,5 +1,3 @@
-   
-
     var uid;
     var depto;
     var ultimoestado;
@@ -159,7 +157,8 @@
                     + " \n jqXHR.status : " + jqXHR.status );
             }
         });
-    }    
+    }
+
     function getListadoEstadoMemos(depto){
             var datax = {
                 "Accion":"listarmin",
@@ -295,12 +294,10 @@
                         fila += ' class="btn btn-xs btn-success" ';
                         fila += ' role="button id="ver-memo"> ';
                         fila += 'Ver <span class="glyphicon glyphicon-eye-open"></span></a>';
-                        /*fila += ' <a href="#" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-eye-open"></span></a>'*/
-                        fila += ' <a href="#" class="btn btn-xs btn-info">Destinos <span class="glyphicon glyphicon-plus"></span></a>';
+                        fila += ' <a href="#" class="btn btn-xs btn-info" data-id="' + data.datos[i].mem_id + '" data-toggle="modal" data-target="#myModalDestino">Destinos <span class="glyphicon glyphicon-plus"></span></a>';
                         fila += '</td>';
                         fila += '</tr>';
                         $("#listamemos").append(fila);
-                        //glyphicon .glyphicon-plus
                     }   
                     $(".tdcestmas").hide();                 
                 }else{
@@ -309,8 +306,6 @@
                     $("#activacest").hide();
                     $("#resultadofiltro").show();
                     $('#resultadofiltromsg').append(data.message);
-                    //fila = '<tr><td colspan="8">'+data.message+'</td><tr>';
-                    //$("#listamemos").append(fila);
                 }
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -323,10 +318,61 @@
             });
     }
 
+    //Funcion que lista los derivador del memo
+    function getlistaHistorialDeriv(memId){
+        var datax = {"Accionmem":"listarderiv",
+                     "memoId": memId
+                    };
+        $.ajax({
+            data: datax, 
+            type: "GET",
+            dataType: "json", 
+            url: "controllers/controllermemo.php", 
+        })
+        .done(function( data, textStatus, jqXHR ) {
+            /*if ( console && console.log ) {
+                console.log( " data success getlistaHistorialDeriv : "+ data.success 
+                    + " \n data msg deptos : "+ data.message 
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }*/
+            $("#listaHistorialDeriv").html(""); 
+            var totalHistorialDev = data.datos.length;
+            $("#totalDeriva").html("");
+            $("#totaltotalDerivaObs").html(totalHistorialDev);
+            console.log('Total Derivados : '+totalHistorialDev);
+
+            j=data.datos.length;
+            classactual="id='actualDestino'";
+            for(var i=0; i<data.datos.length;i++){
+                //console.log('id: ' + data.datos[i].memder_id + ' DervTipo: ' + data.datos[i].memder_deptonom);
+                if(i==0){
+                    fila = '<tr ' + classactual+ ' >';
+                }else{
+                    fila = '<tr>';
+                }
+                fila += '<td>' + (j) +' - ' +data.datos[i].memder_deptocorto + '</td>';
+                fila += '<td>' + data.datos[i].memder_fecha + '</td>';
+                fila += '</tr>';
+                $("#listaHistorialDeriv").append(fila);
+                j--;
+            }
+            
+        })
+        .fail(function( jqXHR, textStatus, errorThrown ) {
+            if ( console && console.log ) {
+                console.log( " La solicitud getlistaHistorialDeriv ha fallado,  textStatus : " +  textStatus 
+                    + " \n errorThrown : "+ errorThrown
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+        });
+    }
+
     $(document).ready(function(){
         //$('[data-toggle="tooltip"]').tooltip();
         getListadoEstadoMemos(depto);
-        getListadoMemos(1,depto,0,1,uid,0);
+        getListadoMemos(1,1,0,1,uid,0);
         getlistaDepto();
 
         $("#titulolistado").hide();
@@ -553,6 +599,12 @@
                     }
                 });
             }
+        });
+
+        $('#myModalDestino').on('shown.bs.modal', function (e) {
+            var id = $(e.relatedTarget).data().id;
+                getlistaHistorialDeriv(id);
+                $('#cerrarModalLittle').focus();
         });
     });
     
