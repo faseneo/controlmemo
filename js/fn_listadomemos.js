@@ -2,6 +2,16 @@
     var depto;
     var ultimoestado;
 
+    document.onkeydown = function(){
+        if(window.event){
+            window.event.keyCode = 116;
+        } 
+        if(window.event && window.event.keyCode == 116){
+            getListadoMemos(1,1,0,1,uid,0);
+            getlistaDepto();
+        // return false;
+        }
+    } 
     function limpiaformcambioestado(){
         $('#formcambioestado')[0].reset();
         $("#memoOtroDepto").hide();
@@ -36,7 +46,6 @@
         }        
         return true;
     }
-
     //Funcion que lista los estado del memo
     function getlistaCambioEstadosMemo (){
         console.log('estado global : ' + ultimoestado);
@@ -142,9 +151,9 @@
                    opcion = '<option value=' + data.datos[i].depto_id + '>' + data.datos[i].depto_nombre + '</option>';
                    $("#memoDeptoSol").append(opcion);
                    $("#memoOtroDeptoId").append(opcion);
-                     if(data.datos[i].depto_id==depto){
+                     /*if(data.datos[i].depto_id==depto){
                          opcion = '<option value=' + data.datos[i].depto_id + ' selected>' + data.datos[i].depto_nombre + '</option>';
-                     }
+                     }*/
                 $("#memoDeptoDest").append(opcion);
             }
             $("#memoDeptoDest").selectpicker();
@@ -294,7 +303,7 @@
                         fila += ' class="btn btn-xs btn-success" ';
                         fila += ' role="button id="ver-memo"> ';
                         fila += 'Ver <span class="glyphicon glyphicon-eye-open"></span></a>';
-                        fila += ' <a href="#" class="btn btn-xs btn-info" data-id="' + data.datos[i].mem_id + '" data-toggle="modal" data-target="#myModalDestino">Destinos <span class="glyphicon glyphicon-plus"></span></a>';
+                        fila += ' <a href="#" class="btn btn-xs btn-info" data-id="' + data.datos[i].mem_id + '" data-toggle="modal" data-target="#myModalDestino">Destinos <span class="glyphicon glyphicon-map-marker"></span></a>';
                         fila += '</td>';
                         fila += '</tr>';
                         $("#listamemos").append(fila);
@@ -384,7 +393,7 @@
 
             $("#memoEstado").selectpicker();
             $("#memoDeptoDest").selectpicker();
-            $("#memoDeptoSol").selectpicker();
+            $(".selectpicker").selectpicker();
             $("#memoAnio").selectpicker();
             $("#memoOtroDeptoId").selectpicker();
 
@@ -463,6 +472,14 @@
             e.preventDefault();
             validabusca();
         });
+
+        $("#numDoc").keypress(function(event) {
+            if (event.which == 13 ) {
+                console.log('presiona enter');
+                validabusca();
+            }
+    }); 
+        
         // funcion al hacer click checkea todos los doc. de lista ya filtrados
         $("#chekseltodos").on("click", function() {  
             $(".chknumest").prop("checked", this.checked);  
@@ -602,13 +619,9 @@
         });
 
         $('#myModalDestino').on('shown.bs.modal', function (e) {
+            $("#listaHistorialDeriv").html(""); 
             var id = $(e.relatedTarget).data().id;
-                getlistaHistorialDeriv(id);
+            getlistaHistorialDeriv(id);
                 $('#cerrarModalLittle').focus();
         });
     });
-    
-    
-    
-    
-    

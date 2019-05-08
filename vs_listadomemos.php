@@ -10,8 +10,8 @@ if($_SESSION["autentica"] != "SIP"){
 <head>
     <?php include "header.php"; ?>
     <title>Listado Memos</title>
-    <link rel="stylesheet" href="bootstrap/select/css/bootstrap-select.min.css">
-    <script src="bootstrap/select/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/select/css/bootstrap-select.css">
+    <script src="bootstrap/select/js/bootstrap-select.js"></script>
     <script src="bootstrap/select/js/i18n/defaults-es_CL.js"></script>
     <script src="js/globalfn.js"></script>    
     <script src="js/fn_listadomemos.js"></script>
@@ -70,7 +70,7 @@ if($_SESSION["autentica"] != "SIP"){
                         <div class="col-sm-3">
                              <div class="form-group">
                                 <label for="memoDeptoSol">Departamento Solicitante</label>  
-                                <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" data-live-search="true">
+                                <select name="memoDeptoSol" id="memoDeptoSol" class="form-control selectpicker" data-live-search="true">
                                 </select>
                                 <div class="help-block with-errors"></div>
                             </div>
