@@ -3,6 +3,19 @@
     var ultimoorden=1;
     var uid;
     var memId;
+    
+    function inicio(){
+        $(".help-block").hide();
+        $("#cambiaestado").hide();
+    }    
+    document.onkeydown = function(){
+        if(window.event){
+            window.event.keyCode = 116;
+        } 
+        if(window.event && window.event.keyCode == 116){
+            getlistaDepto();
+        }
+    }
     function returnFileSize(number) {
             if(number < 1024) {
                 return number + 'bytes';
@@ -12,51 +25,15 @@
                 return (number/1048576).toFixed(1) + ' MB';
             }
     }
-
-    function deshabilitabotones(){
-        document.getElementById('grabar-memo').style.display = 'none';        
-    }
-
-    function deshabilitaform(){
-        $("#memoFecha").prop( "disabled", true );
-        $("#memoNum").prop( "disabled", true );
-        $("#memoAnio").prop( "disabled", true );
-        $("#memoMateria").prop( "disabled", true );
-        $("#memoNombreSol").prop( "disabled", true );
-        $("#memoDeptoSol").prop( "disabled", true );
-        $("#memoNombreDest").prop( "disabled", true );
-        $("#memoDeptoDest").prop( "disabled", true );
-    }
-
-    function habilitaform(){
-        //$("#memoFecha").prop( "disabled", false );
-        //$("#memoNum").prop( "disabled", false );
-        //$("#memoAnio").prop( "disabled", false );
-        //$("#memoFechaRecep").prop( "disabled", false );
-        $("#memoMateria").prop( "disabled", false );
-        $("#memoNombreSol").prop( "disabled", false );
-        $("#memoDeptoSol").prop( "disabled", false );
-        $("#memoNombreDest").prop( "disabled", false );
-        $("#memoDeptoDest").prop( "disabled", false );
-    }
-
+    
     function limpiaFormMemo(){
         $('#formIngresoMemo')[0].reset();
         $("#listaArchivosMemo").html("");
         $("#archivoMemo").html("");
         $('#memoFecha').val(fechaActual());
         $('#memoAnio').val(anioActual());
-        //$('#memoFecha').focus();
-        $('#paneles').hide();
-        $("#listaHistorial").html("");
-        $("#verarchivoMemo").html("");
-        $("#verlistaArchivosMemo").html("");
+         getlistaDepto();
     }
-    
-    /*function limpiaformcambioestado(){
-        $('#formcambioestado')[0].reset();
-        $('#memoEstado').focus();
-    }*/
     
     function aniomemo(){
         var fecha = document.getElementById("memoFecha").value;
@@ -80,8 +57,14 @@
         var txtMemMat = document.getElementById('memoMateria').value;
         var txtMemNomSol = document.getElementById('memoNombreSol').value;
         var selMemDptoSol = document.getElementById('memoDeptoSol').selectedIndex;
+        console.log('index seleccion sol. : ' +selMemDptoSol);
+        console.log('seleccion sol.  val : ' +$('#memoDeptoSol').val());
         var txtMemNomDest = document.getElementById('memoNombreDest').value;
         var selMemDptoDest = document.getElementById('memoDeptoDest').selectedIndex;
+
+        console.log('index seleccion dest. : ' +selMemDptoDest);
+        console.log('seleccion dest.  val : ' +$('#memoDeptoDest').val());
+
             //Test campo obligatorio
             //valida FECHA INGRESO MEMO
             if(txtMemFecha == null || txtMemFecha.length == 0 || /^\s+$/.test(txtMemFecha)){
@@ -149,13 +132,13 @@
                 $('#memoNombreSol').parent().children('span').text('').hide();
             }
             //valida DEPARTAMENTO SOLICITANTE
-            if( selMemDptoSol == null || isNaN(selMemDptoSol) || selMemDptoSol == -1 ) {
+            if( selMemDptoSol == null || isNaN(selMemDptoSol) || selMemDptoSol == -1 || selMemDptoSol == 0) {
                 $('#memoDeptoSol').parent().attr('class','form-group has-error');
                 $('#memoDeptoSol').parent().children('span').text('Debe seleccionar un Departamento o Unidad Solicitante').show();
                 document.getElementById('memoDeptoSol').focus();
                 return false;                
             }else{
-                $('#memoDeptoSol').parent().attr('class','form-group has-success');
+                $('#memoDeptoSol').parent().attr('class','form-group has-success-seldiv');
                 $('#memoDeptoSol').parent().children('span').text('').hide();
             }
             //valida NOMBRE DESTINATARIO
@@ -169,13 +152,13 @@
                 $('#memoNombreDest').parent().children('span').text('').hide();
             }
             //valida DEPARTAMENTO DESTINATARIO
-            if( selMemDptoDest == null || isNaN(selMemDptoDest) || selMemDptoDest == -1 ) {
+            if( selMemDptoDest == null || isNaN(selMemDptoDest) || selMemDptoDest == -1 || selMemDptoDest == 0 ) {
                 $('#memoDeptoDest').parent().attr('class','form-group has-error');
                 $('#memoDeptoDest').parent().children('span').text('Debe seleccionar un Departamento o Unidad Destinatario').show();
                 document.getElementById('memoDeptoDest').focus();
                 return false; 
             }else{
-                $('#memoDeptoDest').parent().attr('class','form-group has-success');
+                $('#memoDeptoDest').parent().attr('class','form-group has-success-seldiv');
                 $('#memoDeptoDest').parent().children('span').text('').hide();
             }
             return true;
@@ -228,17 +211,24 @@
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );*/
             }
-            $("#memoDeptoSol").append('<option value="">Seleccionar...</option>');
-            $("#memoDeptoDest").append('<option value="">Seleccionar...</option>');
+            $("#memoDeptoSol").append('<option value="0">Seleccionar...</option>');
+            $("#memoDeptoDest").append('<option value="0">Seleccionar...</option>');
             for(var i=0; i<data.datos.length;i++){
                    // console.log('id: ' + data.datos[i].depto_id + ' nombre Depto: ' + data.datos[i].depto_nombre);
                     opcion = '<option value=' + data.datos[i].depto_id + '>' + data.datos[i].depto_nombre + '</option>';
                 $("#memoDeptoDest").append(opcion);    
-                    if(data.datos[i].depto_id==9){
-                        opcion = '<option value=' + data.datos[i].depto_id + ' selected>' + data.datos[i].depto_nombre + '</option>';
-                    }
                 $("#memoDeptoSol").append(opcion);
             }
+            $("#memoDeptoDest").selectpicker();
+            $("#memoDeptoSol").selectpicker();
+
+            /*$('.selectpicker').selectpicker({
+                  style: 'btn-default'
+            });*/
+
+            $("#memoDeptoSol").selectpicker('val', '9');
+            $("#memoDeptoSol").selectpicker('render');
+            $("#memoDeptoDest").selectpicker('render');  
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -305,256 +295,12 @@
         });
     }
 
-        //Funcion que lista el historial de Estados del memo
-        function getlistaHistorialEstado (memId,depto){
-            var datax = {"Accionmem":"listarestmemo",
-                         "memoId": memId,
-                         "depto":depto
-                        };
-            $.ajax({
-                data: datax, 
-                type: "GET",
-                dataType: "json", 
-                url: "controllers/controllermemo.php", 
-            })
-            .done(function( data, textStatus, jqXHR ) {
-                if ( console && console.log ) {
-                    console.log( " data success getlistaHistorialEstado : "+ data.success 
-                        + " \n data msg deptos : "+ data.message 
-                        + " \n textStatus : " + textStatus
-                        + " \n jqXHR.status : " + jqXHR.status );
-                }
-                //$('#historial').show();
-                $("#listaHistorial").html(""); 
-                var totalHistorial = data.datos.length;
-                $("#totalHist").html("");
-                $("#totalHist").html(totalHistorial);
-                
-                for(var i=0; i<data.datos.length;i++){
-                    console.log('id: ' + data.datos[i].estado_id + ' Estado Tipo: ' + data.datos[i].estado_tipo);
-                    
-                    fila = '<tr><td>'+ data.datos[i].estado_tipo + '</td>';
-                    fila += '<td>' + data.datos[i].observacion + '</td>';
-                    fila += '<td>' + data.datos[i].fecha + '</td>';
-                    fila += '</tr>';
-                    $("#listaHistorial").append(fila);
-                    ultimoestado = data.datos[i].estado_id;
-                    console.log('ultimoestado historial cambio : ' + ultimoestado);
-                }
-            })
-            .fail(function( jqXHR, textStatus, errorThrown ) {
-                if ( console && console.log ) {
-                    console.log( " La solicitud getlistaHistorialEstado ha fallado,  textStatus : " +  textStatus 
-                        + " \n errorThrown : "+ errorThrown
-                        + " \n textStatus : " + textStatus
-                        + " \n jqXHR.status : " + jqXHR.status );
-                }
-            });
-        }
-        //Funcion que lista Los archivos adjuntos del Memo
-        function getlistaArchivos (memId){
-            var datax = {"Accion":"listar",
-                         "memoid": memId
-                        };
-            $.ajax({
-                data: datax, 
-                type: "GET",
-                dataType: "json", 
-                url: "controllers/controllermemoarchivo.php", 
-            })
-            .done(function( data, textStatus, jqXHR ) {
-                if ( console && console.log ) {
-                    console.log( " data success getlistaArchivos : "+ data.success 
-                        + " \n data msg deptos : "+ data.message 
-                        + " \n textStatus : " + textStatus
-                        + " \n jqXHR.status : " + jqXHR.status );
-                }
-                var totalanexos=data.datos.length;
-                $("#totalArch").html(totalanexos);
-                //Lista archivos del memo
-                console.log('largo archivos ' + data.datos.length);
-                $("#verarchivoMemo").html("");
-                $("#verlistaArchivosMemo").html("");
-
-                for(var i=0; i<data.datos.length;i++){
-                    //console.log('id archivo : ' + data.datos[i].memoarch_id + ' Nombre archvo: ' + data.datos[i].memoarch_name);
-                    if(data.datos[i].memoarch_flag == 1){
-                        $("#msgarchivomemo").show();
-                        fila2 = '<tr><td><a href="'+data.datos[i].memoarch_url+'" target="_blank">'+ data.datos[i].memoarch_name + '</a></td>';
-                        fila2 += '<td>' + returnFileSize(data.datos[i].memoarch_size)+'</td>';
-                        fila2 += '</tr>';
-                        $("#verarchivoMemo").append(fila2);
-                    }else{
-                        fila3 = '<tr><td><a href="'+data.datos[i].memoarch_url+'" target="_blank">'+ data.datos[i].memoarch_name + '</a></td>';
-                        fila3 += '<td>' + returnFileSize(data.datos[i].memoarch_size) + '</td>';
-                        fila3 += '</tr>';
-                        $("#verlistaArchivosMemo").append(fila3);
-                    }
-                }
-            })
-            .fail(function( jqXHR, textStatus, errorThrown ) {
-                if ( console && console.log ) {
-                    console.log( " La solicitud getlistaarchivos ha fallado,  textStatus : " +  textStatus 
-                        + " \n errorThrown : "+ errorThrown
-                        + " \n textStatus : " + textStatus
-                        + " \n jqXHR.status : " + jqXHR.status );
-                }
-            });
-        }    
-        //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
-        function verMemo(memId,depto){
-            deshabilitabotones();
-            //console.log('memId :' + memId + ' sec :'+seccion);
-            console.log('memId :' + memId + ' depto :'+depto);
-            var datay = {"memoId": memId,
-                         "Accionmem":"obtener",
-                         "depto":depto
-                        };
-            $.ajax({
-                data: datay, 
-                type: "POST",
-                dataType: "json", 
-                url: "controllers/controllermemo.php",
-            })
-            .done(function(data,textStatus,jqXHR ) {
-                $('#titulo').text('Datos del Memo');
-                if ( console && console.log ) {
-                    console.log( " data success : "+ data.success 
-                        + " \n data msg : "+ data.message 
-                        + " \n textStatus : " + textStatus
-                        + " \n jqXHR.status : " + jqXHR.status );
-                }
-                $("#memoId").val(data.datos.mem_id);
-                $("#memoFecha").val(data.datos.mem_fecha);
-                $("#memoNum").val(data.datos.mem_numero);
-                $("#memoAnio").val(data.datos.mem_anio);
-                $("#memoFechaRecep").val(data.datos.mem_fecha_recep);
-                $("#memoMateria").val(data.datos.mem_materia);
-                $("#memoNombreSol").val(data.datos.mem_nom_sol);
-                $("#memoDeptoSol").val(data.datos.mem_depto_sol_id);
-                $("#memoNombreDest").val(data.datos.mem_nom_dest);
-                $("#memoDeptoDest").val(data.datos.mem_depto_dest_id);
-
-                if(data.datos.mem_cc_codigo!=0){
-                    $("#datosCcostos").show();
-                    $("#verCodigoCC").val(data.datos.mem_cc_codigo);
-                    $("#verFechaCDP").val(data.datos.mem_fecha_cdp);
-                    $("#verNombreCC").val(data.datos.mem_nom_cc);
-                }
-                //$("#meId").val(memId);
-                //$("#uId").val(uid);
-                    
-                    $('#paneles').show();
-                    $('#accordion0').hide();
-                    $('#panel-heading').hide();
-                    $('#buscarDS').hide();
-                    $('#buscarDD').hide();
-                    $('#tituloPanelDestino').html('<b>Derivado a :</b>');
-                    
-                    //Lista historial de los estados del memo, ver luego(21012019) si implemento esta funcion getlistaHistorialEstado
-                    var totalHistorial = data.datos.mem_estados.length;
-                    $("#totalHist").html("");
-                    $("#totalHist").html(totalHistorial);
-                    $("#listaHistorial").html("");
-                    for(var i=0; i<data.datos.mem_estados.length;i++){
-                        console.log('id: ' + data.datos.mem_estados[i].estado_id + ' Estado Tipo: ' + data.datos.mem_estados[i].estado_tipo);
-                        
-                        fila = '<tr><td>'+ data.datos.mem_estados[i].estado_tipo + '</td>';
-                        fila += '<td>' + data.datos.mem_estados[i].observacion + '</td>';
-                        fila += '<td>' + data.datos.mem_estados[i].fecha + '</td>';
-                        fila += '<td data-toggle="tooltip" title="' + data.datos.mem_estados[i].user_nom + '">' + data.datos.mem_estados[i].user + '</td>';
-                        fila += '</tr>';
-                        $("#listaHistorial").append(fila);
-                        ultimoestado = data.datos.mem_estados[i].estado_id;
-                        ultimoorden = data.datos.mem_estados[i].estado_orden;
-                        console.log('ultimoestado carga memo : ' + ultimoestado);
-                    }
-
-                //Lista archivos del memo
-                //console.log('largo archivos ' + data.datos.mem_archivos.length);
-                var totalanexos=data.datos.mem_archivos.length;
-                $("#totalArch").html(totalanexos);
-
-                $("#verarchivoMemo").html("");
-                $("#verlistaArchivosMemo").html("");
-                for(var i=0; i<data.datos.mem_archivos.length;i++){
-                    //console.log('id archivo : ' + data.datos.mem_archivos[i].memoarch_id + ' Nombre archvo: ' + data.datos.mem_archivos[i].memoarch_name);
-                    if(data.datos.mem_archivos[i].memoarch_flag == 1){
-                        $("#msgarchivomemo").show();
-                        fila2 = '<tr><td><a href="'+data.datos.mem_archivos[i].memoarch_url+'" target="_blank">'+ data.datos.mem_archivos[i].memoarch_name + '</a></td>';
-                        fila2 += '<td>' + returnFileSize(data.datos.mem_archivos[i].memoarch_size)+'</td>';
-                        fila2 += '</tr>';
-                        $("#verarchivoMemo").append(fila2);
-                    }else{
-                        fila3 = '<tr><td><a href="'+data.datos.mem_archivos[i].memoarch_url+'" target="_blank">'+ data.datos.mem_archivos[i].memoarch_name + '</a></td>';
-                        fila3 += '<td>' + returnFileSize(data.datos.mem_archivos[i].memoarch_size) + '</td>';
-                        fila3 += '</tr>';
-                        $("#verlistaArchivosMemo").append(fila3);
-                    }
-                }
-                deshabilitabotones();
-                
-                $('#limpiar-memo').hide();
-                if(depto==87){
-                    $("#agregar-det-memo").show();
-                    document.getElementById('agregar-det-memo').setAttribute('href','vs_detallememo.php?memId='+data.datos.mem_id);
-                }else if(depto==9){
-                    console.log('paso por depto 9');
-                    if(ultimoestado==1){
-                        //$('#editar-memo').show();
-                    }
-                    if(ultimoestado == 2 || ultimoestado == 4 || ultimoestado == 5 ||  ultimoestado == 9 || ultimoestado == 11){
-                        $("#cambiaestado").hide();
-                    }else{
-                        $("#cambiaestado").show();
-                        getlistaEstadosMemo(ultimoorden);
-                    }
-                }
-            })
-            .fail(function( jqXHR, textStatus, errorThrown ) {
-                if ( console && console.log ) {
-                    console.log( " La solicitud MEMO ha fallado,  textStatus : " +  textStatus 
-                        + " \n errorThrown : "+ errorThrown
-                        + " \n textStatus : " + textStatus
-                        + " \n jqXHR.status : " + jqXHR.status );
-                }
-            });
-        }
-
     $(document).ready(function(){
+        inicio();
+        getlistaDepto();
+
         $('#memoFecha').val(fechaActual());
         $('#memoAnio').val(anioActual());
-
-        $('#memoBuscaDepto').keypress(function () {
-            var valthis = $(this).val().toLowerCase();
-            var num = 0;
-            $('select#memoDeptoSol>option').each(function () {
-                var text = $(this).text().toLowerCase();
-                if(text.indexOf(valthis) !== -1){
-                    $(this).show(); $(this).prop('selected',true);
-                }else{
-                    $(this).hide();
-                }
-            });
-        });
-
-        $('#memoBuscaDeptoD').keypress(function () {
-            var valthis = $(this).val().toLowerCase();
-            var num = 0;
-            $('select#memoDeptoDest>option').each(function () {
-                var text = $(this).text().toLowerCase();
-                if(text.indexOf(valthis) !== -1){
-                    $(this).show(); $(this).prop('selected',true);
-                }else{
-                    $(this).hide();
-                }
-            });
-        });
-
-        function inicio(){
-            $(".help-block").hide();
-            $("#cambiaestado").hide();
-        }
 
         $("#memoFecha").focusout(function(){
             validafechaonline($(this));
@@ -583,19 +329,6 @@
         $("#memoEstado").focusout(function(){
             validaselectonline($(this));
         });
-
-        inicio();
-        deshabilitabotones();
-        getlistaDepto();
-        
-        if (typeof memId !== 'undefined'){
-            verMemo(memId, depto);
-            //getlistaCcostos();
-            deshabilitaform();
-            $("#msgarchivomemo").hide();
-        }else{
-            $('#grabar-memo').show();
-        }
 
         $('[data-toggle="tooltip"]').tooltip();
 
@@ -658,42 +391,26 @@
                 }
             }
         });
-       
-        //funcion cuando cambia el select de estado del memo
-/*        $("#memoEstado").change(function(e){
-            e.preventDefault();
-            var posidestado = document.getElementById("memoEstado").selectedIndex;
-            var idestado = $('#memoEstado').val();
-            console.log('pos estado: ' + posidestado);
-            console.log('estado: ' + idestado);
-
-            if(idestado==8 || idestado==9 ){
-                $("#memoFechaCDPDiv").show();
-                $("#memoCodigoCCDiv").show();
-                $("#memoNombreCCDiv").show();
-            }else if(idestado==10){
-                $("#memoFechaCDPDiv").hide();
-                $("#memoCodigoCCDiv").hide();
-                $("#memoNombreCCDiv").hide();
-            }
-        });*/
         //funcion que graba datos basicos del memo para adquisiciones, recibios por la DAF
         $("#grabar-memo").click(function(e){
             e.preventDefault();
             if(validarFormulario()==true){
-                var inpt = document.createElement('INPUT');
-                inpt.type="hidden";
-                inpt.name="uid";
-                inpt.id="uid";
-                inpt.value=uid;
-                document.formIngresoMemo.appendChild(inpt);
-
-                var inpt2 = document.createElement('INPUT');
-                inpt2.type="hidden";
-                inpt2.name="tiporeg";
-                inpt2.id="tiporeg";
-                inpt2.value="ingreso";
-                document.formIngresoMemo.appendChild(inpt2);
+                if(document.getElementById('uid') == null){
+                    var inpt = document.createElement('INPUT');
+                    inpt.type="hidden";
+                    inpt.name="uid";
+                    inpt.id="uid";
+                    inpt.value=uid;
+                    document.formIngresoMemo.appendChild(inpt);
+                }
+                if(document.getElementById('tiporeg') == null){
+                    var inpt2 = document.createElement('INPUT');
+                    inpt2.type="hidden";
+                    inpt2.name="tiporeg";
+                    inpt2.id="tiporeg";
+                    inpt2.value="ingreso";
+                    document.formIngresoMemo.appendChild(inpt2);                
+                }
                 //var datax = $("#formIngresoMemo").serializeArray();
                 /*$.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
@@ -719,6 +436,8 @@
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     limpiaFormMemo();
+                    $("#memoDeptoSol").selectpicker('render');
+                    $("#memoDeptoDest").selectpicker('render');
                     if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
@@ -733,6 +452,7 @@
                             modal2.find('.modal-title').text('Mensaje');
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();
+
                         });
                     });
                 })
@@ -803,8 +523,8 @@
                             modal2.find('.modal-title').text('Mensaje');
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();
-                            limpiaformcambioestado();
-                            getlistaHistorialEstado(memId,depto);
+                            //limpiaformcambioestado();
+                            //getlistaHistorialEstado(memId,depto);
                             if(depto==9){
                                 if(ultimoestado==1){
                                     //$("#editar-memo").hide();
@@ -829,18 +549,4 @@
                 });
             }
         });
-
-        //funcion global restaura ver datos del memo
-        $(function(){
-            $.fn.restauraverdatos = function(){
-                $('#titulo').text('Datos del Memo');
-                deshabilitaform();
-                deshabilitabotones();
-                $("#cambiaestado").show();
-                //$("#editar-memo").show();
-                //$('#actualizar-memo').hide();
-                $("#Accionmem").val("");
-            }
-         })
-
     });  // Fin del Document ready

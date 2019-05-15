@@ -11,8 +11,10 @@
         <title>SICAD Umce</title>
 
         <link rel="stylesheet" href="bootstrap/3.4.1/css/bootstrap.min.css" type="text/css">
-        <!-- Bootstrap core CSS 
-             <link rel="stylesheet" href="http://static.umce.cl/bootstrap/3.3.7/css/bootstrap.css" type="text/css"> -->
+        <!-- <link rel="stylesheet" href="bootstrap/3.3.7/css/bootstrap.min.css" type="text/css"> -->
+        <!-- Bootstrap core CSS  -->
+        <!-- <link rel="stylesheet" href="http://static.umce.cl/bootstrap/3.3.7/css/bootstrap.css" type="text/css"> -->
+        
         <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
 
         <!-- <link id="bsdp-css" href="bootstrap-datepicker-1.6.4-dist/css/bootstrap-datepicker3.min.css" rel="stylesheet"> -->
@@ -22,6 +24,7 @@
         <!--  css app siempre al final de los demas css -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
         <link href="css/estilocontrolmemo.css" rel="stylesheet" type="text/css">
+        
         <!-- Bootstrap core JavaScript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
@@ -34,11 +37,11 @@
         <!-- <script src="bootstrap-datepicker/js/moment-with-locales.js"></script> -->
         <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
 
+        <!-- <script src="bootstrap/3.3.7/js/bootstrap.js"></script> -->
         <script src="bootstrap/3.4.1/js/bootstrap.js"></script>
-
-
         <!-- <script src="bootstrap-datepicker/js/bootstrap-datetimepicker.js"></script> -->
         <!-- <script src="bootstrap-datepicker-1.6.4-dist/js/bootstrap-datepicker.min.js"></script>
         <script src="bootstrap-datepicker-1.6.4-dist/locales/bootstrap-datepicker.en-GB.min.js" charset="UTF-8"></script>
         <script src="bootstrap-datepicker-1.6.4-dist/locales/bootstrap-datepicker.es.min.js" charset="UTF-8"></script>
          -->
+         <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script> -->

@@ -79,7 +79,7 @@
     }
 
     function validaselectonline(param){
-		if( param.val() == null || param.val() == "" || param.val() < 0 ) { //isNaN(param.val())
+		if( param.val() == null || param.val() == "" || param.val() < 1 ) { //isNaN(param.val())
 			param.parent().attr('class','form-group has-error');
 			param.parent().children('span').text('Debe selecionar una opcion').show();
 		}else{

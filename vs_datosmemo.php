@@ -10,8 +10,8 @@ if($_SESSION["autentica"] != "SIP"){
 <head>
     <?php include "header.php"; ?>
     <title>Ingreso memo</title>
-    <link rel="stylesheet" href="bootstrap/select/css/bootstrap-select.min.css">
-    <script src="bootstrap/select/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="bootstrap/select/css/bootstrap-select.min_1.11.2.css">
+    <script src="bootstrap/select/js/bootstrap-select.min_1.6.2.js"></script>
     <script src="bootstrap/select/js/i18n/defaults-es_CL.js"></script>    
     <script src="js/fn_memo.js"></script>
     <script src="js/globalfn.js"></script>
@@ -497,6 +497,7 @@ if($_SESSION["autentica"] != "SIP"){
                                 <div class="form-group" id="memoOtroDeptoNombre">
                                     <label for="memoDeptoNombre">Nombre Destinatario</label>
                                     <input name="memoDeptoNombre" id="memoDeptoNombre" type="text"  class="form-control">
+                                    <span class="help-block"></span>
                                 </div>
                             </div>
                         </div>
@@ -505,7 +506,8 @@ if($_SESSION["autentica"] != "SIP"){
                                 <div class="form-group" id="memoOtroDepto">
                                     <label for="memoOtroDeptoId">Departamento o Unidad Destino</label>
                                     <select name="memoOtroDeptoId" id="memoOtroDeptoId" class="form-control" data-live-search="true" required>
-                                    </select>                                    
+                                    </select>
+                                    <span class="help-block" id ="msgerrordeptoid"></span>
                                 </div>
                             </div>
                         </div>

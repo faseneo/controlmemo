@@ -11,7 +11,6 @@ $modelMemo = new ModelMemo();
 
 if(isset($_REQUEST['Accionmem'])){
     switch($_REQUEST['Accionmem']){
-
         case 'registrar':
             //CODIGO TEMPORAL DONDE DEBERIA VALIDAR FECHA (NO SIRVE AUN)
                 /*if($data->__GET('mem_fecha_recep')=="" || $data->__GET('mem_fecha_recep')==NULL) 
@@ -27,7 +26,6 @@ if(isset($_REQUEST['Accionmem'])){
             $memo->__SET('mem_numero',          $_REQUEST['memoNum']);
             $memo->__SET('mem_anio',            $_REQUEST['memoAnio']);
             if(isset($_REQUEST['tiporeg']) and $_REQUEST['tiporeg']=='ingreso'){
-
                 $memo->__SET('mem_fecha_recep', $_REQUEST['memoFecha']);
             }else{
                 $memo->__SET('mem_fecha_recep', $_REQUEST['memoFechaRecep']);
@@ -42,13 +40,10 @@ if(isset($_REQUEST['Accionmem'])){
             /*var_dump($_FILES);
             $files=$_FILES['memoFile'];
             $files2=$_FILES['memoFileList'];
-
             $totalArchivo = sizeof($files['name']);
             $totalArchivo2 = sizeof($files2['name']);
-
             var_dump(is_array($files['name']));
             var_dump(is_array($files2['name']));
-
             var_dump($files['name']);
             var_dump($files2['name']);
             var_dump($totalArchivo);

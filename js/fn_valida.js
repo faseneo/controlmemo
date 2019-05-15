@@ -95,7 +95,7 @@ $(document).ready(function(){
                     }
                     if(data.success==true){
                     	$('#noexiste').hide();
-                    	window.location.href = "principal.php";
+                    	window.location.href = "vs_listadomemos.php";
                     }else{
                     	$('#noexiste').html('<strong><span class="glyphicon glyphicon-exclamation-sign"></span></strong> '+data.message).show();
                     }

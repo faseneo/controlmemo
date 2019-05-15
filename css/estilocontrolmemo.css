@@ -21,6 +21,12 @@ select#detalleestadomemo {
 .panel-heading a#accord.collapsed:after, a#accord1.collapsed:after, a#accord2.collapsed:after {
     content: "\e080";
 }
+
+.has-success-seldiv{
+  color: #3c763d;
+  border-color: #3c763d;
+}
+
 #actualDestino {
     background-color: #efd793;
 }

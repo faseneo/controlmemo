@@ -10,6 +10,11 @@ if($_SESSION["autentica"] != "SIP"){
 <head>
     <?php include "header.php"; ?>
     <title>Ingreso memo</title>
+    <script src="bootstrap/select/js/bootstrap-select.min_1.6.2.js"></script>
+    <link rel="stylesheet" href="bootstrap/select/css/bootstrap-select.min_1.11.2.css">
+    <script src="bootstrap/select/js/i18n/defaults-es_CL.js"></script>
+    <script src="js/fn_memo_ingreso.js"></script>
+    <script src="js/globalfn.js"></script>
     <style type="text/css">
         .alert {
             margin:5px;
@@ -18,18 +23,17 @@ if($_SESSION["autentica"] != "SIP"){
         }
     </style>
     <script>
-    <?php 
-        $depto = $_SESSION["depto"];
-        echo "depto=".$depto.";";    
-        $uid = $_SESSION["uid"];
-        echo "uid=".$uid.";\n";
-    ?>
+        <?php 
+            $depto = $_SESSION["depto"];
+            echo "depto=".$depto.";";    
+            $uid = $_SESSION["uid"];
+            echo "uid=".$uid.";\n";
+        ?>
         $(document).ready(function(){
             $('[data-toggle="popover"]').popover();   
         });
-    </script>    
-    <script src="js/fn_memoing.js"></script>
-    <script src="js/globalfn.js"></script>    
+    </script>
+  
 </head>
 <body>
     <?php include "barranav.php"; ?>
@@ -51,7 +55,6 @@ if($_SESSION["autentica"] != "SIP"){
                                             <div class="form-group">
                                                 <label for="memoFecha">Fecha documento</label>
                                                 <input name="memoFecha" id="memoFecha" type="date" class="form-control" onchange="aniomemo();" required >
-                                                <!-- <span class="glyphicon form-control-feedback" aria-hidden="true"></span> -->
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>
@@ -87,17 +90,10 @@ if($_SESSION["autentica"] != "SIP"){
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-3" id="buscarDS">
-                                            <div class="form-group">
-                                                <label for="memoBuscaDepto">Buscar Unidad...</label>
-                                                <input name="memoBuscaDepto" id="memoBuscaDepto" type="text"  class="form-control" >
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>                        
-                                        <div class="col-md-6" >
+                                        <div class="col-md-9" >
                                             <div class="form-group">
                                                 <label  for="memoDeptoSol">Departamento o Unidad Solicitante</label>
-                                                <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" required>
+                                                <select name="memoDeptoSol" id="memoDeptoSol" class="selectpicker form-control" data-show-subtext="true" data-live-search="true" required>
                                                 </select>
                                                 <span class="help-block"></span>
                                             </div>                            
@@ -124,17 +120,10 @@ if($_SESSION["autentica"] != "SIP"){
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-3" id="buscarDD">
-                                            <div class="form-group">
-                                                <label for="memoBuscaDeptoD">Buscar Unidad...</label>
-                                                <input name="memoBuscaDeptoD" id="memoBuscaDeptoD" type="text"  class="form-control" >
-                                                <span class="help-block"></span>
-                                            </div>
-                                        </div>                        
-                                        <div class="col-md-6">
+                                        <div class="col-md-9">
                                             <div class="form-group">
                                                 <label for="memoDeptoDest">Departamento o Unidad Destinatario</label>
-                                                <select name="memoDeptoDest" id="memoDeptoDest" class="form-control" required>
+                                                <select name="memoDeptoDest" id="memoDeptoDest" class="form-control" data-live-search="true" required>
                                                 </select>
                                                 <span class="help-block"></span>
                                             </div>

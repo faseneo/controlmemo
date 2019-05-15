@@ -241,10 +241,10 @@ class ModelMemoEst{
             $activatrigger=0;
             if ($estadogenerico != 0 || $estadogenerico != NULL) {
                 if($estadogenerico==1 || $estadogenerico==2 || $estadogenerico==5){
-                    $activatrigger=1;
+                    $activatrigger = 1;
                     $deptodestino = $data->__GET('memo_camest_deptoid');
                 }else if($estadogenerico==6 || $estadogenerico==10){
-                    $activatrigger=1;
+                    $activatrigger = 1;
                     $deptodestino = 0;
                 }
             }else{
@@ -295,7 +295,7 @@ class ModelMemoEst{
                                      WHERE memo_derivado_memo_id = ".$memid." and memo_derivado_depto_actual = 1";
             $res = $this->pdo->query($consultaexistederivado);
             $derivadoid = $res->fetchColumn();
-
+            // se actualiza el derivado anterior a 0, solo puede estar en un derivado a la vez
             if ($derivadoid != 0 || $derivadoid != NULL) {
                 $sqlactualiza = "UPDATE memo_derivado SET  memo_derivado_depto_actual = 0
                         WHERE memo_derivado_id = ?";
@@ -305,6 +305,7 @@ class ModelMemoEst{
             }
             if($estadogenid != 0 || $estadogenid != NULL){
                 $deptoanteriorid=0;
+                //condicion para estado generico 6 Devuelto otro departamento, se devuelve al depto. anteriormente derivado
                 if($estadogenid==6){
                     $buscadeptoanterior="SELECT memo_derivado_dpto_id,memo_derivado_nombre_destinatario
                                         FROM memo_derivado
@@ -318,6 +319,7 @@ class ModelMemoEst{
                         $deptonom = $r0->memo_derivado_nombre_destinatario;
                     }
                 }
+                //condicion para estado generico 10 Respondido, se devuelve al depto. origen, o estado generico 6
                 if($estadogenid==10 || (($deptoanteriorid==0 || $deptoanteriorid==NULL) && $estadogenid==6)){
                     $buscadeptoorigen="SELECT memo_depto_solicitante_id, memo_nombre_solicitante
                                          FROM memo
@@ -329,8 +331,11 @@ class ModelMemoEst{
                 }
             }
 
-            $sql = "INSERT INTO memo_derivado (memo_derivado_memo_id, memo_derivado_dpto_id,memo_derivado_nombre_destinatario,
-                                memo_derivado_depto_actual,memo_derivado_estado_id) 
+            $sql = "INSERT INTO memo_derivado (memo_derivado_memo_id,
+                                               memo_derivado_dpto_id,
+                                               memo_derivado_nombre_destinatario,
+                                               memo_derivado_depto_actual,
+                                               memo_derivado_estado_id) 
                     VALUES (?,?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($memid,

@@ -36,6 +36,14 @@ if(isset($_REQUEST['Accion'])){
                 $CambioMEst->__SET('memo_camest_deptoid',   $_REQUEST['memoOtroDeptoId']);
                 $CambioMEst->__SET('memo_camest_deptonom',  $_REQUEST['memoDeptoNombre']);
             }
+            if((isset($_REQUEST['memoEstado']) && $_REQUEST['memoEstado']==11) || ( isset($_REQUEST['memoEstadoce']) && $_REQUEST['memoEstadoce']==11)){
+                $CambioMEst->__SET('memo_camest_deptoid',   $_REQUEST['memoOtroDeptoId']);
+                $CambioMEst->__SET('memo_camest_deptonom',  $_REQUEST['memoDeptoNombre']);
+            }
+            if((isset($_REQUEST['memoEstado']) && $_REQUEST['memoEstado']==14) || ( isset($_REQUEST['memoEstadoce']) && $_REQUEST['memoEstadoce']==14)){
+                $CambioMEst->__SET('memo_camest_deptoid',   $_REQUEST['memoOtroDeptoId']);
+                $CambioMEst->__SET('memo_camest_deptonom',  $_REQUEST['memoDeptoNombre']);
+            }
             if(isset($_REQUEST['meId'])){
                 $CambioMEst->__SET('memo_camest_memid', $_REQUEST['meId']);
                 $CambioMEst->__SET('memo_camest_estid', $_REQUEST['memoEstado']);

@@ -9,19 +9,31 @@
         if(window.event && window.event.keyCode == 116){
             getListadoMemos(1,1,0,1,uid,0);
             getlistaDepto();
-        // return false;
         }
     } 
-    function limpiaformcambioestado(){
+    function limpiaTodoformcambioestado(){
         $('#formcambioestado')[0].reset();
         $("#memoOtroDepto").hide();
         $("#memoOtroDeptoNombre").hide();
         $('#memoEstadoce').focus();
+        
+        $('#cestadomasivos')[0].reset();
+        $("#capacest").hide();
+        $("#tdce").hide();
+        $(".tdcestmas").hide();
+    }
+    function limpiaformcambioestado(){
+        $('#formcambioestado')[0].reset();
+        $("#memoOtroDepto").hide();
+        $("#memoOtroDeptoNombre").hide();
+        $('#memoEstadoce').focus();        
     }
     // Funcion valida los datos del formulario del cambio de estado del memo
     function validarFormularioEstado(idestado){
         var selMemoEstado = document.getElementById('memoEstadoce').selectedIndex;
+        var selOtroDeptoId = document.getElementById('memoOtroDeptoId').selectedIndex;
         var txtMemoObs = document.getElementById('memoObs').value;
+        var txtDeptoNom = document.getElementById('memoDeptoNombre').value;
         //valida Estado
         if( selMemoEstado == null || isNaN(selMemoEstado) || selMemoEstado == -1 ) {
             $('#memoEstadoce').parent().attr('class','form-group has-error');
@@ -32,7 +44,33 @@
             $('#memoEstadoce').parent().attr('class','form-group has-success');
             $('#memoEstadoce').parent().children('span').text('').hide();
         }
-
+        console.log('estado para validar : '+idestado);
+        //Valida nombre destinatario y id depto
+        if(idestado==5 || idestado==11 || idestado==14){
+            if(txtDeptoNom == null || txtDeptoNom.length == 0 || /^\s+$/.test(txtDeptoNom)){
+                $('#memoDeptoNombre').parent().attr('class','form-group has-error');
+                $('#memoDeptoNombre').parent().children('span').text('El campo Nombre Destinatario no debe ir vacío o con espacios en blanco').show();
+                document.getElementById('memoDeptoNombre').focus();
+                return false;                
+            }else{
+                $('#memoDeptoNombre').parent().attr('class','form-group has-success');
+                $('#memoDeptoNombre').parent().children('span').text('').hide();
+            }
+            if(idestado==5){
+                if( selOtroDeptoId == null || isNaN(selOtroDeptoId) || selOtroDeptoId == -1 || selOtroDeptoId == 0 ) {
+                    $('#memoOtroDeptoId').parent().attr('class','form-group has-error');
+                    $('#memoOtroDeptoId').parent().children('span').text('Debe seleccionar un Departamento o Unidad Destinatario').show();
+                    //$('#msgerrordeptoid').text('Debe seleccionar un Departamento').show().attr('class','text-error');
+                    document.getElementById('memoOtroDeptoId').focus();
+                    return false;
+                }else{
+                    //$('#memoOtroDeptoId').parent().attr('class','form-group has-success');
+                    $('#memoOtroDeptoId').parent().attr('class','form-group has-success-seldiv');
+                    $('#msgerrordeptoid').parent().children('span').text('').hide();
+                }
+            }
+            
+        }
         //Valida Observación
         if(txtMemoObs == null || txtMemoObs.length == 0 || /^\s+$/.test(txtMemoObs)){
                 $('#memoObs').parent().attr('class','form-group has-error');
@@ -97,16 +135,32 @@
                 opcion = '<option value=' + data.datos[13].memo_est_id + '>' + data.datos[13].memo_est_tipo + '</option>';
                 $("#memoEstadoce").append(opcion);
             }
-            //Rechazado o rechazado adqui -> respondido.
-            if(ultimoestado==12 || ultimoestado==14) { inicio = 9; fin=9 }
+            //Rechazado Daf, Rechazado ppto o rechazado adqui -> respondido.
+            if(ultimoestado==9 || ultimoestado==13 || ultimoestado==15) { inicio = 9; fin=9 }
+
                 for(var i=inicio; i<=fin; i++){
                     console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
                     opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_tipo + '</option>';
                     $("#memoEstadoce").append(opcion);
                 }
-
-            estadomarcado = $('#memoEstadoce').val()
-            console.log('value memo estado  : ' + estadomarcado);
+                //primero de la lista, inicio posicion + 1, valor del value
+                $("#memoEstadoce").val(inicio+1); 
+                //estadomarcado = $('#memoEstadoce').val();
+                //console.log('value memo estado  : ' + estadomarcado);
+                //var posidestado = document.getElementById("memoEstadoce").selectedIndex;
+                //console.log('posicion estado seleccionado : '+ posidestado);
+                        var idestado = $('#memoEstadoce').val();
+                        //console.log('estado seleccionado : '+ idestado);
+                        if(idestado == 5){
+                            $("#memoOtroDepto").show();
+                            $("#memoOtroDeptoNombre").show();
+                        }else if(idestado == 11 || idestado == 14){
+                            $("#memoOtroDeptoNombre").show();
+                            $("#memoOtroDepto").hide();
+                        }else{
+                            $("#memoOtroDepto").hide();
+                            $("#memoOtroDeptoNombre").hide();
+                        }
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -157,6 +211,9 @@
                 $("#memoDeptoDest").append(opcion);
             }
             $("#memoDeptoDest").selectpicker();
+            $("#memoDeptoSol").selectpicker();
+            $("#memoOtroDeptoId").selectpicker();
+
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -193,7 +250,8 @@
                     opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_tipo + '</option>';
                     $("#memoEstado").append(opcion);
                 }
-
+                $("#memoEstado").selectpicker();
+                $('#memoEstado').selectpicker('render');
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
                 if ( console && console.log ) {
@@ -273,8 +331,8 @@
                         + " \n jqXHR.status : " + jqXHR.status );*/
                 }
                 //$('#ModalCargando').modal('hide');
-                setTimeout($('#boxloader').hide(), 1000000);
-                //$('#boxloader').hide();
+                //setTimeout($('#boxloader').hide(), 1000000);
+                $('#boxloader').hide();
                 incrementotest=0;
                 txtcolor = '';
                 //text-muted, .text-primary, .text-success, .text-info, .text-warning, y .text-danger
@@ -326,7 +384,6 @@
                 }
             });
     }
-
     //Funcion que lista los derivador del memo
     function getlistaHistorialDeriv(memId){
         var datax = {"Accionmem":"listarderiv",
@@ -377,12 +434,12 @@
             }
         });
     }
-
+    //principal
     $(document).ready(function(){
         //$('[data-toggle="tooltip"]').tooltip();
         getListadoEstadoMemos(depto);
-        getListadoMemos(1,1,0,1,uid,0);
         getlistaDepto();
+        getListadoMemos(1,1,0,1,uid,0);
 
         $("#titulolistado").hide();
         $("#activacest").hide();
@@ -390,12 +447,6 @@
         $("#tdce").hide();
             $("#memoOtroDepto").hide();
             $("#memoOtroDeptoNombre").hide();
-
-            $("#memoEstado").selectpicker();
-            $("#memoDeptoDest").selectpicker();
-            $(".selectpicker").selectpicker();
-            $("#memoAnio").selectpicker();
-            $("#memoOtroDeptoId").selectpicker();
 
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 
@@ -442,11 +493,14 @@
             $("#capacest").hide();
             $("#tdce").hide();
             $(".tdcestmas").hide();
+            //$("#cestmodal").hide();
+            
             //getListadoMemos($('#memoDeptoSol').val(),$('#memoDeptoDest').val(),$('#memoEstado').val(),1,uid,$('#memoAnio').val());
         });
         // funcion activa el cambio estado masivo de documentos o memos
         $("#activacest").click(function(e) {
             e.preventDefault();
+            $("#chekseltodos").prop("checked", false);
             $("#capacest").show();
             $("#activacest").hide();
             $("#tdce").show();
@@ -475,11 +529,9 @@
 
         $("#numDoc").keypress(function(event) {
             if (event.which == 13 ) {
-                console.log('presiona enter');
                 validabusca();
             }
-    }); 
-        
+        }); 
         // funcion al hacer click checkea todos los doc. de lista ya filtrados
         $("#chekseltodos").on("click", function() {  
             $(".chknumest").prop("checked", this.checked);  
@@ -495,6 +547,7 @@
         // Levanta modal para cambiar estados masivos de los doc. listados, valida que este al menos uno marcado
         $("#cestmodal").click(function(e) {
             e.preventDefault();
+            limpiaformcambioestado();
             $("#debeseleccionar").hide();
             $("#bodyestado").show();
             $("#footerestado").show();
@@ -507,12 +560,6 @@
                 });
                 if (selected.length) {
                     getlistaCambioEstadosMemo();
-                    var posidestado = document.getElementById("memoEstado").selectedIndex;
-                    var idestado = $('#memoEstado').val();
-                    if(idestado==11 || idestado==14){
-                        $("#memoOtroDeptoNombre").show();
-                        $("#memoOtroDepto").hide();
-                    }
                 }else{
                     $("#debeseleccionar").show();
                     $("#debeseleccionar").html("<b>Debes seleccionar al menos una opción</b>");
@@ -560,7 +607,7 @@
                 inptmemid.value=selected;
                 document.formcambioestado.appendChild(inptmemid);
 
-            var idestado = $('#memoEstado').val();
+            var idestado = $('#memoEstadoce').val();
             console.log('seleccion estado :'+idestado);
 
             if(validarFormularioEstado(idestado)==true){
@@ -601,8 +648,16 @@
                             modal2.find('.modal-title').text('Mensaje');
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();
-                            limpiaformcambioestado();
-                            getListadoEstadoMemos(depto);
+                            $("#capacest").hide();
+                            limpiaTodoformcambioestado();
+                            getListadoMemos(1,1,0,1,uid,0);
+                            //getListadoEstadoMemos(depto);
+                            //getlistaDepto();
+                            $('#memoEstado').selectpicker('val', 0);
+                            $("#memoDeptoSol").selectpicker('val', 1);
+                            $("#memoDeptoDest").selectpicker('val', 1);
+                            $("#memoAnio").selectpicker('val', 0);
+
                         });
                     });
                     

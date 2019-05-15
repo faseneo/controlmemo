@@ -14,7 +14,6 @@ require_once("../modelo/memoestado/modelmemoestado.php");
 require_once("../modelo/logs/modelologs.php");
 require_once("../modelo/logs/modelologsquerys.php");
 
-
 class ModelMemo  {
     private $pdo;
     //public $jsonresponse = array();
@@ -170,13 +169,6 @@ class ModelMemo  {
                           $busq->__SET('mem_fecha_cdp', date_format(date_create($r->memo_fecha_cdp),'d-m-Y' ));
                           $busq->__SET('mem_nom_cc', $r->cc_nombre);
 
-                          $modelMemoArch = new ModelMemoArchivo();
-
-                          //$arrayfile = $modelMemoArch->listar($r->memo_id);
-                          //  $busq->__SET('mem_archivos', $arrayfile['datos']);
-                          //$arrayestados = $this->ObtenerCambiosEstadosMemo($r->memo_id,$dep);
-                          //  $busq->__SET('mem_estados', $arrayestados['datos']);
-
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Se obtuvo el memo correctamente';
                 $jsonresponse['datos'] = $busq->returnArray();
@@ -236,9 +228,6 @@ class ModelMemo  {
               $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($query,$totalestados,'Obtener Cambios Estados');
                 $logsq = null;
-
-              //$stm->execute(array($idmemo));
-              //$r = $stm->fetch(PDO::FETCH_OBJ);
 
                 foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                     $fila = array('estado_id'=>$r->cambio_estados_memo_estado_id,
@@ -370,40 +359,15 @@ class ModelMemo  {
               $objcambioest->__SET('memo_camest_usuid',$uid);
               $objcambioest->__SET('memo_camest_deptoid',$data->__GET('mem_depto_dest_id'));
               $objcambioest->__SET('memo_camest_deptonom',$data->__GET('mem_nom_dest'));
+            $modelcambioest->CambiaEstado($objcambioest);
 
-            /*$sqlinsertaestados="INSERT INTO cambio_estados (cambio_estados_memo_id,
-                                                            cambio_estados_memo_estado_id,
-                                                            cambio_estados_observacion,
-                                                            cambio_estados_usuario_id)
-                                VALUES ($idmemo, $idestado, '$obsestado',$uid)";*/
-                $modelcambioest->CambiaEstado($objcambioest);
-            exit();
-                /*$logsq->GrabarLogsQuerys($sqlinsertaestados,'0','RegistrarEstado');
-                $stm = $this->pdo->prepare($sqlinsertaestados);
-                $stm->execute();*/
-
-            //insertar derivado
-              /*$deptodestino = $data->__GET('mem_depto_dest_id');
-              $deptonomdestino = $data->__GET('mem_nom_dest');
-              $sqlinsertaderivado = "INSERT INTO memo_derivado (memo_derivado_memo_id, memo_derivado_dpto_id,memo_derivado_nombre_destinatario,
-                                    memo_derivado_depto_actual,memo_derivado_estado_id) 
-                                  VALUES ($idmemo,$deptodestino,'$deptonomdestino',1,1)";*/
-            //$logsq = new ModeloLogsQuerys();
-                /*$logsq->GrabarLogsQuerys($sqlinsertaderivado,'0','RegistraDerivado');
-              $stm = $this->pdo->prepare($sqlinsertaderivado);
-              $stm->execute();                */
-
+            //exit();
             $logsq = null;
-            //var_dump($sqlinsertaestados); exit(1);
             $modelMemoArch = new ModelMemoArchivo();
-            //$files['memoFile'];
-            //$idmemo=7;
             $tipoarch='memo';
             $tipoarch2='anexomemo';
             $arrayfile = $modelMemoArch->RegistrarArchivoGenerico($files['memoFile'],$tipoarch,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
             $arrayfile = $modelMemoArch->RegistrarArchivoGenerico($files['memoFileList'],$tipoarch2,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
-            //$arrayfile = $modelMemoArch->Registrar($files,$idmemo,$data->__GET('mem_numero'),$data->__GET('mem_anio'));
-
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo ingresado correctamente'; 
             $jsonresponse['messagefile'] = $arrayfile;

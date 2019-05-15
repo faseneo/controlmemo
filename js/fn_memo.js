@@ -38,10 +38,6 @@
     }
 
     function habilitaform(){
-        //$("#memoFecha").prop( "disabled", false );
-        //$("#memoNum").prop( "disabled", false );
-        //$("#memoAnio").prop( "disabled", false );
-        //$("#memoFechaRecep").prop( "disabled", false );
         $("#memoMateria").prop( "disabled", false );
         $("#memoNombreSol").prop( "disabled", false );
         $("#memoDeptoSol").prop( "disabled", false );
@@ -231,7 +227,9 @@
     // Funcion valida los datos del formulario del cambio de estado del memo
     function validarFormularioEstado(idestado){
         var selMemoEstado = document.getElementById('memoEstado').selectedIndex;
+        var selOtroDeptoId = document.getElementById('memoOtroDeptoId').selectedIndex;
         var txtMemoObs = document.getElementById('memoObs').value;
+        var txtDeptoNom = document.getElementById('memoDeptoNombre').value;
         //valida Estado
         if( selMemoEstado == null || isNaN(selMemoEstado) || selMemoEstado == -1 ) {
             $('#memoEstado').parent().attr('class','form-group has-error');
@@ -242,7 +240,33 @@
             $('#memoEstado').parent().attr('class','form-group has-success');
             $('#memoEstado').parent().children('span').text('').hide();
         }
-
+        if(idestado==5 || idestado==11 || idestado==14){
+            if(txtDeptoNom == null || txtDeptoNom.length == 0 || /^\s+$/.test(txtDeptoNom)){
+                $('#memoDeptoNombre').parent().attr('class','form-group has-error');
+                $('#memoDeptoNombre').parent().children('span').text('El campo Nombre Destinatario no debe ir vacío o con espacios en blanco').show();
+                document.getElementById('memoDeptoNombre').focus();
+                return false;                
+            }else{
+                $('#memoDeptoNombre').parent().attr('class','form-group has-success');
+                $('#memoDeptoNombre').parent().children('span').text('').hide();
+            }
+            if(idestado==5){
+                if( selOtroDeptoId == null || isNaN(selOtroDeptoId) || selOtroDeptoId == -1 || selOtroDeptoId == 0 ) {
+                    //$('#memoOtroDeptoId').parent().attr('class','form-group has-error');
+                    //$('#msgerrordeptoid').text('Debe seleccionar un Departamento').show().attr('class','text-danger');
+                    $('#memoOtroDeptoId').parent().attr('class','form-group has-error');
+                    $('#memoOtroDeptoId').parent().children('span').text('Debe seleccionar un Departamento o Unidad Destinatario').show();
+                    document.getElementById('memoOtroDeptoId').focus();
+                    return false;
+                }else{
+                    //$('#memoOtroDeptoId').parent().attr('class','form-group has-success');
+                    //$('#msgerrordeptoid').text('').hide();
+                    $('#memoOtroDeptoId').parent().attr('class','form-group has-success-seldiv');
+                    $('#msgerrordeptoid').parent().children('span').text('').hide();
+                }
+            }
+            
+        }
         /*if(idestado==8 || idestado==9){
             console.log('paso 8');
             var txtCodigoCC = document.getElementById('memoCodigoCC').value;
@@ -333,19 +357,27 @@
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );*/
             }
-            $("#memoDeptoSol").append('<option value="">Seleccionar...</option>');
-            $("#memoDeptoDest").append('<option value="">Seleccionar...</option>');
-            $("#memoOtroDeptoId").append('<option value="">Seleccionar...</option>');
+            $("#memoDeptoSol").append('<option value="0">Seleccionar...</option>');
+            $("#memoDeptoDest").append('<option value="0">Seleccionar...</option>');
+            $("#memoOtroDeptoId").append('<option value="0">Seleccionar...</option>');
             for(var i=0; i<data.datos.length;i++){
                    // console.log('id: ' + data.datos[i].depto_id + ' nombre Depto: ' + data.datos[i].depto_nombre);
                 opcion = '<option value=' + data.datos[i].depto_id + '>' + data.datos[i].depto_nombre + '</option>';
                 $("#memoDeptoSol").append(opcion);
                 $("#memoOtroDeptoId").append(opcion);
-                    if(data.datos[i].depto_id==9){
+                    /*if(data.datos[i].depto_id==9){
                         opcion = '<option value=' + data.datos[i].depto_id + ' selected>' + data.datos[i].depto_nombre + '</option>';
-                    }
+                    }*/
                 $("#memoDeptoDest").append(opcion);
             }
+            $("#memoOtroDeptoId").selectpicker();
+            $("#memoDeptoSol").selectpicker();
+            $("#memoDeptoDest").selectpicker();
+
+            /*$("#memoOtroDeptoId").selectpicker('render');
+            $("#memoDeptoSol").selectpicker('render');
+            $("#memoDeptoDest").selectpicker('render');            */
+
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -444,18 +476,30 @@
                 opcion = '<option value=' + data.datos[13].memo_est_id + '>' + data.datos[13].memo_est_tipo + '</option>';
                 $("#memoEstado").append(opcion);
             }
-            //Rechazado o rechazado adqui -> respondido.
-            if(ultimoestado==12 || ultimoestado==14) { inicio = 9; fin=9 }
-            //if(ultimoestado==11) { inicio = 1; fin=2 }
+            //Rechazado Daf, Rechazado ppto o rechazado adqui -> respondido.
+            if(ultimoestado==9 || ultimoestado==13 || ultimoestado==15) { inicio = 9; fin=9 }
                                    
                 for(var i=inicio; i<=fin; i++){
                     console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
                     opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_tipo + '</option>';
                     $("#memoEstado").append(opcion);
                 }
-
-            estadomarcado = $('#memoEstado').val()
-            console.log('value memo estado  : ' + estadomarcado);
+                //primero de la lista, inicio posicion + 1, valor del value
+                $("#memoEstado").val(inicio+1);
+            //estadomarcado = $('#memoEstado').val()
+            //console.log('value memo estado  : ' + estadomarcado);
+            var idestado = $('#memoEstado').val();
+            //console.log('estado seleccionado : '+ idestado);
+            if(idestado == 5){
+                $("#memoOtroDepto").show();
+                $("#memoOtroDeptoNombre").show();
+            }else if(idestado == 11 || idestado == 14){
+                $("#memoOtroDeptoNombre").show();
+                $("#memoOtroDepto").hide();
+            }else{
+                $("#memoOtroDepto").hide();
+                $("#memoOtroDeptoNombre").hide();
+            }            
             /*if(estadomarcado == 8 || estadomarcado==9){
                 $("#memoFechaCDPDiv").show();
                 $("#memoCodigoCCDiv").show();
@@ -718,10 +762,11 @@
             $("#memoFechaRecep").val(data.datos.mem_fecha_recep);
             $("#memoMateria").val(data.datos.mem_materia);
             $("#memoNombreSol").val(data.datos.mem_nom_sol);
-            $("#memoDeptoSol").val(data.datos.mem_depto_sol_id);
+            //$("#memoDeptoSol").val(data.datos.mem_depto_sol_id);
+            $("#memoDeptoSol").selectpicker('val', data.datos.mem_depto_sol_id);
             $("#memoNombreDest").val(data.datos.mem_nom_dest);
-            $("#memoDeptoDest").val(data.datos.mem_depto_dest_id);
-
+            //$("#memoDeptoDest").val(data.datos.mem_depto_dest_id);
+            $("#memoDeptoDest").selectpicker('val', data.datos.mem_depto_dest_id);
             if(data.datos.mem_cc_codigo!=0){
                 $("#datosCcostos").hide();
                 $("#verCodigoCC").val(data.datos.mem_cc_codigo);
@@ -750,7 +795,6 @@
         });
     }
     $(document).ready(function(){
-        $("#memoOtroDeptoId").selectpicker();
         $('#memoFecha').val(fechaActual());
         $('#memoAnio').val(anioActual());
 

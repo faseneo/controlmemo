@@ -16,11 +16,11 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a href="/controlmemo/" class="navbar-brand"><img src="img/logo.png" style="height: 30px;"></a>			
+			<a href="/controlmemo/vs_listadomemos.php" class="navbar-brand"><img src="img/logo.png" style="height: 30px;"></a>			
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="/controlmemo/">Inicio</a></li>
+				<li class="active"><a href="/controlmemo/vs_listadomemos.php">Inicio</a></li>
 				<?php 
 					if($rol==1 || $rol==2 || $rol==3 || $rol==4){
 				?>
