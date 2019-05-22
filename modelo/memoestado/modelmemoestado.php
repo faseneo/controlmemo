@@ -181,7 +181,7 @@ class ModelMemoEst{
         }
         return $jsonresponse;
     }
-
+    //graba el cambio de estado de varios memos del listadomemo(se va agregando)
     public function CambiaEstadoMasivo(MemoCambioEst $data){
         $jsonresponse = array();
         //var_dump($data);
@@ -254,6 +254,8 @@ class ModelMemoEst{
                 }else if($data->__GET('memo_camest_estid')==14){
                     $deptodestino = 87;
                     $activatrigger=1;
+                    $data->__SET('memo_camest_estid',16);
+                    $this->CambiaEstado($data);
                 }
                 //agregar los otros id de estado para adquisiciones
             }

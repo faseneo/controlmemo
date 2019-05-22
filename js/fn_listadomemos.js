@@ -7,7 +7,7 @@
             window.event.keyCode = 116;
         } 
         if(window.event && window.event.keyCode == 116){
-            getListadoMemos(1,1,0,1,uid,0);
+            //getListadoMemos(1,1,0,1,uid,0);
             getlistaDepto();
         }
     } 
@@ -309,6 +309,7 @@
                 "idusu":usuid,
                 "anio":anio,
                 "numdoc":numdoc,
+                "dptoid":depto,
                 "Accionmem":"listar"
             }
             $.ajax({

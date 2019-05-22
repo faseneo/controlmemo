@@ -74,7 +74,14 @@ if(isset($_REQUEST['Accionmem'])){
 
         case 'listar':
             //$jsondata = $modelMemo->Listar($_REQUEST['nump'],$_REQUEST['idest'],$_REQUEST['idusu'],$_REQUEST['idsec']);
-            $jsondata = $modelMemo->Listar($_REQUEST['deptosolid'], $_REQUEST['deptodesid'], $_REQUEST['nump'],$_REQUEST['idest'],$_REQUEST['idusu'],$_REQUEST['anio'],$_REQUEST['numdoc']);
+            $jsondata = $modelMemo->Listar($_REQUEST['deptosolid'],
+                                           $_REQUEST['deptodesid'],
+                                           $_REQUEST['nump'],
+                                           $_REQUEST['idest'],
+                                           $_REQUEST['idusu'],
+                                           $_REQUEST['anio'],
+                                           $_REQUEST['numdoc'],
+                                           $_REQUEST['dptoid']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;

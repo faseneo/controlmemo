@@ -33,11 +33,11 @@ class ModelMemo  {
       // Lista todos los memos segun numpag, estado, seccion y/o usuario
       // $deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0
       //public function Listar($numpag = 1, $estadoid = 0, $usuid=0, $secid=1){
-    public function Listar($deptosol=1,$deptodes=1, $numpag = 1, $estadoid = 0, $usuid=0, $anio=0, $numdoc=0){
+    public function Listar($deptosol=1,$deptodes=1, $numpag = 1, $estadoid = 0, $usuid=0, $anio=0, $numdoc=0, $dptoid=0){
       $CantidadMostrar=10;
       $compag         =(int)($numpag);
         try{
-            $respuesta = $this->contarTotal($deptosol,$deptodes,$estadoid,$usuid,$anio,$numdoc);
+            $respuesta = $this->contarTotal($deptosol,$deptodes,$estadoid,$usuid,$anio,$numdoc,$dptoid);
             $tot_reg = (int)$respuesta['total'];
             if ($tot_reg == 0) {
                 $jsonresponsel['success'] = true;
@@ -47,7 +47,7 @@ class ModelMemo  {
               $result = array();
               $reginicio = ($compag-1) * $CantidadMostrar;
 
-              $consulta = "CALL listado_memo_por_estadomax_depto($deptosol,$deptodes,$estadoid,$reginicio,$CantidadMostrar,$usuid,$anio,$numdoc);";
+              $consulta = "CALL listado_memo_por_estadomax_depto($deptosol,$deptodes,$estadoid,$reginicio,$CantidadMostrar,$usuid,$anio,$numdoc,$dptoid);";
 
               $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($consulta,$tot_reg,'Listar');
@@ -98,10 +98,10 @@ class ModelMemo  {
         return $jsonresponsel;
     }
     //cuenta total de memos en el sistema
-    public function contarTotal($deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0,$numdoc=0){
+    public function contarTotal($deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0,$numdoc=0,$dptoid=0){
         $jsonresponse = array();
         try{
-            $consulta = "CALL total_listado_memos_estado_depto($deptosol,$deptodes,$estadoid,$usuid,$anio,$numdoc);";
+            $consulta = "CALL total_listado_memos_estado_depto($deptosol,$deptodes,$estadoid,$usuid,$anio,$numdoc,$dptoid);";
 
             $stm = $this->pdo->prepare($consulta);
             $stm->execute();
@@ -243,7 +243,7 @@ class ModelMemo  {
                 }
 
                 $jsonresponse['success'] = true;
-                $jsonresponse['message'] = 'Se Cambios Estados correctamente';
+                $jsonresponse['message'] = 'Historial Estados listado correctamente';
                 $jsonresponse['datos'] = $result;
               $stm=null;
             }
