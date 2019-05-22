@@ -139,14 +139,14 @@ if($_SESSION["autentica"] != "SIP"){
                                         <tr>
                                             <th id="tdce" width="2%"><input type="checkbox" id="chekseltodos" value="opcion_1"></th>
                                             <th id="tdnu" width="6%" class="orden">Año / Número</th>
-                                            <th id="tdfd" width="5%" class="orden">Fecha Documento</th>
-                                            <th id="tdfr" width="5%" class="orden">Fecha Recepción</th>
+                                            <th id="tdfd" width="6%" class="orden">Fecha Documento</th>
+                                            <th id="tdfr" width="6%" class="orden">Fecha Recepción</th>
                                             <th id="tdma" width="18%" class="orden">Materia o Asunto</th>
                                             <th id="tdds" width="18%" class="orden">Departamento Solicitante</th>
                                             <th id="tddd" width="18%" class="orden">Departamento Destinatario</th>
                                             <th id="tdea" width="12%" class="orden">Estado Actual</th>
                                             <th id="tddm" width="5%" class="orden">Dias sin Movimiento</th>
-                                            <th id="tdac" width="12%">Acciones</th>
+                                            <th id="tdac" width="10%">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody id="listamemos">
@@ -157,13 +157,10 @@ if($_SESSION["autentica"] != "SIP"){
                                 <!-- <button type="button" class="close" data-dismiss="alert">&times;</button> -->
                                 <span id="resultadofiltromsg"></span>
                             </div>
-
                             <ul id="paginador" class="pagination pagination-sm">
                             </ul>
                         </div>
                     </div>
-                  
-                
             </div><!-- /.8 -->
         </div> <!-- /.row-->
     </div> <!-- /.container-->
@@ -184,7 +181,6 @@ if($_SESSION["autentica"] != "SIP"){
         </div>
       </div>
     </div>
-
     <!-- Modal cambio estado del memo-->
     <div class="modal fade" id="myModalEstado" tabindex="-1" role="dialog" aria-labelledby="myModalEstadoLabel">
         <div class="modal-dialog" role="document">
@@ -244,7 +240,6 @@ if($_SESSION["autentica"] != "SIP"){
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
     <!-- Modal para asignar usuarios -->
     <div class="modal fade" id="myModalAsiganUsu" tabindex="-1" role="dialog" aria-labelledby="myModalAsiganUsuLabel">
         <div class="modal-dialog modal-md" role="document">
@@ -311,7 +306,6 @@ if($_SESSION["autentica"] != "SIP"){
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
     <!-- Modal Destinos-->
     <div class="modal fade" id="myModalDestino" tabindex="-1" role="dialog" aria-labelledby="myModalDestinoLabel">
         <div class="modal-dialog">

@@ -93,7 +93,7 @@ if($_SESSION["autentica"] != "SIP"){
                                         <div class="col-md-9" >
                                             <div class="form-group">
                                                 <label  for="memoDeptoSol">Departamento o Unidad Solicitante</label>
-                                                <select name="memoDeptoSol" id="memoDeptoSol" class="selectpicker form-control" data-show-subtext="true" data-live-search="true" required>
+                                                <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" data-live-search="true" required>
                                                 </select>
                                                 <span class="help-block"></span>
                                             </div>                            

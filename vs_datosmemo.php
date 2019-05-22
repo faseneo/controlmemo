@@ -357,8 +357,8 @@ if($_SESSION["autentica"] != "SIP"){
                             <h4 class="panel-title">
                                 <a id="accord1" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
                                     Listado Archivos
-                                    <span class="badge" id="totalArch"></span>
                                 </a>
+                                <span class="badge" id="totalArch"></span>
                                 <a href="#" data-toggle="tooltip" title="Tipos de Archivos aceptados : pdf, jpg, png, doc, docx, xls, xlsx" data-content="pdf, jpg, png, doc, docx, xls, xlsx">
                                     <span class="glyphicon glyphicon-info-sign"></span>
                                 </a>

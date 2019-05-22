@@ -317,15 +317,15 @@
         $("#memoNombreSol").focusout(function () {
             validatxtonline($(this));
         });
-        $("#memoDeptoSol").focusout(function(){
-            validaselectonline($(this));
-        });        
+        // $("#memoDeptoSol").focusout(function(){
+        //     validaselectonline($(this));
+        // });        
         $("#memoNombreDest").focusout(function () {
             validatxtonline($(this));
         });
-        $("#memoDeptoDest").focusout(function(){
-            validaselectonline($(this));
-        });
+        // $("#memoDeptoDest").focusout(function(){
+        //     validaselectonline($(this));
+        // });
         $("#memoEstado").focusout(function(){
             validaselectonline($(this));
         });
