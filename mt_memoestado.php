@@ -16,6 +16,18 @@ if(!isset($_SESSION["autentica"])){
             <div class="row">
 				<div class="col-md-12">
 					<h2 class="sub-header">Memo Estado</h2>
+				</div>
+			</div>
+            <div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="depto">Departamento o Unidad </label>  
+						<select name="depto" id="depto" class="form-control"></select>
+                    </div>					
+				</div>
+			</div>			
+			<div class="row">
+				<div class="col-md-12">
 					<div class="table-responsive">
 						<!-- Añadimos un botón para el diálogo modal onclick="newServicio()"-->
 						<button type="button" id="crea-memoest" class="btn btn-sm btn-primary"
@@ -25,15 +37,19 @@ if(!isset($_SESSION["autentica"])){
 								<tr>
 									<th width="3%">Id</th>
 									<th width="20%">Nombre estado</th>
-									<th width="40%">Depto / Unidad</th>
-									<th width="12%">Prioridad</th>
-									<th width="12%">Activo</th>
-									<th width="13%">Acciones</th>
+									<th width="36%">Depto / Unidad</th>
+									<th width="8%">Prioridad</th>
+									<th width="10%">Activo</th>
+									<th width="16%">Generico</th>
+									<th width="7%">Acciones</th>
 								</tr>
 							</thead>
 							<tbody id="listamemoestado"> 
 							</tbody>
 		 				</table>
+		 				<div class="alert alert-warning " id="resultadofiltro">
+                            <span id="resultadofiltromsg"></span>
+                        </div>
 					</div>
 				</div>
 			</div>

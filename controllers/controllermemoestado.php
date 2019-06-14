@@ -85,14 +85,15 @@ if(isset($_REQUEST['Accion'])){
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);            
             break;
-            
+
         case 'listar':
             $jsondata = $modelMEst->Listar($_REQUEST['depto']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
+
         case 'listarmin':
-            $jsondata = $modelMEst->ListarMin($_REQUEST['depto']);
+            $jsondata = $modelMEst->ListarMin($_REQUEST['depto'][0]); // solo el primer depto para ver estados propios
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            

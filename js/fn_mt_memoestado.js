@@ -7,6 +7,7 @@
             document.getElementById('actualizar-memoest').style.display = 'none';
         }
         function limpiaform(){
+            $('#formMemoEst')[0].reset();
             bgcolor='white-bg';
             txtcolor='black-text';            
             $('#ejcolor').attr('class','form-control ' + bgcolor + ' ' + txtcolor);
@@ -49,16 +50,18 @@
             })
             .done(function( data, textStatus, jqXHR ) {
                 $("#memoestDeptoId").html("");
+                $("#depto").html("");
                 if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
                         + " \n data msg : "+ data.message 
-                        + " \n textStatus : " + textStatus
+                        //+ " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
                 for(var i=0; i<data.datos.length;i++){
-                    console.log('id: '+data.datos[i].depto_id + ' tipo: '+data.datos[i].depto_nombre);
+                    //console.log('id: '+data.datos[i].depto_id + ' tipo: '+data.datos[i].depto_nombre);
                     opcion = '<option value='+ data.datos[i].depto_id +'>'+data.datos[i].depto_nombre+'</option>';
                     $("#memoestDeptoId").append(opcion);
+                    $("#depto").append(opcion);
                 }
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -71,7 +74,11 @@
             });
         }
     getlistadepto();
+
     $(document).ready(function(){
+        $('#resultadofiltromsg').html("");
+        $("#resultadofiltro").hide();
+
         function validarFormulario(){
             var txtTipo = document.getElementById('memoestTipo').value;
             var txtPriori = document.getElementById('memoestOrden').value;
@@ -106,10 +113,14 @@
         }         
         deshabilitabotones();
         //funcion para listar los cecostos
-        var getlista = function (){
+        var getlista = function (dpto){
+            console.log(dpto);
+            if(dpto==null){
+                dpto=9;
+            }
             var datax = {
                 "Accion":"listar",
-                'depto':'null'
+                'depto':dpto
             }
             $.ajax({
                 data: datax, 
@@ -118,36 +129,50 @@
                 url: "controllers/controllermemoestado.php", 
             })
             .done(function( data, textStatus, jqXHR ) {
+                $("#resultadofiltro").hide();
                 $("#listamemoestado").html("");
                 if ( console && console.log ) {
                     console.log( " data success : "+ data.success 
                         + " \n data msg : "+ data.message 
-                        + " \n textStatus : " + textStatus
+                        //+ " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
-                for(var i=0; i<data.datos.length;i++){
-                                //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
-                                console.log('id: '+data.datos[i].memo_est_id + ' tipo: '+data.datos[i].memo_est_tipo);
-                                $clasetr = (data.datos[i].memo_est_depto_id % 9) ? 'class="fila1"':'class="fila2"';
-                                var activo = data.datos[i].memo_est_activo == 1 ? 'Activo':'Inactivo';
-
-                                fila = '<tr '+$clasetr+'>';
-                                fila += '<td>'+ data.datos[i].memo_est_id +'</td>';
-                                fila += '<td class="'+ data.datos[i].memo_est_colorbg + ' '+ data.datos[i].memo_est_colortxt+'">'+ data.datos[i].memo_est_tipo +'</td>';
-                                fila += '<td>'+ data.datos[i].memo_est_depto_nombre +'</td>';
-                                fila += '<td>'+ data.datos[i].memo_est_orden +'</td>';
-                                fila += '<td>'+ activo +'</td>';
-                                fila += '<td><button id="ver-memoest" type="button" '
-                                fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
-                                fila += ' onclick="verMemoEst(\'ver\',\'' + data.datos[i].memo_est_id + '\')">';
-                                fila += 'Ver / Editar</button>';
-                                fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
-                                fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
-                                fila += 'onclick="deleteMemoEst(\''+ data.datos[i].memo_est_id +'\',\''
-                                + data.datos[i].memo_est_tipo +'\')">';
-                                fila += 'Eliminar</button></td>';
-                                fila += '</tr>';
-                                $("#listamemoestado").append(fila);
+                if(data.datos.length>0){
+                    var otro = 9;
+                    for(var i=0; i<data.datos.length;i++){
+                        if (otro == data.datos[i].memo_est_depto_id){
+                            //$clasetr = (data.datos[i].memo_est_depto_id % 9) ? 'class="fila1"':'class="fila2"';
+                            $clasetr = 'class="fila1"';
+                        }else{
+                            $clasetr = 'class="fila2"';
+                        }
+                                    //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
+                                    console.log('id: '+data.datos[i].memo_est_id + ' tipo: '+data.datos[i].memo_est_tipo);
+                                    var activo = data.datos[i].memo_est_activo == 1 ? 'Activo':'Inactivo';
+                                    var generico = data.datos[i].memo_est_generico_nom != null ? data.datos[i].memo_est_generico_id+' - '+data.datos[i].memo_est_generico_nom : 'N/A';
+                                    fila = '<tr '+$clasetr+'>';
+                                    fila += '<td>'+ data.datos[i].memo_est_id +'</td>';
+                                    fila += '<td class="'+ data.datos[i].memo_est_colorbg + ' '+ data.datos[i].memo_est_colortxt+'">'+ data.datos[i].memo_est_tipo +'</td>';
+                                    fila += '<td>'+ data.datos[i].memo_est_desc +'</td>';
+                                    fila += '<td>'+ data.datos[i].memo_est_orden +'</td>';
+                                    fila += '<td>'+ activo +'</td>';
+                                    fila += '<td>'+ generico +'</td>';
+                                    fila += '<td><button id="ver-memoest" type="button" '
+                                    fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
+                                    fila += ' onclick="verMemoEst(\'ver\',\'' + data.datos[i].memo_est_id + '\')">';
+                                    fila += 'Ver / Editar</button>';
+                                    //fila += ' <button id="delete-language-modal" name="delete-language-modal" type="button" ';
+                                    //fila += 'class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete" ';
+                                    //fila += 'onclick="deleteMemoEst(\''+ data.datos[i].memo_est_id +'\',\''
+                                    //+ data.datos[i].memo_est_tipo +'\')">';
+                                    //fila += 'Eliminar</button></td>';
+                                    fila += '</td>';
+                                    fila += '</tr>';
+                                    $("#listamemoestado").append(fila);
+                    }
+                }else{
+                    $("#resultadofiltro").show();
+                    $('#resultadofiltromsg').html("No hay estados para el Departamento o Unidad seleccionada");
                 }
             })
             .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -204,7 +229,7 @@
                         modal2.find('.msg').text(data.message);  
                         $('#cerrarModalLittle').focus();
                     });
-                    getlista();
+                    getlista($('#depto').val());
                     deshabilitabotones();
                 })
                 .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -258,7 +283,7 @@
                                 modal2.find('.msg').text(data.message);
                                 $('#cerrarModalLittle').focus();                                
                             });
-                            getlista();
+                            getlista($('#depto').val());
                             deshabilitabotones();
                         })
                         .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -316,7 +341,8 @@
                     });
                 });
         deshabilitabotones();
-        getlista();
+        //getlista();
+        getlista($('#depto').val());
 
         $("#memoestColorbg").change(function(event) {
             bgcolor = $("#memoestColorbg").val();
@@ -327,8 +353,12 @@
             $('#ejcolor').attr('class','form-control ' + txtcolor + ' ' + bgcolor);
         });
         
+        $("#depto").change(function(e){
+            e.preventDefault();
+            getlista($('#depto').val());
+        });
     });
-    //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
+    //funcion levanta modal y muestra  los datos del estado cuando presion boton Ver/Editar, aca se puede mdificar si quiere
     function verMemoEst(action, memoestid){
         deshabilitabotones();
         limpiaform();

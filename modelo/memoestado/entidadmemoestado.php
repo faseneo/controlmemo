@@ -10,6 +10,8 @@ class MemoEst{
     private $memo_est_depto_id;
     private $memo_est_depto_nombre;
     private $memo_est_activo;
+    private $memo_est_generico_id;
+    private $memo_est_generico_nom;
 
     public function __GET($k){
         return $this->$k;

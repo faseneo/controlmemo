@@ -27,7 +27,7 @@ class ModelMemoEst{
         try{
             $result = array();
             if($depto == 1 || $depto == null || $depto=='null'){
-                $filtro = "";
+                $filtro = " ";
             }else{
                 $filtro = " AND me.memo_estado_depto_id = ".$depto;
             }
@@ -39,10 +39,13 @@ class ModelMemoEst{
                                     me.memo_estado_color_font,
                                     me.memo_estado_activo,
                                     dep.depto_id,
-                                    dep.depto_nombre
-                        FROM memo_estado as me, departamento as dep
-                        WHERE dep.depto_id = me.memo_estado_depto_id "
-                        .$filtro
+                                    dep.depto_nombre,
+                                    me.memo_estado_memo_estadogenerico_id,
+                                    meg.memo_estadogenerico_nombre
+                        FROM memo_estado as me
+                        INNER JOIN departamento as dep ON dep.depto_id = me.memo_estado_depto_id
+                        LEFT JOIN memo_estadogenerico as meg ON meg.memo_estadogenerico_id = me.memo_estado_memo_estadogenerico_id 
+                        WHERE 1 = 1 ".$filtro
                         ." ORDER BY me.memo_estado_depto_id ASC, me.memo_estado_orden ASC, memo_estado_tipo ASC";
             $stm = $this->pdo->prepare($consulta);
             $stm->execute();
@@ -55,8 +58,11 @@ class ModelMemoEst{
                     $busq->__SET('memo_est_colorbg',        $r->memo_estado_color_bg);
                     $busq->__SET('memo_est_colortxt',       $r->memo_estado_color_font);
                     $busq->__SET('memo_est_activo',         $r->memo_estado_activo);
-                    $busq->__SET('memo_est_depto_id',     $r->depto_id);
-                    $busq->__SET('memo_est_depto_nombre', $r->depto_nombre);
+                    $busq->__SET('memo_est_depto_id',       $r->depto_id);
+                    $busq->__SET('memo_est_depto_nombre',   $r->depto_nombre);
+                    $busq->__SET('memo_est_generico_id',    $r->memo_estado_memo_estadogenerico_id);
+                    $busq->__SET('memo_est_generico_nom',   $r->memo_estadogenerico_nombre);
+                    
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;
@@ -223,7 +229,6 @@ class ModelMemoEst{
         try{
             $consultamemoestado="SELECT memo_estado_memo_estadogenerico_id  FROM memo_estado
                                  WHERE memo_estado_id = ".$data->__GET('memo_camest_estid');
-
             $res = $this->pdo->query($consultamemoestado);
             $estadogenerico = $res->fetchColumn();
 
@@ -237,13 +242,24 @@ class ModelMemoEst{
                                                     ));
             $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($sql,'0','Registracambioestado');
-
+                $logsq->GrabarLogsQuerys('estado : '.$data->__GET('memo_camest_estid'),'0','Registracambioestado_variableestado');
+                // ver si aca agrego que situacion deptodestino distinto a DAF en la rececpion, cambiar estado de DAF y agregar estado depto. destino (adqui)
+                // mostrar mensaje en la vista que si depto destino distinto a daf, agrega estado derivado inmediatamente, y agregar cambio estado depto destino
+                // si no cambia derivado altiro, dejar activo derivado, ver como activar eso.
             $activatrigger=0;
+            $logsq->GrabarLogsQuerys('activatrigger : '.$activatrigger,'0','Registracambioestado_variable_activatrigger');
+            $logsq->GrabarLogsQuerys('estadogenerico : '.$estadogenerico,'0','Registracambioestado_variable_estadogenerico');
             if ($estadogenerico != 0 || $estadogenerico != NULL) {
                 if($estadogenerico==1 || $estadogenerico==2 || $estadogenerico==5){
-                    $activatrigger = 1;
                     $deptodestino = $data->__GET('memo_camest_deptoid');
-                }else if($estadogenerico==6 || $estadogenerico==10){
+                    if($deptodestino == 87){
+                        $data->__SET('memo_camest_estid',17);
+                        $this->CambiaEstadoOtroDepto($data);
+                    }
+                    //else{
+                        $activatrigger = 1;
+                    //}
+                }else if($estadogenerico==6 || $estadogenerico==10){ // estado 6 devuelto otro depto
                     $activatrigger = 1;
                     $deptodestino = 0;
                 }
@@ -254,11 +270,12 @@ class ModelMemoEst{
                 }else if($data->__GET('memo_camest_estid')==14){
                     $deptodestino = 87;
                     $activatrigger=1;
-                    $data->__SET('memo_camest_estid',16);
-                    $this->CambiaEstado($data);
+                    $data->__SET('memo_camest_estid',17);
+                    $this->CambiaEstadoOtroDepto($data);
                 }
                 //agregar los otros id de estado para adquisiciones
             }
+            $logsq->GrabarLogsQuerys('activatrigger_despues de condicionales : '.$activatrigger,'0','Registracambioestado_variable_activatrigger');
             if($activatrigger){
                 $ejecutatrigger = $this->agregaDerivadoTriggers($data->__GET('memo_camest_memid'),
                                                                 $deptodestino,
@@ -287,6 +304,37 @@ class ModelMemoEst{
         return $jsonresponse;
     }
 
+    //graba el cambio de estado del memo(se va agregando)
+    public function CambiaEstadoOtroDepto(MemoCambioEst $data){
+        $jsonresponse = array();
+        try{
+            $sql = "INSERT INTO cambio_estados (cambio_estados_memo_id, cambio_estados_memo_estado_id, cambio_estados_observacion, cambio_estados_usuario_id) 
+                    VALUES (?,?,?,?)";
+
+            $this->pdo->prepare($sql)->execute(array(   $data->__GET('memo_camest_memid'),
+                                                        $data->__GET('memo_camest_estid'),
+                                                        $data->__GET('memo_camest_obs'),
+                                                        $data->__GET('memo_camest_usuid')
+                                                    ));
+            $logsq = new ModeloLogsQuerys();
+                $logsq->GrabarLogsQuerys($sql,'0','Registracambioestado_Otro_Depto');
+                $logsq->GrabarLogsQuerys('estado : '.$data->__GET('memo_camest_estid'),'0','Registracambioestado_OtroDepto');
+
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Estado cambiado correctamente'; 
+            $jsonresponse['mid'] = $data->__GET('memo_camest_memid');
+        } catch (PDOException $pdoException){
+            //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al ingresar cambiar estado';
+            $jsonresponse['errorQuery'] = $pdoException->getMessage();
+            $logs = new modelologs();
+            $trace=$pdoException->getTraceAsString();
+              $logs->GrabarLogs($pdoException->getMessage(),$trace);
+              $logs = null;             
+        }
+        return $jsonresponse;
+    }
     //funcion que agrega nuevo depto en el derivado
     public function agregaDerivadoTriggers($memid,$deptoid,$deptonom,$estadogenid=0){
         $jsonresponse = array();
@@ -392,14 +440,21 @@ class ModelMemoEst{
             $result = array();
             if($depto == 1 || $depto == null || $depto=='null'){
                 $filtro = "";
+            }else if(is_array($depto)){
+                foreach($depto as $dp){
+                    $deptos .= $dp.',';
+                }
+                $deptos = trim($deptos, ',');
+                $filtro = " AND me.memo_estado_depto_id in (".$depto2.") ";
             }else{
                 $filtro = " AND me.memo_estado_depto_id = ".$depto;
             }
             $stm = $this->pdo->prepare("SELECT  me.memo_estado_id,
                                                 me.memo_estado_tipo,
                                                 me.memo_estado_color_bg,
-                                                me.memo_estado_color_font,                                                
-                                                dep.depto_nombre
+                                                me.memo_estado_color_font,
+                                                dep.depto_nombre,
+                                                dep.depto_nombre_corto
                                         FROM memo_estado as me, departamento as dep
                                         WHERE dep.depto_id = me.memo_estado_depto_id
                                         AND me.memo_estado_activo = 1 "
@@ -407,8 +462,13 @@ class ModelMemoEst{
                                         ." ORDER BY me.memo_estado_id ASC, me.memo_estado_orden ASC ");
             $stm->execute();
             foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                if($depto == 1){
+                    $nomestado = $r->depto_nombre_corto.'-'.$r->memo_estado_tipo;
+                }else{
+                    $nomestado = $r->memo_estado_tipo;
+                }
                 $fila = array('memo_est_id'=>$r->memo_estado_id,
-                              'memo_est_tipo'=>$r->memo_estado_tipo,
+                              'memo_est_tipo'=>$nomestado,
                               'memo_est_depto_nombre'=>$r->depto_nombre);
                 $result[]=$fila;
             }
