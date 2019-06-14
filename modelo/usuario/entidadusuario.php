@@ -11,8 +11,9 @@ class Usuarios{
     private $usu_fecha_ing;
     private $usu_email;
     private $usu_urlimg;
-    private $usu_depto_id;
-    private $usu_depto_nombre;
+    //private $usu_depto_id;
+    //private $usu_depto_nombre;
+    private $usu_deptos=array();
     private $usu_perfiles=array();
 
     public function __GET($k){

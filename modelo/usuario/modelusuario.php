@@ -31,14 +31,9 @@ class ModelUsuarios{
                                                 us.usuario_usu_rol_id,
                                                 us.usuario_estado,
                                                 us.usuario_fecha_ingreso,
-                                                ur.usu_rol_nombre,
-                                                dtu.dpto_tiene_usu_usuario_id,
-                                                dtu.dpto_tiene_usu_depto_id,
-                                                dp.depto_nombre
+                                                ur.usu_rol_nombre
                             FROM usuario as us 
                             INNER JOIN usuario_rol as ur ON us.usuario_usu_rol_id= ur.usu_rol_id
-                            LEFT JOIN dpto_tiene_usu as dtu ON us.usuario_id = dtu.dpto_tiene_usu_usuario_id
-                            LEFT JOIN departamento as dp ON dp.depto_id = dtu.dpto_tiene_usu_depto_id
                             ORDER BY us.usuario_usu_rol_id ASC";
 
             $stm = $this->pdo->prepare($consultalistado);
@@ -52,9 +47,9 @@ class ModelUsuarios{
                     $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                     $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
 					$busq->__SET('usu_estado_id',   $r->usuario_estado);
-                    $busq->__SET('usu_depto_id',    $r->dpto_tiene_usu_depto_id);
-                    $busq->__SET('usu_depto_nombre',$r->depto_nombre);                         
                     $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
+                    $arraydeptos = $this->ObtenerDeptosUsuario($r->usuario_id);
+                            $busq->__SET('usu_deptos', $arraydeptos['datos']);
                 $result[] = $busq->returnArray();
             }
             $jsonresponse['success'] = true;
@@ -66,6 +61,7 @@ class ModelUsuarios{
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al listar los usuarios';
         } 
+        $this->pdo=null;
 		return $jsonresponse;
     }
     // Lista los usuarios por rolid
@@ -80,7 +76,7 @@ class ModelUsuarios{
                                                 us.usuario_usu_rol_id,
                                                 us.usuario_estado,
                                                 us.usuario_fecha_ingreso,
-                                                ur.usu_rol_nombre,
+                                                ur.usu_rol_nombre
                                         FROM usuario as us ,usuario_rol as ur
                                         WHERE us.usuario_usu_rol_id= ur.usu_rol_id
                                         AND  ur.usu_rol_id = ?");
@@ -121,11 +117,9 @@ class ModelUsuarios{
                                                 us.usuario_usu_rol_id,
                                                 us.usuario_estado,
                                                 us.usuario_fecha_ingreso,
-                                                ur.usu_rol_nombre,
-                                                dtu.dpto_tiene_usu_depto_id
+                                                ur.usu_rol_nombre
                             FROM usuario as us 
                             INNER JOIN usuario_rol as ur ON us.usuario_usu_rol_id= ur.usu_rol_id
-                            LEFT JOIN dpto_tiene_usu as dtu ON us.usuario_id = dtu.dpto_tiene_usu_usuario_id
                             WHERE us.usuario_id = ?";
             $stm = $this->pdo->prepare($consultaobtiene);
             $stm->execute(array($id));
@@ -139,8 +133,9 @@ class ModelUsuarios{
                     $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                     $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                     $busq->__SET('usu_estado_id',   $r->usuario_estado);
-                    $busq->__SET('usu_depto_id',    $r->dpto_tiene_usu_depto_id);
                     $busq->__SET('usu_fecha_ing',   $r->usuario_fecha_ingreso);
+                    $arraydeptos = $this->ObtenerDeptosIdUsuario($r->usuario_id);
+                            $busq->__SET('usu_deptos', $arraydeptos['datos']);
 
                     $arrayperfiles = $this->ObtenerPerfilesUsuaro($id);
                             $busq->__SET('usu_perfiles', $arrayperfiles['datos']);
@@ -198,6 +193,91 @@ class ModelUsuarios{
         $this->pdo=null;
         return $jsonresponse;
     }
+
+    // obtiene departamentos del ususario por su id
+    public function ObtenerDeptosUsuario($idusu){
+        try{
+            $consulta = "SELECT COUNT(*) FROM dpto_tiene_usu where dpto_tiene_usu_usuario_id = ".$idusu;
+            $res = $this->pdo->query($consulta);
+            if ($res->fetchColumn() == 0) {
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Usuario No tiene Deptos asignados';
+                $jsonresponse['datos'] = [];
+            }else{
+              $stm = $this->pdo->prepare("SELECT  dtu.dpto_tiene_usu_depto_id,
+                                                  dtu.dpto_tiene_usu_usuario_id,
+                                                  de.depto_nombre
+                                          FROM dpto_tiene_usu as dtu,
+                                               departamento as de
+                                          WHERE dtu.dpto_tiene_usu_depto_id = de.depto_id
+                                          AND dtu.dpto_tiene_usu_usuario_id = ?");
+              $stm->execute(array($idusu));
+                foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                    $fila = array('depto_id'    => $r->dpto_tiene_usu_depto_id,
+                                  'depto_nombre'=> $r->depto_nombre,
+                                  'usuario_id'  => $r->dpto_tiene_usu_usuario_id);
+                    $result[]=$fila;
+                }
+
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Listado departamentos por usuario';
+                $jsonresponse['datos'] = $result;
+
+              $stm=null;
+            }
+            $res=null;
+        }catch (Exception $Exception){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al obtener perfiles';
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;
+        }
+        return $jsonresponse;
+    }
+
+    // obtiene departamentos del ususario por su id generando un arreglo de id de los deptos.
+    public function ObtenerDeptosIdUsuario($idusu){
+        try{
+            $consulta = "SELECT COUNT(*) FROM dpto_tiene_usu where dpto_tiene_usu_usuario_id = ".$idusu;
+            $res = $this->pdo->query($consulta);
+            if ($res->fetchColumn() == 0) {
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Usuario No tiene Deptos asignados';
+                $jsonresponse['datos'] = [];
+            }else{
+              $stm = $this->pdo->prepare("SELECT  dtu.dpto_tiene_usu_depto_id,
+                                                  dtu.dpto_tiene_usu_usuario_id,
+                                                  de.depto_nombre
+                                          FROM dpto_tiene_usu as dtu,
+                                               departamento as de
+                                          WHERE dtu.dpto_tiene_usu_depto_id = de.depto_id
+                                          AND dtu.dpto_tiene_usu_usuario_id = ?");
+              $stm->execute(array($idusu));
+                foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                    //$fila = array($r->dpto_tiene_usu_depto_id);
+                    $result[]=$r->dpto_tiene_usu_depto_id;
+                }
+
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Listado departamentos por usuario';
+                $jsonresponse['datos'] = $result;
+
+              $stm=null;
+            }
+            $res=null;
+        }catch (Exception $Exception){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al obtener perfiles';
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;
+        }
+        return $jsonresponse;
+    }
+
     // elimina usuario 
     public function Eliminar($id){
         $jsonresponse = array();
@@ -237,7 +317,10 @@ class ModelUsuarios{
             $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($sql,'0','Registra');
                 $logsq = null;
-            $idUsu = $this->pdo->lastInsertId();
+            $idUsu =    $this->pdo->lastInsertId();
+            $deptosid =  $data->__GET('usu_depto_id');
+            $this->RegistrarUsuDeptos($idUsu,$deptosid);
+            /*
             $idestado = 1;
             $deptoid=$data->__GET('usu_depto_id');
             $sqlinsertausuDepto = "INSERT INTO dpto_tiene_usu (dpto_tiene_usu_depto_id,
@@ -247,9 +330,8 @@ class ModelUsuarios{
             $logsq2 = new ModeloLogsQuerys();
                 $logsq2->GrabarLogsQuerys($sqlinsertausuDepto,'0','RegistrarusuDepto');
                 $logsq2 = null;
-
             $stm = $this->pdo->prepare($sqlinsertausuDepto);
-            $stm->execute();
+            $stm->execute();*/
 
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Usuario ingresado correctamente'; 
@@ -332,7 +414,7 @@ class ModelUsuarios{
         }
         return $jsonresponse;
     }
-    //registra los perfiles asignados al usuario
+    //registra los departamentos asignados al usuario
     public function RegistrarUsuDeptos($idusu , $deptosid){
         /*
         INSERT INTO `dpto_tiene_usu` (`dpto_tiene_usu_depto_id`, `dpto_tiene_usu_usuario_id`, `dpto_tiene_usu_estado`) 
@@ -347,10 +429,17 @@ class ModelUsuarios{
                 $sql0 = "DELETE FROM dpto_tiene_usu WHERE dpto_tiene_usu_usuario_id = ?";
                 $this->pdo->prepare($sql0)->execute(array($idusu));
             }
+            $idestado = 1;
                //foreach ($perfiles as $perfilid) {
-                    $sql = "INSERT INTO dpto_tiene_usu (dpto_tiene_usu_usuario_id, dpto_tiene_usu_depto_id,dpto_tiene_usu_estado) VALUES (?,?,?)";
-                    $this->pdo->prepare($sql)->execute(array($idusu,$deptosid,1));
+               /*     $sql = "INSERT INTO dpto_tiene_usu (dpto_tiene_usu_usuario_id, dpto_tiene_usu_depto_id,dpto_tiene_usu_estado) 
+                            VALUES (?,?,?)";
+                    $this->pdo->prepare($sql)->execute(array($idusu,$deptosid,1));*/
                 //}
+               foreach ($deptosid as $deptoid) {
+                    $sql = "INSERT INTO dpto_tiene_usu (dpto_tiene_usu_depto_id, dpto_tiene_usu_usuario_id,dpto_tiene_usu_estado) 
+                            VALUES (?,?,?)";
+                    $this->pdo->prepare($sql)->execute(array($deptoid,$idusu,$idestado));
+                }                
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Ingresado correctamente';
                 $jsonresponse['datos'] = [];
@@ -440,8 +529,10 @@ class ModelUsuarios{
                         $busq->__SET('usu_rol_id',      $r->usuario_usu_rol_id);
                         $busq->__SET('usu_rol_nombre',  $r->usu_rol_nombre);
                         $busq->__SET('usu_estado_id',   $r->usuario_estado);
-                        $busq->__SET('usu_depto_id',    $r->dpto_tiene_usu_depto_id);
+                        //$busq->__SET('usu_depto_id',    $r->dpto_tiene_usu_depto_id);
 
+                        $arraydeptos = $this->ObtenerDeptosIdUsuario($r->usuario_id);
+                            $busq->__SET('usu_deptos', $arraydeptos['datos']);
                         $arrayperfiles = $this->ObtenerPerfilesUsuaro($r->usuario_id);
                             $busq->__SET('usu_perfiles', $arrayperfiles['datos']);
                 
@@ -451,12 +542,17 @@ class ModelUsuarios{
                 $fechaactual = date("d-m-Y");
                 //session_start();
                    $_SESSION["autentica"] = "SIP";
-                   $_SESSION["rut"] = $r->usuario_rut;
                    $_SESSION["email"] = $r->usuario_email;
                    $_SESSION["uid"] = $r->usuario_id;
                    $_SESSION["nombre"] = $r->usuario_nombre;
                    $_SESSION["rol"] = $r->usuario_usu_rol_id;
-                   $_SESSION["depto"] = $r->dpto_tiene_usu_depto_id;
+                   $deptos="[";
+                        foreach($busq->__GET('usu_deptos') as $dep){
+                            $deptos .= $dep.',';
+                        };
+                        $deptos = trim($deptos, ',');
+                        $deptos .= ']';
+                   $_SESSION["deptos"] = $deptos;
                    $_SESSION["fecactual"] = $fechaactual;
                    $_SESSION["datos"] = $result;
 

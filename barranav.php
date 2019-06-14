@@ -1,7 +1,6 @@
 <?php 
 
  $val = $_SESSION["autentica"];
- $rut = $_SESSION["rut"];
  $rol = $_SESSION["rol"];
  $nombre = $_SESSION["nombre"];
  $rolnom = $_SESSION["datos"]["usu_rol_nombre"];

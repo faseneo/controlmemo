@@ -14,7 +14,7 @@ if(!isset($_SESSION["autentica"])){
     </head>
     <body>
 	<?php include "barranav.php"; ?>
-        <div class="container" style="margin-top:50px">
+        <div class="container-fluid" style="margin-top:50px">
             <div class="row">
 				<div class="col-md-12">  
 					<h2 class="sub-header">Usuarios</h2>
@@ -67,20 +67,21 @@ if(!isset($_SESSION["autentica"])){
 							</div>
 						</div>
 						<div class="row">
-	                        <div class="col-md-12">
+	                        <div class="col-md-8">
 								<div class="form-group">
 									<label for="usuEmail">E-mail</label>
 									<input id="usuEmail" name="usuEmail" type="text" class="form-control" rows="3"  title="Ingrese Email" />
 								</div>	                        
 	                        </div>
-	                    </div>
-						<div class="row">
-	                        <div class="col-md-6">
+	                        <div class="col-md-4">
 								<div class="form-group">
 									<label for="usuPass">Contraseña</label>
 									<input id="usuPass" name="usuPass" type="password" class="form-control" rows="3"  title="Ingrese contraseña" />
 								</div>
-							</div>
+							</div>	                        
+	                    </div>
+
+						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="usuRolId">Rol Usuario</label>
@@ -88,15 +89,6 @@ if(!isset($_SESSION["autentica"])){
 		                                </select>
 								</div>
 							</div>
-						</div>
-						<div class="row">
-	                        <div class="col-md-6">
-								<div class="form-group">
-									<label for="usuDeptoId">Departamento o Unidad</label>
-										<select name="usuDeptoId" id="usuDeptoId" class="form-control">
-		                                </select>
-								</div>
-	                        </div>						
 	                        <div class="col-md-6">
 								<div class="form-group">
 									<label for="usuEstadoId">Estado</label>
@@ -106,7 +98,17 @@ if(!isset($_SESSION["autentica"])){
 											<option value="2">Inactivo</option>
 		                                </select>
 								</div>
-	                        </div>
+	                        </div>							
+						</div>
+						<div class="row">
+	                        <div class="col-md-12">
+								<div class="form-group">
+									<label for="usuDeptoId">Departamento o Unidad</label>
+										<select name="usuDeptoId[]" id="usuDeptoId" multiple="multiple" class="form-control" size="5">
+		                                </select>
+		                            <span class="help-block"></span>
+								</div>
+	                        </div>						
 	                    </div>
 						<div class="row">
 	                        <div class="col-md-12">

@@ -7,6 +7,7 @@
             $("#perfilId").val("");
             $("#perfilNombre").val("");
             $("#perfilDesc").val("");
+            
         }        
         function habilitaform(){
             $("#perfilId").prop( "disabled", false );
@@ -16,7 +17,7 @@
         function deshabilitaform(){
             $("#perfilId").prop( "disabled", true );
             $("#perfilNombre").prop( "disabled", true );
-            $("#perfilDesc").prop( "disabled", false );
+            $("#perfilDesc").prop( "disabled", true );
         }
    $(document).ready(function(){
         function validarFormulario(){
@@ -263,6 +264,8 @@
             }
             $("#perfilId").val(data.datos.perf_id);
             $("#perfilNombre").val(data.datos.perf_nombre);
+            $("#perfilDesc").val(data.datos.perf_desc);
+
 
             deshabilitaform();
             $("#Accion").val(action);

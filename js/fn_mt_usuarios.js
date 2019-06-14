@@ -157,6 +157,7 @@
     getlistaDeptos();
 
     $(document).ready(function(){
+        $(".help-block").hide();
         function validarFormulario(){
             var txtRut = document.getElementById('usuRut').value;
             var txtNombre = document.getElementById('usuNombre').value;
@@ -184,6 +185,18 @@
                     document.getElementById('usuPass').focus();
                     return false;
                 }                 
+            
+            //valida seleccion un perfil
+            var selDepto = document.getElementById('usuDeptoId').selectedIndex;
+            if( selDepto == null || isNaN(selDepto) || selDepto == -1 ) {
+                $('#usuDeptoId').parent().attr('class','form-group has-error');
+                $('#usuDeptoId').parent().children('span').text('Debe seleccionar Depto. para el usuario').show();
+                document.getElementById('usuDeptoId').focus();
+                return false;                
+            }else{
+                $('#usuDeptoId').parent().attr('class','form-group has-success');
+                $('#usuDeptoId').parent().children('span').text('').hide();
+            }                                 
             return true;
         }
         function validarFormularioPerfil(){
@@ -240,12 +253,17 @@
                     }
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
                                 //console.log('id: '+data.datos[i].usu_id + ' rut: '+data.datos[i].usu_rut + ' nombre: '+data.datos[i].usu_nombre + ' rol: '+data.datos[i].usu_rol_nombre);
-
                                 fila = '<tr><td>'+ data.datos[i].usu_rut +'</td>';
                                 fila += '<td>'+ data.datos[i].usu_email +'</td>';
                                 fila += '<td>'+ data.datos[i].usu_nombre +'</td>';
 								fila += '<td>'+ data.datos[i].usu_rol_nombre +'</td>';
-                                fila += '<td>'+ data.datos[i].usu_depto_nombre +'</td>';
+                                //fila += '<td>'+ data.datos[i].usu_depto_nombre +'</td>';
+                                fila += '<td>';
+                                for (var valor of data.datos[i].usu_deptos){
+                                    //console.log("depto : " + valor.depto_nombre);
+                                    fila += valor.depto_nombre + ' ';
+                                } 
+                                fila += '</td>';
                                 fila += '<td>'+ estadonombre +'</td>';
                                 fila += '<td><button id="ver-usuario" type="button" '
                                 fila += 'class="btn btn-xs btn-success" data-toggle="modal" data-target="#myModal"'
@@ -561,8 +579,17 @@
             $("#usuEmail").val(data.datos.usu_email);
             $("#usuPass").val(data.datos.usu_password);
 			$("#usuRolId").val(data.datos.usu_rol_id).prop('selected',true);
-            $("#usuDeptoId").val(data.datos.usu_depto_id).prop('selected',true);
             $("#usuEstadoId").val(data.datos.usu_estado_id).prop('selected',true);
+            //lista deptos en select multiple
+            var selDepto = document.getElementById('usuDeptoId');
+            for(var j=0; j<selDepto.length; j++){
+                o=selDepto.options[j];
+                if(data.datos.usu_deptos.indexOf(o.value) != -1){
+                    o.selected = true;
+                }else{
+                    o.selected = false;
+                }
+            }
 
             if(data.datos.usu_perfiles.length==0){
                 $("#msgPerfil").removeClass("alert-success");
