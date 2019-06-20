@@ -17,12 +17,13 @@ if($_SESSION["autentica"] != "SIP"){
     <script src="js/fn_listadomemos.js"></script>
     <script>
         <?php 
-        $depto = $_SESSION["depto"];
-        echo "depto=".$depto.";";
+        echo "depto=".$_SESSION["deptos"].";";
         $uid = $_SESSION["uid"];
         echo "uid=".$uid.";\n";
+        $rolid = $_SESSION["rol"];
+        echo "rolid=".$rolid.";\n";
         ?>
-    </script>    
+    </script>
     <style type="text/css">
         .orden{
             cursor: pointer;
@@ -34,11 +35,9 @@ if($_SESSION["autentica"] != "SIP"){
         .sorting {
             color: #337AB7;
         }
-
         .asc:after {
             content: ' ↑';
         }
-
         .desc:after {
             content: " ↓";
         }

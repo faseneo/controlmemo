@@ -24,7 +24,7 @@ if($_SESSION["autentica"] != "SIP"){
     </style>
     <script>
         <?php 
-            $depto = $_SESSION["depto"];
+            $depto = $_SESSION["deptos"];
             echo "depto=".$depto.";";    
             $uid = $_SESSION["uid"];
             echo "uid=".$uid.";\n";
@@ -86,7 +86,7 @@ if($_SESSION["autentica"] != "SIP"){
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="memoNombreSol">Nombre Solicitante</label>
-                                                <input name="memoNombreSol" id="memoNombreSol" type="text"  class="form-control" value="Leonel Durán" >
+                                                <input name="memoNombreSol" id="memoNombreSol" type="text"  class="form-control" value="" >
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>

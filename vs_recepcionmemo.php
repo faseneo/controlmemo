@@ -24,7 +24,7 @@ if($_SESSION["autentica"] != "SIP"){
     </style>
     <script>
         <?php 
-            $depto = $_SESSION["depto"];
+            $depto = $_SESSION["deptos"];
             echo "depto=".$depto.";";
             $uid = $_SESSION["uid"];
             echo "uid=".$uid.";\n";

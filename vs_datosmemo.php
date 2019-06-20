@@ -17,7 +17,7 @@ if($_SESSION["autentica"] != "SIP"){
     <script src="js/globalfn.js"></script>
     <script>
         <?php 
-            $depto = $_SESSION["depto"];
+            $depto = $_SESSION["deptos"];
             echo "depto=".$depto.";";    
             $uid = $_SESSION["uid"];
             echo "uid=".$uid.";\n";
@@ -63,7 +63,6 @@ if($_SESSION["autentica"] != "SIP"){
                             <div class="box box-success box-solid">
                                 <div class="box-header"><b>Datos Documento</b></div>
                                 <div class="box-body">
-
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -133,7 +132,6 @@ if($_SESSION["autentica"] != "SIP"){
                             </div>
                         </div>
                     </div>
-                        
                     <div class="row">
                         <div class="col-md-12">
                             <div class="panel panel-primary">
@@ -171,7 +169,6 @@ if($_SESSION["autentica"] != "SIP"){
                             </div>
                         </div>
                     </div>                    
-                    
                     <div class="row" id="datosCcostos">
                         <div class="col-md-2">
                             <div class="form-group">
@@ -463,7 +460,6 @@ if($_SESSION["autentica"] != "SIP"){
             </div>            
         </div>
     </div> <!-- /.container-->
-
     <!-- Modal cambio estado del memo-->
     <div class="modal fade" id="myModalEstado" tabindex="-1" role="dialog" aria-labelledby="myModalEstadoLabel">
         <div class="modal-dialog" role="document">
@@ -558,7 +554,6 @@ if($_SESSION["autentica"] != "SIP"){
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
     <!-- Modal agrega archivo memo-->
     <div class="modal fade" id="myModalArchivoMemo" tabindex="-1" role="dialog" aria-labelledby="myModalArchivoMemoLabel">
         <div class="modal-dialog" role="document">
@@ -610,7 +605,6 @@ if($_SESSION["autentica"] != "SIP"){
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
     <div class="modal fade" id="myModalArchivoOtros" tabindex="-1" role="dialog" aria-labelledby="myModalArchivoOtrosLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
