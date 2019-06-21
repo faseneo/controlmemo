@@ -253,7 +253,9 @@
                     }
                                 //$.each(data.datos[i], function(k, v) { console.log(k + ' : ' + v); });
                                 //console.log('id: '+data.datos[i].usu_id + ' rut: '+data.datos[i].usu_rut + ' nombre: '+data.datos[i].usu_nombre + ' rol: '+data.datos[i].usu_rol_nombre);
-                                fila = '<tr><td>'+ data.datos[i].usu_rut +'</td>';
+                                fila = '<tr>';
+                                fila += '<td>'+ data.datos[i].usu_id +'</td>';
+                                fila += '<td>'+ data.datos[i].usu_rut +'</td>';
                                 fila += '<td>'+ data.datos[i].usu_email +'</td>';
                                 fila += '<td>'+ data.datos[i].usu_nombre +'</td>';
 								fila += '<td>'+ data.datos[i].usu_rol_nombre +'</td>';
@@ -261,7 +263,7 @@
                                 fila += '<td>';
                                 for (var valor of data.datos[i].usu_deptos){
                                     //console.log("depto : " + valor.depto_nombre);
-                                    fila += valor.depto_nombre + ' ';
+                                    fila += valor.depto_id +' - '+ valor.depto_nombre + '<br>';
                                 } 
                                 fila += '</td>';
                                 fila += '<td>'+ estadonombre +'</td>';

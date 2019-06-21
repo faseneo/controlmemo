@@ -37,7 +37,7 @@ if(!isset($_SESSION["autentica"])){
 								<tr>
 									<th width="3%">Id</th>
 									<th width="20%">Nombre estado</th>
-									<th width="36%">Depto / Unidad</th>
+									<th width="36%">Descripción</th>
 									<th width="8%">Prioridad</th>
 									<th width="10%">Activo</th>
 									<th width="16%">Generico</th>

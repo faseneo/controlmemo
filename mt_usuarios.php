@@ -25,11 +25,12 @@ if(!isset($_SESSION["autentica"])){
 						<table class="table table-striped">
 							<thead>
 								<tr>
-									<th width="8%">Rut</th>
-									<th width="14%">Email</th>
-									<th width="20%">Nombre</th>
-									<th width="20%">Rol Ususario</th>
-									<th width="18%">Depto/Unidad</th>
+									<th width="2%">Id</th>
+									<th width="7%">Rut</th>
+									<th width="13%">Email</th>
+									<th width="13%">Nombre</th>
+									<th width="13%">Rol Ususario</th>
+									<th width="32%">Id - Departamento o Unidad</th>
 									<th width="8%">Estado</th>
 									<th width="12%">Acciones</th>
 								</tr>
