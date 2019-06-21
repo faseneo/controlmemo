@@ -63,6 +63,12 @@ if(isset($_REQUEST['Accion'])){
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
+            
+        case 'listarminhabilitaxusu':
+            $jsondata = $modelDptos->ListarMinHabilitadoPorUsu($_REQUEST['usuid']);
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);
+            break;            
     }
 }
 ?>

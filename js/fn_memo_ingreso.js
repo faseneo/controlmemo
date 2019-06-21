@@ -191,7 +191,7 @@
         }        
         return true;
     }
-    //Funcion que lista los deptos
+    //Funcion que lista los deptos destino del memo
     function getlistaDepto (){
         var datax = {
             "Accion":"listarmin"
@@ -203,31 +203,27 @@
             url: "controllers/controllerdepartamento.php", 
         })
         .done(function( data, textStatus, jqXHR ) {
-            $("#memoDeptoSol").html("");
-            $("#memoDeptoDest").html("");
             if ( console && console.log ) {
                /* console.log( " data success : "+ data.success 
                     + " \n data msg deptos : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );*/
             }
-            $("#memoDeptoSol").append('<option value="0">Seleccionar...</option>');
+           /// $("#memoDeptoSol").html("");
+            $("#memoDeptoDest").html("");            
+            ///$("#memoDeptoSol").append('<option value="0">Seleccionar...</option>');
             $("#memoDeptoDest").append('<option value="0">Seleccionar...</option>');
             for(var i=0; i<data.datos.length;i++){
                    // console.log('id: ' + data.datos[i].depto_id + ' nombre Depto: ' + data.datos[i].depto_nombre);
                     opcion = '<option value=' + data.datos[i].depto_id + '>' + data.datos[i].depto_nombre + '</option>';
                 $("#memoDeptoDest").append(opcion);    
-                $("#memoDeptoSol").append(opcion);
+                ///$("#memoDeptoSol").append(opcion);
             }
             $("#memoDeptoDest").selectpicker();
-            $("#memoDeptoSol").selectpicker();
+            //$("#memoDeptoSol").selectpicker();
 
-            /*$('.selectpicker').selectpicker({
-                  style: 'btn-default'
-            });*/
-
-            $("#memoDeptoSol").selectpicker('val', '9');
-            $("#memoDeptoSol").selectpicker('render');
+            //$("#memoDeptoSol").selectpicker('val', depto[0]);
+            //$("#memoDeptoSol").selectpicker('render');
             $("#memoDeptoDest").selectpicker('render');  
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -239,13 +235,55 @@
             }
         });
     }
+    // función que lista los departamentos orignes del usuario para el ingreso de memos
+        function getlistaDeptos(){
+            var datax = {
+                "Accion":"listarminhabilitaxusu",
+                "usuid":uid,
+            }
+            $.ajax({
+                data: datax, 
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerdepartamento.php",          
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                //$("#usuDeptoId").html("");
+                $("#memoDeptoSol").html("");
+                $("#memoDeptoSol").append('<option value="0">Seleccionar...</option>');
+                if ( console && console.log ) {
+                    console.log( " data success deptos : "+ data.success 
+                        + " \n data msg : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+                for(var i=0; i<data.datos.length;i++){
+                    //console.log('id: '+data.datos[i].depto_id + ' nombre: '+data.datos[i].depto_nombre);
+                    opcion = '<option value='+ data.datos[i].depto_id +'>'+data.datos[i].depto_nombre+'</option>';
+                    $("#memoDeptoSol").append(opcion);
+                    //$("#usuDeptoId").append(opcion);
+                }
+                $("#memoDeptoSol").selectpicker();
+                $("#memoDeptoSol").selectpicker('val', depto[0]);
+                $("#memoDeptoSol").selectpicker('render');
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlista deptos ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+        }
+
     //Funcion que lista los estado del memo
     function getlistaEstadosMemo (ultestado){
         console.log('estado funcion : ' + ultestado);
         console.log('estado global : ' + ultimoestado);
         var datax = {
             'Accion':'listarmin',
-            'depto':depto
+            'depto':depto[0]
         }
         $.ajax({
             data: datax, 
@@ -294,11 +332,17 @@
             }
         });
     }
-
+    // para ingreso y recepcion cargar en los select correspondientes solos los deptos que estan asignados al usuario.
+    // ver como llamar estos con el arreglo de la variable "depto"
     $(document).ready(function(){
         inicio();
-        getlistaDepto();
-
+        getlistaDepto();//deptos destino
+        getlistaDeptos(uid); // desptos origen del usuario
+        if(depto[0]==9){
+            $('#memoNombreSol').val('Leonel Durán');
+        }else if(depto[0]==32){
+            $('#memoNombreSol').val('Paulina Sepulveda');
+        } 
         $('#memoFecha').val(fechaActual());
         $('#memoAnio').val(anioActual());
 
@@ -452,7 +496,6 @@
                             modal2.find('.modal-title').text('Mensaje');
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();
-
                         });
                     });
                 })

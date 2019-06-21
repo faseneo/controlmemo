@@ -172,6 +172,31 @@ class ModelDepartamento {
         }
     }
 
+    public function ListarMinHabilitadoPorUsu($idusu){
+        $jsonresponse = array();
+        try{
+            $result = array();
+             $stm = $this->pdo->prepare("SELECT  dp.depto_id,dp.depto_nombre
+                                        FROM departamento as dp
+                                        INNER JOIN dpto_tiene_usu AS dtu ON dtu.dpto_tiene_usu_depto_id=dp.depto_id
+                                        WHERE dp.depto_habilitado=1 and dp.depto_estado=1
+                                        AND dtu.dpto_tiene_usu_usuario_id=?");
+            $stm->execute(array($idusu));
+            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                $fila = array('depto_id'=>$r->depto_id,
+                              'depto_nombre'=>$r->depto_nombre);
+                $result[]=$fila;
+            }
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'listado deptos correctamente';
+            $jsonresponse['datos'] = $result;
+            return $jsonresponse;  
+        }
+        catch(Exception $e){
+            die($e->getMessage());
+        }
+    }
+
     public function ListarMin(){
         $jsonresponse = array();
         try{
