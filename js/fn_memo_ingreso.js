@@ -209,21 +209,14 @@
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );*/
             }
-           /// $("#memoDeptoSol").html("");
             $("#memoDeptoDest").html("");            
-            ///$("#memoDeptoSol").append('<option value="0">Seleccionar...</option>');
             $("#memoDeptoDest").append('<option value="0">Seleccionar...</option>');
             for(var i=0; i<data.datos.length;i++){
                    // console.log('id: ' + data.datos[i].depto_id + ' nombre Depto: ' + data.datos[i].depto_nombre);
                     opcion = '<option value=' + data.datos[i].depto_id + '>' + data.datos[i].depto_nombre + '</option>';
                 $("#memoDeptoDest").append(opcion);    
-                ///$("#memoDeptoSol").append(opcion);
             }
             $("#memoDeptoDest").selectpicker();
-            //$("#memoDeptoSol").selectpicker();
-
-            //$("#memoDeptoSol").selectpicker('val', depto[0]);
-            //$("#memoDeptoSol").selectpicker('render');
             $("#memoDeptoDest").selectpicker('render');  
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
@@ -235,7 +228,7 @@
             }
         });
     }
-    // función que lista los departamentos orignes del usuario para el ingreso de memos
+    // función que lista los departamentos origenes del usuario para el ingreso de memos
         function getlistaDeptos(){
             var datax = {
                 "Accion":"listarminhabilitaxusu",
@@ -248,7 +241,6 @@
                 url: "controllers/controllerdepartamento.php",          
             })
             .done(function( data, textStatus, jqXHR ) {
-                //$("#usuDeptoId").html("");
                 $("#memoDeptoSol").html("");
                 $("#memoDeptoSol").append('<option value="0">Seleccionar...</option>');
                 if ( console && console.log ) {
@@ -261,7 +253,6 @@
                     //console.log('id: '+data.datos[i].depto_id + ' nombre: '+data.datos[i].depto_nombre);
                     opcion = '<option value='+ data.datos[i].depto_id +'>'+data.datos[i].depto_nombre+'</option>';
                     $("#memoDeptoSol").append(opcion);
-                    //$("#usuDeptoId").append(opcion);
                 }
                 $("#memoDeptoSol").selectpicker();
                 $("#memoDeptoSol").selectpicker('val', depto[0]);

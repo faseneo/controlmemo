@@ -16,6 +16,10 @@ if($_SESSION["autentica"] != "SIP"){
     <script src="js/fn_memo_ingreso.js"></script>
     <script src="js/globalfn.js"></script>
     <style type="text/css">
+        .has-success-seldiv{
+            color: #3c763d;
+            border-color: #3c763d;
+        }
         .alert {
             margin:5px;
             padding: 5px;
