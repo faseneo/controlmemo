@@ -28,7 +28,6 @@
         $("#memoOtroDepto").hide();
         $("#memoOtroDeptoNombre").hide();
         $('#memoEstadoce').focus();
-        alert('paso por limpia');
     }
     // Funcion valida los datos del formulario del cambio de estado del memo
     function validarFormularioEstado(idestado){

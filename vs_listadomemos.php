@@ -55,60 +55,77 @@ if($_SESSION["autentica"] != "SIP"){
     <div class="container-fluid" style="margin-top:50px" id="bodyprincipal">  
         <div class="row"> 
             <div class="col-md-12 ">
-                <center><h2>Listado Memos <span class="badge" id="totalmemos"></span></h2></center><br>
-                <form id="formulariofiltro" method="post" action="#" role="form">
-                    <div class="row">
-                        <div class="col-sm-2">
-                             <div class="form-group">
-                                <label for="memoEstado">Estado</label>  
-                                <select name="memoEstado" id="memoEstado" class="form-control" data-live-search="true">
-                                </select>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                             <div class="form-group">
-                                <label for="memoDeptoSol">Departamento Solicitante</label>  
-                                <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" data-live-search="true">
-                                </select>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                             <div class="form-group">
-                                <label for="memoDeptoDest">Departamento Destinatario</label>  
-                                <select name="memoDeptoDest" id="memoDeptoDest" class="form-control" data-live-search="true">
-                                </select>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-1">
-                             <div class="form-group">
-                                <label for="memoAnio">Año Doc.</label>  
-                                <select name="memoAnio" id="memoAnio" class="form-control" data-live-search="true">
-                                    <option value="0">Todos..</option>
-                                    <option value="2018">2018</option>
-                                    <option value="2019">2019</option>
-                                </select>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-1">
-                             <div class="form-group">
-                                <label class="control-label" for="numDoc">Número doc.</label>
-                                    <div class="input-group">
-                                        <input name="numDoc" id="numDoc" type="text"  class="form-control input-sm" maxlength="10">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary btn-sm" type="button" id="buscarnumdoc">
-                                                    <span class="glyphicon glyphicon-search"></span>
-                                            </button>
-                                        </span>
-                                    </div>
-                                <div class="help-block with-errors"></div>
-                            </div>
-                        </div>
+            <center><h2>Listado Memos <span class="badge" id="totalmemos"></span></h2></center><br>
+                <div class="panel-group" id="accordion">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4 class="panel-title" id="tituloPanelDestino">
+                            <a id="accord1" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                            <b>Filtros</b>
+                            </a>
+                        </h4>
                     </div>
-                </form>   
+                    <div id="collapse1" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                
+                    <form id="formulariofiltro" method="post" action="#" role="form">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                 <div class="form-group">
+                                    <label for="memoEstado">Estado</label>  
+                                    <select name="memoEstado" id="memoEstado" class="form-control" data-live-search="true">
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                 <div class="form-group">
+                                    <label for="memoDeptoSol">Departamento Solicitante</label>  
+                                    <select name="memoDeptoSol" id="memoDeptoSol" class="form-control" data-live-search="true">
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                 <div class="form-group">
+                                    <label for="memoDeptoDest">Departamento Destinatario</label>  
+                                    <select name="memoDeptoDest" id="memoDeptoDest" class="form-control" data-live-search="true">
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                 <div class="form-group">
+                                    <label for="memoAnio">Año Doc.</label>  
+                                    <select name="memoAnio" id="memoAnio" class="form-control" data-live-search="true">
+                                        <option value="0">Todos..</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2019">2019</option>
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                 <div class="form-group">
+                                    <label class="control-label" for="numDoc">Número doc.</label>
+                                        <div class="input-group">
+                                            <input name="numDoc" id="numDoc" type="text"  class="form-control input-sm" maxlength="10">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary btn-sm" type="button" id="buscarnumdoc">
+                                                        <span class="glyphicon glyphicon-search"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                    </div>
+                </div>
+                </div>
                     <div class="row">
                         <div class="col-md-3">
                             <button class="btn btn-primary btn-sm" type="button" id="activacest">Activar Cambio Estado Masivos</button>
@@ -160,6 +177,7 @@ if($_SESSION["autentica"] != "SIP"){
                             </ul>
                         </div>
                     </div>
+
             </div><!-- /.8 -->
         </div> <!-- /.row-->
     </div> <!-- /.container-->
