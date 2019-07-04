@@ -1,6 +1,7 @@
     var uid;
     var depto;
     var ultimoestado;
+    var rolid;
 
     document.onkeydown = function(){
         if(window.event){
@@ -26,7 +27,8 @@
         $('#formcambioestado')[0].reset();
         $("#memoOtroDepto").hide();
         $("#memoOtroDeptoNombre").hide();
-        $('#memoEstadoce').focus();        
+        $('#memoEstadoce').focus();
+        alert('paso por limpia');
     }
     // Funcion valida los datos del formulario del cambio de estado del memo
     function validarFormularioEstado(idestado){
@@ -89,7 +91,8 @@
         console.log('estado global : ' + ultimoestado);
         var datax = {
             'Accion':'listarmin',
-            'depto':depto
+            'depto':depto[0],
+            'ultestado':ultimoestado
         }
         $.ajax({
             data: datax, 
@@ -106,61 +109,23 @@
                     + " \n jqXHR.status : " + jqXHR.status );
             }*/
             console.log('ultimoestado: ' + ultimoestado);
-            var inicio=0;var fin=0;
-            // Ingresado ->  Anulado y Devuelto otro Depto
-            if(ultimoestado==1) { 
-                inicio = 2; fin=2 
-                opcion = '<option value=' + data.datos[5].memo_est_id + '>' + data.datos[5].memo_est_tipo + '</option>';
-                $("#memoEstadoce").append(opcion);                
-            }
-            //Recibido -> Anulado, Pendiente y Derivado
-            if(ultimoestado==2) { inicio = 2; fin=4 }
-            //Pendiente -> Archivado, Aprobado,  y rechazado
-            if(ultimoestado==4) { inicio = 6; fin=8 }
-            //Derivado -> Devuelto
-            if(ultimoestado==5) { inicio = 5; fin=5; }
-            // Devuelto -> Pendiente y Derivado
-            if(ultimoestado==6) { inicio = 3; fin=4 }
-            //Aprobado -> Derivado, derivado ppto
-            if(ultimoestado==8) { //aprobado DAF
-                inicio = 4; fin=4;
-                opcion = '<option value=' + data.datos[10].memo_est_id + '>' + data.datos[10].memo_est_tipo + '</option>';
-                $("#memoEstadoce").append(opcion);
-            } 
-            //Derivado ppto -> aprobado ppto, rechazado ppto
-            if(ultimoestado==11) { inicio = 11; fin=12; }
-            // aprobado ppto -> Derivado , derivado adqui.
-            if(ultimoestado==12) { 
-                inicio = 4; fin=4;
-                opcion = '<option value=' + data.datos[13].memo_est_id + '>' + data.datos[13].memo_est_tipo + '</option>';
-                $("#memoEstadoce").append(opcion);
-            }
-            //Rechazado Daf, Rechazado ppto o rechazado adqui -> respondido.
-            if(ultimoestado==9 || ultimoestado==13 || ultimoestado==15) { inicio = 9; fin=9 }
-
-                for(var i=inicio; i<=fin; i++){
+            var inicio=0;
+            var fin=data.datos.length;
+            if(fin){
+                for(var i=inicio; i<fin; i++){
                     console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
                     opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_tipo + '</option>';
                     $("#memoEstadoce").append(opcion);
                 }
                 //primero de la lista, inicio posicion + 1, valor del value
-                $("#memoEstadoce").val(inicio+1); 
-                //estadomarcado = $('#memoEstadoce').val();
-                //console.log('value memo estado  : ' + estadomarcado);
-                //var posidestado = document.getElementById("memoEstadoce").selectedIndex;
-                //console.log('posicion estado seleccionado : '+ posidestado);
-                        var idestado = $('#memoEstadoce').val();
-                        //console.log('estado seleccionado : '+ idestado);
-                        if(idestado == 5){
-                            $("#memoOtroDepto").show();
-                            $("#memoOtroDeptoNombre").show();
-                        }else if(idestado == 11 || idestado == 14){
-                            $("#memoOtroDeptoNombre").show();
-                            $("#memoOtroDepto").hide();
-                        }else{
-                            $("#memoOtroDepto").hide();
-                            $("#memoOtroDeptoNombre").hide();
-                        }
+                $("#memoEstadoce").val(data.datos[0].memo_est_id); 
+                estadomarcado = $('#memoEstadoce').val();
+            }else{
+                $("#debeseleccionar").show();
+                $("#debeseleccionar").html("<b>El estado seleccionado es un estado terminal,no se puede cambiar este estado</b>");
+                $("#bodyestado").hide();
+                $("#footerestado").hide();
+            }
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -228,7 +193,8 @@
     function getListadoEstadoMemos(depto){
             var datax = {
                 "Accion":"listarmin",
-                'depto':depto
+                'depto':depto[0],
+                'ultestado':0
             }
             $.ajax({
                 data: datax,  
@@ -289,6 +255,7 @@
     /* ver una funcion que vaya a contar y vuelva si no llamar a listado memos*/
     function getListadoMemos(deptosolid=1,deptodesid=1,estado=0,pag=1,usuid=0,anio=0,numdoc=0){
         inicio();
+        var deptousu;
         /*console.log('console log LISTADO MEMO ------- ' );
         console.log('Usuario ' + usuid);
         console.log('pagina ' + pag);
@@ -300,6 +267,12 @@
             //paginador(pag,estado,usuid);
         ultimoestado = estado;
         console.log('ult.estado : ' + ultimoestado);
+
+        if (rolid==1){
+            deptousu = 0;
+        }else{
+            deptousu = depto;
+        }
             var $loader = $('.loader');
             var datax = {
                 "deptodesid":deptodesid,
@@ -309,7 +282,7 @@
                 "idusu":usuid,
                 "anio":anio,
                 "numdoc":numdoc,
-                "dptoid":depto,
+                "dptoid":deptousu,
                 "Accionmem":"listar"
             }
             $.ajax({
@@ -575,7 +548,7 @@
             var idestado = $('#memoEstadoce').val();
             console.log('pos estado: ' + posidestado);
             console.log('estado: ' + idestado);
-            if(idestado == 5){
+            if(idestado == 5 || idestado == 35){
                 $("#memoOtroDepto").show();
                 $("#memoOtroDeptoNombre").show();
             }else if(idestado == 11 || idestado == 14){
@@ -594,6 +567,7 @@
             inptuid.name="uId";
             inptuid.value=uid;
             document.formcambioestado.appendChild(inptuid);
+
 
             var selected = [];
                 $(":checkbox[name=cestado]").each(function() {
@@ -641,6 +615,7 @@
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
                     }
+
                     $('#ModalCargando').modal('hide');
                     $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
@@ -672,6 +647,8 @@
                     }
                 });
             }
+            document.formcambioestado.removeChild(inptuid);
+            document.formcambioestado.removeChild(inptmemid);
         });
 
         $('#myModalDestino').on('shown.bs.modal', function (e) {

@@ -30,14 +30,29 @@ class ModelMemo  {
               return null;
         }
     }
+    function convertdeptos_arraytostring($dptoid=1){
+        $deptos="";
+        if($dptoid == null || $dptoid=='null'){
+                $deptos = 1;
+        }else if(is_array($dptoid)){
+                foreach($dptoid as $dp){
+                    $deptos .= $dp.',';
+                }
+                $deptos = trim($deptos, ',');
+        }else{
+                $deptos = $dptoid;
+        }
+        return $deptos;
+    }
       // Lista todos los memos segun numpag, estado, seccion y/o usuario
       // $deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0
       //public function Listar($numpag = 1, $estadoid = 0, $usuid=0, $secid=1){
     public function Listar($deptosol=1,$deptodes=1, $numpag = 1, $estadoid = 0, $usuid=0, $anio=0, $numdoc=0, $dptoid=0){
       $CantidadMostrar=10;
       $compag         =(int)($numpag);
+      $deptos=$this->convertdeptos_arraytostring($dptoid);
         try{
-            $respuesta = $this->contarTotal($deptosol,$deptodes,$estadoid,$usuid,$anio,$numdoc,$dptoid);
+            $respuesta = $this->contarTotal($deptosol,$deptodes,$estadoid,$usuid,$anio,$numdoc,$deptos);
             $tot_reg = (int)$respuesta['total'];
             if ($tot_reg == 0) {
                 $jsonresponsel['success'] = true;
@@ -47,7 +62,7 @@ class ModelMemo  {
               $result = array();
               $reginicio = ($compag-1) * $CantidadMostrar;
 
-              $consulta = "CALL listado_memo_por_estadomax_depto($deptosol,$deptodes,$estadoid,$reginicio,$CantidadMostrar,$usuid,$anio,$numdoc,$dptoid);";
+              $consulta = "CALL listado_memo_por_estadomax_depto($deptosol,$deptodes,$estadoid,$reginicio,$CantidadMostrar,$usuid,$anio,$numdoc,'$deptos');";
 
               $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($consulta,$tot_reg,'Listar');
@@ -98,15 +113,15 @@ class ModelMemo  {
         return $jsonresponsel;
     }
     //cuenta total de memos en el sistema
-    public function contarTotal($deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0,$numdoc=0,$dptoid=0){
+    public function contarTotal($deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0,$numdoc=0,$dptoid){
         $jsonresponse = array();
+        $deptos = $this->convertdeptos_arraytostring($dptoid);
         try{
-            $consulta = "CALL total_listado_memos_estado_depto($deptosol,$deptodes,$estadoid,$usuid,$anio,$numdoc,$dptoid);";
-
+            $consulta = "CALL total_listado_memos_estado_depto($deptosol,$deptodes,$estadoid,$usuid,$anio,$numdoc,'$deptos');";
             $stm = $this->pdo->prepare($consulta);
             $stm->execute();
             $total_reg = $stm->fetch(PDO::FETCH_OBJ);
-
+            //var_dump($deptos); var_dump($total_reg); exit();
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'correctamente';
             $jsonresponse['total'] = $total_reg->cantidad;
@@ -313,7 +328,7 @@ class ModelMemo  {
         return $jsonresponse;
     }    
     //Registra un nuevo Memo
-    public function Registrar(Memos $data, $files,$uid,$tiporeg){
+    public function Registrar(Memos $data, $files, $uid, $tiporeg, $estadoinicial=0){
       try{
             $sql = "INSERT INTO memo (memo_num_memo,
                                       memo_anio,
@@ -344,22 +359,27 @@ class ModelMemo  {
                 //$logsq = null;
             $idmemo = $this->pdo->lastInsertId(); 
             if($tiporeg=='ingreso'){
-              $idestado = 1; //$data->__GET('mem_estado_id');
+              //$idestado = 1; //$data->__GET('mem_estado_id');
               $obsestado = "Documento nuevo ingresado por usuario"; 
+              $estadogen = 1;
+              $deptosolid = 0;
             }else{
-              $idestado = 2; 
+              //$idestado = 2; 
               $obsestado = "Documento recibido e ingresado por usuario"; 
+              $estadogen = 2;
+              $deptosolid = $data->__GET('mem_depto_sol_id');
+              
             }
             //$obsestado = "Ingresado por usuario"; //$data->__GET('mem_estado_obs')
             $objcambioest = new MemoCambioEst();
             $modelcambioest = new ModelMemoEst();
               $objcambioest->__SET('memo_camest_memid',$idmemo);
-              $objcambioest->__SET('memo_camest_estid',$idestado);
+              $objcambioest->__SET('memo_camest_estid',$estadoinicial);
               $objcambioest->__SET('memo_camest_obs',$obsestado);
               $objcambioest->__SET('memo_camest_usuid',$uid);
               $objcambioest->__SET('memo_camest_deptoid',$data->__GET('mem_depto_dest_id'));
               $objcambioest->__SET('memo_camest_deptonom',$data->__GET('mem_nom_dest'));
-            $modelcambioest->CambiaEstado($objcambioest);
+            $modelcambioest->CambiaEstado($objcambioest, $estadogen, $deptosolid);
 
             //exit();
             $logsq = null;
@@ -383,7 +403,39 @@ class ModelMemo  {
         }
         return $jsonresponse;
     }
+    public function ValidaEstadoDepto($usuid,$estgenerico){
+        $jsonresponse = array();
+        $msg='';
+        $estadomemo = 0;
+        try{
+            $consultamemoestado = "SELECT me.memo_estado_id
+                                  FROM usuario as usu
+                                  INNER JOIN dpto_tiene_usu AS dtu ON dtu.dpto_tiene_usu_usuario_id = usu.usuario_id
+                                  INNER JOIN memo_estado AS me ON me.memo_estado_depto_id = dtu.dpto_tiene_usu_depto_id
+                                  WHERE usu.usuario_id = ".$usuid. " AND dtu.dpto_tiene_usu_principal = 1 AND me.memo_estado_memo_estadogenerico_id = ".$estgenerico;
+                $res = $this->pdo->query($consultamemoestado);
+                $estadomemo = $res->fetchColumn();
+                if($estadomemo == NULL || $estadomemo == ''){
+                  // $msg='NO existe estado para el Depto. del usuario, no esta autorizado para ingresar Documentos ';
+                    $msg='NO está autorizado para ingresar Documentos, consulte con el Administrador del Sistema ';
+                }else{
+                    $msg='Estado del Depto para usuario existe';
+                }
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = $msg; 
+            $jsonresponse['estadoinicial'] = $estadomemo;
+        } catch (Exception $Exception){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al validar estado depto del usuario';
+            $jsonresponse['errorQuery'] = $Exception->getMessage();
+            $logs = new modelologs();
+            $trace=$Exception->getTraceAsString();
+              $logs->GrabarLogs($Exception->getMessage(),$trace);
+              $logs = null;            
+        }
+        return $jsonresponse;
 
+    }
     public function Actualizar(Memos $data){
       //var_dump($data);
       try{

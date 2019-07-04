@@ -30,20 +30,11 @@ if(isset($_REQUEST['Accion'])){
             break;
 
         case 'cambiaestado':
-            $CambioMEst->__SET('memo_camest_usuid', $_REQUEST['uId']);
-            $CambioMEst->__SET('memo_camest_obs',   $_REQUEST['memoObs']);
-            if((isset($_REQUEST['memoEstado']) && $_REQUEST['memoEstado']==5) || ( isset($_REQUEST['memoEstadoce']) && $_REQUEST['memoEstadoce']==5)){
-                $CambioMEst->__SET('memo_camest_deptoid',   $_REQUEST['memoOtroDeptoId']);
-                $CambioMEst->__SET('memo_camest_deptonom',  $_REQUEST['memoDeptoNombre']);
-            }
-            if((isset($_REQUEST['memoEstado']) && $_REQUEST['memoEstado']==11) || ( isset($_REQUEST['memoEstadoce']) && $_REQUEST['memoEstadoce']==11)){
-                $CambioMEst->__SET('memo_camest_deptoid',   $_REQUEST['memoOtroDeptoId']);
-                $CambioMEst->__SET('memo_camest_deptonom',  $_REQUEST['memoDeptoNombre']);
-            }
-            if((isset($_REQUEST['memoEstado']) && $_REQUEST['memoEstado']==14) || ( isset($_REQUEST['memoEstadoce']) && $_REQUEST['memoEstadoce']==14)){
-                $CambioMEst->__SET('memo_camest_deptoid',   $_REQUEST['memoOtroDeptoId']);
-                $CambioMEst->__SET('memo_camest_deptonom',  $_REQUEST['memoDeptoNombre']);
-            }
+            $CambioMEst->__SET('memo_camest_usuid',     $_REQUEST['uId']);
+            $CambioMEst->__SET('memo_camest_obs',       $_REQUEST['memoObs']);
+            $CambioMEst->__SET('memo_camest_deptoid',   $_REQUEST['memoOtroDeptoId']);
+            $CambioMEst->__SET('memo_camest_deptonom',  $_REQUEST['memoDeptoNombre']);
+            
             if(isset($_REQUEST['meId'])){
                 $CambioMEst->__SET('memo_camest_memid', $_REQUEST['meId']);
                 $CambioMEst->__SET('memo_camest_estid', $_REQUEST['memoEstado']);
@@ -91,9 +82,10 @@ if(isset($_REQUEST['Accion'])){
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
-
-        case 'listarmin':
-            $jsondata = $modelMEst->ListarMin($_REQUEST['depto'][0]); // solo el primer depto para ver estados propios
+            // solo el primer depto (de sus deptos si tiene mas de uno) mas ultimo estado, para ver estados propios 
+            // del flujo que posee. Esto se seteo por BD tabla memo_estado_flujo
+        case 'listarmin': 
+            $jsondata = $modelMEst->ListarMin($_REQUEST['depto'], $_REQUEST['ultestado']); 
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            

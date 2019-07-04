@@ -7,6 +7,11 @@
     function inicio(){
         $(".help-block").hide();
         $("#cambiaestado").hide();
+        if(depto[0]==9){
+            $('#memoNombreDest').val('Leonel Durán');
+        }else if(depto[0]==32){
+            $('#memoNombreDest').val('Paulina Sepulveda');
+        }
     }    
     document.onkeydown = function(){
         if(window.event){
@@ -248,7 +253,7 @@
         });
     }
     // función que lista los departamentos origenes del usuario para la rececepcion del memos
-        function getlistaDeptos(){
+    function getlistaDeptos(){
             var datax = {
                 "Accion":"listarminhabilitaxusu",
                 "usuid":uid,
@@ -285,72 +290,13 @@
                         + " \n jqXHR.status : " + jqXHR.status );
                 }
             });
-        }
-
-    //Funcion que lista los estado del memo
-    function getlistaEstadosMemo (ultestado){
-        console.log('estado funcion : '+ultestado);
-        console.log('estado global : '+ultimoestado);
-        var datax = {
-            'Accion':'listarmin',
-            'depto':depto[0]
-        }
-        $.ajax({
-            data: datax, 
-            type: "GET",
-            dataType: "json", 
-            url: "controllers/controllermemoestado.php", 
-        })
-        .done(function( data, textStatus, jqXHR ) {
-            $("#memoEstado").html("");
-            if ( console && console.log ) {
-                console.log( " data success : "+ data.success 
-                    + " \n data msg memest : "+ data.message 
-                    + " \n textStatus : " + textStatus
-                    + " \n jqXHR.status : " + jqXHR.status );
-            }
-            console.log('ultimoestado: ' + ultimoestado);
-            var inicio=0;var fin=0;
-
-            if(ultimoestado==1) { inicio = ultimoestado; fin=3 }
-            if(ultimoestado==3) { inicio = 4; fin=5 }
-            if(ultimoestado==6) { inicio = 6; fin=6 }
-            if(ultimoestado==7) { inicio = 7; fin=8 }
-            if(ultimoestado==10 || ultimoestado==12) { inicio = 10; fin=10 }
-            //if(ultimoestado==11) { inicio = 1; fin=2 }
-                for(var i=inicio; i<=fin; i++){
-                    console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
-                    opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_tipo + '</option>';
-                    $("#memoEstado").append(opcion);
-                }
-            estadomarcado = $('#memoEstado').val()
-            console.log('value memo estado  : ' + estadomarcado);
-            if(estadomarcado == 8 || estadomarcado==9){
-                $("#memoFechaCDPDiv").show();
-                $("#memoCodigoCCDiv").show();
-                $("#memoNombreCCDiv").show();
-                $("#memoFechaCDP").attr("required", true);
-                $("#memoCodigoCC").attr("required", true);
-            }
-        })
-        .fail(function( jqXHR, textStatus, errorThrown ) {
-            if ( console && console.log ) {
-                console.log( " La solicitud getlistaEstadosMemo ha fallado,  textStatus : " +  textStatus 
-                    + " \n errorThrown : "+ errorThrown
-                    + " \n textStatus : " + textStatus
-                    + " \n jqXHR.status : " + jqXHR.status );
-            }
-        });
     }
     // para ingreso y recepcion cargar en los select correspondientes solos los deptos que estan asignados al usuario.
     // ver como llamar estos con el arreglo de la variable "depto"
     $(document).ready(function(){
-        inicio();
         getlistaDepto();//deptos destino
-        getlistaDeptos(uid); // desptos origen del usuario
-        if(depto[0]==9){
-            $('#memoNombreDest').val('Leonel Durán');
-        } 
+        getlistaDeptos(uid); // deptos origen del usuario
+        inicio();
         $('#memoFechaRecep').val(fechaActual());
 
         $("#memoFecha").focusout(function(){
@@ -509,89 +455,6 @@
                 .fail(function( jqXHR, textStatus, errorThrown ) {
                     if ( console && console.log ) {
                         console.log( " La solicitud GRABA MEMO ha fallado,  textStatus : " +  textStatus 
-                            + " \n errorThrown : "+ errorThrown
-                            + " \n textStatus : " + textStatus
-                            + " \n jqXHR.status : " + jqXHR.status );
-                    }
-                });
-            }
-        });
-
-        //funcion que graba datos basicos del memo para adquisiciones, recibios por la DAF
-        $("#grabar-estado").click(function(e){
-            e.preventDefault();
-            var inptuid = document.createElement('input');
-            inptuid.type="hidden";
-            inptuid.name="uId";
-            inptuid.value=uid;
-            document.formcambioestado.appendChild(inptuid);
-
-            var inptmemid = document.createElement('input');
-            inptmemid.type="hidden";
-            inptmemid.name="meId";
-            inptmemid.value=memId;
-            document.formcambioestado.appendChild(inptmemid);
-
-            var idestado = $('#memoEstado').val();
-            console.log('seleccion estado :'+idestado);
-
-            if(validarFormularioEstado(idestado)==true){
-                var datax = $("#formcambioestado").serializeArray();
-                $.each(datax, function(i, field){
-                    console.log("contenido del form ESTADO = "+ field.name + ":" + field.value + " ");
-                });
-                var $loader = $('.loader');
-                var formData = new FormData(document.getElementById("formcambioestado"));
-                $.ajax({
-                    data: formData, 
-                    type: "POST",
-                    dataType: "json", 
-                    url: "controllers/controllermemoestado.php",
-                    cache:false,
-                    contentType:false,
-                    processData:false,
-                    beforeSend: function(){
-                        $('#myModalEstado').modal('hide');
-                        $('#ModalCargando').modal('show');
-                        $('#ModalCargando').on('shown.bs.modal', function () {
-                            $loader.show();
-                        });
-                    }                    
-                })
-                .done(function( data, textStatus, jqXHR ) {
-                    if ( console && console.log ) {
-                        console.log( " data success : "+ data.success 
-                            + " \n data msg buscares : "+ data.message 
-                            + " \n textStatus : " + textStatus
-                            + " \n jqXHR.status : " + jqXHR.status );
-                    }
-                    $('#ModalCargando').modal('hide');
-                    $('#ModalCargando').on('hidden.bs.modal', function () {
-                        $('#myModalLittle').modal('show');
-                        $('#myModalLittle').on('shown.bs.modal', function () {
-                            var modal2 = $(this);
-                            modal2.find('.modal-title').text('Mensaje');
-                            modal2.find('.msg').text(data.message);
-                            $('#cerrarModalLittle').focus();
-                            //limpiaformcambioestado();
-                            //getlistaHistorialEstado(memId,depto);
-                            if(depto==9){
-                                if(ultimoestado==1){
-                                    //$("#editar-memo").hide();
-                                }
-                                if(ultimoestado==2 || ultimoestado==4 || ultimoestado==6 || ultimoestado==8 || ultimoestado==9 || ultimoestado==11){
-                                    $("#cambiaestado").hide();
-                                }else{
-                                    getlistaEstadosMemo(ultimoestado);
-                                }
-                            }
-                        });
-                    });
-                    
-                })
-                .fail(function( jqXHR, textStatus, errorThrown ) {
-                    if ( console && console.log ) {
-                        console.log( " La solicitud GRABA ESTADO ha fallado,  textStatus : " +  textStatus 
                             + " \n errorThrown : "+ errorThrown
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );

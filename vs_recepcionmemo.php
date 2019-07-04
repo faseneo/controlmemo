@@ -113,7 +113,7 @@ if($_SESSION["autentica"] != "SIP"){
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="memoNombreDest">Nombre Destinatario</label>
-                                                <input name="memoNombreDest" id="memoNombreDest" type="text"  class="form-control" value="Leonel Durán" >
+                                                <input name="memoNombreDest" id="memoNombreDest" type="text"  class="form-control" value="" >
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>

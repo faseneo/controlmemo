@@ -329,7 +329,7 @@
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();                                
                         });
-                        getlista(); 
+                        getlista($('#depto').val()); 
                     })
                     .fail(function( jqXHR, textStatus, errorThrown ) {
                         if ( console && console.log ) {
