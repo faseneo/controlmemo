@@ -47,12 +47,30 @@ class ModelMemo  {
       // Lista todos los memos segun numpag, estado, seccion y/o usuario
       // $deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0
       //public function Listar($numpag = 1, $estadoid = 0, $usuid=0, $secid=1){
-    public function Listar($deptosol=1,$deptodes=1, $numpag = 1, $estadoid = 0, $usuid=0, $anio=0, $numdoc=0, $dptoid=0){
+    public function Listar($deptosol=1,$deptodes=1, $numpag = 1, $estadoid = 0, $usuid=0, $anio=0, $mes=0, $numdoc=0, $dptoid=0){
       $CantidadMostrar=10;
       $compag         =(int)($numpag);
       $deptos=$this->convertdeptos_arraytostring($dptoid);
+      $estadonot='';
         try{
-            $respuesta = $this->contarTotal($deptosol,$deptodes,$estadoid,$usuid,$anio,$numdoc,$deptos);
+          //estados genericos 3 'anulado' y 7 'archivados' no se deben mostrar al principio, solo por solicitud
+          if($estadoid == 0 || $estadoid == null){
+            if($dptoid != 0){
+              $deptousu = is_array($dptoid)? $dptoid[0] : $dptoid;
+              $buscaestadogennot= "SELECT mm.memo_estado_id FROM memo_estado AS mm  WHERE mm.memo_estado_depto_id=$deptousu AND (mm.memo_estado_memo_estadogenerico_id=3 OR mm.memo_estado_memo_estadogenerico_id=7)";
+                $stm = $this->pdo->prepare($buscaestadogennot);
+                $stm->execute();
+                $logsq = new ModeloLogsQuerys();
+                  $logsq->GrabarLogsQuerys($buscaestadogennot,0,'Consulta estados genericos a no mostrar');
+                  $logsq = null;
+                  foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                    $estadonotarray[]= $r->memo_estado_id;
+                  }
+                  $estadonot = $this->convertdeptos_arraytostring($estadonotarray);
+                  //$estadonot="3,7";            
+            }
+          }          
+            $respuesta = $this->contarTotal($deptosol,$deptodes,$estadoid,$usuid,$anio,$mes,$numdoc,$deptos,$estadonot);
             $tot_reg = (int)$respuesta['total'];
             if ($tot_reg == 0) {
                 $jsonresponsel['success'] = true;
@@ -62,7 +80,8 @@ class ModelMemo  {
               $result = array();
               $reginicio = ($compag-1) * $CantidadMostrar;
 
-              $consulta = "CALL listado_memo_por_estadomax_depto($deptosol,$deptodes,$estadoid,$reginicio,$CantidadMostrar,$usuid,$anio,$numdoc,'$deptos');";
+              
+              $consulta = "CALL listado_memo_por_estadomax_depto($deptosol,$deptodes,$estadoid,$reginicio,$CantidadMostrar,$usuid,$anio,$mes,$numdoc,'$deptos','$estadonot');";
 
               $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($consulta,$tot_reg,'Listar');
@@ -81,7 +100,9 @@ class ModelMemo  {
                       $busq->__SET('mem_materia', $r->memo_materia);
                       $busq->__SET('mem_depto_sol_nom', $r->depto_nombre);
                       $busq->__SET('mem_depto_dest_nom', $r->depto_nombre_dest);
-                      $busq->__SET('mem_estado_id_max', $r->estado_max_id);
+                      $busq->__SET('mem_estado_id_max', $r->cambio_estados_memo_estado_id);
+                      $genid = $r->memo_estado_memo_estadogenerico_id != null ? $r->memo_estado_memo_estadogenerico_id : 0;
+                      $busq->__SET('mem_estado_gen_id', $genid);
                       $busq->__SET('mem_estado_nom_max', $r->memo_estado_tipo);
                       $busq->__SET('mem_estado_colorbg', $r->memo_estado_color_bg);
                       $busq->__SET('mem_estado_colortxt', $r->memo_estado_color_font);                      
@@ -113,11 +134,11 @@ class ModelMemo  {
         return $jsonresponsel;
     }
     //cuenta total de memos en el sistema
-    public function contarTotal($deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0,$numdoc=0,$dptoid){
+    public function contarTotal($deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0,$mes=0,$numdoc=0,$dptoid, $estadonot=0){
         $jsonresponse = array();
         $deptos = $this->convertdeptos_arraytostring($dptoid);
         try{
-            $consulta = "CALL total_listado_memos_estado_depto($deptosol,$deptodes,$estadoid,$usuid,$anio,$numdoc,'$deptos');";
+            $consulta = "CALL total_listado_memos_estado_depto($deptosol,$deptodes,$estadoid,$usuid,$anio,$mes,$numdoc,'$deptos','$estadonot');";
             $stm = $this->pdo->prepare($consulta);
             $stm->execute();
             $total_reg = $stm->fetch(PDO::FETCH_OBJ);
@@ -228,6 +249,7 @@ class ModelMemo  {
               $orderby=" ORDER BY ce.cambio_estados_fecha DESC";
               $query = "SELECT  ce.cambio_estados_memo_estado_id,
                                                   me.memo_estado_tipo,
+                                                  me.memo_estado_memo_estadogenerico_id,
                                                   me.memo_estado_orden,
                                                   ce.cambio_estados_observacion,
                                                   ce.cambio_estados_fecha,
@@ -243,10 +265,12 @@ class ModelMemo  {
               $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($query,$totalestados,'Obtener Cambios Estados');
                 $logsq = null;
-
                 foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                    $genid = $r->memo_estado_memo_estadogenerico_id != null ? $r->memo_estado_memo_estadogenerico_id : 0;
+
                     $fila = array('estado_id'=>$r->cambio_estados_memo_estado_id,
                                   'estado_tipo'=>$r->memo_estado_tipo,
+                                  'estado_gen_id'=>$genid,
                                   'estado_orden'=>$r->memo_estado_orden,
                                   'observacion'=>$r->cambio_estados_observacion,
                                   'fecha'=>date_format(date_create($r->cambio_estados_fecha),'d-m-Y H:i:s' ),

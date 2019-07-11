@@ -3,6 +3,11 @@
     var ultimoestado;
     var rolid;
 
+    var d = new Date();
+    var day = d.getDate();
+    var mesinicial = d.getMonth()+1;
+    var anioinicial = d.getFullYear();
+
     document.onkeydown = function(){
         if(window.event){
             window.event.keyCode = 116;
@@ -228,14 +233,14 @@
             });
     }
     // Funcion para paginar lista de memos
-    function paginador(total=0,deptosolid=1,deptodesid=1,estado=0,pag=1,usuid=0,anio=0){
+    function paginador(total=0,deptosolid=1,deptodesid=1,estado=0,pag=1,usuid=0,anio=0,mes=0){
         //getListadoMemos(deptosolid=1,deptodesid=1,estado=0,pag=1,usuid=0,anio=0)
         //paginador(pag,estado,usuid,data.total,depto);
-            console.log('console log PAGINADOR------- ' );
+            /*console.log('console log PAGINADOR------- ' );
             console.log('pag '+ pag );
             console.log('esta '+ estado);
             console.log('usuid '+ usuid);
-            console.log('total '+ total);
+            console.log('total '+ total);*/
             
             var cantidadMostrar = 10;  // total de numeros de paginas  a mostrar 
             var registroPorPagina = 10; //total registro por pagina, debe coincidir con el modelo.listar
@@ -245,15 +250,34 @@
             $("#totalmemos").html(total);
                     if(total > registroPorPagina){
                         fnlista = "getListadoMemos";
-                        pagina = drawpaginador(total,registroPorPagina,cantidadMostrar,fnlista,pag,deptosolid,deptodesid,estado,usuid,anio);
+                        pagina = drawpaginador(total,registroPorPagina,cantidadMostrar,fnlista,pag,deptosolid,deptodesid,estado,usuid,anio,mes);
                         $("#paginador").html("");
                         $("#paginador").append(pagina);
                     }
     }
     // Funcion principal para listar los memos
     /* ver una funcion que vaya a contar y vuelva si no llamar a listado memos*/
-    function getListadoMemos(deptosolid=1,deptodesid=1,estado=0,pag=1,usuid=0,anio=0,numdoc=0){
+    function getListadoMemos(deptosolid=1,deptodesid=1,estado=0,pag=1,usuid=0,anio=0,mes=0,numdoc=0){
         inicio();
+        var txtdptoSol='';
+        var txtdptoDest='';
+        var txtestado='';
+        var txtanio='';
+        var txtmes='';
+        if(estado != 0){     txtestado = ' / ' + $("#memoEstado option:selected").text(); }
+        if(deptosolid != 1){ txtdptoSol = ' / ' + $("#memoDeptoSol option:selected").text(); }
+        if(deptodesid != 1){ txtdptoDest = ' / ' + $("#memoDeptoDest option:selected").text(); }
+        if(anio != 0){       txtanio = ' / ' + $("#memoAnio option:selected").text(); }
+        if(mes != 0){        txtmes = ' / ' + $("#memoMes option:selected").text(); }
+
+        var textotitulo='<b>Filtros ';
+            textotitulo += txtestado;
+            textotitulo += txtdptoSol;
+            textotitulo += txtdptoDest;
+            textotitulo += txtmes;
+            textotitulo += txtanio;
+            textotitulo += '</b>';
+        $('#accord1').html(textotitulo);
         var deptousu;
         /*console.log('console log LISTADO MEMO ------- ' );
         console.log('Usuario ' + usuid);
@@ -265,7 +289,7 @@
         console.log('NumDoc ' + numdoc);*/
             //paginador(pag,estado,usuid);
         ultimoestado = estado;
-        console.log('ult.estado : ' + ultimoestado);
+        //console.log('ult.estado : ' + ultimoestado);
 
         if (rolid==1){
             deptousu = 0;
@@ -280,6 +304,7 @@
                 "idest":estado,
                 "idusu":usuid,
                 "anio":anio,
+                "mes":mes,                
                 "numdoc":numdoc,
                 "dptoid":deptousu,
                 "Accionmem":"listar"
@@ -311,7 +336,7 @@
                 //text-muted, .text-primary, .text-success, .text-info, .text-warning, y .text-danger
                 if(data.datos.length>0){
                     //console.log('tiene elementos');
-                    paginador(data.total, deptosolid, deptodesid,estado,pag,usuid,anio);
+                    paginador(data.total, deptosolid, deptodesid,estado,pag,usuid,anio,mes);
                     for(var i=0; i<data.datos.length;i++){
                         var chek='<label class="checkbox-inline"><input class="chknumest" type="checkbox" value="'+data.datos[i].mem_id+'" name="cestado"></label>';
                         txtcolor = 'class="'+data.datos[i].mem_estado_colortxt + ' ' + data.datos[i].mem_estado_colorbg + '"';
@@ -409,10 +434,12 @@
     }
     //principal
     $(document).ready(function(){
+        $('#memoAnio').val(anioinicial);
+        $('#memoMes').val(mesinicial);        
         //$('[data-toggle="tooltip"]').tooltip();
         getListadoEstadoMemos(depto);
         getlistaDepto();
-        getListadoMemos(1,1,0,1,uid,0);
+        getListadoMemos(1,1,0,1,uid,anioinicial,mesinicial,0);
 
         $("#titulolistado").hide();
         $("#activacest").hide();
@@ -440,22 +467,24 @@
         // funcion que 
         function validabusca(){
             var txtnumdoc = document.getElementById("numDoc").value;
-            console.log('Funcion valida busca -------');
-            console.log('Num Doc: ' + $('#numDoc').val());
-            console.log('usuid :' + uid);
-            console.log('test ' + !(/^\s+$/.test(txtnumdoc)));
+            //console.log('Funcion valida busca -------');
+            //console.log('Num Doc: ' + $('#numDoc').val());
+            //console.log('usuid :' + uid);
+            //console.log('test ' + !(/^\s+$/.test(txtnumdoc)));
             if(txtnumdoc != null && txtnumdoc.length != 0 && !(/^\s+$/.test(txtnumdoc)) ){
                 var numdoc=txtnumdoc;//console.log('paso num correcto');
             }else{
                 var numdoc=0; //console.log('paso num negado');
             }
-            getListadoMemos($('#memoDeptoSol').val(),$('#memoDeptoDest').val(),$('#memoEstado').val(),1,uid,$('#memoAnio').val(),numdoc);
+            getListadoMemos($('#memoDeptoSol').val(),$('#memoDeptoDest').val(),$('#memoEstado').val(),1,uid,$('#memoAnio').val(),$('#memoMes').val(),numdoc);
         }
         // funcion buscar y lista doc. memos al cambiar estado
         $("#memoEstado").change(function(e){
             e.preventDefault();
             validabusca();
             var idestado = document.getElementById("memoEstado").selectedIndex;
+            //console.log('memoEstado :  ' + $("#memoEstado").val());
+            $("#ultimoEstado").val($("#memoEstado").val());
             var texto = $(this).find('option:selected').text();
             $("#estadoactual").html("Ultimo Estado : <b>" + texto + "</b>");
             if(idestado != 0){
@@ -494,6 +523,10 @@
             e.preventDefault();
             validabusca();
         });
+        $("#memoMes").change(function(e){
+            e.preventDefault();
+            validabusca();
+        });        
         // funcion buscar por numero de doc. 
         $("#buscarnumdoc").click(function(e){
             e.preventDefault();
@@ -561,20 +594,20 @@
         //Funcion que graba el cambio de estado en el modal cambia estado
         $("#grabar-estado").click(function(e){
             e.preventDefault();
+
             var inptuid = document.createElement('input');
             inptuid.type="hidden";
             inptuid.name="uId";
             inptuid.value=uid;
             document.formcambioestado.appendChild(inptuid);
 
-
             var selected = [];
                 $(":checkbox[name=cestado]").each(function() {
                     if (this.checked) {
-                        // agregas cada elemento.
-                        selected.push($(this).val());
+                        selected.push($(this).val());             // agregas cada elemento.
                     }
                 });
+
             var inptmemid = document.createElement('input');
                 inptmemid.type="hidden";
                 inptmemid.name="memosId";
@@ -625,7 +658,7 @@
                             $('#cerrarModalLittle').focus();
                             $("#capacest").hide();
                             limpiaTodoformcambioestado();
-                            getListadoMemos(1,1,0,1,uid,0);
+                            getListadoMemos(1,1,0,1,uid,anioinicial,mesinicial,0);
                             //getListadoEstadoMemos(depto);
                             //getlistaDepto();
                             $('#memoEstado').selectpicker('val', 0);

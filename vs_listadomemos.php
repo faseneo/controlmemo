@@ -55,13 +55,12 @@ if($_SESSION["autentica"] != "SIP"){
     <div class="container-fluid" style="margin-top:50px" id="bodyprincipal">  
         <div class="row"> 
             <div class="col-md-12 ">
-            <center><h2>Listado Memos <span class="badge" id="totalmemos"></span></h2></center><br>
+            <center><h2>Listado Memos <span class="badge" id="totalmemos"></span></h2> </center><br>
                 <div class="panel-group" id="accordion">
                 <div class="panel panel-info">
                     <div class="panel-heading">
                         <h4 class="panel-title" id="tituloPanelDestino">
                             <a id="accord1" data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-                            <b>Filtros</b>
                             </a>
                         </h4>
                     </div>
@@ -106,6 +105,27 @@ if($_SESSION["autentica"] != "SIP"){
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
+                            <div class="col-sm-1">
+                                 <div class="form-group">
+                                    <label for="memoMes">Mes Doc.</label>  
+                                    <select name="memoMes" id="memoMes" class="form-control" data-live-search="true">
+                                        <option value="0">Todos..</option>
+                                        <option value="1">Enero</option>
+                                        <option value="2">Febrero</option>
+                                        <option value="3">Marzo</option>
+                                        <option value="4">Abril</option>
+                                        <option value="5">Mayo</option>
+                                        <option value="6">Junio</option>
+                                        <option value="7">Julio</option>
+                                        <option value="8">Agosto</option>
+                                        <option value="9">Septiembre</option>
+                                        <option value="10">Octubre</option>
+                                        <option value="11">Noviembre</option>
+                                        <option value="12">Diciembre</option>
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>                            
                             <div class="col-sm-1">
                                  <div class="form-group">
                                     <label class="control-label" for="numDoc">Número doc.</label>
@@ -181,6 +201,7 @@ if($_SESSION["autentica"] != "SIP"){
             </div><!-- /.8 -->
         </div> <!-- /.row-->
     </div> <!-- /.container-->
+    <!-- Modal Cargando-->
     <div class="modal fade" id="ModalCargando" tabindex="-1" role="dialog" aria-labelledby="ModalCargandoLabel">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -210,6 +231,7 @@ if($_SESSION["autentica"] != "SIP"){
                 </div>
                 <form role="form" name="formcambioestado" id="formcambioestado" method="post" action="">
                     <input type="hidden" name="Accion" id="Accion" value="cambiaestado" />
+                    <input type="hidden" name="ultimoEstado" id="ultimoEstado" value="" />
                     <!-- <input type="hidden" name="meId" id="meId" value="" />
                     <input type="hidden" name="uId" id="uId" value="" /> -->
                     <div class="modal-body" id="bodyestado">

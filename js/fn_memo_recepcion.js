@@ -33,6 +33,7 @@
 
     function limpiaFormMemo(){
         $('#formIngresoMemo')[0].reset();
+        inicio();
         $("#listaArchivosMemo").html("");
         $("#archivoMemo").html("");
         $('#memoFechaRecep').val(fechaActual());
@@ -434,6 +435,7 @@
                 .done(function( data, textStatus, jqXHR ) {
                     limpiaFormMemo();
                     $("#memoDeptoSol").selectpicker('render');
+                    $("#memoDeptoDest").selectpicker('val', depto[0]);
                     $("#memoDeptoDest").selectpicker('render');
                     if ( console && console.log ) {
                         console.log( " data success : "+ data.success 

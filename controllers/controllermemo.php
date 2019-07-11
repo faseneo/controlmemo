@@ -96,6 +96,7 @@ if(isset($_REQUEST['Accionmem'])){
                                            $_REQUEST['idest'],
                                            $_REQUEST['idusu'],
                                            $_REQUEST['anio'],
+                                           $_REQUEST['mes'],
                                            $_REQUEST['numdoc'],
                                            $_REQUEST['dptoid']);
             header('Content-type: application/json; charset=utf-8');

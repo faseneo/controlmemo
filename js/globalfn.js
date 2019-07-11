@@ -1,3 +1,30 @@
+    //funcion para revisar y mejorar
+    function diaSemana() {
+        var x = document.getElementById("fecha");
+        let date = new Date(x.value.replace(/-+/g, '/'));
+
+        let options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        };
+        console.log(date.toLocaleDateString('es-MX', options));
+    }
+    function fechaCompleta(){
+        let dias = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
+        let meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        //function diaSemana() {
+            var x = document.getElementById("fecha");
+            let date = new Date(x.value.replace(/-+/g, '/'));
+
+            var fechaNum = date.getDate();
+            var mes_name = date.getMonth();
+            console.log(dias[date.getDay()-1] + " " + fechaNum + " de " + meses[mes_name] + " de " + date.getFullYear());
+        //}
+    }
+
+
     function fechaActual(){
         var fecha = new Date(); //Fecha actual
         var mes = fecha.getMonth()+1; //obteniendo mes
@@ -15,6 +42,11 @@
         var fecha = new Date(); //Fecha actual
         var anio = fecha.getFullYear(); //obteniendo año
         return anio;
+    }
+
+    function mesActualTexto(mes){
+        let meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        return meses[mes];
     }
 
     function validarFormatoFecha(campo) {
@@ -89,7 +121,7 @@
     }
 
     //function drawpaginador(compag,total,filasPorPagina,cantidadMostrar,fnlista,secid,estado){
-    function drawpaginador(total,filasPorPagina,cantidadMostrar,fnlista,compag,deptosolid,deptodesid,estado,usuid,anio){
+    function drawpaginador(total,filasPorPagina,cantidadMostrar,fnlista,compag,deptosolid,deptodesid,estado,usuid,anio,mes){
         totalPag = Math.ceil(total/filasPorPagina);
         var pagina="";
         var funcioninicio="";
@@ -106,7 +138,7 @@
                 }
                 // valida primera pagina y deshabilita anterior
                 concatfuncion = fnlista + '(' + deptosolid + ',' + deptodesid + ',' + estado ;
-                funcionfin = ',' + usuid + ',' + anio + ')';
+                funcionfin = ',' + usuid + ',' + anio + ',' + mes + ')';
                 if(compag == 1 ){
                     pagina = "<li class='disabled'><a href='#'><span aria-hidden='true'>&laquo;</span></a></li>";
                 }else{
