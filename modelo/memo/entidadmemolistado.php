@@ -10,7 +10,8 @@ class MemosListado{
     private $mem_depto_sol_nom;
     private $mem_depto_dest_nom;
     private $mem_estado_id_max;
-    private $mem_estado_nom_max;    
+    private $mem_estado_nom_max;  
+    private $mem_estado_gen_id;
     private $mem_estado_colorbg;
     private $mem_estado_colortxt;
     private $mem_estado_obs_max;  

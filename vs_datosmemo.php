@@ -471,6 +471,7 @@ if($_SESSION["autentica"] != "SIP"){
                 </div>
                 <form role="form" name="formcambioestado" id="formcambioestado" method="post" action="">
                     <input type="hidden" name="Accion" id="Accion" value="cambiaestado" />
+                    <input type="hidden" name="ultimoEstado" id="ultimoEstado" value="" />
                     <!-- <input type="hidden" name="meId" id="meId" value="" />
                     <input type="hidden" name="uId" id="uId" value="" /> -->
                     <div class="modal-body">

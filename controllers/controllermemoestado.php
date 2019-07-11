@@ -38,11 +38,11 @@ if(isset($_REQUEST['Accion'])){
             if(isset($_REQUEST['meId'])){
                 $CambioMEst->__SET('memo_camest_memid', $_REQUEST['meId']);
                 $CambioMEst->__SET('memo_camest_estid', $_REQUEST['memoEstado']);
-                $jsondata = $modelMEst->CambiaEstado($CambioMEst);
+                $jsondata = $modelMEst->CambiaEstado($CambioMEst,$_REQUEST['ultimoEstado']);
             }elseif (isset($_REQUEST['memosId'])){
                 $CambioMEst->__SET('memo_camest_memid', $_REQUEST['memosId']);
                 $CambioMEst->__SET('memo_camest_estid', $_REQUEST['memoEstadoce']);
-                $jsondata = $modelMEst->CambiaEstadoMasivo($CambioMEst);
+                $jsondata = $modelMEst->CambiaEstadoMasivo($CambioMEst, $_REQUEST['ultimoEstado']);
             }
             //llenar datos en el memo 
             /*if($_REQUEST['memoEstado']==8 || $_REQUEST['memoEstado']==9){

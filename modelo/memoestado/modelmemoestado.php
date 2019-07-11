@@ -222,7 +222,7 @@ class ModelMemoEst{
 
     }
     //graba el cambio de estado del memo(se va agregando)
-    public function CambiaEstado(MemoCambioEst $data, $estadogen=0, $deptosolid=0){
+    public function CambiaEstado(MemoCambioEst $data, $ultimoestado=0, $deptosolid=0){
         $jsonresponse = array();
         try{
             $sql = "INSERT INTO cambio_estados (cambio_estados_memo_id, cambio_estados_memo_estado_id, cambio_estados_observacion, cambio_estados_usuario_id) 
@@ -242,6 +242,11 @@ class ModelMemoEst{
 
                 $logsq->GrabarLogsQuerys('estado : '.$data->__GET('memo_camest_estid'),'0','Registracambioestado_variableestado');
 
+            $consultaultimoestadogen="SELECT memo_estado_memo_estadogenerico_id  FROM memo_estado
+                                     WHERE memo_estado_id = ".$ultimoestado;
+            $res = $this->pdo->query($consultaultimoestadogen);
+                $ultimoestadogenerico = $res->fetchColumn();
+
             $activatrigger=0;
             if ($estadogenerico != 0 || $estadogenerico != NULL) {
                 switch ($estadogenerico) {
@@ -259,6 +264,9 @@ class ModelMemoEst{
                         $deptodestino = $data->__GET('memo_camest_deptoid');
                         $activatrigger = 1;
                         $this->ValidaCambiaEstadoOtroDepto($data,0,2);
+                        if($ultimoestadogenerico==1){
+                            $this->actualizaFechaRecepcion($data->__GET('memo_camest_memid'));   
+                        }
                         break;
                     case 6:
                         $deptodestino = 0;
@@ -307,7 +315,6 @@ class ModelMemoEst{
         }
         return $jsonresponse;
     }
-
     //graba el cambio de estado del memo(se va agregando)
     public function ValidaCambiaEstadoOtroDepto(MemoCambioEst $data, $deptosolid=0,$estadogenerico=0){
         $jsonresponse = array();
@@ -430,28 +437,27 @@ class ModelMemoEst{
         return $jsonresponse;
     }    
     // funcion cambia estado para el Estado = 8 o Estado = 9, para que pase a depto. adquisiciones
-    /*public function CambiaEstadoTriggers($memid, $estid, $obs, $usuid){
+    public function actualizaFechaRecepcion($memid){
         $jsonresponse = array();
         try{
-            $sql = "INSERT INTO cambio_estados (cambio_estados_memo_id, cambio_estados_memo_estado_id, cambio_estados_observacion, cambio_estados_usuario_id) 
-                    VALUES (?,?,?,?)";
-
-            $this->pdo->prepare($sql)->execute(array($memid,
-                                                     $estid,
-                                                     $obs,
-                                                     $usuid
-                                                    )
-                                              );
+            $sqlactualizafecharecep = "UPDATE memo SET memo_fecha_recepcion = NOW() WHERE memo_id = ?";
+                $this->pdo->prepare($sqlactualizafecharecep)->execute(array($memid));
+                $logsq = new ModeloLogsQuerys();                
+                $logsq->GrabarLogsQuerys($sqlactualizafecharecep,'0','Actualiza Fecha Recepcion');
+                $logsq = null;
             $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Trigger ejecutado correctamente'; 
+            $jsonresponse['message'] = 'Actualiza fecha recepcion correctamente'; 
         } catch (PDOException $pdoException){
-            //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
             $jsonresponse['success'] = false;
-            $jsonresponse['message'] = 'Error al ingresar cambiar estado';
+            $jsonresponse['message'] = 'Error al Actualizar fecha recepcion';
             $jsonresponse['errorQuery'] = $pdoException->getMessage();
+            $logs = new modelologs();
+            $trace=$pdoException->getTraceAsString();
+              $logs->GrabarLogs($pdoException->getMessage(),$trace);
+              $logs = null;            
         }
         return $jsonresponse;
-    }*/
+    }
 
     public function ListarMin($depto = 1,$ultimoestado=0){
         $depto = (int) $depto;

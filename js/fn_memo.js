@@ -511,8 +511,12 @@
                 fila += '</tr>';
                 $("#listaHistorial").append(fila);
             }
-
+            //usar este estado para generalizar las vistas de estos botones
+            //queda pendiente esta modificacion (09072019 fsegovia)
+            ultimoestadogenid = data.datos[0].estado_gen_id;
+            console.log('ultimo estado generico : '+ultimoestadogenid);
             ultimoestado = data.datos[0].estado_id;
+            $("#ultimoEstado").val(ultimoestado);
             ultimoestadotipo = data.datos[0].estado_tipo;
             $("#estadoactual").html("Ultimo Estado : <b>" + ultimoestadotipo + "</b>");
             deshabilitabotones();
