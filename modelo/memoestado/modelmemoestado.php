@@ -289,7 +289,7 @@ class ModelMemoEst{
                 }else if($data->__GET('memo_camest_estid')==14){
                     $deptodestino = 87;
                     $activatrigger=1;
-                    $data->__SET('memo_camest_estid',17);
+                    //$data->__SET('memo_camest_estid',17);
                     $this->ValidaCambiaEstadoOtroDepto($data,$deptodestino,2);
                 }
                 //agregar los otros id de estado para adquisiciones
