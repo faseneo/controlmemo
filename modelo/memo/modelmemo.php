@@ -54,7 +54,7 @@ class ModelMemo  {
       $estadonot='';
         try{
           //estados genericos 3 'anulado' y 7 'archivados' no se deben mostrar al principio, solo por solicitud
-          if($estadoid == 0 || $estadoid == null){
+          if(($estadoid == 0 || $estadoid == null) && $numdoc==0){
             if($dptoid != 0){
               $deptousu = is_array($dptoid)? $dptoid[0] : $dptoid;
               $buscaestadogennot= "SELECT mm.memo_estado_id FROM memo_estado AS mm  WHERE mm.memo_estado_depto_id=$deptousu AND (mm.memo_estado_memo_estadogenerico_id=3 OR mm.memo_estado_memo_estadogenerico_id=7)";
