@@ -537,8 +537,8 @@
                     getlistaEstadosMemo(ultimoorden);
                 }
             }else if(depto[0]==32){
-                //console.log('paso por depto 9');
-                if(ultimoestado==31 || ultimoestado==32){
+                //Edita solo en ingreso o recepcion con destino propio depto
+                if(ultimoestado==31 || (ultimoestado==32 && depto[0]==$("#memoDeptoDest").val())){
                     $('#editar-memo').show();
                 }
                 if(ultimoestado==33 || ultimoestado==37 || ultimoestado==40 ){
@@ -623,7 +623,7 @@
             $("#listaHistorialDeriv").html(""); 
             var totalHistorialDev = data.datos.length;
             $("#totalDeriva").html("");
-            $("#totaltotalDerivaObs").html(totalHistorialDev);
+            $("#totalDeriva").html(totalHistorialDev);
             console.log('Total Derivados : '+totalHistorialDev);
 
             j=data.datos.length;
@@ -1018,6 +1018,9 @@
             if(idestado==11 || idestado==14){
                 $("#memoOtroDeptoNombre").show();
                 $("#memoOtroDepto").hide();
+            }else if(idestado==5 || idestado==35){
+                $("#memoOtroDepto").show();
+                $("#memoOtroDeptoNombre").show();
             }else{
                 $("#memoOtroDeptoNombre").hide();
                 $("#memoOtroDepto").hide();

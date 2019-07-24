@@ -289,8 +289,7 @@ if($_SESSION["autentica"] != "SIP"){
                         <div class="panel panel-warning">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                        Historial Observaciones
-                                        <span class="badge" id="totalObs"></span>
+                                    Historial Observaciones <span class="badge" id="totalObs"></span>
                                 </h4>
                             </div>
                             <!-- <div id="collapse3" class="panel-collapse collapse"> -->
@@ -320,7 +319,7 @@ if($_SESSION["autentica"] != "SIP"){
                     <div class="col-md-12">
                         <div class="panel panel-warning">
                             <div class="panel-heading">
-                                <h4 class="panel-title">Historial Destinos<span class="badge" id="totalDeriva"></span>
+                                <h4 class="panel-title">Historial Destinos <span class="badge" id="totalDeriva"></span>
                                 </h4>
                             </div>
                                 <div class="panel-body fixed-panel" >

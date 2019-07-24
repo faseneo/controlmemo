@@ -658,14 +658,14 @@
                             $('#cerrarModalLittle').focus();
                             $("#capacest").hide();
                             limpiaTodoformcambioestado();
-                            getListadoMemos(1,1,0,1,uid,anioinicial,mesinicial,0);
-                            //getListadoEstadoMemos(depto);
-                            //getlistaDepto();
+                            $('#memoAnio').val(anioinicial);
+                            $('#memoMes').val(mesinicial);
                             $('#memoEstado').selectpicker('val', 0);
                             $("#memoDeptoSol").selectpicker('val', 1);
                             $("#memoDeptoDest").selectpicker('val', 1);
-                            $("#memoAnio").selectpicker('val', 0);
-
+                            //getListadoEstadoMemos(depto);
+                            //getlistaDepto();
+                            getListadoMemos(1,1,0,1,uid,anioinicial,mesinicial,0);
                         });
                     });
                     
