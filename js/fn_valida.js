@@ -95,7 +95,14 @@ $(document).ready(function(){
                     }
                     if(data.success==true){
                     	$('#noexiste').hide();
-                    	window.location.href = "vs_listadomemos.php";
+                        if(data.datos.usu_rol_id==1 || data.datos.usu_rol_id==2){
+                            window.location.href = "vs_listadomemoasigna.php";
+                        }else if(data.datos.usu_rol_id==3){
+                            window.location.href = "vs_listadomemoadq.php";
+                        }else{
+                            window.location.href = "vs_listadomemos.php";
+                        }
+                    	
                     }else{
                     	$('#noexiste').html('<strong><span class="glyphicon glyphicon-exclamation-sign"></span></strong> '+data.message).show();
                     }

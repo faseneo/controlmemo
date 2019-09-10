@@ -47,7 +47,7 @@ class ModelMemo  {
       // Lista todos los memos segun numpag, estado, seccion y/o usuario
       // $deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0
       //public function Listar($numpag = 1, $estadoid = 0, $usuid=0, $secid=1){
-    public function Listar($deptosol=1,$deptodes=1, $numpag = 1, $estadoid = 0, $usuid=0, $anio=0, $mes=0, $numdoc=0, $dptoid=0){
+    public function Listar($deptosol=1,$deptodes=1, $numpag = 1, $estadoid = 0, $usuid=0, $anio=0, $mes=0, $numdoc=0, $dptoid=0, $usuasig=0){
       $CantidadMostrar=10;
       $compag         =(int)($numpag);
       $deptos=$this->convertdeptos_arraytostring($dptoid);
@@ -64,13 +64,13 @@ class ModelMemo  {
                   $logsq->GrabarLogsQuerys($buscaestadogennot,0,'Consulta estados genericos a no mostrar');
                   $logsq = null;
                   foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
-                    $estadonotarray[]= $r->memo_estado_id;
+                      $estadonotarray[]= $r->memo_estado_id;
                   }
                   $estadonot = $this->convertdeptos_arraytostring($estadonotarray);
                   //$estadonot="3,7";            
             }
-          }          
-            $respuesta = $this->contarTotal($deptosol,$deptodes,$estadoid,$usuid,$anio,$mes,$numdoc,$deptos,$estadonot);
+          }
+            $respuesta = $this->contarTotal($deptosol,$deptodes,$estadoid,$usuid,$anio,$mes,$numdoc,$deptos,$estadonot,$usuasig);
             $tot_reg = (int)$respuesta['total'];
             if ($tot_reg == 0) {
                 $jsonresponsel['success'] = true;
@@ -79,10 +79,11 @@ class ModelMemo  {
             }else{
               $result = array();
               $reginicio = ($compag-1) * $CantidadMostrar;
-
-              
-              $consulta = "CALL listado_memo_por_estadomax_depto($deptosol,$deptodes,$estadoid,$reginicio,$CantidadMostrar,$usuid,$anio,$mes,$numdoc,'$deptos','$estadonot');";
-
+                if($dptoid[0]==87){
+                    $consulta = "CALL listado_memos_estadomax_depto_adquisiciones($deptosol,$estadoid,$reginicio,$CantidadMostrar,$usuid,$anio,$mes,$numdoc,$usuasig,'$estadonot');";
+                }else{
+                  $consulta = "CALL listado_memo_por_estadomax_depto($deptosol,$deptodes,$estadoid,$reginicio,$CantidadMostrar,$usuid,$anio,$mes,$numdoc,'$deptos','$estadonot');";
+                }   
               $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($consulta,$tot_reg,'Listar');
                 $logsq = null;
@@ -90,16 +91,34 @@ class ModelMemo  {
               $stm = $this->pdo->prepare($consulta);
               $stm->execute();
               $totquery = 0;
+
               foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
                  $busq = new MemosListado();
                       $busq->__SET('mem_id', $r->memo_id);
                       $busq->__SET('mem_numero', $r->memo_num_memo);
                       $busq->__SET('mem_anio', $r->memo_anio);
                       $busq->__SET('mem_fecha', date_format(date_create($r->memo_fecha_memo),'d-m-Y' ));
-                      $busq->__SET('mem_fecha_recep', date_format(date_create($r->memo_fecha_recepcion),'d-m-Y' ));
+                      if($dptoid[0]==87){ //fecha_recepcion_unidad
+                        $busq->__SET('mem_fecha_recep', date_format(date_create($r->fecha_recepcion_unidad),'d-m-Y' ));
+                        if($r->asigna_usu_usuario_id==null){
+                          require_once("../modelo/usuario/modelusuario.php");
+                          $modelUsu = new ModelUsuarios();
+                          $arraydatos = $modelUsu->ObtenerAsignaMemo($r->memo_id);
+                            if(count($arraydatos["datos"]) > 0){
+                              $busq->__SET('mem_asigna_array', $arraydatos["datos"]);
+                            }
+                        }else{
+                          $busq->__SET('mem_asigna_usu_id', $r->asigna_usu_usuario_id);
+                          $busq->__SET('mem_asigna_usu_nom', $r->usuario_nombre);
+                          $busq->__SET('mem_asigna_fecha', date_format(date_create($r->asigna_usu_fecha),'d-m-Y' ));
+                          $busq->__SET('mem_asigna_usu_estado', $r->asigna_usu_estado);
+                        }
+                      }else{
+                        $busq->__SET('mem_fecha_recep', date_format(date_create($r->memo_fecha_recepcion),'d-m-Y' ));
+                        $busq->__SET('mem_depto_dest_nom', $r->depto_nombre_dest);
+                      }
                       $busq->__SET('mem_materia', $r->memo_materia);
                       $busq->__SET('mem_depto_sol_nom', $r->depto_nombre);
-                      $busq->__SET('mem_depto_dest_nom', $r->depto_nombre_dest);
                       $busq->__SET('mem_estado_id_max', $r->cambio_estados_memo_estado_id);
                       $genid = $r->memo_estado_memo_estadogenerico_id != null ? $r->memo_estado_memo_estadogenerico_id : 0;
                       $busq->__SET('mem_estado_gen_id', $genid);
@@ -109,6 +128,7 @@ class ModelMemo  {
                       $busq->__SET('mem_estado_obs_max', $r->cambio_estados_observacion);
                       $busq->__SET('mem_estado_fecha_max', date_format(date_create($r->cambio_estados_fecha),'d-m-Y' ));
                       $busq->__SET('mem_estado_dias', $r->cambio_estados_dias);
+
                   $result[] = $busq->returnArray();
                   $totquery++;
               }
@@ -133,12 +153,19 @@ class ModelMemo  {
         
         return $jsonresponsel;
     }
-    //cuenta total de memos en el sistema
-    public function contarTotal($deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0,$mes=0,$numdoc=0,$dptoid, $estadonot=0){
+    //Función que cuenta total de memos en el sistema
+    public function contarTotal($deptosol=1,$deptodes=1,$estadoid=0,$usuid=0,$anio=0,$mes=0,$numdoc=0,$dptoid, $estadonot=0,$usuasig=0){
         $jsonresponse = array();
         $deptos = $this->convertdeptos_arraytostring($dptoid);
         try{
-            $consulta = "CALL total_listado_memos_estado_depto($deptosol,$deptodes,$estadoid,$usuid,$anio,$mes,$numdoc,'$deptos','$estadonot');";
+          //total_listado_memos_estado_depto_adquisiciones
+          $deptoconsulta=explode(',',$dptoid);
+          
+          if($deptoconsulta[0]==87){
+            $consulta = "CALL total_listado_memos_estado_depto_adquisiciones($deptosol,$estadoid,$usuid,$anio,$mes,$numdoc,$usuasig,'$estadonot');";
+          }else{
+             $consulta = "CALL total_listado_memos_estado_depto($deptosol,$deptodes,$estadoid,$usuid,$anio,$mes,$numdoc,'$deptos','$estadonot');";
+          }
             $stm = $this->pdo->prepare($consulta);
             $stm->execute();
             $total_reg = $stm->fetch(PDO::FETCH_OBJ);
@@ -159,10 +186,10 @@ class ModelMemo  {
               $logs->GrabarLogs($Exception->getMessage(),$trace,'contarTotal');
               $logs = null;            
         }
-      return $jsonresponse;        
+        return $jsonresponse;        
     }
-    //Obtiene datos del memo  por su id
-    public function Obtener($id,$dep){
+    //Función que obtiene datos del memo  por su id
+    public function Obtener($id,$dep,$uid){
         try{
           $consulta = "SELECT COUNT(*) FROM memo WHERE memo_id = ".$id;
             $res = $this->pdo->query($consulta);
@@ -172,14 +199,18 @@ class ModelMemo  {
                 $jsonresponse['message'] = 'Memo no existe';
                 $jsonresponse['datos'] = [];
             }else{
-              $consultamemo = "SELECT  *
-                            FROM memo as mm, departamento as dep, centro_costos as cc
-                            WHERE dep.depto_id = mm.memo_depto_solicitante_id 
-                            AND cc.cc_codigo=mm.memo_cc_codigo
-                            AND mm.memo_id = ?";
+              $consultamemo = "SELECT  mm.memo_id, mm.memo_num_memo, mm.memo_anio, mm.memo_materia, mm.memo_fecha_memo, 
+                          mm.memo_fecha_recepcion,
+                          mm.memo_nombre_solicitante, mm.memo_depto_solicitante_id, dep.depto_nombre as depto_nombre_sol, 
+                          mm.memo_nombre_destinatario, mm.memo_depto_destinatario_id, depd.depto_nombre as depto_nombre_dest,
+                          mm.memo_fecha_ingreso
+                          FROM memo as mm 
+                          LEFT JOIN departamento AS dep ON dep.depto_id = mm.memo_depto_solicitante_id 
+                          LEFT JOIN departamento AS depd ON depd.depto_id = mm.memo_depto_destinatario_id 
+                          WHERE mm.memo_id = ?";
               $stm = $this->pdo->prepare($consultamemo);
               $logsq = new ModeloLogsQuerys();
-                $logsq->GrabarLogsQuerys($consultamemo,$total,'Obtener');
+                $logsq->GrabarLogsQuerys($consultamemo,$total,'ObtenerMEMO');
                 $logsq = null;
 
               $stm->execute(array($id));
@@ -190,20 +221,33 @@ class ModelMemo  {
                           $busq->__SET('mem_numero', $r->memo_num_memo);
                           $busq->__SET('mem_anio', $r->memo_anio);
                           $busq->__SET('mem_materia', $r->memo_materia);
-                          $busq->__SET('mem_fecha', $r->memo_fecha_memo);
-                          $busq->__SET('mem_fecha_recep', $r->memo_fecha_recepcion);
-
+                          if($dep[0]==87){
+                            $busq->__SET('mem_fecha', date_format(date_create($r->memo_fecha_memo),'d-m-Y' ));
+                            $busq->__SET('mem_fecha_recep', date_format(date_create($r->memo_fecha_recepcion),'d-m-Y' ));
+                          }else{
+                            $busq->__SET('mem_fecha', $r->memo_fecha_memo);
+                            $busq->__SET('mem_fecha_recep', $r->memo_fecha_recepcion);
+                          }
                           $busq->__SET('mem_depto_sol_id', $r->memo_depto_solicitante_id);
                           $busq->__SET('mem_nom_sol', $r->memo_nombre_solicitante);
-                          $busq->__SET('mem_depto_sol_nom', $r->depto_nombre);
+                          $busq->__SET('mem_depto_sol_nom', $r->depto_nombre_sol);
 
                           $busq->__SET('mem_depto_dest_id', $r->memo_depto_destinatario_id);
                           $busq->__SET('mem_nom_dest', $r->memo_nombre_destinatario);
+                          $busq->__SET('mem_depto_dest_nom', $r->depto_nombre_dest);
 
-                          $busq->__SET('mem_fecha_ingr', $r->memo_fecha_ingreso);
-                          $busq->__SET('mem_cc_codigo', $r->memo_cc_codigo);
-                          $busq->__SET('mem_fecha_cdp', date_format(date_create($r->memo_fecha_cdp),'d-m-Y' ));
-                          $busq->__SET('mem_nom_cc', $r->cc_nombre);
+                          $busq->__SET('mem_fecha_ingr', date_format(date_create($r->memo_fecha_ingreso),'d-m-Y' ));
+                          
+                          require_once("../modelo/usuario/modelusuario.php");
+                          $modelUsu = new ModelUsuarios();
+                          $arraydatos = $modelUsu->ObtenerAsignaMemo($r->memo_id);
+                            if(count($arraydatos["datos"]) > 0){
+                                for($i=0; $i<count($arraydatos["datos"]); $i++){
+                                      if($arraydatos["datos"][$i]["asigna_usu_uid"]==$uid && $arraydatos["datos"][$i]["asigna_usu_estado_id"]==1){
+                                        $modelUsu->CambiaEstadoAsignaMemo($uid,$r->memo_id,2);
+                                      }
+                                }
+                            }
 
                 $jsonresponse['success'] = true;
                 $jsonresponse['message'] = 'Se obtuvo el memo correctamente';
@@ -227,7 +271,6 @@ class ModelMemo  {
         $this->pdo=null;
         return $jsonresponse;
     }
-
     //Funcion que lista los cambios de estados del memo
     public function ObtenerCambiosEstadosMemo($idmemo,$dep=1){
         $depto = (int) $dep;
@@ -351,7 +394,7 @@ class ModelMemo  {
         $this->pdo=null;
         return $jsonresponse;
     }    
-    //Registra un nuevo Memo
+    //función que Registra un nuevo Memo
     public function Registrar(Memos $data, $files, $uid, $tiporeg, $estadoinicial=0){
       try{
             $sql = "INSERT INTO memo (memo_num_memo,
@@ -362,10 +405,9 @@ class ModelMemo  {
                                       memo_nombre_solicitante,
                                       memo_depto_solicitante_id,
                                       memo_nombre_destinatario,
-                                      memo_depto_destinatario_id,
-                                      memo_cc_codigo
+                                      memo_depto_destinatario_id
                                       ) 
-                    VALUES (?,?,?,?,?,?,?,?,?,?)";
+                    VALUES (?,?,?,?,?,?,?,?,?)";
 
             $this->pdo->prepare($sql)->execute(array($data->__GET('mem_numero'),
                                                      $data->__GET('mem_anio'),
@@ -375,8 +417,7 @@ class ModelMemo  {
                                                      $data->__GET('mem_nom_sol'),
                                                      $data->__GET('mem_depto_sol_id'),
                                                      $data->__GET('mem_nom_dest'),
-                                                     $data->__GET('mem_depto_dest_id'),
-                                                     0
+                                                     $data->__GET('mem_depto_dest_id')
                                                     ));
             $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($sql,'0','Registrar');
@@ -427,6 +468,7 @@ class ModelMemo  {
         }
         return $jsonresponse;
     }
+    //Funcion que valida si un usuario tiene permisos para ingresar documentos
     public function ValidaEstadoDepto($usuid,$estgenerico){
         $jsonresponse = array();
         $msg='';
@@ -458,10 +500,9 @@ class ModelMemo  {
               $logs = null;            
         }
         return $jsonresponse;
-
     }
+    //Funcion que actualiza el memo
     public function Actualizar(Memos $data){
-      //var_dump($data);
       try{
             $sql = "UPDATE memo SET 
                            memo_materia = ?,
@@ -485,7 +526,6 @@ class ModelMemo  {
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Memo Actualizado correctamente'; 
         } catch (Exception $Exception){
-        //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
             $jsonresponse['success'] = false;
             $jsonresponse['message'] = 'Error al actualizad Memo';
             $jsonresponse['errorQuery'] = $Exception->getMessage();
@@ -496,11 +536,11 @@ class ModelMemo  {
         }
         return $jsonresponse;
     }
-
-    public function ActualizarMemoCDP($memoId,$ccCodigo,$fechaCDP){
+    //Función que actualiza datos del CDP del memo
+    public function ActualizarMemoCDP($memoId,$ccCodigo,$fechaCDP,$uid){
         $jsonresponse = array();
         try{
-            $sql = "UPDATE memo SET memo_cc_codigo = $ccCodigo,memo_fecha_cdp = '$fechaCDP' WHERE  memo_id = $memoId";                      
+            $sql = "UPDATE memo SET memo_cc_codigo = $ccCodigo, memo_fecha_cdp = '$fechaCDP' WHERE  memo_id = $memoId";                      
             $this->pdo->prepare($sql)->execute();
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'Datos Memo actualizados correctamente';                 

@@ -341,11 +341,13 @@
                         fila += '<td class="tdcestmas">'+chek+'</td>';
                         fila += '<td>'+ data.datos[i].mem_anio + ' - ' + data.datos[i].mem_numero + '</td>';
                         fila += '<td>'+ data.datos[i].mem_fecha +'</td>';
-                        fila += '<td>'+ data.datos[i].mem_fecha_recep +'</td>';
+                        //fila += '<td>'+ data.datos[i].mem_fecha_recep +'</td>';
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_materia + '">'+ materia +'</a></td>';
                         fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].mem_depto_sol_nom + '">' + deptosol  + '</a></td>'
                         //console.log('largo : ' + data.datos[i].mem_asigna_array.length);
                         var largoasigna = data.datos[i].mem_asigna_array.length;
+                        var filaestado = '';
+                        var filafechae = '';
                         if(largoasigna > 0 ){
                             //console.log('largho '+ largoasigna);
                             fila += '<td>';
@@ -354,24 +356,26 @@
                                 fila += data.datos[i].mem_asigna_array[j].asigna_usu_fecha + '">';
                                 fila += data.datos[i].mem_asigna_array[j].asigna_usu_nom + '</a>';
                                 fila += '<br>';
+                                filaestado +=  data.datos[i].mem_asigna_array[j].asigna_usu_estado + '<br>';
+                                filafechae +=  data.datos[i].mem_asigna_array[j].asigna_usu_fecha + '<br>';
                             }   
                             fila += '</td>';
                         }else{
-                            var usuasigna = data.datos[i].mem_asigna_usu_nom==null ? '':data.datos[i].mem_asigna_usu_nom;
+                            var usuasigna = data.datos[i].mem_asigna_usu_nom==null ? '':data.datos[i].mem_asigna_usu_nom;//mem_asigna_usu_estado
+                            filaestado = data.datos[i].mem_asigna_fecha==null ? '':data.datos[i].mem_asigna_fecha;
+                            filafechae = data.datos[i].mem_asigna_usu_estado==null ? '':data.datos[i].mem_asigna_usu_estado;
                             fila += '<td>' + usuasigna + '</td>'
                         }
-
+                        fila += '<td class="text-left">' + filafechae + '</td>';
+                        fila += '<td class="text-left">' + filaestado + '</td>';
                         fila += '<td><p '+ txtcolor +' data-toggle="tooltip" title="Modificado el ' + data.datos[i].mem_estado_fecha_max + '"> &nbsp;&nbsp;' + data.datos[i].mem_estado_nom_max + '</p></td>'
                         fila += '<td class="text-left">'+data.datos[i].mem_estado_dias + '</td>';
+                        
                         fila += '<td class="text-left"><a  href="vs_gestionmemo.php?memId=' + data.datos[i].mem_id + '"';
                         fila += ' class="btn btn-xs btn-success" ';
                         fila += ' role="button id="ver-memo"> ';
                         fila += 'Ver <span class="glyphicon glyphicon-eye-open"></span></a>';
 
-                        fila += ' <button id="Asignar" type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#myModalAsiganUsu"';
-                        fila += ' onclick="datosMemoAsigna(' + data.datos[i].mem_id + ',' + data.datos[i].mem_estado_id_max + ')" >Asignar</button></td>';
-
-                        //fila += ' <a href="#" class="btn btn-xs btn-info" data-id="' + data.datos[i].mem_id + '" data-toggle="modal" data-target="#myModalDestino">Destinos <span class="glyphicon glyphicon-map-marker"></span></a>';
                         fila += '</td>';
                         fila += '</tr>';
                         $("#listamemos").append(fila);
@@ -503,7 +507,7 @@
         getListadoDificultad();
         getListadoPrioridad();
         getlistaDepto();
-        getListadoMemos(1,1,0,1,uid,0,0,0,0);
+        getListadoMemos(1,1,0,1,uid,0,0,0,uid);
         $("#tdce").hide();
 
         $("#limpiar-memo").click(function(e){

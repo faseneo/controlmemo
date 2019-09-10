@@ -26,19 +26,21 @@
 
     $(document).ready(function(){
         //funcion para validar campos del formulario
+        
         function validarFormulario(){
             var txtTipo = document.getElementById('proccompTipo').value;
             var txtPriori = document.getElementById('proccompOrden').value;
             var txtDescrip = document.getElementById('proccompDescrip').value;
             var proctActivo = document.getElementById('proccompActivo').selectedIndex;
-                //Test campo obligatorio
+
+               //Test campo obligatorio
                 if(txtTipo == null || txtTipo.length == 0 || /^\s+$/.test(txtTipo)){
                     alert('ERROR: El campo tipo no debe ir vacío o con espacios en blanco');
                     document.getElementById('proccompTipo').focus();
                     return false;
                 }   
                 if(txtDescrip == null || txtDescrip.length == 0 || /^\s+$/.test(txtDescrip)){
-                    alert('ERROR: El campo prioridad no debe ir vacío o con espacios en blanco');
+                    alert('ERROR: El campo Decripcion no debe ir vacío o con espacios en blanco');
                     document.getElementById('proccompDescrip').focus();
                     return false;
                 }                

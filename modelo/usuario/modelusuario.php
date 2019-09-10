@@ -18,7 +18,7 @@ class ModelUsuarios{
             die($e->getMessage());
         }
     }
-    //Lista todos los usuarios
+    //Lista todos los usuarios, mantenedor
     public function Listar(){
         $jsonresponse = array();
         try{
@@ -64,7 +64,7 @@ class ModelUsuarios{
         $this->pdo=null;
 		return $jsonresponse;
     }
-    // Lista los usuarios por rolid
+    // Lista los usuarios por rolid, 
     public function Listarxrol($rolid){
         $jsonresponse = array();
         try{
@@ -105,7 +105,40 @@ class ModelUsuarios{
         } 
         return $jsonresponse;
     }
-    // trae datos de un usuario por id
+    //Lista por Perfil , usado en listadomemoasigna de adquisiciones
+    public function Listarxperfil($perfilid){
+        $jsonresponse = array();
+        try{
+            $result = array();
+            $stm = $this->pdo->prepare("SELECT  us.usuario_id,
+                                                us.usuario_nombre,
+                                                us.usuario_email,
+                                                us.usuario_estado
+                                        FROM usuario AS us 
+                                        LEFT JOIN usu_perfiles AS uper ON uper.usu_perfiles_usuario_id= us.usuario_id
+                                        WHERE uper.usu_perfiles_perfiles_id = ? AND us.usuario_estado=1
+                                        ORDER BY us.usuario_nombre ASC");
+            
+            $stm->execute(array($perfilid));
+            foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                $fila = array('usu_id'=>$r->usuario_id,
+                              'usu_nombre'=>$r->usuario_nombre,
+                              'usu_email'=>$r->usuario_email,
+                              'usu_estado_id'=>$r->usuario_estado);
+                $result[]=$fila;
+            }
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'listado correctamente';
+            $jsonresponse['datos'] = $result;
+        }
+        catch(Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al listar los usuarios';
+        } 
+        return $jsonresponse;
+    }
+    // trae datos de un usuario por id, , mantenedor
     public function Obtener($id){
         $jsonresponse = array();
         try{
@@ -150,7 +183,7 @@ class ModelUsuarios{
         }
         return $jsonresponse;
     }
-    // obtiene perfiles del ususario por su id
+    // obtiene perfiles del ususario por su id, , mantenedor
     public function ObtenerPerfilesUsuaro($idusu){
         try{
             $consulta = "SELECT COUNT(*) FROM usu_perfiles where usu_perfiles_usuario_id = ".$idusu;
@@ -193,8 +226,7 @@ class ModelUsuarios{
         $this->pdo=null;
         return $jsonresponse;
     }
-
-    // obtiene departamentos del ususario por su id
+    // obtiene departamentos del ususario por su id, mantenedor
     public function ObtenerDeptosUsuario($idusu){
         try{
             $consulta = "SELECT COUNT(*) FROM dpto_tiene_usu where dpto_tiene_usu_usuario_id = ".$idusu;
@@ -236,7 +268,6 @@ class ModelUsuarios{
         }
         return $jsonresponse;
     }
-
     // obtiene departamentos del ususario por su id generando un arreglo de id de los deptos.
     public function ObtenerDeptosIdUsuario($idusu){
         try{
@@ -277,8 +308,7 @@ class ModelUsuarios{
         }
         return $jsonresponse;
     }
-
-    // elimina usuario 
+    // elimina usuario , , mantenedor
     public function Eliminar($id){
         $jsonresponse = array();
         try{
@@ -295,7 +325,7 @@ class ModelUsuarios{
         }
         return $jsonresponse;
     }
-    // Registra por primera vez un usuario
+    // Registra por primera vez un usuario, , mantenedor
     public function Registrar(Usuarios $data){
         $jsonresponse = array();
         try{
@@ -350,7 +380,7 @@ class ModelUsuarios{
         }
         return $jsonresponse;
     }
-    //registra los perfiles asignados al usuario
+    //registra los perfiles asignados al usuario, mantenedor
     public function RegistrarPerfiles($idusu , $perfiles){
         $jsonresponse = array();
         try{
@@ -381,7 +411,7 @@ class ModelUsuarios{
         $this->pdo=null;
         return $jsonresponse;
     }
-    //actualiza datos del usuario
+    //actualiza datos del usuario, mantenedor
     public function Actualizar(Usuarios $data){
         $jsonresponse = array();
         //print_r($data);
@@ -414,7 +444,7 @@ class ModelUsuarios{
         }
         return $jsonresponse;
     }
-    //registra los departamentos asignados al usuario
+    //registra los departamentos asignados al usuario, mantenedor
     public function RegistrarUsuDeptos($idusu , $deptosid){
         /*
         INSERT INTO `dpto_tiene_usu` (`dpto_tiene_usu_depto_id`, `dpto_tiene_usu_usuario_id`, `dpto_tiene_usu_estado`) 
@@ -456,8 +486,8 @@ class ModelUsuarios{
         $this->pdo=null;
         return $jsonresponse;
     }
-    //revisar a quien esta asignado antes y cambiar el estado de la asignacion anterior
-    //todos lo de la Secretaria estado 1, ver permisos para ayudante admin
+    //Revisar a quien esta asignado antes (no es necesario, puede tener mas de un usuario asignado y un usuario mas de una asignación)
+    //Ver permisos para ayudante admin(ingreso de factura)
     public function AsignaMemo($usuid,$memid,$dif,$prio,$coment){
         $jsonresponse = array();
         try{
@@ -466,15 +496,10 @@ class ModelUsuarios{
                                                 asigna_usuario_comentario,
                                                 asigna_usuario_asigna_prioridad_id,
                                                 asigna_usuario_asigna_dificultad_id,
-                                                asigna_usuario_estado_asignacion_id)
-                    VALUES ($memid,$usuid,'$coment',$prio,$dif,1)";
+                                                asigna_usuario_estado_asignacion_id,
+                                                asigna_usuario_ultimamod)
+                    VALUES ($memid,$usuid,'$coment',$prio,$dif,1,now())";
 
-            /*$this->pdo->prepare($sql)->execute(array($memid,
-                                                     $usuid,
-                                                     $coment, 
-                                                     '1')
-                                              );*/
-            //                                  var_dump($sql);
             $logsq = new ModeloLogsQuerys();
                 $logsq->GrabarLogsQuerys($sql,'0','AsignaMemo');
                 $logsq = null;
@@ -491,8 +516,100 @@ class ModelUsuarios{
         }
         return $jsonresponse;        
     }
-    // valida usuario al loguearse
+    //Funcion que actualiza estado de la asignacion
+    public function CambiaEstadoAsignaMemo($usuid,$memid,$estadonuevo){
 
+        $jsonresponse = array();
+        try{
+            $sql = "UPDATE asigna_usuario SET asigna_usuario_estado_asignacion_id=$estadonuevo, asigna_usuario_ultimamod=now()
+                    WHERE asigna_usuario_memo_id=$memid AND asigna_usuario_usuario_id=$usuid";
+
+            $this->pdo->prepare($sql)->execute();
+
+            $logsq = new ModeloLogsQuerys();
+                $logsq->GrabarLogsQuerys($sql,'0','Cambia estado AsignaMemo');
+                $logsq = null;
+
+            $stm= $this->pdo->prepare($sql);
+            $stm->execute();
+
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Cambiado estado asignacion correctamente';
+        }catch(Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al cambiar estado asignacion';             
+        }
+        return $jsonresponse;        
+    }
+
+    //Funcion que obtiene usuarios asignados del memo, 
+    public function ObtenerAsignaMemo($memid){
+        $sql=
+        $jsonresponse = array();
+        $result=array();
+        try{
+            $consulta = "SELECT count(*) FROM asigna_usuario WHERE asigna_usuario_memo_id = ".$memid;
+            $res = $this->pdo->query($consulta);
+            $totalasignados = $res->fetchColumn();
+
+            if ($totalasignados == 0) {
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Memo sin usuarios asignados';
+                $jsonresponse['datos'] = [];
+            }else{
+                $consultaobtiene = "SELECT asu.asigna_usuario_id, 
+                                            asu.asigna_usuario_usuario_id, 
+                                            usu.usuario_nombre,
+                                            asu.asigna_usuario_comentario,
+                                            asu.asigna_usuario_fecha, 
+                                            asu.asigna_usuario_ultimamod,
+                                            ap.asigna_prioridad_texto,
+                                            ad.asigna_dificultad_texto,
+                                            ea.estado_asignacion_texto,
+                                            ea.estado_asignacion_id
+                                    FROM asigna_usuario AS asu
+                                    LEFT JOIN usuario AS usu ON usu.usuario_id=asu.asigna_usuario_usuario_id
+                                    LEFT JOIN asigna_dificultad as ad ON ad.asigna_dificultad_id = asu.asigna_usuario_asigna_dificultad_id
+                                    LEFT JOIN asigna_prioridad AS ap ON ap.asigna_prioridad_id = asu.asigna_usuario_asigna_prioridad_id
+                                    LEFT JOIN estado_asignacion AS ea ON ea.estado_asignacion_id = asu.asigna_usuario_estado_asignacion_id
+                                    WHERE  asu.asigna_usuario_memo_id= ?";
+
+                $stm = $this->pdo->prepare($consultaobtiene);
+                $stm->execute(array($memid));
+                // formatea fecha date_format(date_create($r->asigna_usuario_fecha),'d-m-Y H:i:s' )
+                $arrayString="";
+                foreach($stm->fetchAll(PDO::FETCH_OBJ) as $r){
+                    $fila = array('asigna_usu_id'           =>  $r->asigna_usuario_id,
+                                    'asigna_usu_uid'        =>  $r->asigna_usuario_usuario_id,
+                                    'asigna_usu_nom'        =>  $r->usuario_nombre,
+                                    'asigna_usu_coment'     =>  $r->asigna_usuario_comentario,
+                                    'asigna_usu_fecha'      =>  date_format(date_create($r->asigna_usuario_fecha),'d-m-Y' ),
+                                    'asigna_usu_fecha_mod'  =>  date_format(date_create($r->asigna_usuario_ultimamod),'d-m-Y' ),
+                                    'asigna_usu_estado'     =>  $r->estado_asignacion_texto,
+                                    'asigna_usu_estado_id'  =>  $r->estado_asignacion_id,
+                                    'asigna_usu_prioridad'  =>  $r->asigna_prioridad_texto,
+                                    'asigna_usu_dificultad' =>  $r->asigna_dificultad_texto
+                                  );
+                    $result[] = $fila;
+                    $arrayString = implode(',', $fila);
+                }
+                $logsq = new ModeloLogsQuerys();
+                    $logsq->GrabarLogsQuerys($arrayString,$totalasignados,'ObtenerAsignaMemo');
+                    $logsq = null;
+
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Se obtuvo los usuarios asginados correctamente';
+                $jsonresponse['datos'] = $result;
+            }
+        } catch (Exception $e){
+            //die($e->getMessage());
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al obtener usuarios';             
+        }
+        return $jsonresponse;
+    }
+    // valida usuario al loguearse
     public function valida($user,$pass){
         $jsonresponse = array();
         try{

@@ -18,7 +18,7 @@ class ModelMemoEst{
             die($e->getMessage());
         }
     }
-
+    //Funcion LIstar los estados del memo, mantenedor
     public function Listar($depto = 1){
         $depto = (int) $depto;
         $jsonresponse = array();
@@ -74,7 +74,7 @@ class ModelMemoEst{
             $jsonresponse['message'] = 'Error al listar memo estado';
         }
     }
-
+    //Funcion Obtener datos de estados del memo, mantenedor
     public function Obtener($id){
         $jsonresponse = array();
         try{
@@ -112,7 +112,7 @@ class ModelMemoEst{
         }
         return $jsonresponse;
     }
-
+    //Función elimina estado del memo, mantenedor
     public function Eliminar($id){
         $jsonresponse = array();
         try{
@@ -128,7 +128,7 @@ class ModelMemoEst{
         }
         return $jsonresponse;
     }
-
+    //Función que registra un nuevo estado del memo, mantenedor
     public function Registrar(MemoEst $data){
         $jsonresponse = array();
         try{
@@ -154,7 +154,7 @@ class ModelMemoEst{
         }
         return $jsonresponse;
     }
-
+    //Función actualiza datos del estado del memo, mantenedor
     public function Actualizar(MemoEst $data){
         $jsonresponse = array();
         try{
@@ -219,7 +219,29 @@ class ModelMemoEst{
               $logs = null;             
         }
         return $jsonresponse;
+    }
+    public function ObtieneEstadoMemoId($memoid, $memestid ){
+        try{
+            $consultamemoestado="SELECT COUNT(*) FROM cambio_estados 
+                            WHERE cambio_estados_memo_estado_id = $memestid AND cambio_estados_memo_id=$memoid";
+            $res = $this->pdo->query($consultamemoestado);
+                $existeestado = $res->fetchColumn();
 
+            if ($existeestado == 0) {
+                $jsonresponse=FALSE;
+            }else{
+                $jsonresponse=TRUE;
+            }
+        } catch (PDOException $pdoException){
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al obtener id';
+            $jsonresponse['errorQuery'] = $pdoException->getMessage();
+            $logs = new modelologs();
+            $trace=$pdoException->getTraceAsString();
+              $logs->GrabarLogs($pdoException->getMessage(),$trace);
+              $logs = null;             
+        }
+        return $jsonresponse;
     }
     //graba el cambio de estado del memo(se va agregando)
     public function CambiaEstado(MemoCambioEst $data, $ultimoestado=0, $deptosolid=0){
@@ -458,7 +480,7 @@ class ModelMemoEst{
         }
         return $jsonresponse;
     }
-
+    //Funcion que lista los estados del memo segun depto y ultimo estado
     public function ListarMin($depto = 1,$ultimoestado=0){
         $depto = (int) $depto;
         $jsonresponse = array();

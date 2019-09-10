@@ -25,7 +25,7 @@ class ModelMemoObservacion {
                 $res = $this->pdo->query($consulta);
                 if ($res->fetchColumn() == 0) {
                     $jsonresponse['success'] = true;
-                    $jsonresponse['message'] = 'Memo sin otras observaciones';
+                    $jsonresponse['message'] = 'Memo sin observaciones';
                     $jsonresponse['datos'] = [];
                 }else{
                     $result = array();
@@ -119,6 +119,28 @@ class ModelMemoObservacion {
                                                      $data->__GET('memoobs_usu_id')
                                                      )
                                               );
+            require_once("../modelo/usuario/modelusuario.php");
+                          $modelUsu = new ModelUsuarios();
+                          $arraydatos = $modelUsu->ObtenerAsignaMemo($data->__GET('memoobs_memo_id'));
+                            if(count($arraydatos["datos"]) > 0){
+                                for($i=0; $i<count($arraydatos["datos"]); $i++){
+                                      if($arraydatos["datos"][$i]["asigna_usu_uid"]==$data->__GET('memoobs_usu_id') && $arraydatos["datos"][$i]["asigna_usu_estado_id"]==2){
+                                        $modelUsu->CambiaEstadoAsignaMemo($data->__GET('memoobs_usu_id'),$data->__GET('memoobs_memo_id'),3);
+                                            require_once("../modelo/memoestado/entidadmemocambioestado.php");
+                                            require_once("../modelo/memoestado/modelmemoestado.php");
+                                            $objcambioest = new MemoCambioEst();
+                                            $modelcambioest = new ModelMemoEst();
+                                            $resp= $modelcambioest->ObtieneEstadoMemoId($data->__GET('memoobs_memo_id'),27);
+                                            if($resp==FALSE){
+                                              $objcambioest->__SET('memo_camest_memid',$data->__GET('memoobs_memo_id'));
+                                              $objcambioest->__SET('memo_camest_estid',27);
+                                              $objcambioest->__SET('memo_camest_obs','Ingreso de datos al memo');
+                                              $objcambioest->__SET('memo_camest_usuid',$data->__GET('memoobs_usu_id'));
+                                                $modelcambioest->CambiaEstado($objcambioest, 26, 87);
+                                            }
+                                      }
+                                }
+                            }
             $jsonresponse['success'] = true;
             $jsonresponse['message'] = 'obs. memos ingresado correctamente'; 
         } catch (PDOException $pdoException){

@@ -141,7 +141,39 @@ class ModelEstadoDetMemo{
         }
         return $jsonresponse;
     }
-
+    //graba el cambio de estado del detalle del memo(se va agregando)
+    public function CambiaEstadoDetMemo(DetMemoCambioEst $data){
+        $jsonresponse = array();
+        try{
+            $sql = "INSERT INTO cambio_estados_detmemo (cambio_estados_detmemo_detmemo_id, 
+                                                        cambio_estados_detmemo_estado_detmemo_id, 
+                                                        cambio_estados_detmemo_observacion,
+                                                        cambio_estados_detmemo_usu_id
+                                                        ) 
+                    VALUES (?,?,?,?,?)";
+            $this->pdo->prepare($sql)->execute(array(   $data->__GET('detmemo_camest_memid'),
+                                                        $data->__GET('detmemo_camest_estid'),
+                                                        $data->__GET('detmemo_camest_obs'),
+                                                        $data->__GET('detmemo_camest_usuid')
+                                                    ));
+            $logsq = new ModeloLogsQuerys();
+                $logsq->GrabarLogsQuerys($sql,'0','CambiaEstadoDetMemo');
+            
+            $jsonresponse['success'] = true;
+            $jsonresponse['message'] = 'Estado cambiado correctamente'; 
+            $jsonresponse['mid'] = $data->__GET('detmemo_camest_memid');
+        } catch (PDOException $pdoException){
+            //echo 'Error crear un nuevo elemento busquedas en Registrar(...): '.$pdoException->getMessage();
+            $jsonresponse['success'] = false;
+            $jsonresponse['message'] = 'Error al ingresar cambiar estado';
+            $jsonresponse['errorQuery'] = $pdoException->getMessage();
+            $logs = new modelologs();
+            $trace=$pdoException->getTraceAsString();
+              $logs->GrabarLogs($pdoException->getMessage(),$trace);
+              $logs = null;             
+        }
+        return $jsonresponse;
+    }
     public function Listar2(){
         $jsonresponse = array();
         try{

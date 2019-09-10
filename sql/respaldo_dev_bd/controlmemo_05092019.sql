@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-09-2019 a las 11:55:12
+-- Tiempo de generación: 05-09-2019 a las 09:39:03
 -- Versión del servidor: 10.1.30-MariaDB
 -- Versión de PHP: 5.6.33
 
@@ -418,10 +418,7 @@ INSERT INTO `asigna_usuario` (`asigna_usuario_id`, `asigna_usuario_memo_id`, `as
 (4, 3, 4, 'ver', 3, '2019-09-04 23:54:12', 2, 1, '2019-09-04 21:09:43'),
 (5, 3, 7, 'ver', 3, '2019-09-04 23:54:22', 3, 2, '2019-09-04 20:53:22'),
 (6, 3, 2, 'ver', 3, '2019-09-03 23:54:28', 4, 2, '2019-09-04 20:04:18'),
-(7, 4, 2, 'ver', 3, '2019-09-05 01:13:25', 4, 2, '2019-09-04 21:26:47'),
-(8, 23, 4, 'ver', 3, '2019-09-05 22:18:33', 4, 2, '2019-09-05 19:12:29'),
-(9, 19, 4, 'ver', 1, '2019-09-05 22:18:55', 4, 2, '2019-09-05 18:18:55'),
-(10, 17, 4, 'ver', 1, '2019-09-05 22:19:07', 1, 1, '2019-09-05 18:19:07');
+(7, 4, 2, 'ver', 3, '2019-09-05 01:13:25', 4, 2, '2019-09-04 21:26:47');
 
 -- --------------------------------------------------------
 
@@ -596,11 +593,7 @@ INSERT INTO `cambio_estados` (`cambio_estados_id`, `cambio_estados_memo_id`, `ca
 (150, 3, 27, 'Ingreso de datos al memo', 4, '2019-09-05 01:09:43'),
 (151, 4, 26, 'Asignado a usuario : María José Garcés', 2, '2019-09-05 01:13:25'),
 (155, 4, 27, 'Ingreso de datos al memo', 2, '2019-09-05 01:26:47'),
-(156, 20, 27, 'Ingreso de datos al memo', 2, '2019-09-05 01:30:01'),
-(157, 23, 26, 'Asignado a usuario : Jorge', 2, '2019-09-05 22:18:33'),
-(158, 19, 26, 'Asignado a usuario : Jorge', 2, '2019-09-05 22:18:55'),
-(159, 17, 26, 'Asignado a usuario : Jorge', 2, '2019-09-05 22:19:07'),
-(160, 23, 27, 'Ingreso de datos al memo', 4, '2019-09-05 23:12:30');
+(156, 20, 27, 'Ingreso de datos al memo', 2, '2019-09-05 01:30:01');
 
 -- --------------------------------------------------------
 
@@ -1556,9 +1549,7 @@ INSERT INTO `memo_observaciones` (`memo_observaciones_id`, `memo_observaciones_t
 (3, 'otra obs', '2019-09-05 01:00:08', 3, 7),
 (4, 'nueva observacion', '2019-09-05 01:09:43', 3, 4),
 (9, 'observacion', '2019-09-05 01:26:47', 4, 2),
-(10, 'otra obs', '2019-09-05 01:27:17', 4, 4),
-(11, 'agrego observacion', '2019-09-05 23:12:29', 23, 4),
-(12, 'nueva', '2019-09-09 22:06:23', 4, 4);
+(10, 'otra obs', '2019-09-05 01:27:17', 4, 4);
 
 -- --------------------------------------------------------
 
@@ -2163,7 +2154,7 @@ ALTER TABLE `asigna_prioridad`
 -- AUTO_INCREMENT de la tabla `asigna_usuario`
 --
 ALTER TABLE `asigna_usuario`
-  MODIFY `asigna_usuario_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `asigna_usuario_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `asocia_resolucion`
@@ -2175,7 +2166,7 @@ ALTER TABLE `asocia_resolucion`
 -- AUTO_INCREMENT de la tabla `cambio_estados`
 --
 ALTER TABLE `cambio_estados`
-  MODIFY `cambio_estados_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
+  MODIFY `cambio_estados_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
 
 --
 -- AUTO_INCREMENT de la tabla `cambio_estados_detmemo`
@@ -2289,7 +2280,7 @@ ALTER TABLE `memo_estadogenerico`
 -- AUTO_INCREMENT de la tabla `memo_observaciones`
 --
 ALTER TABLE `memo_observaciones`
-  MODIFY `memo_observaciones_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `memo_observaciones_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `menu`

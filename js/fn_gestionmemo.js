@@ -3,6 +3,7 @@
     var ultimoorden=1;
     var uid;
     var memId;
+    var rolid;
     function returnFileSize(number) {
             if(number < 1024) {
                 return number + 'bytes';
@@ -11,16 +12,6 @@
             } else if(number > 1048576) {
                 return (number/1048576).toFixed(1) + ' MB';
             }
-    }
-
-    function deshabilitabotones(){
-        document.getElementById('editar-memo').style.display = 'none';
-        document.getElementById('actualizar-memo').style.display = 'none';
-        document.getElementById('grabar-memo').style.display = 'none';        
-        document.getElementById('agregar-det-memo').style.display = 'none';
-        document.getElementById('cancelar-memo').style.display = 'none';
-        //document.getElementById('editar-archivos').style.display = 'none';
-        //document.getElementById('cancelar-archivos').style.display = 'none';
     }
 
     function deshabilitaform(){
@@ -33,16 +24,6 @@
         $("#memoDeptoSol").prop( "disabled", true );
         $("#memoNombreDest").prop( "disabled", true );
         $("#memoDeptoDest").prop( "disabled", true );
-        //$("#memoCcosto").prop( "disabled", true );
-        //$("#memoCodigoCC").prop( "disabled", true );
-    }
-
-    function habilitaform(){
-        $("#memoMateria").prop( "disabled", false );
-        $("#memoNombreSol").prop( "disabled", false );
-        $("#memoDeptoSol").prop( "disabled", false );
-        $("#memoNombreDest").prop( "disabled", false );
-        $("#memoDeptoDest").prop( "disabled", false );
     }
 
     function limpiaFormMemo(){
@@ -68,13 +49,25 @@
         $("#memoOtroDeptoNombre").hide();
         $('#memoEstado').focus();
     }
+
     function limpiaformobservacion(){
         $('#formobservacion')[0].reset();
         $('#memobsTexto').focus();
-    }    
+    }   
+    function limpiaformcdp(){
+        $('#formcdp')[0].reset();
+        $("#CCostoId").selectpicker('render');
+        $('#FechaCDP').focus();
+    } 
     function limpiaFormDetalle(){
         $('#formDetalleMemo')[0].reset();
         $('#memoDetDescripcion').focus();
+    }
+    function limpiaFormAsignaMem(){
+        $('#formAsignaMem')[0].reset();
+        $("#asignadif").val(2).prop('selected',true);
+        $("#asignaprio").val(4).prop('selected',true);
+        $('#asignausu').focus();        
     }
     
     function aniomemo(){
@@ -93,15 +86,15 @@
     // Funcion valida los datos del formulario del memo
     function validarFormulario(){
         var txtMemFecha = document.getElementById('memoFecha').value;
-        console.log('fecha de input : '+txtMemFecha);
+        //console.log('fecha de input : '+txtMemFecha);
         var txtMemNum = document.getElementById('memoNum').value;
         var txtMemAnio = document.getElementById("memoAnio").value;
         var txtMemFechaRec = document.getElementById('memoFechaRecep').value;
         var txtMemMat = document.getElementById('memoMateria').value;
         var txtMemNomSol = document.getElementById('memoNombreSol').value;
-        var selMemDptoSol = document.getElementById('memoDeptoSol').selectedIndex;
+        //var selMemDptoSol = document.getElementById('memoDeptoSol').selectedIndex;
         var txtMemNomDest = document.getElementById('memoNombreDest').value;
-        var selMemDptoDest = document.getElementById('memoDeptoDest').selectedIndex;
+        //var selMemDptoDest = document.getElementById('memoDeptoDest').selectedIndex;
             //Test campo obligatorio
             //valida FECHA INGRESO MEMO
             if(txtMemFecha == null || txtMemFecha.length == 0 || /^\s+$/.test(txtMemFecha)){
@@ -193,7 +186,7 @@
                 $('#memoNombreSol').parent().children('span').text('').hide();
             }
             //valida DEPARTAMENTO SOLICITANTE
-            if( selMemDptoSol == null || isNaN(selMemDptoSol) || selMemDptoSol == -1 ) {
+           /* if( selMemDptoSol == null || isNaN(selMemDptoSol) || selMemDptoSol == -1 ) {
                 $('#memoDeptoSol').parent().attr('class','form-group has-error');
                 $('#memoDeptoSol').parent().children('span').text('Debe seleccionar un Departamento o Unidad Solicitante').show();
                 document.getElementById('memoDeptoSol').focus();
@@ -201,7 +194,7 @@
             }else{
                 $('#memoDeptoSol').parent().attr('class','form-group has-success');
                 $('#memoDeptoSol').parent().children('span').text('').hide();
-            }
+            }*/
             //valida NOMBRE DESTINATARIO
             if(txtMemNomDest == null || txtMemNomDest.length == 0 || /^\s+$/.test(txtMemNomDest)){
                 $('#memoNombreDest').parent().attr('class','form-group has-error');
@@ -213,7 +206,7 @@
                 $('#memoNombreDest').parent().children('span').text('').hide();
             }
             //valida DEPARTAMENTO DESTINATARIO
-            if( selMemDptoDest == null || isNaN(selMemDptoDest) || selMemDptoDest == -1 ) {
+            /*if( selMemDptoDest == null || isNaN(selMemDptoDest) || selMemDptoDest == -1 ) {
                 $('#memoDeptoDest').parent().attr('class','form-group has-error');
                 $('#memoDeptoDest').parent().children('span').text('Debe seleccionar un Departamento o Unidad Destinatario').show();
                 document.getElementById('memoDeptoDest').focus();
@@ -221,7 +214,7 @@
             }else{
                 $('#memoDeptoDest').parent().attr('class','form-group has-success');
                 $('#memoDeptoDest').parent().children('span').text('').hide();
-            }
+            }*/
             return true;
     }
     // Funcion valida los datos del formulario del cambio de estado del memo
@@ -267,46 +260,6 @@
             }
             
         }
-        /*if(idestado==8 || idestado==9){
-            console.log('paso 8');
-            var txtCodigoCC = document.getElementById('memoCodigoCC').value;
-            var txtFechaCDP = document.getElementById('memoFechaCDP').value;
-            //Valida Observación
-            if(txtCodigoCC == null || txtCodigoCC.length == 0 || /^\s+$/.test(txtCodigoCC)){
-                    $('#memoCodigoCC').parent().attr('class','form-group has-error');
-                    $('#memoCodigoCC').parent().children('span').text('El campo Codigo Centro de Costo no debe ir vacío o con espacios en blanco').show();
-                    document.getElementById('memoCodigoCC').focus();
-                    return false;                
-            }else{
-                    $('#memoCodigoCC').parent().attr('class','form-group has-success');
-                    $('#memoCodigoCC').parent().children('span').text('').hide();
-                    //document.getElementById('memoNum').focus();
-            }
-            //valida FECHA DEL CDP
-            if(txtFechaCDP == null || txtFechaCDP.length == 0 || /^\s+$/.test(txtFechaCDP)){
-                $('#memoFechaCDP').parent().attr('class','form-group has-error');
-                $('#memoFechaCDP').parent().children('span').text('Debe ingresar fecha').show();
-                document.getElementById('memoFechaCDP').focus();
-                return false;
-            }else{
-                if( validarFormatoFecha(txtFechaCDP)){
-                    if(existeFecha(txtFechaCDP)){
-                        $('#memoFechaCDP').parent().attr('class','form-group has-success');
-                        $('#memoFechaCDP').parent().children('span').text('').hide();
-                    }else{
-                        $('#memoFechaCDP').parent().attr('class','form-group has-error');
-                        $('#memoFechaCDP').parent().children('span').text('La fecha introducida no es valida.').show();
-                        document.getElementById('memoFechaCDP').focus();
-                        return false;
-                    }
-                }else{
-                    $('#memoFechaCDP').parent().attr('class','form-group has-error');
-                    $('#memoFechaCDP').parent().children('span').text('El formato de la fecha es incorrecto.').show();
-                    document.getElementById('memoFechaCDP').focus();
-                    return false;                
-                }
-            }            
-        }*/
         //Valida Observación
         if(txtMemoObs == null || txtMemoObs.length == 0 || /^\s+$/.test(txtMemoObs)){
                 $('#memoObs').parent().attr('class','form-group has-error');
@@ -319,6 +272,57 @@
                 //document.getElementById('memoNum').focus();
         }        
         return true;
+    }
+    // Funcion valida los datos del CDP, fecha, codigo ccosto
+    function validarFormularioCDP(){
+        var txtFechaCDP = document.getElementById('FechaCDP').value;
+        var txtnumCDP = document.getElementById('numeroCDP').value;
+        var selCodigoCC = document.getElementById('CCostoId').selectedIndex;
+            // valida FECHA RECEPCION MEMO
+            if(txtFechaCDP == null || txtFechaCDP.length == 0 || /^\s+$/.test(txtFechaCDP)){
+                $('#FechaCDP').parent().attr('class','form-group has-error');
+                $('#FechaCDP').parent().children('span').text('Debe ingresar fecha').show();
+                document.getElementById('FechaCDP').focus();
+                return false;
+            }else{
+                if( validarFormatoFecha(txtFechaCDP)){
+                    if(existeFecha(txtFechaCDP)){
+                        $('#FechaCDP').parent().attr('class','form-group has-success');
+                        $('#FechaCDP').parent().children('span').text('').hide();
+                    }else{
+                        $('#FechaCDP').parent().attr('class','form-group has-error');
+                        $('#FechaCDP').parent().children('span').text('La fecha introducida no es valida.').show();
+                        document.getElementById('FechaCDP').focus();
+                        return false;
+                    }
+                }else{
+                    $('#memoFechaRecep').parent().attr('class','form-group has-error');
+                    $('#memoFechaRecep').parent().children('span').text('El formato de la fecha es incorrecto.').show();
+                    document.getElementById('memoFechaRecep').focus();
+                    return false;                
+                }
+            }
+            //valida numero del CDP
+            if(txtnumCDP == null || txtnumCDP.length == 0 || /^\s+$/.test(txtnumCDP)){
+                $('#numeroCDP').parent().attr('class','form-group has-error');
+                $('#numeroCDP').parent().children('span').text('El campo Numero CDP no debe ir vacío o con espacios en blanco').show();
+                document.getElementById('numeroCDP').focus();
+                return false;                
+            }else{
+                $('#numeroCDP').parent().attr('class','form-group has-success');
+                $('#numeroCDP').parent().children('span').text('').hide();
+            }
+            //valida select con codigo del centro de costo
+            if( selCodigoCC == null || isNaN(selCodigoCC) || selCodigoCC == -1 || selCodigoCC == 0) {
+                $('#CCostoId').parent().attr('class','form-group has-error');
+                $('#CCostoId').parent().children('span').text('Debe seleccionar un Centro de Costo').show();
+                document.getElementById('CCostoId').focus();
+                return false;                
+            }else{
+                $('#CCostoId').parent().attr('class','form-group has-success');
+                $('#CCostoId').parent().children('span').text('').hide();
+            }
+            return true;
     }
     // Funcion valida los datos del formulario del cambio de estado del memo
     function validarFormularioObservacion(){
@@ -335,7 +339,120 @@
                 //document.getElementById('memoNum').focus();
         }        
         return true;
-    }    
+    }
+    // Funcion valida los datos del formulario en el modal de asginacion del memo, 
+    function validarFormularioAsigna(){
+        var selasigusu = document.getElementById('asignausu').selectedIndex;
+        var selasigdif = document.getElementById('asignadif').selectedIndex;
+        var selasgiprio = document.getElementById('asignaprio').selectedIndex;
+        var txtasigObs = document.getElementById('asignaobs').value;
+        //valida Usuario
+        if( selasigusu == null || isNaN(selasigusu) || selasigusu == -1 || selasigusu == 0) {
+            $('#asignausu').parent().attr('class','form-group has-error');
+            $('#asignausu').parent().children('span').text('Debe seleccionar un Usuario').show();
+            document.getElementById('asignausu').focus();
+            return false;                
+        }else{
+            $('#asignausu').parent().attr('class','form-group has-success');
+            $('#asignausu').parent().children('span').text('').hide();
+        }
+        //valida Dificultad
+        if( selasigdif == null || isNaN(selasigdif) || selasigdif == -1) {
+            $('#asignadif').parent().attr('class','form-group has-error');
+            $('#asignadif').parent().children('span').text('Debe seleccionar dificultad').show();
+            document.getElementById('asignadif').focus();
+            return false;                
+        }else{
+            $('#asignadif').parent().attr('class','form-group has-success');
+            $('#asignadif').parent().children('span').text('').hide();
+        }
+        //valida Prioridad
+        if( selasgiprio == null || isNaN(selasgiprio) || selasgiprio == -1) {
+            $('#asignaprio').parent().attr('class','form-group has-error');
+            $('#asignaprio').parent().children('span').text('Debe seleccionar Prioridad').show();
+            document.getElementById('asignaprio').focus();
+            return false;                
+        }else{
+            $('#asignaprio').parent().attr('class','form-group has-success');
+            $('#asignaprio').parent().children('span').text('').hide();
+        }
+        //Valida Observación
+        if(txtasigObs == null || txtasigObs.length == 0 || /^\s+$/.test(txtasigObs)){
+                $('#asignaobs').parent().attr('class','form-group has-error');
+                $('#asignaobs').parent().children('span').text('El campo Observación no debe ir vacío o con espacios en blanco').show();
+                document.getElementById('asignaobs').focus();
+                return false;                
+        }else{
+                $('#asignaobs').parent().attr('class','form-group has-success');
+                $('#asignaobs').parent().children('span').text('').hide();
+        }        
+        return true;
+    }
+    /*--------------------------------------------------------------------------*/
+    //funcion trae asignaciones del memo para mostrar en el modal, OK funcion
+    function getlistaUsuAsignaMemo(memid){
+        var datax = {
+                    "Accion":"getasignamemo",
+                    "memoId":memid
+            }
+            $.ajax({
+                data: datax,  
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerusuario.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                if ( console && console.log ) {
+                    console.log( " data success asignados : "+ data.success 
+                        + " \n data msg : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }                
+                $("#listusuasigna").html(""); 
+                var totalUsu = data.datos.length;
+                $("#totalUsu").html("");
+                $("#totalUsu").html(totalUsu);
+                if(data.datos.length>0){
+                    $("#listadoasigna").show();
+                    $("#resultasigna").hide();
+                    for(var i=0; i<data.datos.length;i++){
+                        fila = '<tr>';
+                        fila += '<td>'+ data.datos[i].asigna_usu_fecha +'</td>';
+                        fila += '<td>'+ data.datos[i].asigna_usu_nom +'</td>';
+                        fila += '<td>'+ data.datos[i].asigna_usu_coment +'</td>';
+                        if(data.datos[i].asigna_usu_estado_id == 1){
+                            fila += '<td class="text-danger">';
+                        }else{
+                            fila += '<td>';
+                        }
+                        fila += data.datos[i].asigna_usu_estado +'</td>';
+                        fila += '<td>'+ data.datos[i].asigna_usu_fecha_mod +'</td>';
+                        fila += '<td>'+ data.datos[i].asigna_usu_dificultad +'</td>';
+                        fila += '<td>'+ data.datos[i].asigna_usu_prioridad +'</td>';
+                        fila += '</tr>';
+                        $("#listusuasigna").append(fila);
+                        if(data.datos[i].asigna_usu_uid==uid){
+                            $("#agregar-det-memo").show();
+                            $('#agregarcdp').show();
+                            $('#agrega-res').show();
+                        }
+
+                    }
+                }else{
+                    $('#resultasignamsg').html("");
+                    $("#resultasigna").show();
+                    $('#resultasignamsg').append(data.message);
+                }
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud asignados ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });            
+    }
     //Funcion que lista los deptos
     function getlistaDepto (){
         var datax = {
@@ -348,36 +465,20 @@
             url: "controllers/controllerdepartamento.php", 
         })
         .done(function( data, textStatus, jqXHR ) {
-            $("#memoDeptoSol").html("");
-            $("#memoDeptoDest").html("");
             $("#memoOtroDeptoId").html("");
-            if ( console && console.log ) {
-               /* console.log( " data success : "+ data.success 
-                    + " \n data msg deptos : "+ data.message 
-                    + " \n textStatus : " + textStatus
-                    + " \n jqXHR.status : " + jqXHR.status );*/
-            }
-            $("#memoDeptoSol").append('<option value="0">Seleccionar...</option>');
-            $("#memoDeptoDest").append('<option value="0">Seleccionar...</option>');
+                /*if ( console && console.log ) {
+                    console.log( " data success : "+ data.success 
+                        + " \n data msg deptos : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }*/
             $("#memoOtroDeptoId").append('<option value="0">Seleccionar...</option>');
             for(var i=0; i<data.datos.length;i++){
                    // console.log('id: ' + data.datos[i].depto_id + ' nombre Depto: ' + data.datos[i].depto_nombre);
                 opcion = '<option value=' + data.datos[i].depto_id + '>' + data.datos[i].depto_nombre + '</option>';
-                $("#memoDeptoSol").append(opcion);
                 $("#memoOtroDeptoId").append(opcion);
-                    /*if(data.datos[i].depto_id==9){
-                        opcion = '<option value=' + data.datos[i].depto_id + ' selected>' + data.datos[i].depto_nombre + '</option>';
-                    }*/
-                $("#memoDeptoDest").append(opcion);
             }
             $("#memoOtroDeptoId").selectpicker();
-            $("#memoDeptoSol").selectpicker();
-            $("#memoDeptoDest").selectpicker();
-
-            /*$("#memoOtroDeptoId").selectpicker('render');
-            $("#memoDeptoSol").selectpicker('render');
-            $("#memoDeptoDest").selectpicker('render');            */
-
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -400,20 +501,20 @@
             url: "controllers/controllercentrocostos.php", 
         })
         .done(function( data, textStatus, jqXHR ) {
-            $("#memoCcosto").html("");
+            $("#CCostoId").html("");
             /*if ( console && console.log ) {
                 console.log( " data success : "+ data.success 
                     + " \n data msg deptos : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
             }*/
-            $("#memoCcosto").append('<option value="">Seleccionar...</option>');
+            $("#CCostoId").append('<option value="0">Seleccionar...</option>');
             for(var i=0; i<data.datos.length;i++){
                 // console.log('id: ' + data.datos[i].depto_id + ' nombre Depto: ' + data.datos[i].depto_nombre);
-                opcion = '<option value=' + data.datos[i].ccosto_codigo + '>' + data.datos[i].ccosto_nombre + '</option>';
-                $("#memoCcosto").append(opcion);
+                opcion = '<option value=' + data.datos[i].ccosto_codigo + '>' + data.datos[i].ccosto_codigo + ' - ' + data.datos[i].ccosto_nombre + '</option>';
+                $("#CCostoId").append(opcion);
             }
-
+            $("#CCostoId").selectpicker();
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -517,38 +618,9 @@
             console.log('ultimo estado generico : '+ultimoestadogenid);
             ultimoestado = data.datos[0].estado_id;
             $("#ultimoEstado").val(ultimoestado);
+            $("#memoultest").val(ultimoestado);
             ultimoestadotipo = data.datos[0].estado_tipo;
             $("#estadoactual").html("Ultimo Estado : <b>" + ultimoestadotipo + "</b>");
-            deshabilitabotones();
-            $('#limpiar-memo').hide();
-            if(depto[0]==87){
-                $("#agregar-det-memo").show();
-                document.getElementById('agregar-det-memo').setAttribute('href','vs_detallememo.php?memId='+data.datos.mem_id);
-            }else if(depto[0]==9){
-                //console.log('paso por depto 9');
-                if(ultimoestado==1 || ultimoestado==2){
-                    $('#editar-memo').show();
-                }
-                //if(ultimoestado == 2 || ultimoestado == 4 || ultimoestado == 5 ||  ultimoestado == 9 || ultimoestado == 11){
-                if(ultimoestado==3 || ultimoestado==7 || ultimoestado==10 || ultimoestado==14){
-                    $("#cambiaestado").hide();
-                }else{
-                    $("#cambiaestado").show();
-                    getlistaEstadosMemo(ultimoorden);
-                }
-            }else if(depto[0]==32){
-                //Edita solo en ingreso o recepcion con destino propio depto
-                if(ultimoestado==31 || (ultimoestado==32 && depto[0]==$("#memoDeptoDest").val())){
-                    $('#editar-memo').show();
-                }
-                if(ultimoestado==33 || ultimoestado==37 || ultimoestado==40 ){
-                    $("#cambiaestado").hide();
-                }else{
-                    $("#cambiaestado").show();
-                    getlistaEstadosMemo(ultimoorden);
-                }
-            }
-
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -559,6 +631,58 @@
             }
         });
     }
+    //Funcion que lista el historial de Estados del memo
+    function getlistaHistorialDetalles(memId){
+        var datax = {"Accion":"listar",
+                     "memoId": memId
+                    };
+        $.ajax({
+            data: datax, 
+            type: "GET",
+            dataType: "json", 
+            url: "controllers/controllermemodetalle.php", 
+        })
+        .done(function( data, textStatus, jqXHR ) {
+            if ( console && console.log ) {
+                console.log( " data success getlistaHistorialDetalles : "+ data.success 
+                    + " \n data msg deptos : "+ data.message 
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+            $("#listaHistorialDet").html(""); 
+            var totalHistorialDet = data.datos.length;
+            $("#totalDet").html("");
+            $("#totalDet").html(totalHistorialDet);
+            console.log('Total HistorialDet : '+totalHistorialDet);
+            if(data.datos.length>0){
+                $("#listadodet").show();
+                $("#resultdet").hide();
+                for(var i=0; i<data.datos.length;i++){
+                    //console.log('id: ' + data.datos[i].memoobs_id + ' Estado Tipo: ' + data.datos[i].memoobs_texto);
+                    fila = '<tr><td>'+ data.datos[i].memo_detalle_detmemocc + '</td>';
+                    fila += '<td>' + data.datos[i].memo_detalle_procompra_nom + '</td>';
+                    fila += '<td>' + data.datos[i].memo_detalle_num_oc_chc + '</td>';
+                    fila += '<td>' + data.datos[i].memo_detalle_num_oc_sac + '</td>';
+                    fila += '<td>' + data.datos[i].memo_detalle_monto_total + '</td>';
+                    fila += '<td>' + data.datos[i].memo_detalle_proveedor_nom + '</td>';
+                    fila += '</tr>';
+                    $("#listaHistorialDet").append(fila);
+                }
+            }else{
+                $('#resultdetmsg').html("");
+                $("#resultdet").show();
+                $('#resultdetmsg').append("Memo sin Detalles agregados");
+            }
+        })
+        .fail(function( jqXHR, textStatus, errorThrown ) {
+            if ( console && console.log ) {
+                console.log( " La solicitud  getlistaHistorialDetalles ha fallado,  textStatus : " +  textStatus 
+                    + " \n errorThrown : "+ errorThrown
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+        });
+    }    
     //Funcion que lista el historial de Estados del memo
     function getlistaHistorialObs(memId){
         var datax = {"Accion":"listar",
@@ -582,16 +706,22 @@
             $("#totalObs").html("");
             $("#totalObs").html(totalHistorialObs);
             console.log('Total Observaciones : '+totalHistorialObs);
-            
-            for(var i=0; i<data.datos.length;i++){
-                //console.log('id: ' + data.datos[i].memoobs_id + ' Estado Tipo: ' + data.datos[i].memoobs_texto);
-                fila = '<tr><td>'+ data.datos[i].memoobs_texto + '</td>';
-                fila += '<td>' + data.datos[i].memoobs_fecha + '</td>';
-                fila += '<td>' + data.datos[i].memoobs_usu_nom + '</td>';
-                fila += '</tr>';
-                $("#listaHistorialObs").append(fila);
+            if(data.datos.length>0){
+                $("#listadoobs").show();
+                $("#resultobs").hide();
+                for(var i=0; i<data.datos.length;i++){
+                    //console.log('id: ' + data.datos[i].memoobs_id + ' Estado Tipo: ' + data.datos[i].memoobs_texto);
+                    fila = '<tr><td>'+ data.datos[i].memoobs_texto + '</td>';
+                    fila += '<td>' + data.datos[i].memoobs_fecha + '</td>';
+                    fila += '<td>' + data.datos[i].memoobs_usu_nom + '</td>';
+                    fila += '</tr>';
+                    $("#listaHistorialObs").append(fila);
+                }
+            }else{
+                $('#resultobsmsg').html("");
+                $("#resultobs").show();
+                $('#resultobsmsg').append(data.message);
             }
-            
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -701,10 +831,295 @@
                     + " \n jqXHR.status : " + jqXHR.status );
             }
         });
+    }
+    //Funcion que lista las resoluciones agregadas al memo
+    /* TERMINAR */
+    function getlistaResoluciones (memid){
+        var datax = {
+            'Accion':'listarmin',
+            'memId': memid,
+        }
+        $.ajax({
+            data: datax, 
+            type: "GET",
+            dataType: "json", 
+            url: "controllers/controllermemoresolucion.php", 
+        })
+        .done(function( data, textStatus, jqXHR ) {
+            if ( console && console.log ) {
+                console.log( " data success : "+ data.success 
+                    + " \n data msg memest : "+ data.message 
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+            $("#listaHistorialRes").html("");
+            var totalHistorialRes = data.datos.length;
+            $("#totalRes").html("");
+            $("#totalRes").html(totalHistorialRes);
+            if(data.datos.length>0){
+                $("#listadores").show();
+                $("#resultres").hide();
+                for(var i=0; i < totalHistorialRes; i++){
+                    fila = '<tr>';
+                    fila += '<td>'+ data.datos[i].mem_asoc_resanio +' - ' + data.datos[i].mem_asoc_resnum + '</td>';
+                    fila += '<td><a target="_blank" href="' + data.datos[i].mem_asoc_resurl + '">' + data.datos[i].mem_asoc_resurl + '</a></td>';
+                    fila += '<td>' + data.datos[i].mem_asoc_resfecha + '</td>';
+                    fila += '</tr>';
+                    $("#listaHistorialRes").append(fila);
+                }
+            }else{
+                $('#resultresmsg').html("");
+                $("#resultres").show();
+                $('#resultresmsg').append(data.message);
+            }
+                //primero de la lista, inicio posicion + 1, valor del value
+                //$("#memoEstado").val(data.datos[0].memo_est_id);
+        })
+        .fail(function( jqXHR, textStatus, errorThrown ) {
+            if ( console && console.log ) {
+                console.log( " La solicitud getlistaResoluciones ha fallado,  textStatus : " +  textStatus 
+                    + " \n errorThrown : "+ errorThrown
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+        });
+    }
+    //funcion que lista los CDP del memo
+    function getlistamemoCDP (memid){
+        var datax = {
+            'Accion':'listarcdp',
+            'memId': memid,
+        }
+        $.ajax({
+            data: datax, 
+            type: "GET",
+            dataType: "json", 
+            url: "controllers/controllermemocdp.php", 
+        })
+        .done(function( data, textStatus, jqXHR ) {
+            if ( console && console.log ) {
+                console.log( " data success : "+ data.success 
+                    + " \n data msg memest : "+ data.message 
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+            $("#listacdp").html("");
+            var totalCDP = data.datos.length;
+            $("#totalCdp").html("");
+            $("#totalCdp").html(totalCDP);
+            if(data.datos.length>0){
+                $("#listadocdp").show();
+                $("#resultcdp").hide();
+                $("#detmemocc").html("");
+                for(var i=0; i < totalCDP; i++){
+                    fila = '<tr>';
+                    fila += '<td>'+ data.datos[i].memocdp_fecha + '</td>';
+                    fila += '<td>'+ data.datos[i].memocdp_num + '</td>';
+                    fila += '<td>'+ data.datos[i].memocdp_cod_cc + '</td>';
+                    fila += '<td>'+ data.datos[i].memocdp_nom_cc + '</td>';
+                    fila += '<td>'+ data.datos[i].memocdp_obs + '</td>';
+                    fila += '</tr>';
+                    $("#listacdp").append(fila);
+                    opcion = '<option value=' + data.datos[i].memocdp_cod_cc + '>' + data.datos[i].memocdp_cod_cc + ' - ' + data.datos[i].memocdp_nom_cc + '</option>';
+                    $("#detmemocc").append(opcion);
+                }
+                $("#detmemocc").selectpicker();
+            }else{
+                $('#resultcdpmsg').html("");
+                $("#resultcdp").show();
+                $('#resultcdpmsg').append(data.message);
+            }
+        })
+        .fail(function( jqXHR, textStatus, errorThrown ) {
+            if ( console && console.log ) {
+                console.log( " La solicitud getlistamemoCDP ha fallado,  textStatus : " +  textStatus 
+                    + " \n errorThrown : "+ errorThrown
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+        });
     }    
+    //Listado usuarios perfil analistas, OK funciona
+    function getListadoUsuarios(){
+            var datax = {
+                "Accion":"listarxperfil",
+                "perfilId":4
+            }
+            $.ajax({
+                data: datax,  
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerusuario.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                $("#asignausu").html(""); 
+                /*if ( console && console.log ) {
+                    console.log( " data success : "+ data.success 
+                        + " \n data usuarios msg : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }*/
+                usuarios=data.datos;
+                $("#asignausu").append('<option value="">Seleccione...</option>'); 
+                for(var i=0; i<data.datos.length;i++){
+                    //console.log('id: ' + data.datos[i].usu_id + ' nombre: ' + data.datos[i].usu_nombre);
+                    opcion = '<option value=' + data.datos[i].usu_id + '>' + data.datos[i].usu_nombre + '</option>';
+                    $("#asignausu").append(opcion);
+                }
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlistaUsuarios ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+    }
+    //Listado proveedores    getListadoProveedores
+    function getListadoProveedores(){
+            var datax = {
+                "Accion":"listar"
+            }
+            $.ajax({
+                data: datax, 
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerproveedor.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                $("#detmemoprov").html("");
+                /* if ( console && console.log ) {
+                    console.log( " data success : "+ data.success 
+                        + " \n data msg : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }*/
+                $("#detmemoprov").append('<option value="">Seleccione...</option>'); 
+                for(var i=0; i<data.datos.length;i++){
+                    opcion = '<option value=' + data.datos[i].prov_id + '>' + data.datos[i].prov_rut+ '-' + data.datos[i].prov_nombre + '</option>';
+                    $("#detmemoprov").append(opcion);                                
+                }
+                $("#detmemoprov").selectpicker();
+
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+    }
+    //Listado procedimiento de compra, OK funciona
+    function getListadoProceCompra(){
+            var datax = {
+                "Accion":"listar"
+            }
+            $.ajax({
+                data: datax, 
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerprocedimientocompra.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                $("#detmemoprocompra").html("");
+                /* if ( console && console.log ) {
+                    console.log( " data success : "+ data.success 
+                        + " \n data msg : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }*/
+                $("#detmemoprocompra").append('<option value="">Seleccione...</option>'); 
+                for(var i=0; i<data.datos.length;i++){
+                    opcion = '<option value=' + data.datos[i].proc_comp_id + '>' + data.datos[i].proc_comp_tipo + '</option>';
+                    $("#detmemoprocompra").append(opcion);                                
+                }
+                $("#detmemoprocompra").selectpicker();
+
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlista ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+    }
+    //Listado dificultad de la asignacion, OK funciona
+    function getListadoDificultad(){
+            var datax = {
+                "Accion":"listar",
+            }
+            $.ajax({
+                data: datax,  
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerasignadificultad.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                $("#asignadif").html(""); 
+                /*if ( console && console.log ) {
+                    console.log( " data success : "+ data.success 
+                        + " \n data msg estados memo : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }*/
+                for(var i=0; i<data.datos.length;i++){
+                   //console.log('id: '+data.datos[i].adificultad_id + ' nombre: '+data.datos[i].adificultad_texto);
+                    opcion = '<option value=' + data.datos[i].adificultad_id + '>' + data.datos[i].adificultad_texto + '</option>';
+                    $("#asignadif").append(opcion);
+                }
+                $("#asignadif").val(2).prop('selected',true);
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlistaEstados ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+    }    
+    //Listado prioridad de la asignacion, OK funciona
+    function getListadoPrioridad(){
+            var datax = {
+                "Accion":"listar",
+            }
+            $.ajax({
+                data: datax,  
+                type: "GET",
+                dataType: "json", 
+                url: "controllers/controllerasignaprioridad.php", 
+            })
+            .done(function( data, textStatus, jqXHR ) {
+                $("#asignaprio").html(""); 
+                /*if ( console && console.log ) {
+                    console.log( " data success : "+ data.success 
+                        + " \n data msg estados memo : "+ data.message 
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }*/
+                for(var i=0; i<data.datos.length;i++){
+                   //console.log('id: '+data.datos[i].aprioridad_id + ' nombre: '+data.datos[i].aprioridad_texto);
+                    opcion = '<option value=' + data.datos[i].aprioridad_id + '>' + data.datos[i].aprioridad_texto + '</option>';
+                    $("#asignaprio").append(opcion);
+                }
+                $("#asignaprio").val(4).prop('selected',true);
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                if ( console && console.log ) {
+                    console.log( " La solicitud getlistaEstados ha fallado,  textStatus : " +  textStatus 
+                        + " \n errorThrown : "+ errorThrown
+                        + " \n textStatus : " + textStatus
+                        + " \n jqXHR.status : " + jqXHR.status );
+                }
+            });
+    }
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
     function verMemo(memId,depto){
-        deshabilitabotones();
         var datay = {"memoId": memId,
                      "Accionmem":"obtener",
                      "depto":depto,
@@ -717,7 +1132,7 @@
             url: "controllers/controllermemo.php",
         })
         .done(function(data,textStatus,jqXHR ) {
-            $('#titulo').text('Datos del Memo');
+            //$('#titulo').text('Gestión Memo');
             /*if ( console && console.log ) {
                 console.log( " data success : "+ data.success 
                     + " \n data msg : "+ data.message 
@@ -731,28 +1146,28 @@
             $("#memoFechaRecep").val(data.datos.mem_fecha_recep);
             $("#memoMateria").val(data.datos.mem_materia);
             $("#memoNombreSol").val(data.datos.mem_nom_sol);
-            //$("#memoDeptoSol").val(data.datos.mem_depto_sol_id);
-            $("#memoDeptoSol").selectpicker('val', data.datos.mem_depto_sol_id);
+            $("#memoDeptoSol").val(data.datos.mem_depto_sol_nom);
             $("#memoNombreDest").val(data.datos.mem_nom_dest);
-            //$("#memoDeptoDest").val(data.datos.mem_depto_dest_id);
-            $("#memoDeptoDest").selectpicker('val', data.datos.mem_depto_dest_id);
-            if(data.datos.mem_cc_codigo!=0){
-                $("#datosCcostos").hide();
-                $("#verCodigoCC").val(data.datos.mem_cc_codigo);
-                $("#verFechaCDP").val(data.datos.mem_fecha_cdp);
-                $("#verNombreCC").val(data.datos.mem_nom_cc);
-            }
-            //$("#meId").val(memId);
-            //$("#uId").val(uid);
+            $("#memoDeptoDest").val(data.datos.mem_depto_dest_nom);
+
                 $('#paneles').show();
-                $('#accordion0').hide();
                 $('#panel-heading').hide();
                 $('#buscarDS').hide();
                 $('#buscarDD').hide();
-            getlistaHistorialEstado(data.datos.mem_id,depto);
-            getlistaArchivos(data.datos.mem_id);
-            getlistaHistorialObs(data.datos.mem_id);
-            getlistaHistorialDeriv(data.datos.mem_id);
+            $("#memoId").val(data.datos.mem_id);
+            $("#memocpdId").val(data.datos.mem_id);
+
+            $("#detmemId").val(data.datos.mem_id);
+            $("#detmemonum").val(data.datos.mem_numero);
+
+            getlistaHistorialDetalles(data.datos.mem_id);
+            getlistaHistorialEstado(data.datos.mem_id,depto); // tiene log
+            getlistaArchivos(data.datos.mem_id);  //  
+            getlistaHistorialObs(data.datos.mem_id); //
+            getlistaHistorialDeriv(data.datos.mem_id); // tiene log
+            getlistaResoluciones(data.datos.mem_id); //
+            getlistaUsuAsignaMemo(data.datos.mem_id);
+            getlistamemoCDP(data.datos.mem_id);
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -763,90 +1178,40 @@
             }
         });
     }
+    function inicio(){
+            $(".help-block").hide();
+            $('#paneles').hide();
+            $("#cambiaestado").hide();
+            
+            $("#listadodet").hide();
+            $("#resultdet").hide();
+
+            $("#memoOtroDepto").hide();
+            $("#memoOtroDeptoNombre").hide();
+
+            $("#agregar-det-memo").hide();
+            $('#agregarcdp').hide();
+            $('#agrega-res').hide();
+
+            $("#listadocdp").hide();
+            $("#resultcdp").hide();
+
+            $("#listadoobs").hide();
+            $("#resultobs").hide();
+
+            $("#listadores").hide();
+            $("#resultres").hide();
+            $("#listadoasigna").hide();
+            $("#resultasigna").hide();
+
+            $('#asignar').hide();
+    }
+
     $(document).ready(function(){
         $('#memoFecha').val(fechaActual());
         $('#memoAnio').val(anioActual());
 
-        $('#memoBuscaDepto').keypress(function () {
-            var valthis = $(this).val().toLowerCase();
-            var num = 0;
-            $('select#memoDeptoSol>option').each(function () {
-                var text = $(this).text().toLowerCase();
-                if(text.indexOf(valthis) !== -1){
-                    $(this).show(); $(this).prop('selected',true);
-                }else{
-                    $(this).hide();
-                }
-            });
-        });
-
-        $('#memoBuscaDeptoD').keypress(function () {
-            var valthis = $(this).val().toLowerCase();
-            var num = 0;
-            $('select#memoDeptoDest>option').each(function () {
-                var text = $(this).text().toLowerCase();
-                if(text.indexOf(valthis) !== -1){
-                    $(this).show(); $(this).prop('selected',true);
-                }else{
-                    $(this).hide();
-                }
-            });
-        });
-
-        $('#memoBuscaDeptoDer').keypress(function () {
-            var valthis = $(this).val().toLowerCase();
-            var num = 0;
-            $('select#memoOtroDeptoId>option').each(function () {
-                var text = $(this).text().toLowerCase();
-                if(text.indexOf(valthis) !== -1){
-                    $(this).show(); $(this).prop('selected',true);
-                }else{
-                    $(this).hide();
-                }
-            });
-        });        
-
-        function inicio(){
-            $(".help-block").hide();
-            $('#paneles').hide();
-            $("#cambiaestado").hide();
-            $("#agregar-det-memo").hide();
-            $("#datosCcostos").hide();
-            $("#memoOtroDepto").hide();
-            $("#buscarDerivado").hide();
-            $("#memoOtroDeptoNombre").hide();
-        }
-
-        $("#memoFecha").focusout(function(){
-            validafechaonline($(this));
-        });
-        $("#memoNum").focusout(function () {
-            validatxtonline($(this));
-        });        
-        $("#memoFechaRecep").focusout(function(){
-            validafechaonline($(this));
-        });        
-        $("#memoMateria").focusout(function () {
-            validatxtonline($(this));
-        });
-        $("#memoNombreSol").focusout(function () {
-            validatxtonline($(this));
-        });
-        $("#memoDeptoSol").focusout(function(){
-            validaselectonline($(this));
-        });        
-        $("#memoNombreDest").focusout(function () {
-            validatxtonline($(this));
-        });
-        $("#memoDeptoDest").focusout(function(){
-            validaselectonline($(this));
-        });
-        $("#memoEstado").focusout(function(){
-            validaselectonline($(this));
-        });
-
         inicio();
-        deshabilitabotones();
         getlistaDepto();
         //Aqui llega variable externa por URL via GET
         if (typeof memId !== 'undefined'){
@@ -857,14 +1222,15 @@
         }else{
             $('#grabar-memo').show();
         }
-        
-        //$('#agregar-det-memo').show();
-        //$('#agregar-det-memo-compra').show();
+        if(rolid==2){
+            //console.log('paso rol '+rolid);
+            $('#asignar').show();
+        }
+
         $('[data-toggle="tooltip"]').tooltip();
 
-        $("#limpiar-memo").click(function(e){
-            e.preventDefault();
-            limpiaFormMemo();
+        $("#memoEstado").focusout(function(){
+            validaselectonline($(this));
         });
 
         $("#limpiar-archivo-memo").click(function(e){
@@ -895,28 +1261,7 @@
             //$("#msgarchivomemo").hide();
         });
 
-        // Funcion cuando se agrega el memo escaneado
-        $("#memoFile").change(function() {
-            $("#archivoMemo").html("");
-            var archivos = document.getElementById("memoFile");//Creamos un objeto con el elemento que contiene los archivos: el campo input file, que tiene el id = 'archivos'
-            var archivo = archivos.files; //Obtenemos los archivos seleccionados en el imput
-            //console.log(archivo.length);
-            if(archivo.length===0){
-                $("#memoFileInfo").show();
-                $("#memoFileInfo").append("No ha seleccionado archivo para subir");
-            }else{
-                $("#memoFileInfo").hide();
-                var nombre = archivo[0].name;
-                var peso = returnFileSize(archivo[0].size);
-                //console.log(nombre );
-                var lista = `<tr>
-                <td>${nombre}</td>
-                <td>${peso}</td>
-                </tr>`;
-                $("#archivoMemo").append(lista);
-            }
-        });
-        // Funcion cuando se agrega el memo escaneado
+        // Funcion agrega el memo escaneado
         $("#addmemoFile").change(function() {
             $("#addarchivoMemo").html("");
             //Creamos un objeto con el elemento que contiene los archivos: el campo input file, que tiene el id = 'archivos'
@@ -943,25 +1288,6 @@
             }
         });        
         // Funcion cuando se agrega otros archivos al memo
-        $("#memoFileList").change(function() {
-            $("#listaArchivosMemo").html("");
-            var archivos = document.getElementById("memoFileList");//Creamos un objeto con el elemento que contiene los archivos: el campo input file, que tiene el id = 'archivos'
-            var archivo = archivos.files; //Obtenemos los archivos seleccionados en el imput
-            if(archivo.length===0){
-                $("#memoFileListInfo").show();
-                $("#memoFileListInfo").append("No ha seleccionado archivos para subir");
-            }else{
-                $("#memoFileListInfo").hide();
-                for(i=0; i<archivo.length; i++){
-                    var lista="<tr>";
-                    lista += "<td>"+archivo[i].name+"</td>";
-                    lista += "<td>"+returnFileSize(archivo[i].size)+"</td>";
-                    /*lista += "<td><button type='button' id='quitarfile' class='close' onclick='quitafile(\'"+i+"\')'>&times;</button></td>";*/
-                    lista += "</tr>";
-                    $("#listaArchivosMemo").append(lista);                    
-                }
-            }
-        });
         $("#addmemoFileList").change(function() {
             $("#addarchivoMemoList").html("");
             var archivos = document.getElementById("addmemoFileList");//Creamos un objeto con el elemento que contiene los archivos: el campo input file, que tiene el id = 'archivos'
@@ -995,7 +1321,7 @@
                 $("#memoOtroDeptoNombre").show();
                 if(ultimoestado==1 || ultimoestado==31){
                     $("#memoDeptoNombre").val(document.getElementById('memoNombreDest').value);
-                    $("#memoOtroDeptoId").selectpicker('val',document.getElementById('memoDeptoDest').value );
+                    //$("#memoOtroDeptoId").selectpicker('val',document.getElementById('memoDeptoDest').value );
                 }
             }else if(idestado==11 || idestado==14){
                 $("#memoOtroDeptoNombre").show();
@@ -1005,6 +1331,21 @@
                 $("#memoOtroDeptoNombre").hide();
             }
         });
+        $("#detmemoprov").change(function(e){
+            //$('#detmemoprovrut').val($("#detmemoprov option:selected").text());
+        });
+        //funcion que valida boton "agregar-det-memo" se se agrego CDP
+        $("#agregar-det-memo").click(function(e) {
+            e.preventDefault();
+            getListadoProceCompra();
+            getListadoProveedores();
+            console.log('total centro costos : '+document.formdetallememo.detmemocc.length);
+            if(document.formdetallememo.detmemocc.length>0){
+                $("#detallememo").show();    
+            }else{
+                $("#detallememo").hide();
+            }
+        });
 
         $("#cambiaestado").click(function(e) {
             e.preventDefault();
@@ -1012,7 +1353,6 @@
             var posidestado = document.getElementById("memoEstado").selectedIndex;
             var idestado = $('#memoEstado').val();
             console.log('estado id : ' + idestado);
-
             if(idestado==11 || idestado==14){
                 $("#memoOtroDeptoNombre").show();
                 $("#memoOtroDepto").hide();
@@ -1024,7 +1364,6 @@
                 $("#memoOtroDepto").hide();
             }
         });
-
         //funcion que graba datos basicos del memo para adquisiciones, recibios por la DAF
         $("#grabar-memo").click(function(e){
             e.preventDefault();
@@ -1093,30 +1432,105 @@
                 });
             }
         });
-        // funcion que actualiza solo algunos datos del memo
-        $("#actualizar-memo").click(function(e){
+        //funcion que graba datos basicos del memo para adquisiciones, recibios por la DAF
+        $("#grabar-detmemo").click(function(e){
             e.preventDefault();
-            if(validarFormulario()==true){
+            //if(validarFormulario()==true){
+                var inpt = document.createElement('INPUT');
+                inpt.type="hidden";
+                inpt.name="uid";
+                inpt.id="uid";
+                inpt.value=uid;
+                document.formdetallememo.appendChild(inpt);
                 //var datax = $("#formIngresoMemo").serializeArray();
                 /*$.each(datax, function(i, field){
                     console.log("contenido del form = "+ field.name + ":" + field.value + " ");
                 });*/
                 var $loader = $('.loader');
-                var formData = new FormData(document.getElementById("formIngresoMemo"));
+                var formData = new FormData(document.getElementById("formdetallememo"));
+               /*  var x = document.getElementById("formIngresoMemo").acceptCharset;
+                   console.log("charset : " + x);*/
                 $.ajax({
                     data: formData, 
                     type: "POST",
                     dataType: "json", 
-                    url: "controllers/controllermemo.php",
+                    url: "controllers/controllermemodetalle.php",
                     cache:false,
                     contentType:false,
-                    processData:false
-                    /*beforeSend: function(){
+                    processData:false,
+                    beforeSend: function(){
+                        $('#myModalDetalle').modal('hide');
                         $('#ModalCargando').modal('show');
                         $('#ModalCargando').on('shown.bs.modal', function () {
                             $loader.show();
                         });
-                    }*/                    
+                    }                    
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    limpiaFormMemo();
+                    if ( console && console.log ) {
+                        console.log( " data success : "+ data.success 
+                            + " \n data msg buscares : "+ data.message 
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                    $('#ModalCargando').modal('hide');
+                    $('#ModalCargando').on('hidden.bs.modal', function () {
+                        $('#myModalLittle').modal('show');
+                        $('#myModalLittle').on('shown.bs.modal', function () {
+                            var modal2 = $(this);
+                            modal2.find('.modal-title').text('Mensaje');
+                            modal2.find('.msg').text(data.message);
+                            $('#cerrarModalLittle').focus();
+                            getlistaHistorialDetalles(memId);
+                        });
+                    });
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    if ( console && console.log ) {
+                        console.log( " La solicitud GRABA MEMO ha fallado,  textStatus : " +  textStatus 
+                            + " \n errorThrown : "+ errorThrown
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                });
+            //}
+        });
+        //funcion limpia el formulario del modal para agregar CDP
+        $("#agregarcdp").click(function(e){
+            limpiaformcdp();
+        });
+        //funcion que graba las observaciones al memo
+        $("#grabarcdp").click(function(e){
+            e.preventDefault();
+            if(validarFormularioCDP()==true){
+                var inptuid = document.createElement('input');
+                inptuid.type="hidden";
+                inptuid.name="uid";
+                inptuid.value=uid;
+                document.formcdp.appendChild(inptuid);
+
+                var datax = $("#formcdp").serializeArray();
+                $.each(datax, function(i, field){
+                    console.log("contenido del form CDP = "+ field.name + ":" + field.value + " ");
+                });
+                var $loader = $('.loader');
+                var formData = new FormData(document.getElementById("formcdp"));
+                $.ajax({
+                    data: formData, 
+                    type: "POST",
+                    dataType: "json", 
+                    url: "controllers/controllermemocdp.php",
+                    cache:false,
+                    contentType:false,
+                    processData:false,
+                    beforeSend: function(){
+                        $('#myModalCDPMemo').modal('hide');
+                        $('#ModalCargando').modal('show');
+                        $('#ModalCargando').on('shown.bs.modal', function () {
+                            $loader.show();
+                        });
+                    }                    
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     if ( console && console.log ) {
@@ -1125,24 +1539,24 @@
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
                     }
-                    console.log('recibe respuesta');
-                    /*$('#ModalCargando').modal('hide');
-                    $('#ModalCargando').on('hidden.bs.modal', function () {*/
+                    $('#ModalCargando').modal('hide');
+                    $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
                         $('#myModalLittle').on('shown.bs.modal', function () {
-                            console.log('entra a abrir modal msg');
-                            //deshabilitaform();
-                            $(this).restauraverdatos();
                             var modal2 = $(this);
                             modal2.find('.modal-title').text('Mensaje');
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();
+                            limpiaformcdp();
+                            getlistamemoCDP(memId);
+                            getlistaHistorialEstado(memId,depto);
                         });
-                    //});
+                    });
                 })
                 .fail(function( jqXHR, textStatus, errorThrown ) {
+                    limpiaformcdp();
                     if ( console && console.log ) {
-                        console.log( " La solicitud GRABA MEMO ha fallado,  textStatus : " +  textStatus 
+                        console.log( " La solicitud GRABA ESTADO ha fallado,  textStatus : " +  textStatus 
                             + " \n errorThrown : "+ errorThrown
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
@@ -1287,8 +1701,10 @@
                             modal2.find('.modal-title').text('Mensaje');
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();
+                            $("#resultobs").hide();
                             limpiaformobservacion();
                             getlistaHistorialObs(memId);
+                            getlistaHistorialEstado(memId,depto);
                         });
                     });
                     
@@ -1447,67 +1863,105 @@
                     }
                 });
         });
-
-        //Boton para editar cierto campos del memo
-        $("#editar-memo").click(function(e){
-            e.preventDefault();//titulo
-            $('#titulo').text('Edita Memo');
-            habilitaform();
-            deshabilitabotones();
-            $("#cambiaestado").hide();
-            $('#actualizar-memo').show();
-            $('#cancelar-memo').show();
-            $("#Accionmem").val("actualizar");
-        });
         //funcion global restaura ver datos del memo
         $(function(){
             $.fn.restauraverdatos = function(){
-                $('#titulo').text('Datos del Memo');
+                //$('#titulo').text('Gestión Memo');
                 deshabilitaform();
-                deshabilitabotones();
                 $("#cambiaestado").show();
                 $("#editar-memo").show();
                 $('#actualizar-memo').hide();
                 $("#Accionmem").val("");
             }
-         })
-        //Boton para cancelar la edicion del memo
-        $("#cancelar-memo").click(function(e){
-            e.preventDefault();//titulo
-            $(this).restauraverdatos();
         });
-
-
-
-        // Funcion que busca numero de resolucion y devuelve url ubicacion
-        /*var buscaRes = function (){
+        //LEVANTA MODAL RES para buscar y agregar resolucion, 
+        $("#agrega-res").click(function(){
+            //$("#linkres").text("");
+            $('#listado_resol').hide();            
+            $("#myModalBuscaRes").modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        });
+        //MODAL RES limpia objetos con mensajes y listado de lo buscado
+        $("#buscaNumRes").on("click",function(e){
+                $('#msgres').html(""); 
+                $('#listaresol').text("");
+                //$("#linkres").text("");
+        });
+        //MODAL RES busca resoluciones si presiona boton buscar al final del input
+        $("#buscar-res").on("click",function(e){
+            e.preventDefault();
+            numRes = $("#buscaNumRes").val().trim();
+                if(numRes == null || numRes.length == 0 ){
+                    $('#msgres').html('<div class="alert alert-danger" id="msgres" role="alert">NO debe ir vacío o espacios en blanco</div>')
+                    document.getElementById('buscaNumRes').focus();
+                }else{
+                    buscaRes();
+                }
+        });
+        //MODAL RES busca resoluciones si presiona enter en el  input
+        $("#buscaNumRes").on("keydown",function(e){
+                if(e.which == 13){      
+                    e.preventDefault();
+                        numRes = $("#buscaNumRes").val().trim();
+                        if(numRes == null || numRes.length == 0 ){
+                            $('#msgres').html('<div class="alert alert-danger" id="msgres" role="alert">NO debe ir vacío o espacios en blanco</div>')
+                            document.getElementById('buscaNumRes').focus();
+                        }else{
+                            buscaRes();
+                        }                    
+                }
+                if(e.which == 8){      
+                    $('#msgres').html(""); 
+                }             
+        });
+        //MODAL RES limpia formulario y mensajes
+        $("#limpiar-busca_res").click(function(e){
+            e.preventDefault();
+             $('#formBusquedaRes')[0].reset();
+             $('#msgres').html(""); 
+             $("#linkres").text("");
+             $('#listaresol').text("");
+        });
+        // MODAL RES Funcion que busca numero de resolucion y devuelve url ubicacion
+        function buscaRes(){
             var datax = $("#formBusquedaRes").serializeArray();
-                /*$.each(datax, function(i, field){
-                    console.log("contenido del form = "+ field.name + ":" + field.value + " ");
-                });*/
-                /*$.ajax({
+                $.ajax({
                     data: datax, 
                     type: "POST",
                     dataType: "json", 
                     url: "http://resoluciones2.umce.cl/controllers/controllerresoluciones.php", 
                 })
                 .done(function( data, textStatus, jqXHR ) {
-                    if ( console && console.log ) {
+                    $("#listaresol").html(""); 
+                    /*if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
-                    }
+                    }*/
                     if(data.total>0){
-                        $("#linkres").text(data.datos[0].res_anio + "-" + data.datos[0].res_numero + " : " + data.datos[0].res_descripcion);  
-                        $("#linkres").attr("href",data.datos[0].res_ruta);
-                        $("#memoUrlRes").val(data.datos[0].res_ruta);
+                        $("#listado_resol").show();
+                        /*terminar aqui el listado de resoluciones "listaresol" */
+                        fila = '';
+                        for (var i = 0; i < data.total; i++) {
+                            var chek='<input class="chkidres" type="hidden" value="'
+                                        + data.datos[i].res_id+'" name="idres">';
+                            fila = '<tr id="fila' + i + '">';
+                            //fila += '<td>'+chek+'</td>';
+                            fila += '<td><a target="_blank" href="'+data.datos[0].res_ruta+'">';
+                            fila += data.datos[0].res_anio + "-" + data.datos[0].res_numero + " : " + data.datos[0].res_descripcion;
+                            fila += '</a></td>';
+                            fila += '<td>'+chek+'<button id="agregaidres" name="agregaidres" class="btn btn-sm btn-success borrar" type="button">Agregar</button>';
+                            fila += '</td>';
+                            fila += '</tr>';
+                            $("#listaresol").append(fila);
+                        }
                         $('#buscaNumRes').val("");
-                        $('#myModalBuscaRes').modal('hide');
                     }else{
                         $('#msgres').html('<div class="alert alert-warning" id="msgres" role="alert">NO existe Resolución</div>')
                     }
-
                 })
                 .fail(function( jqXHR, textStatus, errorThrown ) {
                     if ( console && console.log ) {
@@ -1517,34 +1971,132 @@
                             + " \n jqXHR.status : " + jqXHR.status );
                     }
                 });
-            };*/
-            /*$("#buscar-res").on("click",function(e){
-                e.preventDefault();
-                numRes = $("#buscaNumRes").val().trim();
-                //?Accion=buscar&buscaNumRes=2017-100002
-                //if(validarFormulario()==true){
-                if(numRes == null || numRes.length == 0 ){
-                    $('#msgres').html('<div class="alert alert-danger" id="msgres" role="alert">NO debe ir vacío o espacios en blanco</div>')
-                    document.getElementById('buscaNumRes').focus();
-                }else{
-                    buscaRes();
-                }
-               // }
-           });*/
-            /*$("#buscaNumRes").on("keydown",function(e){
-                if(e.which == 13){      
-                    e.preventDefault();
-                     buscaRes();
-                }
-                if(e.which == 8){      
-                    $('#msgres').html(""); 
-                }             
-            });*/
-            /*$("#buscaNumRes").on("click",function(e){
-                $('#msgres').html(""); 
-            });*/
+        };
+        // MODAL RES  graba resolucion al memo , OK funcionando
+        $(document).on('click', '.borrar', function (event) {
+            event.preventDefault();
+            // colocar codigo que agrega resolucion al memo, en tabla resoluciones
+            $(this).closest('tr').remove();
+            var resid=$(this).siblings('input').val();
+            //console.log($(this).siblings('input').val());
+
+            var datax = {
+                "Accion":"registrares",
+                "uId": uid,                
+                "memId": memId,
+                "resId": resid
+            }
+                var $loader = $('.loader');
+                //var formData = new FormData(document.getElementById("formobservacion"));
+                $.ajax({
+                    data: datax, 
+                    type: "POST",
+                    dataType: "json", 
+                    url: "controllers/controllermemoresolucion.php",
+                    /*cache:false,
+                    contentType:false,
+                    processData:false,*/
+                    beforeSend: function(){
+                        $('#myModalBuscaRes').modal('hide');
+                        $('#ModalCargando').modal('show');
+                        $('#ModalCargando').on('shown.bs.modal', function () {
+                            $loader.show();
+                        });
+                    }                    
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    if ( console && console.log ) {
+                        console.log( " data success : "+ data.success 
+                            + " \n data msg buscares : "+ data.message 
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                    $('#ModalCargando').modal('hide');
+                    $('#ModalCargando').on('hidden.bs.modal', function () {
+                        $('#myModalLittle').modal('show');
+                        $('#myModalLittle').on('shown.bs.modal', function () {
+                            var modal2 = $(this);
+                            modal2.find('.modal-title').text('Mensaje');
+                            modal2.find('.msg').text(data.message);
+                            $('#cerrarModalLittle').focus();
+                            getlistaResoluciones(memId);
+                            getlistaHistorialEstado(memId,depto);
+                        });
+                    });
+                    
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    if ( console && console.log ) {
+                        console.log( " La solicitud agrega resolucion ha fallado,  textStatus : " +  textStatus 
+                            + " \n errorThrown : "+ errorThrown
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                });
+        });
+        // funcion que carga en input hidden "nomanalista" el nombre del analista selecionado del select "asignausu"
+        $("#asignausu").change(function(event) {
+            $('#nomanalista').val($("#asignausu option:selected").text());
+        });
+        // funcion que limpia formulario de la asignacion
+        $("#limpiar-memo").click(function(e){
+            e.preventDefault();
+            limpiaFormAsignaMem();
+        });
+        // funcion que agrega analista al memo (asignación)
+        $('#asigna').click(function(e){
+            e.preventDefault();
+            if(validarFormularioAsigna()==true){
+                var inptuid = document.createElement('input');
+                inptuid.type="hidden";
+                inptuid.name="uId";
+                inptuid.value=uid;
+                document.formAsignaMem.appendChild(inptuid);
+                var datax = $("#formAsignaMem").serializeArray();
+                $.ajax({
+                    data: datax,
+                    type: "GET",
+                    dataType: "json",
+                    url: "controllers/controllerusuario.php",
+                })
+                .done(function( data, textStatus, jqXHR ) {
+                    /*if ( console && console.log ) {
+                        console.log( " data success : "+ data.success 
+                            + " \n data usuarios msg : "+ data.message 
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }*/
+                        //$('#myModalAsiganUsu').modal('hide');
+                        $('#myModalLittle').modal('show');
+                        $('#myModalLittle').on('shown.bs.modal', function () {
+                            var modal2 = $(this);
+                            modal2.find('.modal-title').text('Mensaje del Servidor');
+                            modal2.find('.msg').text(data.message);  
+                            $('#cerrarModalLittle').focus();
+                        });
+                    //listar usuarios asignado del memo
+                    getlistaUsuAsignaMemo($('#memoId').val());
+                    //limpia formulario asignacion
+                    limpiaFormAsignaMem(); 
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    if ( console && console.log ) {
+                        console.log( " La solicitud getlistaUsuarios ha fallado,  textStatus : " +  textStatus 
+                            + " \n errorThrown : "+ errorThrown
+                            + " \n textStatus : " + textStatus
+                            + " \n jqXHR.status : " + jqXHR.status );
+                    }
+                });    
+            }
+        });
+
+
+
+
+
 
         //si tiene numero memo Levanta modal nuevo detalle memo y graba el memo
+        
         //$("#crea-detalle-memo").click(function(e){
         /*$("#formIngresoMemo").on('submit',function(e){
             e.preventDefault();

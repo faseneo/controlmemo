@@ -11,7 +11,7 @@
     document.onkeydown = function(){
         if(window.event){
             window.event.keyCode = 116;
-        } 
+        }
         if(window.event && window.event.keyCode == 116){
             //getListadoMemos(1,1,0,1,uid,0);
             getlistaDepto();
@@ -130,6 +130,17 @@
                 $("#bodyestado").hide();
                 $("#footerestado").hide();
             }
+            if(estadomarcado == 5 || estadomarcado == 35){
+                $("#memoOtroDepto").show();
+                $("#memoOtroDeptoNombre").show();
+            }
+            /*else if(idestado == 11 || idestado == 14){
+                $("#memoOtroDeptoNombre").show();
+                $("#memoOtroDepto").hide();
+            }else{
+                $("#memoOtroDepto").hide();
+                $("#memoOtroDeptoNombre").hide();
+            }*/
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -495,9 +506,6 @@
             $("#capacest").hide();
             $("#tdce").hide();
             $(".tdcestmas").hide();
-            //$("#cestmodal").hide();
-            
-            //getListadoMemos($('#memoDeptoSol').val(),$('#memoDeptoDest').val(),$('#memoEstado').val(),1,uid,$('#memoAnio').val());
         });
         // funcion activa el cambio estado masivo de documentos o memos
         $("#activacest").click(function(e) {

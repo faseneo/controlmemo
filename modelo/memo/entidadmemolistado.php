@@ -17,6 +17,11 @@ class MemosListado{
     private $mem_estado_obs_max;  
     private $mem_estado_fecha_max;
     private $mem_estado_dias;
+    private $mem_asigna_usu_id;
+    private $mem_asigna_fecha;
+    private $mem_asigna_usu_nom;
+    private $mem_asigna_usu_estado;
+    private $mem_asigna_array=array();
 
     public function __GET($k){
         return $this->$k;

@@ -6,9 +6,15 @@ ini_set('display_errors', '1');
 require_once '../modelo/usuario/entidadusuario.php';
 require_once '../modelo/usuario/modelusuario.php';
 
+require_once '../modelo/memoestado/entidadmemocambioestado.php';
+require_once '../modelo/memoestado/modelmemoestado.php';
+
 // Logica
 $usu = new Usuarios();
 $modelUsu = new ModelUsuarios();
+
+$CambioMEst = new MemoCambioEst();
+$modelMemoEst = new ModelMemoEst();
 
 if(isset($_REQUEST['Accion'])){
 
@@ -67,13 +73,31 @@ if(isset($_REQUEST['Accion'])){
             echo json_encode($jsondata);
             break;
 
+        case 'listarxperfil':
+            $jsondata = $modelUsu->Listarxperfil($_REQUEST['perfilId']);
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);
+            break;            
+
         case 'asignamemo':
-            //var_dump($_REQUEST);
             $jsondata = $modelUsu->AsignaMemo($_REQUEST['asignausu'],
                                               $_REQUEST['memoId'],
                                               $_REQUEST['asignadif'],
                                               $_REQUEST['asignaprio'],
                                               $_REQUEST['asignaobs']);
+            if($jsondata['success']==true && $_REQUEST['memoultest']){
+                $CambioMEst->__SET('memo_camest_memid', $_REQUEST['memoId']);
+                $CambioMEst->__SET('memo_camest_estid', 26);
+                $CambioMEst->__SET('memo_camest_usuid', $_REQUEST['uId']);
+                $CambioMEst->__SET('memo_camest_obs',   'Asignado a usuario : '.$_REQUEST['nomanalista']);
+                $jsondata2 = $modelMemoEst->CambiaEstado($CambioMEst,17);
+            }
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);
+            break;
+
+        case 'getasignamemo':
+            $jsondata = $modelUsu->ObtenerAsignaMemo($_REQUEST['memoId']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;

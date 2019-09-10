@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-09-2019 a las 11:55:12
+-- Tiempo de generación: 10-07-2019 a las 18:45:48
 -- Versión del servidor: 10.1.30-MariaDB
 -- Versión de PHP: 5.6.33
 
@@ -26,77 +26,54 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `listado_memos_estadomax_depto_adquisiciones` (IN `deptosol` INT, IN `estado` INT, IN `inicio` INT, IN `fin` INT, IN `usuario` INT, IN `anio` INT, IN `mes` INT, IN `numdoc` INT, IN `usuasigna` INT, IN `estadonot` VARCHAR(6))  BEGIN
-DECLARE maximos VARCHAR(2000);
-DECLARE consulta VARCHAR (2000);
-DECLARE filtromemo VARCHAR(2000)DEFAULT ' ';
-DECLARE agregajoin VARCHAR(2000)DEFAULT ' ';
-DECLARE campo1 varchar(30) default '(NULL)';
-DECLARE campo2 varchar(30) default '(NULL)';
-DECLARE campo3 varchar(40) default '(NULL)';
-DECLARE filtro VARCHAR(2000)DEFAULT ' WHERE 1 = 1 ';
-DECLARE orden VARCHAR(1000) DEFAULT ' ORDER BY cambio_estados_dias DESC, fecha_recepcion_unidad ASC, memo_fecha_memo DESC';
+CREATE DEFINER=`root`@`localhost` PROCEDURE `estado_max_por_seccion` (IN `seccion` INT, IN `estado` INT, IN `inicio` INT, IN `fin` INT, IN `usuario` INT)  BEGIN
+DECLARE maximos VARCHAR(300);
+DECLARE consulta VARCHAR (1000);
+DECLARE filtro VARCHAR(100)DEFAULT ' WHERE 1 = 1 ';
+DECLARE orden VARCHAR(100) DEFAULT ' ORDER BY cambio_estados_dias DESC, m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC';
 DECLARE pagina VARCHAR (50);
-DECLARE estado_recepcion int;
-
-SELECT me.memo_estado_id INTO estado_recepcion
-FROM usuario as usu
-INNER JOIN dpto_tiene_usu AS dtu ON dtu.dpto_tiene_usu_usuario_id = usu.usuario_id
-INNER JOIN memo_estado AS me ON me.memo_estado_depto_id = dtu.dpto_tiene_usu_depto_id
-WHERE usu.usuario_id = usuario AND dtu.dpto_tiene_usu_principal = 1 AND me.memo_estado_memo_estadogenerico_id = 2;
+DECLARE agregajoinusuario VARCHAR (100) DEFAULT ' LEFT JOIN asigna_usuario as mtu ON mtu.asigna_usuario_memo_id = m.memo_id ';
 
 SET pagina = CONCAT(' LIMIT ',inicio,',',fin);
 
-	IF deptosol <> 1 THEN
-		SET filtromemo = CONCAT(filtromemo,' AND mm.memo_depto_solicitante_id = ',deptosol);
+	IF seccion = 1 THEN
+		SET maximos = 'SELECT cambio_estados_memo_id, max(ce.cambio_estados_memo_estado_id) as estado_max_id
+						FROM cambio_estados as ce, memo_estado as me 
+						WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id
+						GROUP by ce.cambio_estados_memo_id';
+	ELSEIF seccion=2 THEN
+		SET maximos = 'SELECT cambio_estados_memo_id, max(ce.cambio_estados_memo_estado_id) as estado_max_id
+						FROM cambio_estados as ce, memo_estado as me 
+						WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id
+						AND me.memo_estado_seccion_id = 2
+						GROUP by ce.cambio_estados_memo_id';
+	ELSEIF seccion=3 THEN
+		SET maximos = 'SELECT cambio_estados_memo_id, max(ce.cambio_estados_memo_estado_id) as estado_max_id 
+						FROM cambio_estados as ce, memo_estado as me 
+						WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id
+						AND me.memo_estado_seccion_id = 3
+						GROUP by ce.cambio_estados_memo_id';
 	END IF;
 
-	IF anio <> 0 THEN
-		SET filtromemo = concat(filtromemo,' AND mm.memo_anio=',anio);
-	END IF;
-
-	IF mes <> 0 THEN
-		SET filtromemo = concat(filtromemo,' AND MONTH(mm.memo_fecha_memo) = ',mes);
-	END IF;
-
-	IF numdoc  <> 0 THEN
-		SET filtromemo = concat(filtromemo,' AND mm.memo_num_memo=',numdoc );
-	END IF;
-
-	IF usuasigna <> 0 THEN 
-		SET agregajoin = ' LEFT JOIN asigna_usuario AS asu ON asu.asigna_usuario_memo_id = mm.memo_id 
-											 LEFT JOIN estado_asignacion AS ea ON ea.estado_asignacion_id = asu.asigna_usuario_estado_asignacion_id ';
-		SET filtromemo = concat(filtromemo,' AND asu.asigna_usuario_usuario_id=',usuasigna );
-		SET campo1 = 'asu.asigna_usuario_usuario_id';
-		SET campo2 = 'asu.asigna_usuario_fecha';
-		SET campo3 = 'ea.estado_asignacion_texto';
-	END IF;
-
-SET maximos = CONCAT('SELECT estado_max(mm.memo_id,',usuario,') AS estado_max_id, mm.memo_id, mm.memo_num_memo, mm.memo_anio, mm.memo_fecha_memo, 
-			mm.memo_materia, mm.memo_depto_solicitante_id, ',campo1,' AS asigna_usu_usuario_id , ',campo2,' AS asigna_usu_fecha, ',campo3,' AS asigna_usu_estado
-					FROM memo as mm 
-					LEFT JOIN memo_derivado AS md ON md.memo_derivado_memo_id = mm.memo_id ',agregajoin,' WHERE md.memo_derivado_dpto_id in (87) ',filtromemo);
-
-	SET @consulta = CONCAT('SELECT estado_max_id,memo_id, memo_num_memo, memo_anio,
-							memo_fecha_memo, memo_materia, memo_depto_solicitante_id, 
-							dep.depto_nombre, met.memo_estado_tipo, met.memo_estado_color_bg, met.memo_estado_color_font, 
-							cei.cambio_estados_memo_estado_id,cei.cambio_estados_observacion, cei.cambio_estados_fecha,
-							DATEDIFF(CURDATE(), cei.cambio_estados_fecha) as cambio_estados_dias, cei.cambio_estados_usuario_id, met.memo_estado_memo_estadogenerico_id,
-							(SELECT cambio_estados_fecha FROM cambio_estados WHERE cambio_estados_memo_id=memo_id AND cambio_estados_memo_estado_id = ',estado_recepcion,'  ORDER BY cambio_estados_fecha DESC LIMIT 1) AS fecha_recepcion_unidad,
-							asigna_usu_usuario_id, us.usuario_nombre, asigna_usu_fecha, asigna_usu_estado
+	SET @consulta = CONCAT('SELECT m.memo_id, m.memo_num_memo, m.memo_anio, m.memo_fecha_recepcion, m.memo_fecha_memo, m.memo_materia, dep.depto_nombre, met.memo_estado_tipo, met.memo_estado_color_bg, met.memo_estado_color_font, estado_max_id, cei.cambio_estados_observacion, cei.cambio_estados_fecha, DATEDIFF(CURDATE() ,cei.cambio_estados_fecha) as cambio_estados_dias
 			FROM (',maximos,') AS TABLA_MEM_MAX
-			LEFT JOIN cambio_estados as cei ON cei.cambio_estados_id = estado_max_id
-			LEFT JOIN memo_estado as met ON met.memo_estado_id = cambio_estados_memo_estado_id
-			INNER JOIN departamento as dep ON dep.depto_id = memo_depto_solicitante_id
-			LEFT JOIN usuario as us ON us.usuario_id=asigna_usu_usuario_id');
+			LEFT JOIN memo as m ON m.memo_id = cambio_estados_memo_id
+			LEFT JOIN memo_estado as met ON met.memo_estado_id = estado_max_id
+			LEFT JOIN cambio_estados AS cei ON estado_max_id = cei.cambio_estados_memo_estado_id and cei.cambio_estados_memo_id = m.memo_id
+			INNER JOIN departamento as dep ON dep.depto_id = m.memo_depto_solicitante_id ');
+
+	IF usuario<>0 and seccion = 3 THEN
+		SET @consulta = CONCAT(@consulta,agregajoinusuario);
+	END IF;
 
 	SET @consulta = CONCAT(@consulta,filtro);
 
 	IF estado <> 0 THEN
-		SET @consulta = concat(@consulta,' AND cambio_estados_memo_estado_id=',estado);
+		SET @consulta = concat(@consulta,' AND estado_max_id=',estado);
 	END IF;
-	IF estadonot <> 0 THEN
-		SET @consulta = concat(@consulta,' AND cambio_estados_memo_estado_id NOT IN (',estadonot,')');
+
+	IF usuario <> 0 and seccion = 3 THEN
+		SET @consulta = concat(@consulta,' AND mtu.asigna_usuario_usuario_id=',usuario);
 	END IF;
 
 	SET @consulta = concat(@consulta,orden);
@@ -110,19 +87,12 @@ SET maximos = CONCAT('SELECT estado_max(mm.memo_id,',usuario,') AS estado_max_id
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `listado_memo_por_estadomax_depto` (IN `deptosol` INT, IN `deptodes` INT, IN `estado` INT, IN `inicio` INT, IN `fin` INT, IN `usuario` INT, IN `anio` INT, IN `mes` INT, IN `numdoc` INT, IN `dptoid` VARCHAR(30), IN `estadonot` VARCHAR(6))  BEGIN
-DECLARE maximos VARCHAR(2000);
-DECLARE consulta VARCHAR (2000);
-DECLARE filtromemo VARCHAR(2000)DEFAULT ' ';
-DECLARE filtro VARCHAR(2000)DEFAULT ' WHERE 1 = 1 ';
-DECLARE orden VARCHAR(1000) DEFAULT ' ORDER BY cambio_estados_dias ASC, memo_fecha_recepcion ASC, memo_fecha_memo DESC';
+DECLARE maximos VARCHAR(1000);
+DECLARE consulta VARCHAR (1000);
+DECLARE filtromemo VARCHAR(100)DEFAULT ' ';
+DECLARE filtro VARCHAR(100)DEFAULT ' WHERE 1 = 1 ';
+DECLARE orden VARCHAR(100) DEFAULT ' ORDER BY cambio_estados_dias DESC, memo_fecha_recepcion ASC, memo_fecha_memo DESC';
 DECLARE pagina VARCHAR (50);
-DECLARE estado_recepcion int;
-
-SELECT me.memo_estado_id INTO estado_recepcion
-FROM usuario as usu
-INNER JOIN dpto_tiene_usu AS dtu ON dtu.dpto_tiene_usu_usuario_id = usu.usuario_id
-INNER JOIN memo_estado AS me ON me.memo_estado_depto_id = dtu.dpto_tiene_usu_depto_id
-WHERE usu.usuario_id = usuario AND dtu.dpto_tiene_usu_principal = 1 AND me.memo_estado_memo_estadogenerico_id = 2;
 
 SET pagina = CONCAT(' LIMIT ',inicio,',',fin);
 
@@ -157,8 +127,7 @@ FROM memo as mm LEFT JOIN memo_derivado AS md ON md.memo_derivado_memo_id = mm.m
 							memo_fecha_memo, memo_materia, memo_fecha_ingreso, memo_depto_solicitante_id, memo_depto_destinatario_id,
 							dep.depto_nombre, dep2.depto_nombre as depto_nombre_dest, met.memo_estado_tipo, met.memo_estado_color_bg, met.memo_estado_color_font, 
 							cei.cambio_estados_memo_estado_id,cei.cambio_estados_observacion, cei.cambio_estados_fecha,
-							DATEDIFF(CURDATE() ,cei.cambio_estados_fecha) as cambio_estados_dias, cei.cambio_estados_usuario_id, met.memo_estado_memo_estadogenerico_id,
-							(SELECT cambio_estados_fecha FROM cambio_estados WHERE cambio_estados_memo_id=memo_id AND cambio_estados_memo_estado_id = ',estado_recepcion,' ) AS fecha_recepcion_unidad
+							DATEDIFF(CURDATE() ,cei.cambio_estados_fecha) as cambio_estados_dias, cei.cambio_estados_usuario_id, met.memo_estado_memo_estadogenerico_id
 			FROM (',maximos,') AS TABLA_MEM_MAX
 			LEFT JOIN cambio_estados as cei ON cei.cambio_estados_id = estado_max_id
 			LEFT JOIN memo_estado as met ON met.memo_estado_id = cambio_estados_memo_estado_id
@@ -184,13 +153,57 @@ FROM memo as mm LEFT JOIN memo_derivado AS md ON md.memo_derivado_memo_id = mm.m
 	DEALLOCATE PREPARE smpt;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `total_listado_memos` (IN `seccion` INT, IN `estado` INT, IN `usuario` INT)  BEGIN
+DECLARE maximos VARCHAR(300);
+DECLARE consulta VARCHAR (1000);
+DECLARE filtro VARCHAR(100)DEFAULT ' WHERE 1 = 1 ';
+DECLARE orden VARCHAR(100) DEFAULT ' ORDER BY m.memo_fecha_recepcion ASC, m.memo_fecha_memo DESC';
+/*DECLARE pagina VARCHAR (50);*/
+DECLARE agregajoinusuario VARCHAR (100) DEFAULT ' LEFT JOIN asigna_usuario as mtu ON mtu.asigna_usuario_memo_id = m.memo_id ';
+
+/*SET pagina = CONCAT(' LIMIT ',inicio,',',fin);*/
+
+	IF seccion = 1 THEN
+		SET maximos = 'SELECT cambio_estados_memo_id, max(ce.cambio_estados_memo_estado_id) as estado_max_id FROM cambio_estados as ce, memo_estado as me WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id GROUP by ce.cambio_estados_memo_id';
+	ELSEIF seccion=2 THEN
+		SET maximos = 'SELECT cambio_estados_memo_id, max(ce.cambio_estados_memo_estado_id) as estado_max_id FROM cambio_estados as ce, memo_estado as me  WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id AND me.memo_estado_seccion_id = 2 GROUP by ce.cambio_estados_memo_id';
+	ELSEIF seccion=3 THEN
+		SET maximos = 'SELECT cambio_estados_memo_id, max(ce.cambio_estados_memo_estado_id) as estado_max_id FROM cambio_estados as ce, memo_estado as me WHERE me.memo_estado_id = ce.cambio_estados_memo_estado_id AND me.memo_estado_seccion_id = 3 GROUP by ce.cambio_estados_memo_id';
+	END IF;
+
+	SET @consulta = CONCAT('SELECT count(*) AS cantidad FROM (',maximos,') AS TABLA_MEM_MAX LEFT JOIN memo as m ON m.memo_id = cambio_estados_memo_id LEFT JOIN memo_estado as met ON met.memo_estado_id = estado_max_id INNER JOIN departamento as dep ON dep.depto_id = m.memo_depto_solicitante_id ');
+
+	IF usuario<>0 and seccion = 3 THEN
+		SET @consulta = CONCAT(@consulta,agregajoinusuario);
+	END IF;
+
+	SET @consulta = CONCAT(@consulta,filtro);
+
+	IF estado <> 0 THEN
+		SET @consulta = concat(@consulta,' AND estado_max_id=',estado);
+	END IF;
+
+	IF usuario <> 0 and seccion = 3 THEN
+		SET @consulta = concat(@consulta,' AND mtu.asigna_usuario_usuario_id=',usuario);
+	END IF;
+
+	SET @consulta = concat(@consulta,orden);
+	/*SET @consulta = concat(@consulta,pagina);*/
+
+	
+
+	PREPARE smpt FROM @consulta;
+	EXECUTE smpt;
+	DEALLOCATE PREPARE smpt;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `total_listado_memos_estado_depto` (IN `deptosol` INT, IN `deptodes` INT, IN `estado` INT, IN `usuario` INT, IN `anio` INT, IN `mes` INT, IN `numdoc` INT, IN `dptoid` VARCHAR(30), IN `estadonot` VARCHAR(6))  BEGIN
 DECLARE maximos VARCHAR(2000);
 DECLARE consulta VARCHAR (2000);
 DECLARE filtromemo VARCHAR(2000)DEFAULT ' ';
 DECLARE filtro VARCHAR(2000)DEFAULT ' WHERE 1 = 1 ';
 
-	IF deptosol <> 1 THEN
+IF deptosol <> 1 THEN
 		SET filtromemo = CONCAT(filtromemo,' AND mm.memo_depto_solicitante_id = ',deptosol);
 	END IF;
 
@@ -217,72 +230,6 @@ DECLARE filtro VARCHAR(2000)DEFAULT ' WHERE 1 = 1 ';
 					 mm.memo_fecha_memo, mm.memo_materia, mm.memo_fecha_ingreso, mm.memo_depto_solicitante_id, mm.memo_depto_destinatario_id
 	FROM memo as mm LEFT JOIN memo_derivado AS md ON md.memo_derivado_memo_id = mm.memo_id WHERE md.memo_derivado_dpto_id in (',dptoid ,') ',filtromemo);
 
-	SET @consulta = CONCAT('SELECT count(*) AS cantidad FROM (',maximos,') AS TABLA_MEM_MAX 
-							LEFT JOIN cambio_estados as cei ON cei.cambio_estados_id = estado_max_id
-							LEFT JOIN memo_estado as met ON met.memo_estado_id = cambio_estados_memo_estado_id
-							INNER JOIN departamento as dep ON dep.depto_id = memo_depto_solicitante_id ');
-
-	SET @consulta = CONCAT(@consulta,filtro);
-
-	IF estado <> 0 THEN
-		SET @consulta = concat(@consulta,' AND cambio_estados_memo_estado_id=',estado);
-	END IF;
-	IF estadonot <> 0 THEN
-		SET @consulta = concat(@consulta,' AND cambio_estados_memo_estado_id NOT IN (',estadonot,')');
-	END IF;
-
-	PREPARE smpt FROM @consulta;
-	EXECUTE smpt;
-	DEALLOCATE PREPARE smpt;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `total_listado_memos_estado_depto_adquisiciones` (IN `deptosol` INT, IN `estado` INT, IN `usuario` INT, IN `anio` INT, IN `mes` INT, IN `numdoc` INT, IN `usuasigna` INT, IN `estadonot` VARCHAR(6))  BEGIN
-DECLARE maximos VARCHAR(2000);
-DECLARE consulta VARCHAR (2000);
-DECLARE filtromemo VARCHAR(2000)DEFAULT ' ';
-DECLARE filtro VARCHAR(2000)DEFAULT ' WHERE 1 = 1 ';
-DECLARE agregajoin VARCHAR(2000)DEFAULT ' ';
-DECLARE campo1 varchar(30) default '(NULL)';
-DECLARE campo2 varchar(30) default '(NULL)';
-
-	IF deptosol <> 1 THEN
-		SET filtromemo = CONCAT(filtromemo,' AND mm.memo_depto_solicitante_id = ',deptosol);
-	END IF;
-
-	IF anio <> 0 THEN
-		SET filtromemo = concat(filtromemo,' AND mm.memo_anio=',anio);
-	END IF;
-
-	IF mes <> 0 THEN
-		SET filtromemo = concat(filtromemo,' AND MONTH(mm.memo_fecha_memo) = ',mes);
-	END IF;
-
-	IF numdoc  <> 0 THEN
-			SET filtromemo = concat(filtromemo,' AND mm.memo_num_memo=',numdoc );
-	END IF;
-
-	/*IF usuasigna <> 0 THEN 
-		SET filtromemo = concat(filtromemo,' AND asu.asigna_usuario_usuario_id=',usuasigna );
-	END IF;*/
-
-	IF usuasigna <> 0 THEN 
-		SET agregajoin = ' LEFT JOIN asigna_usuario AS asu ON asu.asigna_usuario_memo_id = mm.memo_id ';
-		SET filtromemo = concat(filtromemo,' AND asu.asigna_usuario_usuario_id=',usuasigna );
-		SET campo1 = 'asu.asigna_usuario_usuario_id';
-		SET campo2 = 'asu.asigna_usuario_fecha';
-	END IF;
-
-	SET maximos = CONCAT('SELECT estado_max(mm.memo_id,',usuario,') AS estado_max_id, mm.memo_id, mm.memo_num_memo, mm.memo_anio, mm.memo_fecha_memo, 
-			mm.memo_materia, mm.memo_depto_solicitante_id, ',campo1,' AS asigna_usu_usuario_id , ',campo2,' AS asigna_usu_fecha
-					FROM memo as mm 
-					LEFT JOIN memo_derivado AS md ON md.memo_derivado_memo_id = mm.memo_id ',agregajoin,' WHERE md.memo_derivado_dpto_id in (87) ',filtromemo);
-
-	/*SET maximos = CONCAT('SELECT estado_max(mm.memo_id,',usuario,') as estado_max_id, mm.memo_id, mm.memo_num_memo, mm.memo_anio, mm.memo_fecha_memo, 
-			mm.memo_materia, mm.memo_depto_solicitante_id, asu.asigna_usuario_usuario_id, asu.asigna_usuario_fecha
-					FROM memo as mm 
-					LEFT JOIN memo_derivado AS md ON md.memo_derivado_memo_id = mm.memo_id 
-					LEFT JOIN asigna_usuario AS asu ON asu.asigna_usuario_memo_id = mm.memo_id 
-					WHERE md.memo_derivado_dpto_id in (87) ',filtromemo);*/
 
 	SET @consulta = CONCAT('SELECT count(*) AS cantidad FROM (',maximos,') AS TABLA_MEM_MAX 
 							LEFT JOIN cambio_estados as cei ON cei.cambio_estados_id = estado_max_id
@@ -403,25 +350,15 @@ CREATE TABLE `asigna_usuario` (
   `asigna_usuario_estado_asignacion_id` int(11) NOT NULL,
   `asigna_usuario_fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `asigna_usuario_asigna_prioridad_id` int(11) NOT NULL,
-  `asigna_usuario_asigna_dificultad_id` int(11) NOT NULL,
-  `asigna_usuario_ultimamod` datetime NOT NULL
+  `asigna_usuario_asigna_dificultad_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `asigna_usuario`
 --
 
-INSERT INTO `asigna_usuario` (`asigna_usuario_id`, `asigna_usuario_memo_id`, `asigna_usuario_usuario_id`, `asigna_usuario_comentario`, `asigna_usuario_estado_asignacion_id`, `asigna_usuario_fecha`, `asigna_usuario_asigna_prioridad_id`, `asigna_usuario_asigna_dificultad_id`, `asigna_usuario_ultimamod`) VALUES
-(1, 4, 4, 'Favor cursar segun materia', 3, '2019-09-04 23:47:11', 4, 2, '2019-09-04 21:27:17'),
-(2, 20, 2, 'ver', 3, '2019-09-04 23:47:37', 4, 2, '2019-09-04 21:30:01'),
-(3, 1, 7, 'ver', 1, '2019-09-04 23:47:56', 1, 2, '2019-09-04 19:47:56'),
-(4, 3, 4, 'ver', 3, '2019-09-04 23:54:12', 2, 1, '2019-09-04 21:09:43'),
-(5, 3, 7, 'ver', 3, '2019-09-04 23:54:22', 3, 2, '2019-09-04 20:53:22'),
-(6, 3, 2, 'ver', 3, '2019-09-03 23:54:28', 4, 2, '2019-09-04 20:04:18'),
-(7, 4, 2, 'ver', 3, '2019-09-05 01:13:25', 4, 2, '2019-09-04 21:26:47'),
-(8, 23, 4, 'ver', 3, '2019-09-05 22:18:33', 4, 2, '2019-09-05 19:12:29'),
-(9, 19, 4, 'ver', 1, '2019-09-05 22:18:55', 4, 2, '2019-09-05 18:18:55'),
-(10, 17, 4, 'ver', 1, '2019-09-05 22:19:07', 1, 1, '2019-09-05 18:19:07');
+INSERT INTO `asigna_usuario` (`asigna_usuario_id`, `asigna_usuario_memo_id`, `asigna_usuario_usuario_id`, `asigna_usuario_comentario`, `asigna_usuario_estado_asignacion_id`, `asigna_usuario_fecha`, `asigna_usuario_asigna_prioridad_id`, `asigna_usuario_asigna_dificultad_id`) VALUES
+(1, 3, 2, 'Ver el lunes por favor', 1, '2018-11-09 15:09:27', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -432,25 +369,10 @@ INSERT INTO `asigna_usuario` (`asigna_usuario_id`, `asigna_usuario_memo_id`, `as
 CREATE TABLE `asocia_resolucion` (
   `asocia_resolucion_id` int(11) NOT NULL,
   `asocia_resolucion_memo_id` int(11) NOT NULL,
-  `asocia_resolucion_res_id` int(11) NOT NULL,
-  `asocia_resolucion_res_url` varchar(300) NOT NULL,
-  `asocia_resolucion_res_anio` int(11) NOT NULL,
-  `asocia_resolucion_res_num` varchar(15) NOT NULL,
-  `asocia_resolucion_res_cat_cod` varchar(10) NOT NULL,
-  `asocia_resolucion_res_fecha` date NOT NULL,
-  `asocia_resolucion_res_fecha_pub` datetime NOT NULL,
-  `asocia_resolucion_fecha_agregacion` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `asocia_resolucion_memo_res_is` int(11) NOT NULL,
+  `asocia_resolucion_fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `asocia_resolucion_comentario` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `asocia_resolucion`
---
-
-INSERT INTO `asocia_resolucion` (`asocia_resolucion_id`, `asocia_resolucion_memo_id`, `asocia_resolucion_res_id`, `asocia_resolucion_res_url`, `asocia_resolucion_res_anio`, `asocia_resolucion_res_num`, `asocia_resolucion_res_cat_cod`, `asocia_resolucion_res_fecha`, `asocia_resolucion_res_fecha_pub`, `asocia_resolucion_fecha_agregacion`, `asocia_resolucion_comentario`) VALUES
-(1, 3, 47461, 'http://resoluciones2.umce.cl/adjunto/2019_N_100100_Res_Ex autoriza la transferencia de carrera a Camila Ignacia Paz Guajardo Lizada.pdf', 2019, '100100', 'sc020', '2019-01-25', '2019-01-29 12:19:22', NULL, ''),
-(2, 4, 47461, 'http://resoluciones2.umce.cl/adjunto/2019_N_100100_Res_Ex autoriza la transferencia de carrera a Camila Ignacia Paz Guajardo Lizada.pdf', 2019, '100100', 'sc020', '2019-01-25', '2019-01-29 12:19:22', NULL, ''),
-(3, 20, 47463, 'http://resoluciones2.umce.cl/adjunto/2019_N_100102_Res_Ex autoriza rebaja de carga academica fuera de plazo a Camilo Ignacio Valdes Pulgar.pdf', 2019, '100102', 'sc020', '2019-01-25', '2019-01-29 12:22:00', NULL, '');
 
 -- --------------------------------------------------------
 
@@ -506,101 +428,7 @@ INSERT INTO `cambio_estados` (`cambio_estados_id`, `cambio_estados_memo_id`, `ca
 (40, 8, 1, 'Documento nuevo ingresado por usuario', 3, '2019-07-10 15:05:43'),
 (41, 9, 1, 'Documento nuevo ingresado por usuario', 3, '2019-07-10 16:03:48'),
 (42, 9, 3, 'malo', 3, '2019-07-10 16:04:39'),
-(43, 10, 1, 'Documento nuevo ingresado por usuario', 3, '2019-07-10 16:05:34'),
-(44, 11, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-11 16:46:33'),
-(45, 12, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-11 16:47:18'),
-(46, 13, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-11 20:00:05'),
-(47, 14, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-11 20:01:34'),
-(48, 15, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-11 20:12:03'),
-(49, 16, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-11 20:14:08'),
-(50, 17, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-11 20:17:24'),
-(51, 18, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-11 20:18:12'),
-(52, 19, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-11 20:22:31'),
-(53, 6, 4, 'Para revision en DAF', 3, '2019-07-11 21:37:37'),
-(54, 16, 4, 'Para revision en DAF', 3, '2019-07-11 21:37:37'),
-(55, 17, 4, 'Para revision en DAF', 3, '2019-07-11 21:37:38'),
-(56, 18, 4, 'Para revision en DAF', 3, '2019-07-11 21:37:38'),
-(57, 19, 4, 'Para revision en DAF', 3, '2019-07-11 21:37:38'),
-(58, 12, 4, 'Para revision en DAF', 3, '2019-07-11 21:37:38'),
-(59, 16, 8, 'Aprobado con observacion, enviar a informatica para su revision', 3, '2019-07-12 19:21:16'),
-(60, 16, 5, 'Revisar si esto se puede realizar', 3, '2019-07-12 19:21:45'),
-(61, 16, 32, 'Revisar si esto se puede realizar', 3, '2019-07-12 19:21:46'),
-(62, 16, 34, 'En revision', 5, '2019-07-12 19:22:32'),
-(63, 16, 38, 'Si se puede comprar, esta ok', 5, '2019-07-12 19:25:10'),
-(64, 16, 40, 'Esta ok, ', 5, '2019-07-12 19:26:46'),
-(65, 2, 34, 'Revisar', 5, '2019-07-12 20:08:12'),
-(66, 3, 8, 'Cursar PPTO', 3, '2019-07-22 20:41:35'),
-(67, 12, 8, 'Cursar PPTO', 3, '2019-07-22 20:49:06'),
-(68, 19, 8, 'Cursar ppto', 3, '2019-07-22 21:52:47'),
-(69, 18, 5, 'Revisar si esto se puede comprar', 3, '2019-07-22 22:31:50'),
-(70, 18, 32, 'Revisar si esto se puede comprar', 3, '2019-07-22 22:31:50'),
-(71, 20, 31, 'Documento nuevo ingresado por usuario', 5, '2019-07-23 16:03:45'),
-(72, 21, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-23 16:10:26'),
-(73, 21, 4, 'Revisar', 3, '2019-07-23 16:11:04'),
-(74, 21, 5, 'Revisar si esta compra se puede realizar', 3, '2019-07-23 16:12:37'),
-(75, 21, 32, 'Revisar si esta compra se puede realizar', 3, '2019-07-23 16:12:37'),
-(76, 20, 35, 'Vafor revisar y cursar', 5, '2019-07-23 16:17:44'),
-(77, 20, 2, 'Vafor revisar y cursar', 5, '2019-07-23 16:17:45'),
-(78, 20, 4, 'revisar', 3, '2019-07-23 16:18:28'),
-(79, 21, 34, 'En revision', 5, '2019-07-23 16:28:01'),
-(80, 8, 5, 'revisar', 3, '2019-07-24 14:43:02'),
-(81, 8, 32, 'revisar', 3, '2019-07-24 14:43:02'),
-(82, 3, 11, 'Revisar para cursar', 3, '2019-07-24 15:36:46'),
-(83, 19, 11, 'Revisar para cursar', 3, '2019-07-24 15:36:47'),
-(84, 12, 11, 'Revisar para cursar', 3, '2019-07-24 15:36:47'),
-(85, 7, 4, 'revisar', 3, '2019-07-24 15:38:18'),
-(86, 7, 7, 'Se reviso y se archiva', 3, '2019-07-24 15:38:29'),
-(87, 3, 12, 'Aprobados enviar a Adquisiciones', 3, '2019-07-24 15:52:09'),
-(88, 19, 12, 'Aprobados enviar a Adquisiciones', 3, '2019-07-24 15:52:10'),
-(89, 12, 12, 'Aprobados enviar a Adquisiciones', 3, '2019-07-24 15:52:10'),
-(90, 3, 14, 'Favor Cursar', 3, '2019-07-24 15:52:45'),
-(91, 3, 17, 'Favor Cursar', 3, '2019-07-24 15:52:45'),
-(94, 19, 14, 'Favor Cursar', 3, '2019-07-24 16:13:39'),
-(95, 19, 17, 'Favor Cursar', 3, '2019-07-24 16:13:39'),
-(97, 20, 8, 'Memos aprobados', 3, '2019-07-24 20:02:17'),
-(98, 6, 8, 'Memos aprobados', 3, '2019-07-24 20:02:17'),
-(99, 17, 8, 'Memos aprobados', 3, '2019-07-24 20:02:17'),
-(100, 6, 11, 'cursar', 3, '2019-07-24 20:05:40'),
-(101, 17, 11, 'cursar', 3, '2019-07-24 20:05:40'),
-(102, 20, 11, 'cursar', 3, '2019-07-24 20:05:40'),
-(103, 6, 12, 'Aprobado enviar a Adquisiciones', 3, '2019-07-24 20:07:17'),
-(104, 17, 12, 'Aprobado enviar a Adquisiciones', 3, '2019-07-24 20:07:17'),
-(105, 20, 12, 'Aprobado enviar a Adquisiciones', 3, '2019-07-24 20:07:17'),
-(106, 6, 14, 'Cursar', 3, '2019-07-24 20:50:27'),
-(107, 6, 17, 'Cursar', 3, '2019-07-24 20:50:27'),
-(108, 17, 14, 'Cursar', 3, '2019-07-24 20:50:27'),
-(109, 17, 17, 'Cursar', 3, '2019-07-24 20:50:27'),
-(110, 12, 14, 'Cursar', 3, '2019-07-24 20:50:27'),
-(111, 12, 17, 'Cursar', 3, '2019-07-24 20:50:27'),
-(112, 20, 14, 'Cursar', 3, '2019-07-24 20:50:27'),
-(113, 20, 17, 'Cursar', 3, '2019-07-24 20:50:27'),
-(114, 22, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-31 16:05:25'),
-(115, 23, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-31 16:06:22'),
-(116, 24, 2, 'Documento recibido e ingresado por usuario', 3, '2019-07-31 16:07:40'),
-(117, 24, 4, 'Para revisión', 3, '2019-07-31 16:09:18'),
-(118, 23, 4, 'Para revisión', 3, '2019-07-31 16:09:18'),
-(119, 22, 4, 'Para revisión', 3, '2019-07-31 16:09:18'),
-(126, 24, 5, 'Generar cotizacion para monto del CDP', 3, '2019-08-07 20:17:46'),
-(127, 24, 17, 'Generar cotizacion para monto del CDP', 3, '2019-08-07 20:17:46'),
-(128, 23, 8, 'Enviar a PPTO', 3, '2019-08-13 18:13:59'),
-(129, 23, 11, 'Cursar', 3, '2019-08-13 18:14:21'),
-(130, 23, 12, 'aprobado por ppto, enviar a adquisi', 3, '2019-08-13 18:14:50'),
-(131, 23, 14, 'Cursar', 3, '2019-08-13 18:15:02'),
-(132, 23, 17, 'Cursar', 3, '2019-08-13 18:15:02'),
-(142, 4, 26, 'Asignado a usuario : Jorge', 2, '2019-09-04 23:47:11'),
-(143, 20, 26, 'Asignado a usuario : María José Garcés', 2, '2019-09-04 23:47:37'),
-(144, 1, 26, 'Asignado a usuario : Lorena ', 2, '2019-09-04 23:47:57'),
-(145, 3, 26, 'Asignado a usuario : Jorge', 2, '2019-09-04 23:54:12'),
-(146, 3, 26, 'Asignado a usuario : Lorena ', 2, '2019-09-04 23:54:22'),
-(147, 3, 26, 'Asignado a usuario : María José Garcés', 2, '2019-09-04 23:54:28'),
-(150, 3, 27, 'Ingreso de datos al memo', 4, '2019-09-05 01:09:43'),
-(151, 4, 26, 'Asignado a usuario : María José Garcés', 2, '2019-09-05 01:13:25'),
-(155, 4, 27, 'Ingreso de datos al memo', 2, '2019-09-05 01:26:47'),
-(156, 20, 27, 'Ingreso de datos al memo', 2, '2019-09-05 01:30:01'),
-(157, 23, 26, 'Asignado a usuario : Jorge', 2, '2019-09-05 22:18:33'),
-(158, 19, 26, 'Asignado a usuario : Jorge', 2, '2019-09-05 22:18:55'),
-(159, 17, 26, 'Asignado a usuario : Jorge', 2, '2019-09-05 22:19:07'),
-(160, 23, 27, 'Ingreso de datos al memo', 4, '2019-09-05 23:12:30');
+(43, 10, 1, 'Documento nuevo ingresado por usuario', 3, '2019-07-10 16:05:34');
 
 -- --------------------------------------------------------
 
@@ -613,8 +441,7 @@ CREATE TABLE `cambio_estados_detmemo` (
   `cambio_estados_detmemo_detmemo_id` int(11) NOT NULL,
   `cambio_estados_detmemo_estado_detmemo_id` int(11) NOT NULL,
   `cambio_estados_detmemo_observacion` varchar(255) NOT NULL,
-  `cambio_estados_detmemo_fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `cambio_estados_detmemo_usu_id` int(11) NOT NULL
+  `cambio_estados_detmemo_fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -997,17 +824,8 @@ CREATE TABLE `detalle_memo` (
   `detmemo_proc_compra_id` int(11) NOT NULL,
   `detmemo_proveedor_id` int(11) NOT NULL,
   `detmemo_fecha` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `detmemo_memo_id` int(11) NOT NULL,
-  `detmemo_cc_codigo` int(11) NOT NULL
+  `detmemo_memo_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `detalle_memo`
---
-
-INSERT INTO `detalle_memo` (`detmemo_id`, `detmemo_descripcion`, `detmemo_ocnum_chilecompra`, `detmemo_ocnum_sistema_interno`, `detmemo_monto_total`, `detmemo_contacto_nombre`, `detmemo_proc_compra_id`, `detmemo_proveedor_id`, `detmemo_fecha`, `detmemo_memo_id`, `detmemo_cc_codigo`) VALUES
-(1, 'Algo', '123', '123', 1000000, 'Juan Perez', 2, 2, '2019-09-05 06:45:56', 3, 1130200),
-(2, 'Algo nuevo', '234', '234', 100000, 'Juan', 5, 1, '2019-09-05 06:50:16', 3, 1130200);
 
 -- --------------------------------------------------------
 
@@ -1108,8 +926,7 @@ INSERT INTO `dpto_tiene_usu` (`dpto_tiene_usu_depto_id`, `dpto_tiene_usu_usuario
 (81, 3, '2019-06-21 19:18:53', 0, 1),
 (82, 3, '2019-06-21 19:18:53', 0, 1),
 (83, 3, '2019-06-21 19:18:54', 0, 1),
-(87, 3, '2019-06-21 19:18:54', 0, 1),
-(87, 7, '2019-07-26 15:22:11', 1, 1);
+(87, 3, '2019-06-21 19:18:54', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1153,12 +970,12 @@ CREATE TABLE `estado_detalle_memo` (
 --
 
 INSERT INTO `estado_detalle_memo` (`estado_detmemo_id`, `estado_detmemo_tipo`, `estado_detmemo_orden`, `estado_detmemo_descripcion`, `estado_detmemo_activo`) VALUES
-(1, 'En Proceso', 1, 'En Espera de Antecedentes', 1),
-(2, 'En Espera de Antecedentes', 2, 'En Espera de Antecedentes', 1),
-(3, 'Compra Parcial', 3, 'Compra Parcial', 1),
-(4, 'Compra Realizada', 4, 'Compra Parcial', 1),
-(5, 'OC Nula', 5, 'Orden de Compra Nula', 1),
-(6, 'OC Cancelada', 6, 'Orden de Compra Cancelada', 1);
+(1, 'En Proceso', 1, NULL, 1),
+(2, 'En Espera de Antecedentes', 2, NULL, 1),
+(3, 'Compra Parcial', 3, NULL, 1),
+(4, 'Compra Realizada', 4, NULL, 1),
+(5, 'Orden de Compra Nula', 5, NULL, 1),
+(6, 'Orden de Compra Cancelada', 6, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1223,6 +1040,8 @@ CREATE TABLE `memo` (
   `memo_depto_destinatario_id` int(11) NOT NULL,
   `memo_nombre_destinatario` varchar(60) NOT NULL,
   `memo_fecha_ingreso` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `memo_cc_codigo` int(11) DEFAULT NULL,
+  `memo_fecha_cdp` date DEFAULT NULL,
   `memo_tipo_doc_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1230,31 +1049,17 @@ CREATE TABLE `memo` (
 -- Volcado de datos para la tabla `memo`
 --
 
-INSERT INTO `memo` (`memo_id`, `memo_num_memo`, `memo_anio`, `memo_materia`, `memo_fecha_memo`, `memo_fecha_recepcion`, `memo_depto_solicitante_id`, `memo_nombre_solicitante`, `memo_depto_destinatario_id`, `memo_nombre_destinatario`, `memo_fecha_ingreso`, `memo_tipo_doc_id`) VALUES
-(1, '123', 2019, 'prueba', '2019-07-01', '2019-07-01', 9, 'Leonel Durán', 32, 'Paulina Sepulveda', '2019-07-01 14:48:08', NULL),
-(2, '444', 2019, 'Otra prueba para informatica', '2019-06-26', '2019-06-26', 9, 'Leonel Duran', 32, 'Paulina Sepulveda', '2019-07-01 15:04:50', NULL),
-(3, '666', 2019, 'Compra de notebook desarrollo', '2019-06-24', '2019-07-04', 32, 'Paulina Sepulveda', 9, 'Leonel Duran', '2019-07-01 19:44:31', NULL),
-(4, '5555', 2019, 'prueba de memo compra', '2019-06-10', '2019-07-01', 76, 'Juan Perez', 9, 'Leonel Durán', '2019-07-01 19:48:03', NULL),
-(5, '357', 2019, 'Prueba de ingreso desde DAF a Conta', '2019-07-03', '2019-07-03', 9, 'Leonel Durán', 82, 'Juan Conta', '2019-07-04 19:44:19', NULL),
-(6, '159', 2019, 'Recepcion des otros depto a DAF', '2019-07-01', '2019-07-04', 8, 'Cesar Marilaf', 9, 'Leonel Durán', '2019-07-04 19:46:38', NULL),
-(7, '999', 2019, 'Prueba de solicitud', '2019-07-03', '2019-07-09', 9, 'Leonel Durán', 79, 'Juan Perez', '2019-07-09 21:35:02', NULL),
-(8, '321321', 2019, 'prueba de ingreso de memo', '2019-07-08', '2019-07-24', 9, 'Leonel Durán', 32, 'Paulina Sepulveda', '2019-07-10 15:05:43', NULL),
-(9, '9090', 2019, 'Revisar contratos honorarios', '2019-07-10', '2019-07-10', 9, 'Leonel Durán', 90, 'Catalina Cordova', '2019-07-10 16:03:48', NULL),
-(10, '9090', 2019, 'Revisar contratos honorarios', '2019-07-04', '2019-07-04', 9, 'Leonel Duran', 90, 'Catalina Cordova', '2019-07-10 16:05:34', NULL),
-(11, '888', 2019, 'prueba d ecompra', '2019-06-19', '2019-07-08', 78, 'Juan De Nuevo', 9, 'Leonel Durán', '2019-07-11 16:46:33', NULL),
-(12, '7777', 2019, 'nuevo', '2019-07-01', '2019-07-11', 31, 'Carol', 9, 'Leonel Durán', '2019-07-11 16:47:18', NULL),
-(13, '456', 2019, 'Prueba compra Mayo2019', '2019-05-27', '2019-07-11', 71, 'Jose Carrasco', 9, 'Leonel Durán', '2019-07-11 20:00:05', NULL),
-(14, '654', 2019, 'Prueba de compra de Abril 2019', '2019-04-22', '2019-07-11', 34, 'Carolina Muñoz', 9, 'Leonel Durán', '2019-07-11 20:01:34', NULL),
-(15, '554466', 2019, 'Prueba compra muchas cosas', '2019-03-05', '2019-03-07', 22, 'Paula Gonzalez', 9, 'Leonel Durán', '2019-07-11 20:12:03', NULL),
-(16, '7878', 2019, 'Prueba de otra compra en Julio', '2019-07-02', '2019-07-08', 79, 'Juan', 9, 'Leonel Durán', '2019-07-11 20:14:08', NULL),
-(17, '632', 2019, 'otra compra ', '2019-07-03', '2019-07-09', 20, 'Karin Muñoz', 9, 'Leonel Durán', '2019-07-11 20:17:24', NULL),
-(18, '3232', 2019, 'Compra nueva Julio', '2019-07-09', '2019-07-11', 58, 'Cecilia Nuñez', 9, 'Leonel Durán', '2019-07-11 20:18:12', NULL),
-(19, '5252', 2019, 'compra de pantalla 23\"', '2019-07-08', '2019-07-11', 71, 'Carolina Zapata', 9, 'Leonel Durán', '2019-07-11 20:22:31', NULL),
-(20, '8888', 2019, 'Prueba de ingreso de memo desde INFORMATICA, con nuevos datos', '2019-07-11', '2019-07-23', 32, 'Paulina Sepulveda', 9, 'Leonel Duran', '2019-07-23 16:03:45', NULL),
-(21, '35', 2019, 'Compra teclados y mouses', '2019-07-22', '2019-07-23', 20, 'Ernesto Alvarez', 9, 'Leonel Durán', '2019-07-23 16:10:26', NULL),
-(22, '319', 2019, 'Compra de 9 proyectores marca EPSON POWERLITE, formulada en memo 67 (28-03-2019)', '2019-07-30', '2019-07-30', 59, 'Fabían Castro', 9, 'Leonel Durán', '2019-07-31 16:05:25', NULL),
-(23, '320', 2019, 'Compra de 2 Impresoras Multifunción HP DESKJET INK ADVANTAGE 5275', '2019-07-30', '2019-07-30', 59, 'Fabían Castro', 9, 'Leonel Durán', '2019-07-31 16:06:22', NULL),
-(24, '323', 2019, 'Compra 4 Laptops HP240GG INW24LT,  formulada en memo 145(18-04-2019)', '2019-07-30', '2019-07-30', 59, 'Fabían Casgtro', 9, 'Leonel Durán', '2019-07-31 16:07:40', NULL);
+INSERT INTO `memo` (`memo_id`, `memo_num_memo`, `memo_anio`, `memo_materia`, `memo_fecha_memo`, `memo_fecha_recepcion`, `memo_depto_solicitante_id`, `memo_nombre_solicitante`, `memo_depto_destinatario_id`, `memo_nombre_destinatario`, `memo_fecha_ingreso`, `memo_cc_codigo`, `memo_fecha_cdp`, `memo_tipo_doc_id`) VALUES
+(1, '123', 2019, 'prueba', '2019-07-01', '2019-07-01', 9, 'Leonel Durán', 32, 'Paulina Sepulveda', '2019-07-01 14:48:08', 0, NULL, NULL),
+(2, '444', 2019, 'Otra prueba para informatica', '2019-06-26', '2019-06-26', 9, 'Leonel Duran', 32, 'Paulina Sepulveda', '2019-07-01 15:04:50', 0, NULL, NULL),
+(3, '666', 2019, 'Compra de notebook desarrollo', '2019-06-24', '2019-07-04', 32, 'Paulina Sepulveda', 9, 'Leonel Duran', '2019-07-01 19:44:31', 0, NULL, NULL),
+(4, '5555', 2019, 'prueba de memo compra', '2019-06-10', '2019-07-01', 76, 'Juan Perez', 9, 'Leonel Durán', '2019-07-01 19:48:03', 0, NULL, NULL),
+(5, '357', 2019, 'Prueba de ingreso desde DAF a Conta', '2019-07-03', '2019-07-03', 9, 'Leonel Durán', 82, 'Juan Conta', '2019-07-04 19:44:19', 0, NULL, NULL),
+(6, '159', 2019, 'Recepcion des otros depto a DAF', '2019-07-01', '2019-07-04', 8, 'Cesar Marilaf', 9, 'Leonel Durán', '2019-07-04 19:46:38', 0, NULL, NULL),
+(7, '999', 2019, 'Prueba de solicitud', '2019-07-03', '2019-07-09', 9, 'Leonel Durán', 79, 'Juan Perez', '2019-07-09 21:35:02', 0, NULL, NULL),
+(8, '321321', 2019, 'prueba de ingreso de memo', '2019-07-08', '2019-07-08', 9, 'Leonel Durán', 32, 'Paulina Sepulveda', '2019-07-10 15:05:43', 0, NULL, NULL),
+(9, '9090', 2019, 'Revisar contratos honorarios', '2019-07-10', '2019-07-10', 9, 'Leonel Durán', 90, 'Catalina Cordova', '2019-07-10 16:03:48', 0, NULL, NULL),
+(10, '9090', 2019, 'Revisar contratos honorarios', '2019-07-04', '2019-07-04', 9, 'Leonel Duran', 90, 'Catalina Cordova', '2019-07-10 16:05:34', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1275,31 +1080,6 @@ CREATE TABLE `memo_archivo` (
   `memo_archivo_estado` tinyint(4) NOT NULL DEFAULT '1',
   `memo_archivo_tipo_archivo_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `memo_cdp`
---
-
-CREATE TABLE `memo_cdp` (
-  `memo_cdp_id` int(11) NOT NULL,
-  `memo_cdp_num` varchar(20) NOT NULL,
-  `memo_cdp_fecha` date NOT NULL,
-  `memo_cdp_cc_codigo` int(11) NOT NULL,
-  `memo_cdp_obs` varchar(255) DEFAULT NULL,
-  `memo_cdp_memo_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `memo_cdp`
---
-
-INSERT INTO `memo_cdp` (`memo_cdp_id`, `memo_cdp_num`, `memo_cdp_fecha`, `memo_cdp_cc_codigo`, `memo_cdp_obs`, `memo_cdp_memo_id`) VALUES
-(1, '6352', '2019-09-03', 1110300, 'ver', 24),
-(2, '6353', '2019-09-03', 1011500, 'ver', 24),
-(3, '333', '2019-09-03', 1130200, '80% de este CC', 3),
-(4, '333', '2019-09-03', 1130200, '60%', 4);
 
 -- --------------------------------------------------------
 
@@ -1326,49 +1106,15 @@ INSERT INTO `memo_derivado` (`memo_derivado_id`, `memo_derivado_memo_id`, `memo_
 (2, 4, 9, 'Leonel Durán', '2019-07-01 19:48:03', 0, 1),
 (3, 4, 83, 'Juan', '2019-07-02 15:47:36', 0, 1),
 (5, 4, 87, 'Maria Jose garces', '2019-07-02 17:00:07', 1, 1),
-(7, 3, 9, 'Leonel Duran', '2019-07-04 15:32:29', 0, 1),
+(7, 3, 9, 'Leonel Duran', '2019-07-04 15:32:29', 1, 1),
 (8, 2, 32, 'Paulina Sepulveda', '2019-07-04 15:34:23', 1, 1),
 (9, 1, 9, 'Leonel Duran', '2019-07-04 15:35:41', 0, 1),
 (10, 1, 83, 'Duran', '2019-07-04 15:38:23', 0, 1),
 (11, 1, 87, 'Maria Jose garces', '2019-07-04 16:01:58', 1, 1),
-(12, 6, 9, 'Leonel Durán', '2019-07-04 19:46:38', 0, 1),
+(12, 6, 9, 'Leonel Durán', '2019-07-04 19:46:38', 1, 1),
 (13, 5, 82, 'Juan Conta', '2019-07-09 16:02:46', 1, 1),
 (14, 7, 79, 'Juan Perez', '2019-07-09 22:37:14', 0, 1),
-(15, 7, 9, 'Leonel Durán', '2019-07-09 22:38:11', 1, 1),
-(16, 11, 9, 'Leonel Durán', '2019-07-11 16:46:33', 1, 1),
-(17, 12, 9, 'Leonel Durán', '2019-07-11 16:47:18', 0, 1),
-(18, 13, 9, 'Leonel Durán', '2019-07-11 20:00:05', 1, 1),
-(19, 14, 9, 'Leonel Durán', '2019-07-11 20:01:34', 1, 1),
-(20, 15, 9, 'Leonel Durán', '2019-07-11 20:12:03', 1, 1),
-(21, 16, 9, 'Leonel Durán', '2019-07-11 20:14:08', 0, 1),
-(22, 17, 9, 'Leonel Durán', '2019-07-11 20:17:24', 0, 1),
-(23, 18, 9, 'Leonel Durán', '2019-07-11 20:18:13', 0, 1),
-(24, 19, 9, 'Leonel Durán', '2019-07-11 20:22:31', 0, 1),
-(25, 16, 32, 'Paulina Sepulveda', '2019-07-12 19:21:46', 0, 1),
-(26, 16, 79, 'Juan', '2019-07-12 19:26:46', 1, 1),
-(27, 18, 32, 'Paulina Sepulveda', '2019-07-22 22:31:50', 1, 1),
-(28, 21, 9, 'Leonel Durán', '2019-07-23 16:10:26', 0, 1),
-(29, 21, 32, 'Paulina', '2019-07-23 16:12:37', 1, 1),
-(30, 20, 9, 'Leonel Duran', '2019-07-23 16:17:45', 0, 1),
-(31, 8, 32, 'Paulina Sepulveda', '2019-07-24 14:43:02', 1, 1),
-(32, 3, 83, 'Arturo', '2019-07-24 15:36:47', 0, 1),
-(33, 19, 83, 'Arturo', '2019-07-24 15:36:47', 0, 1),
-(34, 12, 83, 'Arturo', '2019-07-24 15:36:47', 0, 1),
-(35, 3, 87, 'Maria Jose Garces', '2019-07-24 15:52:45', 1, 1),
-(38, 19, 87, 'Maria Jose Garces', '2019-07-24 16:13:39', 1, 1),
-(40, 6, 83, 'Arturo', '2019-07-24 20:05:40', 0, 1),
-(41, 17, 83, 'Arturo', '2019-07-24 20:05:40', 0, 1),
-(42, 20, 83, 'Arturo', '2019-07-24 20:05:40', 0, 1),
-(43, 6, 87, 'Maria Jose Garces', '2019-07-24 20:50:27', 1, 1),
-(44, 17, 87, 'Maria Jose Garces', '2019-07-24 20:50:27', 1, 1),
-(45, 12, 87, 'Maria Jose Garces', '2019-07-24 20:50:27', 1, 1),
-(46, 20, 87, 'Maria Jose Garces', '2019-07-24 20:50:27', 1, 1),
-(47, 22, 9, 'Leonel Durán', '2019-07-31 16:05:25', 1, 1),
-(48, 23, 9, 'Leonel Durán', '2019-07-31 16:06:22', 0, 1),
-(49, 24, 9, 'Leonel Durán', '2019-07-31 16:07:40', 0, 1),
-(50, 24, 87, 'Maria Jose Garces', '2019-08-07 20:17:46', 1, 1),
-(51, 23, 83, 'Jose Catalan', '2019-08-13 18:14:21', 0, 1),
-(52, 23, 87, 'MJ ', '2019-08-13 18:15:02', 1, 1);
+(15, 7, 9, 'Leonel Durán', '2019-07-09 22:38:11', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1526,11 +1272,7 @@ INSERT INTO `memo_estado_flujo` (`memo_estado_flujo_estado_id`, `memo_estado_flu
 (35, 36),
 (36, 35),
 (38, 40),
-(39, 40),
-(4, 5),
-(34, 35),
-(6, 4),
-(36, 34);
+(39, 40);
 
 -- --------------------------------------------------------
 
@@ -1546,19 +1288,17 @@ CREATE TABLE `memo_observaciones` (
   `memo_observaciones_usuario_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `memo_observaciones`
+-- Estructura de tabla para la tabla `memo_resoluciones`
 --
 
-INSERT INTO `memo_observaciones` (`memo_observaciones_id`, `memo_observaciones_texto`, `memo_observaciones_fecha`, `memo_observaciones_memo_id`, `memo_observaciones_usuario_id`) VALUES
-(1, 'agrego comentario', '2019-09-05 00:53:22', 3, 7),
-(2, 'otra cosa', '2019-09-05 00:58:39', 3, 7),
-(3, 'otra obs', '2019-09-05 01:00:08', 3, 7),
-(4, 'nueva observacion', '2019-09-05 01:09:43', 3, 4),
-(9, 'observacion', '2019-09-05 01:26:47', 4, 2),
-(10, 'otra obs', '2019-09-05 01:27:17', 4, 4),
-(11, 'agrego observacion', '2019-09-05 23:12:29', 23, 4),
-(12, 'nueva', '2019-09-09 22:06:23', 4, 4);
+CREATE TABLE `memo_resoluciones` (
+  `memo_res_id` int(11) NOT NULL,
+  `memo_res_num` varchar(15) NOT NULL,
+  `memo_res_url` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -1651,7 +1391,7 @@ CREATE TABLE `perfiles` (
 INSERT INTO `perfiles` (`perfiles_id`, `perfiles_nombre`, `perfiles_descripcion`) VALUES
 (1, 'Administrador', 'Tiene todos los permisos para la administración del portal'),
 (2, 'Jefe Departamento', 'Permiso para asignar tareas y algunos permiso de admin'),
-(3, 'Supervisor', 'Solo algunos permisos Jefe de Depto. y de Administrador'),
+(3, 'Supervidor', 'Solo algunos permisos Jefe de Depto. y de Administrador'),
 (4, 'Analista', 'Permisos para gestión de los memos de adquisiciones'),
 (5, 'Secretaria', 'Permisos de ingreso y recepción de Memos, cambios estados memos y listados memos'),
 (6, 'Gestión Pago', 'Permisos para listar memos y gestionar los pagos de facturas'),
@@ -1690,10 +1430,10 @@ CREATE TABLE `procedimiento_compra` (
 
 INSERT INTO `procedimiento_compra` (`proc_compra_id`, `proc_compra_tipo`, `proc_compra_orden`, `proc_compra_descripcion`, `proc_compra_activo`) VALUES
 (1, 'Convenio Marco (CM)', 2, 'Valor de compra hasta 1000 UTM', 1),
-(2, 'Compra Menor a 3 UTM', 3, 'Compras menores a 3 UTM', 1),
-(3, 'Gran compra', 4, 'Gran compra', 1),
-(4, 'Licitacion Publica / Privada', 5, 'Licitacion Publica / Privada', 1),
-(5, 'Trato directo', 6, 'Trato directo', 1),
+(2, 'Compra directa', 3, NULL, 1),
+(3, 'Gran compra', 4, NULL, 1),
+(4, 'Licitacion Publica / Privada', 5, NULL, 1),
+(5, 'Trato directo', 6, NULL, 1),
 (6, 'Caja Chica', 1, 'Caja chica del departamento solicitante', 1);
 
 -- --------------------------------------------------------
@@ -1795,8 +1535,7 @@ INSERT INTO `usuario` (`usuario_id`, `usuario_rut`, `usuario_nombre`, `usuario_e
 (3, '5-1', 'jany', 'jany@umce.cl', '123456', 4, '2019-06-10 16:02:40', NULL, 1),
 (4, '3-5', 'Jorge', 'jorge@umce.cl', '123456', 3, '2019-06-10 22:24:14', NULL, 1),
 (5, '13-7', 'Susana', 'susana@umce.cl', '123456', 4, '2019-06-13 21:08:41', NULL, 1),
-(6, '12-5', 'Juan Perez', 'jperez@umce.cl', '123456', 7, '2019-06-18 23:21:07', NULL, 1),
-(7, '4-3', 'Lorena ', 'lorena@umce.cl', '123456', 3, '2019-07-26 15:22:11', NULL, 1);
+(6, '12-5', 'Juan Perez', 'jperez@umce.cl', '123456', 7, '2019-06-18 23:21:07', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1841,14 +1580,12 @@ CREATE TABLE `usu_perfiles` (
 
 INSERT INTO `usu_perfiles` (`usu_perfiles_usuario_id`, `usu_perfiles_perfiles_id`, `usu_perfiles_fecha`) VALUES
 (1, 1, '2019-06-07 20:29:44'),
-(2, 2, '2019-07-26 15:22:58'),
-(2, 4, '2019-07-26 15:22:58'),
+(2, 2, '2019-06-10 20:25:37'),
 (3, 5, '2019-06-10 20:25:44'),
 (4, 3, '2019-06-10 22:24:39'),
 (4, 4, '2019-06-10 22:24:39'),
 (5, 5, '2019-06-13 21:08:54'),
-(6, 2, '2019-06-18 23:21:23'),
-(7, 4, '2019-07-26 15:22:48');
+(6, 2, '2019-06-18 23:21:23');
 
 --
 -- Índices para tablas volcadas
@@ -1889,6 +1626,7 @@ ALTER TABLE `asigna_usuario`
 --
 ALTER TABLE `asocia_resolucion`
   ADD PRIMARY KEY (`asocia_resolucion_id`),
+  ADD KEY `fk_memo_has_memo_resoluciones_memo_resoluciones1_idx` (`asocia_resolucion_memo_res_is`),
   ADD KEY `fk_memo_has_memo_resoluciones_memo1_idx` (`asocia_resolucion_memo_id`);
 
 --
@@ -1933,8 +1671,7 @@ ALTER TABLE `detalle_memo`
   ADD PRIMARY KEY (`detmemo_id`),
   ADD KEY `fk_detalle_memo_procedimiento_compra1_idx` (`detmemo_proc_compra_id`),
   ADD KEY `fk_detalle_memo_proveedor1_idx` (`detmemo_proveedor_id`),
-  ADD KEY `fk_detalle_memo_memo1_idx` (`detmemo_memo_id`),
-  ADD KEY `fk_detalle_memo_centro_costos1_idx` (`detmemo_cc_codigo`);
+  ADD KEY `fk_detalle_memo_memo1_idx` (`detmemo_memo_id`);
 
 --
 -- Indices de la tabla `detalle_memo_archivo`
@@ -2011,6 +1748,7 @@ ALTER TABLE `memo`
   ADD PRIMARY KEY (`memo_id`),
   ADD KEY `idx_memo_depto_solicitante` (`memo_depto_solicitante_id`),
   ADD KEY `idx_memo_depto_destinatario` (`memo_depto_destinatario_id`),
+  ADD KEY `fk_memo_centro_costos1_idx` (`memo_cc_codigo`),
   ADD KEY `fk_memo_tipo_documento1_idx` (`memo_tipo_doc_id`);
 
 --
@@ -2020,14 +1758,6 @@ ALTER TABLE `memo_archivo`
   ADD PRIMARY KEY (`memo_archivo_id`),
   ADD KEY `fk_memo_archivo_memo1_idx` (`memo_archivo_memo_id`),
   ADD KEY `fk_memo_archivo_tipo_archivo1_idx` (`memo_archivo_tipo_archivo_id`);
-
---
--- Indices de la tabla `memo_cdp`
---
-ALTER TABLE `memo_cdp`
-  ADD PRIMARY KEY (`memo_cdp_id`),
-  ADD KEY `fk_memo_cdp_centro_costos1_idx` (`memo_cdp_cc_codigo`),
-  ADD KEY `fk_memo_cdp_memo1_idx` (`memo_cdp_memo_id`);
 
 --
 -- Indices de la tabla `memo_derivado`
@@ -2064,6 +1794,12 @@ ALTER TABLE `memo_estado_flujo`
 ALTER TABLE `memo_observaciones`
   ADD PRIMARY KEY (`memo_observaciones_id`),
   ADD KEY `fk_memo_observaciones_memo1_idx` (`memo_observaciones_memo_id`);
+
+--
+-- Indices de la tabla `memo_resoluciones`
+--
+ALTER TABLE `memo_resoluciones`
+  ADD PRIMARY KEY (`memo_res_id`);
 
 --
 -- Indices de la tabla `menu`
@@ -2163,19 +1899,19 @@ ALTER TABLE `asigna_prioridad`
 -- AUTO_INCREMENT de la tabla `asigna_usuario`
 --
 ALTER TABLE `asigna_usuario`
-  MODIFY `asigna_usuario_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `asigna_usuario_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `asocia_resolucion`
 --
 ALTER TABLE `asocia_resolucion`
-  MODIFY `asocia_resolucion_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `asocia_resolucion_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cambio_estados`
 --
 ALTER TABLE `cambio_estados`
-  MODIFY `cambio_estados_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
+  MODIFY `cambio_estados_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `cambio_estados_detmemo`
@@ -2199,7 +1935,7 @@ ALTER TABLE `dependencia`
 -- AUTO_INCREMENT de la tabla `detalle_memo`
 --
 ALTER TABLE `detalle_memo`
-  MODIFY `detmemo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `detmemo_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_orden_compra`
@@ -2253,7 +1989,7 @@ ALTER TABLE `historial_cambios_tipo`
 -- AUTO_INCREMENT de la tabla `memo`
 --
 ALTER TABLE `memo`
-  MODIFY `memo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `memo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `memo_archivo`
@@ -2262,16 +1998,10 @@ ALTER TABLE `memo_archivo`
   MODIFY `memo_archivo_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `memo_cdp`
---
-ALTER TABLE `memo_cdp`
-  MODIFY `memo_cdp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
 -- AUTO_INCREMENT de la tabla `memo_derivado`
 --
 ALTER TABLE `memo_derivado`
-  MODIFY `memo_derivado_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `memo_derivado_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `memo_estado`
@@ -2289,7 +2019,13 @@ ALTER TABLE `memo_estadogenerico`
 -- AUTO_INCREMENT de la tabla `memo_observaciones`
 --
 ALTER TABLE `memo_observaciones`
-  MODIFY `memo_observaciones_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `memo_observaciones_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `memo_resoluciones`
+--
+ALTER TABLE `memo_resoluciones`
+  MODIFY `memo_res_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `menu`
@@ -2337,7 +2073,7 @@ ALTER TABLE `tipo_documento`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `usuario_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `usuario_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario_rol`
@@ -2369,7 +2105,8 @@ ALTER TABLE `asigna_usuario`
 -- Filtros para la tabla `asocia_resolucion`
 --
 ALTER TABLE `asocia_resolucion`
-  ADD CONSTRAINT `fk_memo_has_memo_resoluciones_memo1` FOREIGN KEY (`asocia_resolucion_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_memo_has_memo_resoluciones_memo1` FOREIGN KEY (`asocia_resolucion_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_memo_has_memo_resoluciones_memo_resoluciones1` FOREIGN KEY (`asocia_resolucion_memo_res_is`) REFERENCES `memo_resoluciones` (`memo_res_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `cambio_estados`
@@ -2395,7 +2132,6 @@ ALTER TABLE `centro_costos`
 -- Filtros para la tabla `detalle_memo`
 --
 ALTER TABLE `detalle_memo`
-  ADD CONSTRAINT `fk_detalle_memo_centro_costos1` FOREIGN KEY (`detmemo_cc_codigo`) REFERENCES `centro_costos` (`cc_codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_detalle_memo_memo1` FOREIGN KEY (`detmemo_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_detalle_memo_procedimiento_compra1` FOREIGN KEY (`detmemo_proc_compra_id`) REFERENCES `procedimiento_compra` (`proc_compra_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_detalle_memo_proveedor1` FOREIGN KEY (`detmemo_proveedor_id`) REFERENCES `proveedor` (`proveedor_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -2443,6 +2179,7 @@ ALTER TABLE `historial_cambios`
 -- Filtros para la tabla `memo`
 --
 ALTER TABLE `memo`
+  ADD CONSTRAINT `fk_memo_centro_costos1` FOREIGN KEY (`memo_cc_codigo`) REFERENCES `centro_costos` (`cc_codigo`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_memo_tipo_documento1` FOREIGN KEY (`memo_tipo_doc_id`) REFERENCES `tipo_documento` (`tipo_doc_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
@@ -2451,13 +2188,6 @@ ALTER TABLE `memo`
 ALTER TABLE `memo_archivo`
   ADD CONSTRAINT `fk_memo_archivo_memo1` FOREIGN KEY (`memo_archivo_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_memo_archivo_tipo_archivo1` FOREIGN KEY (`memo_archivo_tipo_archivo_id`) REFERENCES `tipo_archivo` (`tipo_archivo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Filtros para la tabla `memo_cdp`
---
-ALTER TABLE `memo_cdp`
-  ADD CONSTRAINT `fk_memo_cdp_centro_costos1` FOREIGN KEY (`memo_cdp_cc_codigo`) REFERENCES `centro_costos` (`cc_codigo`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_memo_cdp_memo1` FOREIGN KEY (`memo_cdp_memo_id`) REFERENCES `memo` (`memo_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `memo_derivado`

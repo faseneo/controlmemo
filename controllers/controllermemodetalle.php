@@ -14,30 +14,36 @@ if(isset($_REQUEST['Accion'])){
     switch($_REQUEST['Accion']){
 
         case 'actualizar':
-            $memoDet->__SET('memo_detalle_id',              $_REQUEST['memodetId']);
-            $memoDet->__SET('memo_detalle_descripcion',     $_REQUEST['memodetDesc']);
-            $memoDet->__SET('memo_detalle_num_oc_chc',      $_REQUEST['memodetNumOcChc']);
-            $memoDet->__SET('memo_detalle_cdp',             $_REQUEST['memodetCdp']);
-            $memoDet->__SET('memo_detalle_num_oc_manager',  $_REQUEST['memodetNumOcMan']);
-            $memoDet->__SET('memo_detalle_num_factura',     $_REQUEST['memodetNumFact']);
-            $memoDet->__SET('memo_detalle_fecha_factura',   $_REQUEST['memodetFechFact']);
-            $memoDet->__SET('memo_detalle_monto_total',     $_REQUEST['memodetMonTotal']);
-            $memoDet->__SET('memo_detalle_observaciones',   $_REQUEST['memodetObs']); 
+            $memoDet->__SET('memo_detalle_id',              $_REQUEST['detmemId']);
+            $memoDet->__SET('memo_detalle_num',             $_REQUEST['detmemonum']);
+            $memoDet->__SET('memo_detalle_detmemocc',       $_REQUEST['detmemocc']);
+            $memoDet->__SET('memo_detalle_solicita',        $_REQUEST['detmemonomsolicita']);
+            $memoDet->__SET('memo_detalle_descripcion',     $_REQUEST['detmemodescrip']);
+            $memoDet->__SET('memo_detalle_procompra',       $_REQUEST['detmemoprocompra']);
+            $memoDet->__SET('memo_detalle_proveedor_id',    $_REQUEST['detmemoprov']);
+            $memoDet->__SET('memo_detalle_num_oc_sac',      $_REQUEST['detmemoocsac']);
+            $memoDet->__SET('memo_detalle_num_oc_chc',      $_REQUEST['detmemoocchicom']);
+            $memoDet->__SET('memo_detalle_monto_total',     $_REQUEST['detmemomonto']);
+            $memoDet->__SET('memo_detalle_memo_id',         $_REQUEST['detmemId']);
+
             $jsondata = $modelMemoDet->Actualizar($memoDet);
             header('Content-type: application/json; charset=utf-8');
 			echo json_encode($jsondata);
             break;
 
-        case 'registrar':
-            $memoDet->__SET('memo_detalle_descripcion',     $_REQUEST['memodetDesc']);
-            $memoDet->__SET('memo_detalle_num_oc_chc',      $_REQUEST['memodetNumOcChc']);
-            $memoDet->__SET('memo_detalle_cdp',             $_REQUEST['memodetCdp']);
-            $memoDet->__SET('memo_detalle_num_oc_manager',  $_REQUEST['memodetNumOcMan']);
-            $memoDet->__SET('memo_detalle_num_factura',     $_REQUEST['memodetNumFact']);
-            $memoDet->__SET('memo_detalle_fecha_factura',   $_REQUEST['memodetFechFact']);
-            $memoDet->__SET('memo_detalle_monto_total',     $_REQUEST['memodetMonTotal']);
-            $memoDet->__SET('memo_detalle_observaciones',   $_REQUEST['memodetObs']);            
-            $jsondata = $modelMemoDet->Registrar($memoDet);
+        case 'registrardetalle':
+            $memoDet->__SET('memo_detalle_num',             $_REQUEST['detmemonum']);
+            $memoDet->__SET('memo_detalle_detmemocc',       $_REQUEST['detmemocc']);
+            $memoDet->__SET('memo_detalle_solicita',        $_REQUEST['detmemonomsolicita']);
+            $memoDet->__SET('memo_detalle_descripcion',     $_REQUEST['detmemodescrip']);
+            $memoDet->__SET('memo_detalle_procompra',       $_REQUEST['detmemoprocompra']);
+            $memoDet->__SET('memo_detalle_proveedor_id',    $_REQUEST['detmemoprov']);
+            $memoDet->__SET('memo_detalle_num_oc_sac',      $_REQUEST['detmemoocsac']);
+            $memoDet->__SET('memo_detalle_num_oc_chc',      $_REQUEST['detmemoocchicom']);
+            $memoDet->__SET('memo_detalle_monto_total',     $_REQUEST['detmemomonto']);
+            $memoDet->__SET('memo_detalle_memo_id',         $_REQUEST['detmemId']);
+                      
+            $jsondata = $modelMemoDet->Registrar($memoDet,$_REQUEST['uid']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
@@ -55,7 +61,7 @@ if(isset($_REQUEST['Accion'])){
             break;
             
         case 'listar':
-            $jsondata = $modelMemoDet->Listar();
+            $jsondata = $modelMemoDet->Listar($_REQUEST['memoId']);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;            

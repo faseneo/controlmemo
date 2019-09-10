@@ -59,7 +59,12 @@ if(isset($_REQUEST['Accionmem'])){
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;
-
+        case 'registrarcdp':
+            $jsondata = $modelMemo->ActualizarMemoCDP($_REQUEST['memoId'],$_REQUEST['CCostoId'],$_REQUEST['FechaCDP'],$_REQUEST['uid']);
+            header('Content-type: application/json; charset=utf-8');
+            echo json_encode($jsondata);
+            break;
+            
         case 'actualizar':
             $memo->__SET('mem_id',              $_REQUEST['memoId']);
             $memo->__SET('mem_materia',         $_REQUEST['memoMateria']);
@@ -74,13 +79,18 @@ if(isset($_REQUEST['Accionmem'])){
             break;
 
         case 'obtener':
-            $jsondata = $modelMemo->Obtener($_REQUEST['memoId'],$_REQUEST['depto']);
+            $uid=isset($_REQUEST['uid']) ? $_REQUEST['uid'] : 0;
+            $jsondata = $modelMemo->Obtener($_REQUEST['memoId'],$_REQUEST['depto'],$uid);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);            
-            break;    	
+            break;
 
         case 'listar':
-            //$jsondata = $modelMemo->Listar($_REQUEST['nump'],$_REQUEST['idest'],$_REQUEST['idusu'],$_REQUEST['idsec']);
+             if(isset($_REQUEST['usuasigna'])){
+                $usuasigna = $_REQUEST['usuasigna'];
+             }else{
+                $usuasigna=0;
+             }
             $jsondata = $modelMemo->Listar($_REQUEST['deptosolid'],
                                            $_REQUEST['deptodesid'],
                                            $_REQUEST['nump'],
@@ -89,7 +99,8 @@ if(isset($_REQUEST['Accionmem'])){
                                            $_REQUEST['anio'],
                                            $_REQUEST['mes'],
                                            $_REQUEST['numdoc'],
-                                           $_REQUEST['dptoid']);
+                                           $_REQUEST['dptoid'],
+                                           $usuasigna);
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);
             break;

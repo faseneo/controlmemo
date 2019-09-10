@@ -23,8 +23,6 @@
             console.log(dias[date.getDay()-1] + " " + fechaNum + " de " + meses[mes_name] + " de " + date.getFullYear());
         //}
     }
-
-
     function fechaActual(){
         var fecha = new Date(); //Fecha actual
         var mes = fecha.getMonth()+1; //obteniendo mes
@@ -121,7 +119,7 @@
     }
 
     //function drawpaginador(compag,total,filasPorPagina,cantidadMostrar,fnlista,secid,estado){
-    function drawpaginador(total,filasPorPagina,cantidadMostrar,fnlista,compag,deptosolid,deptodesid,estado,usuid,anio,mes){
+    function drawpaginador(total,filasPorPagina,cantidadMostrar,fnlista,compag,deptosolid,deptodesid,estado,usuid,anio,mes,usuasig){
         totalPag = Math.ceil(total/filasPorPagina);
         var pagina="";
         var funcioninicio="";
@@ -138,7 +136,7 @@
                 }
                 // valida primera pagina y deshabilita anterior
                 concatfuncion = fnlista + '(' + deptosolid + ',' + deptodesid + ',' + estado ;
-                funcionfin = ',' + usuid + ',' + anio + ',' + mes + ')';
+                funcionfin = ',' + usuid + ',' + anio + ',' + mes + ',' + usuasig + ')';
                 if(compag == 1 ){
                     pagina = "<li class='disabled'><a href='#'><span aria-hidden='true'>&laquo;</span></a></li>";
                 }else{
@@ -182,6 +180,8 @@
             }
         return pagina;
     }
+
+
 
     // funciones para ordenar tabla
     function comparer(index) {
