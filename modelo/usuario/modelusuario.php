@@ -595,7 +595,7 @@ class ModelUsuarios{
                     $arrayString = implode(',', $fila);
                 }
                 $logsq = new ModeloLogsQuerys();
-                    $logsq->GrabarLogsQuerys($arrayString,$totalasignados,'ObtenerAsignaMemo');
+                    $logsq->GrabarLogsQuerys($consultaobtiene,$totalasignados,'ObtenerAsignaMemo');
                     $logsq = null;
 
                 $jsonresponse['success'] = true;

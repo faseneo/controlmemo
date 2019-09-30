@@ -25,9 +25,10 @@ if(!isset($_SESSION["autentica"])){
 						<table class="table table-striped">
 							<thead>
 								<tr>
-									<th width="50%">Nombre Estado</th>
-									<th width="15%">Orden</th>
-									<th width="15%">Activo</th>
+									<th width="25%">Nombre Estado</th>
+									<th width="35%">Descripción</th>
+									<th width="10%">Orden</th>
+									<th width="10%">Activo</th>
 									<th width="20%">Acciones</th>
 								</tr>
 							</thead>
@@ -53,6 +54,10 @@ if(!isset($_SESSION["autentica"])){
 						<div class="form-group">
 							<label for="estadoDMTipo">Nombre Estado</label>
 							<input id="estadoDMTipo" class="form-control" type="text" name="estadoDMTipo" value="" title="Ingrese un tipo" required />
+						</div>
+						<div class="form-group">
+							<label for="estadoDMDesc">Descripción</label>
+							<input id="estadoDMDesc" class="form-control" type="text" name="estadoDMDesc" value="" title="Ingrese Decripción" required />
 						</div>
 						<div class="form-group">
 							<label for="estadoDMOrden">Orden</label>

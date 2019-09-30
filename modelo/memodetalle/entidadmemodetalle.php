@@ -14,7 +14,16 @@ class MemoDetalles{
     private $memo_detalle_num_oc_sac;
     private $memo_detalle_num_oc_chc;
     private $memo_detalle_monto_total;
+    private $memo_detalle_fecha;
     private $memo_detalle_memo_id;
+
+    private $memo_detalle_estado_id;
+    private $memo_detalle_estado_nom;
+    private $memo_detalle_estado_fecha;
+
+    private $memo_detalle_usu_id;
+    private $memo_detalle_usu_nom;
+
 
     public function __GET($k){
         return $this->$k;

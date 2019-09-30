@@ -318,17 +318,18 @@ if($_SESSION["autentica"] != "SIP"){
                                                     <table class="table table-striped">
                                                         <thead>
                                                             <tr>
-                                                                <th width="10%">Centro de Costo</th>
+                                                                <th width="8%">Centro de Costo</th>
                                                                 <th width="10%">Proc. Compra</th>
-                                                                <th width="10%">N° OC CHC</th>
-                                                               <!--  <th width="10%">Destino PPTO</th>
-                                                               <th width="10%">Destino ADQ</th> -->
-                                                                <th width="10%">OC Sist. Cont.</th>
-                                                                <th width="10%">Monto</th>
+                                                                <th width="8%">N° OC CHC</th>
+                                                                <th width="8%">OC Sist. Cont.</th>
+                                                                <th width="8%">Monto</th>
                                                                 <th width="23%">Proveedor</th>
-                                                                <!-- <th width="10%">Estado</th>
-                                                                <th width="10%">Usuario</th>
-                                                                <th width="7%">Acciones</th> -->
+                                                                
+                                                                <th width="10%">Fecha</th>
+
+                                                                <th width="10%">Estado</th>
+                                                                <th width="8%">Usuario</th>
+                                                                <th width="6%">Acciones</th> 
                                                             </tr>
                                                         </thead>
                                                         <tbody id="listaHistorialDet">
@@ -565,6 +566,14 @@ if($_SESSION["autentica"] != "SIP"){
                                     <input id="detmemonomsolicita" type="text" name="detmemonomsolicita" class="form-control" value="">
                                     <div class="help-block with-errors"></div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row" id="msgaddcdp">
+                            <div class="col-md-10">
+                                <div class="alert alert-warning" id="msgcdp">No existe CDP asociado al memo. Para Ingresar un Detalle debe Ingresar CDP</div>
+                            </div>
+                            <div class="col-md-2">
+                                <button id="agregarcdp"  type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#myModalCDPMemo" onclick="getlistaCcostos();">Agrega CDP</button>
                             </div>
                         </div>
                         <hr>

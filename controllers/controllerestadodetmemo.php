@@ -17,6 +17,7 @@ if(isset($_REQUEST['Accion'])){
             $estadoDM->__SET('est_detmemo_id',        $_REQUEST['estadoDMId']);
             $estadoDM->__SET('est_detmemo_tipo',      $_REQUEST['estadoDMTipo']);
             $estadoDM->__SET('est_detmemo_orden',     $_REQUEST['estadoDMOrden']);
+            $estadoDM->__SET('est_detmemo_desc',      $_REQUEST['estadoDMDesc']);
             $estadoDM->__SET('est_detmemo_activo',    $_REQUEST['estadoDMActivo']);
             $jsondata = $modelestadoDM->Actualizar($estadoDM);
             header('Content-type: application/json; charset=utf-8');
@@ -26,6 +27,7 @@ if(isset($_REQUEST['Accion'])){
         case 'registrar':
             $estadoDM->__SET('est_detmemo_tipo',      $_REQUEST['estadoDMTipo']);
             $estadoDM->__SET('est_detmemo_orden',     $_REQUEST['estadoDMOrden']);
+            $estadoDM->__SET('est_detmemo_desc',      $_REQUEST['estadoDMDesc']);
             $estadoDM->__SET('est_detmemo_activo',    $_REQUEST['estadoDMActivo']);     
             $jsondata = $modelestadoDM->Registrar($estadoDM);
             header('Content-type: application/json; charset=utf-8');

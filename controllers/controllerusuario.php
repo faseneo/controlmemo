@@ -85,12 +85,16 @@ if(isset($_REQUEST['Accion'])){
                                               $_REQUEST['asignadif'],
                                               $_REQUEST['asignaprio'],
                                               $_REQUEST['asignaobs']);
+
             if($jsondata['success']==true && $_REQUEST['memoultest']){
-                $CambioMEst->__SET('memo_camest_memid', $_REQUEST['memoId']);
-                $CambioMEst->__SET('memo_camest_estid', 26);
-                $CambioMEst->__SET('memo_camest_usuid', $_REQUEST['uId']);
-                $CambioMEst->__SET('memo_camest_obs',   'Asignado a usuario : '.$_REQUEST['nomanalista']);
-                $jsondata2 = $modelMemoEst->CambiaEstado($CambioMEst,17);
+                $resp= $modelMemoEst->ObtieneEstadoMemoId($_REQUEST['memoId'],26);
+                if($resp==FALSE){
+                    $CambioMEst->__SET('memo_camest_memid', $_REQUEST['memoId']);
+                    $CambioMEst->__SET('memo_camest_estid', 26);
+                    $CambioMEst->__SET('memo_camest_usuid', $_REQUEST['uId']);
+                    $CambioMEst->__SET('memo_camest_obs',   'Asignado a usuario ');
+                    $jsondata2 = $modelMemoEst->CambiaEstado($CambioMEst,17);
+                }
             }
             header('Content-type: application/json; charset=utf-8');
             echo json_encode($jsondata);

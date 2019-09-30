@@ -7,23 +7,28 @@
             $("#estadoDMId").val("");
             $("#estadoDMTipo").val("");
             $("#estadoDMOrden").val("");
+            $("#estadoDMDesc").val("");
             //$("#estadoDMActivo").val("");
         }        
         function habilitaform(){
             $("#estadoDMId").prop( "disabled", false );
             $("#estadoDMTipo").prop( "disabled", false );
             $("#estadoDMOrden").prop( "disabled", false );
+            $("#estadoDMDesc").prop( "disabled", false );
             $("#estadoDMActivo").prop( "disabled", false );
+            
         }
         function deshabilitaform(){
             $("#estadoDMId").prop( "disabled", true );
             $("#estadoDMTipo").prop( "disabled", true );
             $("#estadoDMOrden").prop( "disabled", true );
+            $("#estadoDMDesc").prop( "disabled", true );
             $("#estadoDMActivo").prop( "disabled", true );
         }
 $(document).ready(function(){
         function validarFormulario(){
             var txtTipo = document.getElementById('estadoDMTipo').value;
+            var txtDesc = document.getElementById('estadoDMDesc').value;
             var txtPriori = document.getElementById('estadoDMOrden').value;
             var selEstActivo = document.getElementById('estadoDMActivo').selectedIndex;
 
@@ -31,6 +36,11 @@ $(document).ready(function(){
                 if(txtTipo == null || txtTipo.length == 0 || /^\s+$/.test(txtTipo)){
                     alert('ERROR: El campo tipo no debe ir vacío o con espacios en blanco');
                     document.getElementById('estadoDMTipo').focus();
+                    return false;
+                }
+                if(txtDesc == null || txtDesc.length == 0 || /^\s+$/.test(txtDesc)){
+                    alert('ERROR: El campo Descripción no debe ir vacío o con espacios en blanco');
+                    document.getElementById('estadoDMDesc').focus();
                     return false;
                 }
                 if(txtPriori == null || txtPriori.length == 0 || /^\s+$/.test(txtPriori)){
@@ -71,6 +81,7 @@ $(document).ready(function(){
                                var activo = data.datos[i].est_detmemo_activo == 1 ? 'Activo':'Inactivo';
 
                                 fila = '<tr><td>'+ data.datos[i].est_detmemo_tipo +'</td>';
+                                fila += '<td>'+ data.datos[i].est_detmemo_desc +'</td>';
                                 fila += '<td>'+ data.datos[i].est_detmemo_orden +'</td>';
                                 fila += '<td>'+ activo +'</td>';
 
@@ -277,6 +288,7 @@ $(document).ready(function(){
             $("#estadoDMId").val(data.datos.est_detmemo_id);
             $("#estadoDMTipo").val(data.datos.est_detmemo_tipo);
             $("#estadoDMOrden").val(data.datos.est_detmemo_orden);
+            $("#estadoDMDesc").val(data.datos.est_detmemo_desc);
             $("#estadoDMActivo").val(data.datos.est_detmemo_activo);
 
             deshabilitaform();

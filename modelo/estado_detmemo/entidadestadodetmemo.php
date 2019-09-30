@@ -3,6 +3,7 @@
 class EstadoDetMemo{
     private $est_detmemo_id;
     private $est_detmemo_tipo;
+    private $est_detmemo_desc;
 	private $est_detmemo_orden;
     private $est_detmemo_activo;
 

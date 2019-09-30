@@ -402,12 +402,12 @@
                 url: "controllers/controllerusuario.php", 
             })
             .done(function( data, textStatus, jqXHR ) {
-                if ( console && console.log ) {
+                /*if ( console && console.log ) {
                     console.log( " data success asignados : "+ data.success 
                         + " \n data msg : "+ data.message 
                         + " \n textStatus : " + textStatus
                         + " \n jqXHR.status : " + jqXHR.status );
-                }                
+                }*/                
                 $("#listusuasigna").html(""); 
                 var totalUsu = data.datos.length;
                 $("#totalUsu").html("");
@@ -527,8 +527,8 @@
     }    
     //Funcion que lista los estado del memo
     function getlistaEstadosMemo (ultestado){
-        console.log('estado funcion : ' + ultestado);
-        console.log('estado global : ' + ultimoestado);
+        //console.log('estado funcion : ' + ultestado);
+        //console.log('estado global : ' + ultimoestado);
         var datax = {
             'Accion':'listarmin',
             'depto':depto[0],
@@ -548,12 +548,12 @@
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
             }*/
-            console.log('ultimoestado: ' + ultimoestado);
+            //console.log('ultimoestado: ' + ultimoestado);
             var inicio=0;var fin=data.datos.length;
 
-                console.log('estado posibles: ');
+                //console.log('estado posibles: ');
                 for(var i=inicio; i<fin; i++){
-                    console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
+                    //console.log('id: ' + data.datos[i].memo_est_id + ' nombre EstadoMemo: ' + data.datos[i].memo_est_tipo);
                     opcion = '<option value=' + data.datos[i].memo_est_id + '>' + data.datos[i].memo_est_tipo + '</option>';
                     $("#memoEstado").append(opcion);
                 }
@@ -572,7 +572,7 @@
     }
     //Funcion que lista el historial de Estados del memo
     function getlistaHistorialEstado (memId,depto){
-        console.log(depto);
+        //console.log(depto);
         var datax = {"Accionmem":"listarestmemo",
                      "memoId": memId,
                      "depto":depto[0]
@@ -595,7 +595,7 @@
             $("#totalHist").html("");
             $("#totalHist").html(totalHistorial);
 
-            console.log('Total Estados : '+totalHistorial);
+            //console.log('Total Estados : '+totalHistorial);
             ultimoestadotipo="";
             classactual="id='actualEstado'";
             for(var i=0; i<totalHistorial; i++){
@@ -615,7 +615,7 @@
             //usar este estado para generalizar las vistas de estos botones
             //queda pendiente esta modificacion (09072019 fsegovia)
             ultimoestadogenid = data.datos[0].estado_gen_id;
-            console.log('ultimo estado generico : '+ultimoestadogenid);
+            //console.log('ultimo estado generico : '+ultimoestadogenid);
             ultimoestado = data.datos[0].estado_id;
             $("#ultimoEstado").val(ultimoestado);
             $("#memoultest").val(ultimoestado);
@@ -643,17 +643,17 @@
             url: "controllers/controllermemodetalle.php", 
         })
         .done(function( data, textStatus, jqXHR ) {
-            if ( console && console.log ) {
+            /*if ( console && console.log ) {
                 console.log( " data success getlistaHistorialDetalles : "+ data.success 
                     + " \n data msg deptos : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
-            }
+            }*/
             $("#listaHistorialDet").html(""); 
             var totalHistorialDet = data.datos.length;
             $("#totalDet").html("");
             $("#totalDet").html(totalHistorialDet);
-            console.log('Total HistorialDet : '+totalHistorialDet);
+           // console.log('Total HistorialDet : '+totalHistorialDet);
             if(data.datos.length>0){
                 $("#listadodet").show();
                 $("#resultdet").hide();
@@ -663,8 +663,15 @@
                     fila += '<td>' + data.datos[i].memo_detalle_procompra_nom + '</td>';
                     fila += '<td>' + data.datos[i].memo_detalle_num_oc_chc + '</td>';
                     fila += '<td>' + data.datos[i].memo_detalle_num_oc_sac + '</td>';
-                    fila += '<td>' + data.datos[i].memo_detalle_monto_total + '</td>';
+                    fila += '<td>' + new Intl.NumberFormat("es-CL", {style: "currency", currency: "CLP"}).format(data.datos[i].memo_detalle_monto_total) + '</td>';
                     fila += '<td>' + data.datos[i].memo_detalle_proveedor_nom + '</td>';
+                    fila += '<td>' + data.datos[i].memo_detalle_fecha + '</td>';
+                    //fila += '<td>' + data.datos[i].memo_detalle_estado_nom + '</td>';
+                    fila += '<td><a href="#" data-toggle="tooltip" title="' + data.datos[i].memo_detalle_estado_fecha + '">'+data.datos[i].memo_detalle_estado_nom +'</a></td>';
+                    fila += '<td>' + data.datos[i].memo_detalle_usu_nom + '</td>';
+					fila += '<td class="text-left"><a  href="vs_gestiondetmemo.php?medetId=' + data.datos[i].memo_detalle_id + '"';
+                    fila += ' class="btn btn-xs btn-success" role="button id="ver-memo"> Ver</a>';
+                    fila += '</td>';
                     fila += '</tr>';
                     $("#listaHistorialDet").append(fila);
                 }
@@ -705,7 +712,7 @@
             var totalHistorialObs = data.datos.length;
             $("#totalObs").html("");
             $("#totalObs").html(totalHistorialObs);
-            console.log('Total Observaciones : '+totalHistorialObs);
+            //console.log('Total Observaciones : '+totalHistorialObs);
             if(data.datos.length>0){
                 $("#listadoobs").show();
                 $("#resultobs").hide();
@@ -754,7 +761,7 @@
             var totalHistorialDev = data.datos.length;
             $("#totalDeriva").html("");
             $("#totalDeriva").html(totalHistorialDev);
-            console.log('Total Derivados : '+totalHistorialDev);
+            //console.log('Total Derivados : '+totalHistorialDev);
 
             j=data.datos.length;
             classactual="id='actualDestino'";
@@ -803,7 +810,7 @@
             var totalanexos=data.datos.length;
             $("#totalArch").html(totalanexos);
             //Lista archivos del memo
-            console.log('Total Archivos ' + data.datos.length);
+            //console.log('Total Archivos ' + data.datos.length);
             $("#verarchivoMemo").html("");
             $("#verlistaArchivosMemo").html("");
 
@@ -846,12 +853,12 @@
             url: "controllers/controllermemoresolucion.php", 
         })
         .done(function( data, textStatus, jqXHR ) {
-            if ( console && console.log ) {
+            /*if ( console && console.log ) {
                 console.log( " data success : "+ data.success 
                     + " \n data msg memest : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
-            }
+            }*/
             $("#listaHistorialRes").html("");
             var totalHistorialRes = data.datos.length;
             $("#totalRes").html("");
@@ -897,12 +904,12 @@
             url: "controllers/controllermemocdp.php", 
         })
         .done(function( data, textStatus, jqXHR ) {
-            if ( console && console.log ) {
+            /*if ( console && console.log ) {
                 console.log( " data success : "+ data.success 
                     + " \n data msg memest : "+ data.message 
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
-            }
+            }*/
             $("#listacdp").html("");
             var totalCDP = data.datos.length;
             $("#totalCdp").html("");
@@ -1190,8 +1197,11 @@
             $("#memoOtroDeptoNombre").hide();
 
             $("#agregar-det-memo").hide();
+
             $('#agregarcdp').hide();
-            $('#agrega-res').hide();
+            $('#agrega-res').hide()
+            ;
+            $("#msgaddcdp").hide();
 
             $("#listadocdp").hide();
             $("#resultcdp").hide();
@@ -1270,12 +1280,12 @@
             var archivo = archivos.files; 
             //console.log(archivo.length);
             if(archivo.length===0){
-                console.log('paso por nada');
+                //console.log('paso por nada');
                 $("#addmemoFileInfo").show();
                 $("#addmemoFileInfo").append("No ha seleccionado archivo para subir");
                 $("#grabar-archivomemo").hide();
             }else{
-                console.log('paso por algo');
+                //console.log('paso por algo');
                 $("#grabar-archivomemo").show();
                 $("#addmemoFileInfo").hide();
                 var nombre = archivo[0].name;
@@ -1314,8 +1324,8 @@
             e.preventDefault();
             var posidestado = document.getElementById("memoEstado").selectedIndex;
             var idestado = $('#memoEstado').val();
-            console.log('pos estado: ' + posidestado);
-            console.log('estado: ' + idestado);
+            //console.log('pos estado: ' + posidestado);
+            //console.log('estado: ' + idestado);
             if(idestado==5 || idestado==35){
                 $("#memoOtroDepto").show();
                 $("#memoOtroDeptoNombre").show();
@@ -1339,11 +1349,13 @@
             e.preventDefault();
             getListadoProceCompra();
             getListadoProveedores();
-            console.log('total centro costos : '+document.formdetallememo.detmemocc.length);
+            //console.log('total centro costos : '+document.formdetallememo.detmemocc.length);
             if(document.formdetallememo.detmemocc.length>0){
-                $("#detallememo").show();    
+                $("#msgaddcdp").hide();    
             }else{
-                $("#detallememo").hide();
+                $("#msgaddcdp").show();
+                //$("#msgcdp").show();
+                
             }
         });
 
@@ -1352,7 +1364,7 @@
             limpiaformcambioestado();
             var posidestado = document.getElementById("memoEstado").selectedIndex;
             var idestado = $('#memoEstado').val();
-            console.log('estado id : ' + idestado);
+            //console.log('estado id : ' + idestado);
             if(idestado==11 || idestado==14){
                 $("#memoOtroDeptoNombre").show();
                 $("#memoOtroDepto").hide();
@@ -1405,12 +1417,12 @@
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     limpiaFormMemo();
-                    if ( console && console.log ) {
+                    /*if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
-                    }
+                    }*/
                     $('#ModalCargando').modal('hide');
                     $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
@@ -1464,16 +1476,16 @@
                         $('#ModalCargando').on('shown.bs.modal', function () {
                             $loader.show();
                         });
-                    }                    
+                    }
                 })
                 .done(function( data, textStatus, jqXHR ) {
                     limpiaFormMemo();
-                    if ( console && console.log ) {
+                    /*if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
-                    }
+                    }*/
                     $('#ModalCargando').modal('hide');
                     $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
@@ -1511,9 +1523,9 @@
                 document.formcdp.appendChild(inptuid);
 
                 var datax = $("#formcdp").serializeArray();
-                $.each(datax, function(i, field){
+                /*$.each(datax, function(i, field){
                     console.log("contenido del form CDP = "+ field.name + ":" + field.value + " ");
-                });
+                });*/
                 var $loader = $('.loader');
                 var formData = new FormData(document.getElementById("formcdp"));
                 $.ajax({
@@ -1533,12 +1545,12 @@
                     }                    
                 })
                 .done(function( data, textStatus, jqXHR ) {
-                    if ( console && console.log ) {
+                    /*if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
-                    }
+                    }*/
                     $('#ModalCargando').modal('hide');
                     $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
@@ -1548,6 +1560,7 @@
                             modal2.find('.msg').text(data.message);
                             $('#cerrarModalLittle').focus();
                             limpiaformcdp();
+                            $("#msgaddcdp").hide();
                             getlistamemoCDP(memId);
                             getlistaHistorialEstado(memId,depto);
                         });
@@ -1580,13 +1593,13 @@
             document.formcambioestado.appendChild(inptmemid);
 
             var idestado = $('#memoEstado').val();
-            console.log('seleccion estado :'+idestado);
+            //console.log('seleccion estado :'+idestado);
 
             if(validarFormularioEstado(idestado)==true){
                 var datax = $("#formcambioestado").serializeArray();
-                $.each(datax, function(i, field){
+                /*$.each(datax, function(i, field){
                     console.log("contenido del form ESTADO = "+ field.name + ":" + field.value + " ");
-                });
+                });*/
                 var $loader = $('.loader');
                 var formData = new FormData(document.getElementById("formcambioestado"));
                 $.ajax({
@@ -1606,12 +1619,12 @@
                     }                    
                 })
                 .done(function( data, textStatus, jqXHR ) {
-                    if ( console && console.log ) {
+                    /*if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
-                    }
+                    }*/
                     $('#ModalCargando').modal('hide');
                     $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
@@ -1665,9 +1678,9 @@
 
             if(validarFormularioObservacion()==true){
                 var datax = $("#formobservacion").serializeArray();
-                $.each(datax, function(i, field){
+                /*$.each(datax, function(i, field){
                     console.log("contenido del form observacion = "+ field.name + ":" + field.value + " ");
-                });
+                });*/
                 var $loader = $('.loader');
                 var formData = new FormData(document.getElementById("formobservacion"));
                 $.ajax({
@@ -1687,12 +1700,12 @@
                     }                    
                 })
                 .done(function( data, textStatus, jqXHR ) {
-                    if ( console && console.log ) {
+                    /*if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
-                    }
+                    }*/
                     $('#ModalCargando').modal('hide');
                     $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
@@ -1748,7 +1761,7 @@
                 });*/
                 var $loader = $('.loader');
                 var formData = new FormData(document.getElementById("formarchivomemo"));
-                console.log(formData);
+                //console.log(formData);
                 $.ajax({
                     data: formData, 
                     type: "POST",
@@ -1766,12 +1779,12 @@
                     }                    
                 })
                 .done(function( data, textStatus, jqXHR ) {
-                    if ( console && console.log ) {
+                    /*if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
-                    }
+                    }*/
                     $('#ModalCargando').modal('hide');
                     $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
@@ -1818,7 +1831,7 @@
                 });*/
                 var $loader = $('.loader');
                 var formData = new FormData(document.getElementById("formarchivomemootros"));
-                console.log(formData);
+                //console.log(formData);
                 $.ajax({
                     data: formData, 
                     type: "POST",
@@ -1836,12 +1849,12 @@
                     }                    
                 })
                 .done(function( data, textStatus, jqXHR ) {
-                    if ( console && console.log ) {
+                    /*if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
-                    }
+                    }*/
                     $('#ModalCargando').modal('hide');
                     $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
@@ -2005,12 +2018,12 @@
                     }                    
                 })
                 .done(function( data, textStatus, jqXHR ) {
-                    if ( console && console.log ) {
+                    /*if ( console && console.log ) {
                         console.log( " data success : "+ data.success 
                             + " \n data msg buscares : "+ data.message 
                             + " \n textStatus : " + textStatus
                             + " \n jqXHR.status : " + jqXHR.status );
-                    }
+                    }*/
                     $('#ModalCargando').modal('hide');
                     $('#ModalCargando').on('hidden.bs.modal', function () {
                         $('#myModalLittle').modal('show');
@@ -2089,9 +2102,6 @@
                 });    
             }
         });
-
-
-
 
 
 
