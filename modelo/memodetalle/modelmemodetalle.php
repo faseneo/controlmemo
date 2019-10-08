@@ -114,49 +114,59 @@ class ModelMemoDetalle {
     public function Obtener($id){
         $jsonresponse = array();
         try{
-          $consulta = "SELECT dm.detmemo_memo_id,
-                                      dm.detmemo_id,
-                                      dm.detmemo_descripcion,
-                                      dm.detmemo_fecha,
-                                      dm.detmemo_cc_codigo,
-                                      cc.cc_nombre,
-                                      dm.detmemo_contacto_nombre,
-                                      dm.detmemo_ocnum_sistema_interno, 
-                                      dm.detmemo_ocnum_chilecompra,
-                                      dm.detmemo_monto_total,
-                                      dm.detmemo_proc_compra_id,
-                                      pc.proc_compra_tipo,
-                                      dm.detmemo_proveedor_id,
-                                      pro.proveedor_nombre
-                  FROM detalle_memo as dm
-                  LEFT JOIN procedimiento_compra AS pc ON pc.proc_compra_id=detmemo_proc_compra_id
-                  LEFT JOIN proveedor AS pro ON pro.proveedor_id=detmemo_proveedor_id
-                  LEFT JOIN centro_costos AS cc ON cc.cc_codigo=detmemo_cc_codigo
-                  WHERE dm.detmemo_id = ".$id;
-                  $stm = $this->pdo->prepare($consulta);
-                  $stm->execute();
-            
-            $r = $stm->fetch(PDO::FETCH_OBJ);
-            $busq = new MemoDetalles();
-                    $busq->__SET('memo_detalle_id',             $r->detmemo_id);
-                    $busq->__SET('memo_detalle_descripcion',    $r->detmemo_descripcion);
-                    $busq->__SET('memo_detalle_memo_id',        $r->detmemo_memo_id);
-                    $busq->__SET('memo_detalle_detmemocc',      $r->detmemo_cc_codigo);
-                    $busq->__SET('memo_detalle_detmemocc_nom',  $r->cc_nombre);
-                    $busq->__SET('memo_detalle_solicita',       $r->detmemo_contacto_nombre);
-                    $busq->__SET('memo_detalle_procompra',      $r->detmemo_proc_compra_id);
-                    $busq->__SET('memo_detalle_procompra_nom',  $r->proc_compra_tipo);
-                    $busq->__SET('memo_detalle_proveedor_id',   $r->detmemo_proveedor_id);
-                    $busq->__SET('memo_detalle_proveedor_nom',  $r->proveedor_nombre);
+          $consulta = "SELECT COUNT(*) FROM detalle_memo WHERE detmemo_id = ".$id;
 
-                    $busq->__SET('memo_detalle_num_oc_sac',     $r->detmemo_ocnum_sistema_interno);
-                    $busq->__SET('memo_detalle_num_oc_chc',     $r->detmemo_ocnum_chilecompra);
-                    $busq->__SET('memo_detalle_monto_total',    $r->detmemo_monto_total);
-                    $busq->__SET('memo_detalle_fecha',          date_format(date_create($r->detmemo_fecha),'d-m-Y / H:m' ));
+          $res = $this->pdo->query($consulta);
+            $total = $res->fetchColumn();
+            if ($total == 0) {
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Detella memo no Existe';
+                $jsonresponse['datos'] = [];
+            }else{
+              $consulta = "SELECT dm.detmemo_memo_id,
+                                          dm.detmemo_id,
+                                          dm.detmemo_descripcion,
+                                          dm.detmemo_fecha,
+                                          dm.detmemo_cc_codigo,
+                                          cc.cc_nombre,
+                                          dm.detmemo_contacto_nombre,
+                                          dm.detmemo_ocnum_sistema_interno, 
+                                          dm.detmemo_ocnum_chilecompra,
+                                          dm.detmemo_monto_total,
+                                          dm.detmemo_proc_compra_id,
+                                          pc.proc_compra_tipo,
+                                          dm.detmemo_proveedor_id,
+                                          pro.proveedor_nombre
+                      FROM detalle_memo as dm
+                      LEFT JOIN procedimiento_compra AS pc ON pc.proc_compra_id=detmemo_proc_compra_id
+                      LEFT JOIN proveedor AS pro ON pro.proveedor_id=detmemo_proveedor_id
+                      LEFT JOIN centro_costos AS cc ON cc.cc_codigo=detmemo_cc_codigo
+                      WHERE dm.detmemo_id = ".$id;
+                      $stm = $this->pdo->prepare($consulta);
+                      $stm->execute();
+                
+                $r = $stm->fetch(PDO::FETCH_OBJ);
+                $busq = new MemoDetalles();
+                        $busq->__SET('memo_detalle_id',             $r->detmemo_id);
+                        $busq->__SET('memo_detalle_descripcion',    $r->detmemo_descripcion);
+                        $busq->__SET('memo_detalle_memo_id',        $r->detmemo_memo_id);
+                        $busq->__SET('memo_detalle_detmemocc',      $r->detmemo_cc_codigo);
+                        $busq->__SET('memo_detalle_detmemocc_nom',  $r->cc_nombre);
+                        $busq->__SET('memo_detalle_solicita',       $r->detmemo_contacto_nombre);
+                        $busq->__SET('memo_detalle_procompra',      $r->detmemo_proc_compra_id);
+                        $busq->__SET('memo_detalle_procompra_nom',  $r->proc_compra_tipo);
+                        $busq->__SET('memo_detalle_proveedor_id',   $r->detmemo_proveedor_id);
+                        $busq->__SET('memo_detalle_proveedor_nom',  $r->proveedor_nombre);
 
-            $jsonresponse['success'] = true;
-            $jsonresponse['message'] = 'Se obtuvo los memo detalle correctamente';
-            $jsonresponse['datos'] = $busq->returnArray();
+                        $busq->__SET('memo_detalle_num_oc_sac',     $r->detmemo_ocnum_sistema_interno);
+                        $busq->__SET('memo_detalle_num_oc_chc',     $r->detmemo_ocnum_chilecompra);
+                        $busq->__SET('memo_detalle_monto_total',    $r->detmemo_monto_total);
+                        $busq->__SET('memo_detalle_fecha',          date_format(date_create($r->detmemo_fecha),'d-m-Y / H:m' ));
+
+                $jsonresponse['success'] = true;
+                $jsonresponse['message'] = 'Se obtuvo detalle del memo correctamente';
+                $jsonresponse['datos'] = $busq->returnArray();
+            }
         } catch (Exception $e){
             //die($e->getMessage());
             $jsonresponse['success'] = false;

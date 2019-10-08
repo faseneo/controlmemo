@@ -2,6 +2,7 @@
     var ultimoestado=1;
     var ultimoorden=1;
     var uid;
+    var medetId;
     var memId;
     var rolid;
     function returnFileSize(number) {
@@ -1126,8 +1127,8 @@
             });
     }
     //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
-    function verMemo(memId,depto){
-        var datay = {"memoId": memId,
+    function verMemo(memoId,depto){
+        var datay = {"memoId": memoId,
                      "Accionmem":"obtener",
                      "depto":depto,
                      "uid":uid
@@ -1146,7 +1147,13 @@
                     + " \n textStatus : " + textStatus
                     + " \n jqXHR.status : " + jqXHR.status );
             }*/
-            $("#memoId").val(data.datos.mem_id);
+            $("#memnum").text(data.datos.mem_id);
+            $("#memfec").text(data.datos.mem_fecha);
+            $("#memmat").text(data.datos.mem_materia);
+            $("#memnsol").text(data.datos.mem_nom_sol);
+            $("#memdsol").text(data.datos.mem_depto_sol_nom);
+
+            /*$("#memoId").val(data.datos.mem_id);
             $("#memoFecha").val(data.datos.mem_fecha);
             $("#memoNum").val(data.datos.mem_numero);
             $("#memoAnio").val(data.datos.mem_anio);
@@ -1165,17 +1172,8 @@
             $("#memocpdId").val(data.datos.mem_id);
 
             $("#detmemId").val(data.datos.mem_id);
-            $("#detmemonum").val(data.datos.mem_numero);
-
-            getlistaHistorialDetalles(data.datos.mem_id);
-            getlistaHistorialEstado(data.datos.mem_id,depto); // tiene log
-            getlistaArchivos(data.datos.mem_id);  //  
-            getlistaHistorialObs(data.datos.mem_id); //
-            getlistaHistorialDeriv(data.datos.mem_id); // tiene log
-            getlistaResoluciones(data.datos.mem_id); //
-            getlistaUsuAsignaMemo(data.datos.mem_id);
-            getlistamemoCDP(data.datos.mem_id);
-            getlistaCcostos();
+            $("#detmemonum").val(data.datos.mem_numero);*/
+           
         })
         .fail(function( jqXHR, textStatus, errorThrown ) {
             if ( console && console.log ) {
@@ -1186,6 +1184,71 @@
             }
         });
     }
+
+    //funcion levanta modal y muestra  los datos del centro de costo cuando presion boton Ver/Editar, aca se puede mdificar si quiere
+    function verdetMemo(medetId){
+        var datay = {"memodetId": medetId,
+                     "Accion":"obtener"
+                    };
+        $.ajax({
+            data: datay, 
+            type: "POST",
+            dataType: "json", 
+            url: "controllers/controllermemodetalle.php",
+        })
+        .done(function(data,textStatus,jqXHR ) {
+            //$('#titulo').text('Gestión Memo');
+            /*if ( console && console.log ) {
+                console.log( " data success : "+ data.success 
+                    + " \n data msg : "+ data.message 
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }*/
+            
+            //$("#memnum").val(data.datos.mem_id);
+
+            /*$("#memoId").val(data.datos.mem_id);
+            $("#memoFecha").val(data.datos.mem_fecha);
+            $("#memoNum").val(data.datos.mem_numero);
+            $("#memoAnio").val(data.datos.mem_anio);
+            $("#memoFechaRecep").val(data.datos.mem_fecha_recep);
+            $("#memoMateria").val(data.datos.mem_materia);
+            $("#memoNombreSol").val(data.datos.mem_nom_sol);
+            $("#memoDeptoSol").val(data.datos.mem_depto_sol_nom);
+            $("#memoNombreDest").val(data.datos.mem_nom_dest);
+            $("#memoDeptoDest").val(data.datos.mem_depto_dest_nom);
+
+                $('#paneles').show();
+                $('#panel-heading').hide();
+                $('#buscarDS').hide();
+                $('#buscarDD').hide();
+            $("#memoId").val(data.datos.mem_id);
+            $("#memocpdId").val(data.datos.mem_id);
+
+            $("#detmemId").val(data.datos.mem_id);
+            $("#detmemonum").val(data.datos.mem_numero);*/
+            console.log('memodi '+data.memo_detalle_memo_id);
+            verMemo(data.datos.memo_detalle_memo_id,depto);
+
+            /*getlistaHistorialDetalles(data.datos.mem_id);
+            getlistaHistorialEstado(data.datos.mem_id,depto); // tiene log
+            getlistaArchivos(data.datos.mem_id);  //  
+            getlistaHistorialObs(data.datos.mem_id); //
+            getlistaHistorialDeriv(data.datos.mem_id); // tiene log
+            getlistaResoluciones(data.datos.mem_id); //
+            getlistaUsuAsignaMemo(data.datos.mem_id);
+            getlistamemoCDP(data.datos.mem_id);*/
+        })
+        .fail(function( jqXHR, textStatus, errorThrown ) {
+            if ( console && console.log ) {
+                console.log( " La solicitud MEMO ha fallado,  textStatus : " +  textStatus 
+                    + " \n errorThrown : "+ errorThrown
+                    + " \n textStatus : " + textStatus
+                    + " \n jqXHR.status : " + jqXHR.status );
+            }
+        });
+    }
+
     function inicio(){
             $(".help-block").hide();
             $('#paneles').hide();
@@ -1222,17 +1285,23 @@
         $('#memoFecha').val(fechaActual());
         $('#memoAnio').val(anioActual());
 
-        inicio();
-        getlistaDepto();
+        //inicio();
+        //getlistaDepto();
         //Aqui llega variable externa por URL via GET
-        if (typeof memId !== 'undefined'){
-            verMemo(memId, depto);
+        
+        if (typeof medetId !== 'undefined'){
+        	console.log(medetId);
+            verdetMemo(medetId);
+
             //getlistaCcostos();
             deshabilitaform();
             $("#msgarchivomemo").hide();
         }else{
+        	console.log(medetId);
             $('#grabar-memo').show();
         }
+
+
         if(rolid==2){
             //console.log('paso rol '+rolid);
             $('#asignar').show();
